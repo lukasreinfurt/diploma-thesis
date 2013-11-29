@@ -25,6 +25,10 @@ To connect to the VM via ssh, run:
 
 (The ssh executable must be inside `PATH`)
 
+The thesis source files are located in `/thesis`. Execute the following to change into this directory:
+
+    cd /thesis
+
 Now you can run the rake task by executing:
 
     rake [taskname]
