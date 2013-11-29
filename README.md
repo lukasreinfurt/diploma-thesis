@@ -1,7 +1,7 @@
 README
 ======
 
-This diploma thesis can be build with lualatex and biber. A Vagrantfile and an Ansible playbook are provided in the `vm` directory. These will set up a Virtual Box VM with all necessary components to build this thesis.
+This diploma thesis can be build with rake, lualatex, and biber. A Vagrantfile and an Ansible playbook are provided in the `vm` directory. These will set up a Virtual Box VM with all necessary components to build this thesis.
 
 Setup
 -----
@@ -24,6 +24,18 @@ To connect to the VM via ssh, run:
     vagrant ssh
 
 (The ssh executable must be inside `PATH`)
+
+Now you can run the rake task by executing:
+
+    rake [taskname]
+
+To build a pdf version of this thesis, run:
+
+    rake build
+
+To see all available tasks, run:
+
+    rake
 
 To stop the VM, run:
 
