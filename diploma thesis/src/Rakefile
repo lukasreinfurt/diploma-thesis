@@ -1,0 +1,39 @@
+require 'fileutils'
+
+desc 'build a pdf file'
+task :build => ['build:pdf']
+
+namespace :build do
+
+	namespace :pdf do
+
+		task :pdflatex do
+			system 'lualatex ' +
+			       '-shell-escape ' +
+			       'thesis.tex'
+		end
+
+		task :biber do
+			system 'biber --bibencoding=UTF8 thesis'
+		end
+	end
+
+	desc 'build a pdf file (output: build/thesis.pdf)'
+	task :pdf => ['pdf:pdflatex', 'pdf:biber'] do
+		system 'makeindex thesis.nlo -s nomencl.ist -o thesis.nls'
+		Rake::Task["build:pdf:pdflatex"].reenable
+		Rake::Task["build:pdf:pdflatex"].invoke
+		FileUtils.cp 'thesis.pdf', 'build/thesis.pdf'
+	end
+
+end
+
+desc 'removes pdf and temporary files'
+task :clean do
+	rm_f Dir['*.pdf', '*.aux', '*.blg', '*.log']
+end
+
+desc 'show this list (also "rake", "rake -T")'
+task :default do
+	system 'rake -T'
+end
