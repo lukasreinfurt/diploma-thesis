@@ -1,0 +1,12 @@
+- hosts: localhost
+  tasks:
+    - name: update apt
+      apt: update_cache=yes
+    - name: install rake
+      gem: name=rake state=latest
+    - name: install luatex
+      apt: pkg=texlive-latex-base
+    - name: download biber
+      get_url: url=http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/1.8/binaries/Linux/biber-linux_x86_32.tar.gz/download dest=/tmp/biber.tar.gz
+    - name: extract biber
+      action: command tar xzf /tmp/biber.tar.gz -C /usr/bin
