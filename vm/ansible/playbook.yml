@@ -2,11 +2,34 @@
   tasks:
     - name: update apt
       apt: update_cache=yes
+    - name: install unzip
+      apt: pkg=unzip
     - name: install rake
       gem: name=rake state=latest
-    - name: install luatex
-      apt: pkg=texlive-latex-base
+    - name: install setup tools
+      apt: pkg=python-setuptools
+    - name: install pygments
+      easy_install: name=Pygments
+    - name: donwload texlive
+      get_url: url=http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz dest=/tmp/texlive.tar.gz
+    - name: extract texlive
+      action: shell mkdir -p /tmp/texlive && tar xzf /tmp/texlive.tar.gz -C /tmp/texlive --strip-components=1 creates=/tmp/texlive/install-tl
+    - name: install lualatex and tlmgr
+      action: command ./install-tl --profile=/ansible/files/texlive.profile chdir=/tmp/texlive creates=/usr/local/bin/tlmgr
+    - name: install euenc package
+      action: command sudo tlmgr install euenc creates=/usr/local/texlive/2013/texmf-dist/tex/latex/euenc
     - name: download biber
       get_url: url=http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/1.8/binaries/Linux/biber-linux_x86_32.tar.gz/download dest=/tmp/biber.tar.gz
     - name: extract biber
-      action: command tar xzf /tmp/biber.tar.gz -C /usr/bin
+      action: command tar xzf /tmp/biber.tar.gz -C /usr/bin creates=/usr/bin/biber
+    - name: download texliveonfly
+      get_url: url=http://mirrors.ctan.org/support/texliveonfly.zip dest=/tmp/texliveonfly.zip
+    - name: extract texliveonfly
+      action: command unzip -uj /tmp/texliveonfly.zip texliveonfly/texliveonfly.py -d /usr/bin creates=/usr/bin/texliveonfly.py
+    - name: make texliveonfly.py executable
+      file: path=/usr/bin/texliveonfly.py mode=0775
+    - name: change texliveonfly.py default options
+      lineinfile: dest=/usr/bin/texliveonfly.py regexp="^defaultCompiler = " line="defaultCompiler = \"lualatex\""
+    - name: change texliveonfly.py default options
+      lineinfile: dest=/usr/bin/texliveonfly.py regexp="^defaultArguments = " line="defaultArguments = \"-synctex=1 -interaction=nonstopmode -shell-escape\""
+
