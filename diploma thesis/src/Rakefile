@@ -8,9 +8,7 @@ namespace :build do
 	namespace :pdf do
 
 		task :pdflatex do
-			system 'lualatex ' +
-			       '-shell-escape ' +
-			       'thesis.tex'
+			system 'texliveonfly.py thesis.tex'
 		end
 
 		task :biber do
@@ -23,14 +21,13 @@ namespace :build do
 		system 'makeindex thesis.nlo -s nomencl.ist -o thesis.nls'
 		Rake::Task["build:pdf:pdflatex"].reenable
 		Rake::Task["build:pdf:pdflatex"].invoke
-		FileUtils.cp 'thesis.pdf', 'build/thesis.pdf'
 	end
 
 end
 
 desc 'removes pdf and temporary files'
 task :clean do
-	rm_f Dir['*.pdf', '*.aux', '*.blg', '*.log']
+	rm_f Dir['*.aux', '*.bbl', '*.bcf', '*.blg', '*.ilg', '*.lof', '*.log', '*.lol', '*.lot', '*.nlo', '*.nls', '*.out', '*.pdf', '*.pyg', '*.xml', '*.gz', '*.toc']
 end
 
 desc 'show this list (also "rake", "rake -T")'
