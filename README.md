@@ -35,11 +35,15 @@ Now you can run the rake task by executing:
 
 To build a pdf version of this thesis, run:
 
-    rake build
+    sudo rake build
 
 To see all available tasks, run:
 
     rake
+
+To reprovision with Ansible when the VM is already running, execute:
+
+    sudo ansible-playbook /ansible/playbook.yml --connection=local
 
 To stop the VM, run:
 
