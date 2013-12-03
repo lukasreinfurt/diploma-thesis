@@ -1,5 +1,32 @@
-\documentclass[11pt,twoside]{article}
+%
+% Author: Lukas Reinfurt
+%
+
+\newcommand{\thesistitle}{Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments}
+
+\documentclass[paper=a4,
+               fontsize=10pt,
+               DIV=9,
+               listof=totoc,
+               bibliography=totoc,
+               twoside=false]{scrbook}
+
+\input{_settings/packages}
+
 \begin{document}
-\pagestyle{empty}
-Hello Lua\TeX
+
+\setlength{\headsep}{30pt}
+\setlength{\skip\footins}{10pt}
+
+\widowpenalty=5000
+\clubpenalty=5000
+\raggedbottom
+
+\renewcommand\footnotelayout{\scriptsize}
+
+\input{front_matter/_chapter}
+\input{back_matter/_chapter}
+%\addtocontents{toc}{\protect\newpage}
+
+
 \end{document}

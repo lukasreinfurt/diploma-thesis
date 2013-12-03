@@ -1,0 +1,140 @@
+% i18n
+% http://www.ctan.org/tex-archive/macros/latex/required/babel/
+\usepackage[english]{babel}
+
+\hyphenation{data-bases}
+
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+% syntax highlighting with pygments (requires Python)
+% http://code.google.com/p/minted/
+\usepackage[chapter]{minted}
+\renewcommand\listoflistingscaption{List of Listings}
+\providecommand*{\listingautorefname}{Listing}
+\newminted{java}{linenos,
+                 frame=lines,
+                 tabsize=2,
+                 framesep=0.3cm,
+                 fontsize=\footnotesize}
+\newminted{cfg}{linenos,
+                frame=lines,
+                tabsize=2,
+                framesep=0.3cm,
+                fontsize=\footnotesize}
+\newminted{bash}{linenos,
+                  frame=lines,
+                  tabsize=2,
+                  framesep=0.3cm,
+                  fontsize=\footnotesize}
+\definecolor{bashbg}{rgb}{0.1,0.1,0.1}
+\newminted{text}{bgcolor=bashbg,
+                 tabsize=2,
+                 fontsize=\footnotesize}
+
+% generate nomenclatures (used for list of abbreviations)
+% http://www.ctan.org/tex-archive/macros/latex/contrib/nomencl
+\usepackage[refpage,intoc]{nomencl}
+\makenomenclature
+\renewcommand{\nomname}{List of Abbreviations}
+\renewcommand{\nomlabelwidth}{3cm}
+% \nom{Full Text}{abbr.} will print 'Full Text (abbr.)' and add it to the list
+\newcommand*{\nom}[2]{#1 (#2)\nomenclature{#2}{#1}}
+
+% line breaks in urls
+% http://www.ctan.org/tex-archive/macros/latex/contrib/url
+\usepackage[hyphens]{url}
+
+% advanced inline quotes
+% http://www.ctan.org/pkg/csquotes
+\usepackage{csquotes}
+\MakeOuterQuote{"}
+
+% more control over citations
+% http://www.ctan.org/pkg/biblatex
+\usepackage[style=numeric,
+            hyperref=true,
+            backend=biber]{biblatex}
+\addbibresource{back_matter/bib.bib}
+\AtBeginBibliography{\def\UrlFont{\footnotesize\tt}}
+
+% loading images
+% http://ctan.org/pkg/graphicx/
+\usepackage{graphicx}
+
+% display information about a document
+% http://www.ctan.org/tex-archive/macros/latex/contrib/layouts
+\usepackage{layouts}
+
+\usepackage{fontspec}
+
+\setmainfont[Path = _settings/assets/fonts/Roboto/,
+	UprightFont = *-Light,
+	ItalicFont = *-LightItalic,
+	BoldFont = *-Regular,
+	BoldItalicFont = *-Italic
+	]
+{Roboto}
+
+\setmonofont[Path = _settings/assets/fonts/Droid_Sans_Mono/]{DroidSansMono}
+
+\newfontfamily\droidserif[Path = _settings/assets/fonts/Roboto/,
+	UprightFont = *-Bold,
+	ItalicFont = *-BoldItalic,
+	BoldFont = *-Black,
+	BoldItalicFont = *-BlackItalic,
+	]
+{Roboto}
+\addtokomafont{disposition}{\droidserif}
+
+\linespread{1.2}
+
+% options for footnotes
+% http://www.ctan.org/pkg/footmisc
+\usepackage[flushmargin]{footmisc}
+
+% control caption
+% http://www.ctan.org/tex-archive/macros/latex/contrib/caption/
+\usepackage[labelfont=bf]{caption}
+
+% cross-referencing
+% http://www.ctan.org/tex-archive/macros/latex/contrib/hyperref/
+\usepackage[pdfpagelabels, breaklinks, hidelinks]{hyperref}
+\hypersetup{
+	pdftitle = {Diplomarbeit Lukas Reinfurt},
+	pdfsubject = {\thesistitle},
+	pdfauthor = {Lukas Reinfurt},
+	pdfkeywords = {SimTech, Cloud, Bootstrapping},
+	colorlinks = {false},
+	citecolor = {blue},
+	linkcolor = {red},
+	urlcolor  = {green}
+}
+
+% rotating
+% http://www.ctan.org/tex-archive/macros/latex/contrib/rotating
+\usepackage{rotating}
+
+% multirow
+% http://www.ctan.org/tex-archive/macros/latex/contrib/multirow
+\usepackage{multirow}
+
+% dingbat font
+% http://ctan.org/pkg/pifont
+\usepackage{pifont}
+
+% for line breaks in tables
+% http://www.ctan.org/tex-archive/macros/latex/contrib/pbox
+\usepackage{pbox}
+
+% footnotes inside tables
+% http://www.ctan.org/pkg/footnote
+\usepackage{footnote}
+
+% dashed lines
+% http://www.ctan.org/tex-archive/macros/latex/contrib/dashrule
+\usepackage{dashrule}
+
+% print page layout
+% http://www.ctan.org/tex-archive/macros/latex/contrib/layouts
+\usepackage{layouts}
+
