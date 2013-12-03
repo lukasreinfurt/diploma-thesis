@@ -1,1 +1,17 @@
 .vagrant
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.ilg
+*.lof
+*.log
+*.lol
+*.lot
+*.nlo
+*.nls
+*.out
+*.pyg
+*.run.xml
+*.synctex.gz
+*.toc
