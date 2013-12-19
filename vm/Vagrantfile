@@ -2,15 +2,31 @@
 vms = [
 	{
 		:name            => 'dev',
+		:playbook        => 'dev',
 		:box             => 'precise32',
 		:url             => 'http://files.vagrantup.com/precise32.box',
-		:memory          => '512',
+		:memory          => 256,
 		:forwarded_ports => [
 			{:guest => 8080,  :host => 8080}
 		],
 		:synced_folders  => [
 			{:host => './ansible', :guest => '/ansible'},
 			{:host => '../diploma thesis/src', :guest => '/thesis'}
+		]
+	},
+	{
+		:name            => 'opentosca',
+		:playbook        => 'opentosca',
+		:box             => 'precise32',
+		:url             => 'http://files.vagrantup.com/precise32.box',
+		:memory          => 512,
+		:forwarded_ports => [
+			{:guest => 1337,  :host => 1337},
+			{:guest => 8080,  :host => 8080},
+			{:guest => 9443,  :host => 9443}
+		],
+		:synced_folders  => [
+			{:host => './ansible', :guest => '/ansible'}
 		]
 	}
 ]
@@ -35,19 +51,19 @@ Vagrant.configure("2") do |config|
 
 			# Configure VM parameters
 			vm_config.vm.provider :virtualbox do |vb|
-				vb.gui  = false
-				vb.name = vm[:name]
-				vb.customize ["modifyvm", :id, "--memory", vm[:memory] ]
+				vb.gui    = false
+				vb.name   = vm[:name]
+				vb.memory = vm[:memory]
 			end
 
 			# Setup Ansible
-			vm_config.vm.provision :shell, 
+			vm_config.vm.provision :shell,
 				:inline => "sudo apt-get update " +
 				           "&& sudo apt-get -y install python-software-properties " +
 				           "&& sudo add-apt-repository -y ppa:rquillo/ansible " +
 				           "&& sudo apt-get -y install ansible " +
 				           "&& echo localhost > /etc/ansible/hosts " +
-				           "&& sudo ansible-playbook /ansible/playbook.yml --connection=local"
+				           "&& sudo ansible-playbook /ansible/#{vm[:playbook]}.yml --connection=local"
 		end
 	end
 end

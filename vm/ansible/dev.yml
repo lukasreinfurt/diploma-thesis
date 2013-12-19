@@ -15,7 +15,7 @@
     - name: extract texlive
       action: shell mkdir -p /tmp/texlive && tar xzf /tmp/texlive.tar.gz -C /tmp/texlive --strip-components=1 creates=/tmp/texlive/install-tl
     - name: install lualatex and tlmgr
-      action: command ./install-tl --profile=/ansible/files/texlive.profile chdir=/tmp/texlive creates=/usr/local/bin/tlmgr
+      action: command install-tl --profile=/ansible/files/texlive.profile chdir=/tmp/texlive creates=/usr/local/bin/tlmgr
     - name: install euenc package
       action: command sudo tlmgr install euenc creates=/usr/local/texlive/2013/texmf-dist/tex/latex/euenc
     - name: download biber
