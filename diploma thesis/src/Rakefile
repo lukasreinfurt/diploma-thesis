@@ -16,11 +16,12 @@ namespace :build do
 		end
 	end
 
-	desc 'build a pdf file (output: build/thesis.pdf)'
+	desc 'build a pdf file (output: thesis.pdf)'
 	task :pdf => ['pdf:pdflatex', 'pdf:biber'] do
 		system 'makeindex thesis.nlo -s nomencl.ist -o thesis.nls'
 		Rake::Task["build:pdf:pdflatex"].reenable
 		Rake::Task["build:pdf:pdflatex"].invoke
+		FileUtils.cp 'thesis.pdf', '../Diplomarbeit - Lukas Reinfurt - Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments.pdf'
 	end
 
 end
