@@ -11,7 +11,7 @@ vms = [
 		],
 		:synced_folders  => [
 			{:host => './ansible', :guest => '/ansible'},
-			{:host => '../diploma thesis/', :guest => '/thesis'}
+			{:host => '../diploma thesis', :guest => '/thesis'}
 		]
 	},
 	{
