@@ -9,7 +9,7 @@ namespace :build do
 
 		desc 'build with texliveonfly tp install missing packages'
 		task :texliveonfly do
-			system 'texliveonfly.py thesis.tex'
+			system 'texliveonfly.py -c lualatex -a "-synctex=1 -interaction=batchmode -shell-escape" thesis.tex'
 		end
 
 		desc 'build with pplatex for prettier output'
