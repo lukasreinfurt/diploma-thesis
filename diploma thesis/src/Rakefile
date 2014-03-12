@@ -18,7 +18,7 @@ namespace :build do
 		end
 
 		task :biber do
-			system 'biber --bibencoding=UTF8 thesis'
+			system 'biber --quiet --bibencoding=UTF8 thesis'
 		end
 	end
 
