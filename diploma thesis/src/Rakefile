@@ -3,37 +3,54 @@ require 'fileutils'
 desc 'build a pdf file'
 task :build => ['build:pdf']
 
+def generateSeparator(headline='', newlineBegin=1, newlineEnd=1, char='#', length=79)
+	times1 = (length - headline.length - 2) / 2.0
+	times2 = times1.ceil
+	"\n" * newlineBegin + char * times1 + " #{headline} " + char * times2 + "\n" * (newlineEnd + 1)
+end
+
 namespace :build do
 
 	namespace :pdf do
 
-		desc 'build with texliveonfly tp install missing packages'
+		# build with texliveonfly to install missing packages
 		task :texliveonfly do
+			puts generateSeparator('TEXLIVEONFLY', 5)
 			system 'texliveonfly.py -c lualatex -a "-synctex=1 -interaction=batchmode -shell-escape" thesis.tex'
 		end
 
-		desc 'build with pplatex for prettier output'
+		task :biber do
+			puts generateSeparator('BIBER', 2)
+			puts "INFO - Biber runs in quiet mode. See 'thesis.blg' for logs."
+			system 'biber --quiet --bibencoding=UTF8 thesis'
+		end
+
+		task :makeindex do
+			puts generateSeparator('MAKEINDEX')
+			puts "INFO - Makeindex runs in quiet mode. See 'thesis.ilg' for logs."
+			system 'makeindex thesis.nlo -q -s nomencl.ist -o thesis.nls'
+		end
+
+		# build with pplatex for prettier output
 		task :pplatex do
+			puts generateSeparator('PPLATEX')
 			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=nonstopmode -shell-escape thesis.tex'
 		end
 
-		task :biber do
-			system 'biber --quiet --bibencoding=UTF8 thesis'
-		end
 	end
 
-	desc 'build a pdf file (output: thesis.pdf)'
-	task :pdf => ['pdf:texliveonfly', 'pdf:biber'] do
-		system 'makeindex thesis.nlo -q -s nomencl.ist -o thesis.nls'
-		Rake::Task["build:pdf:pplatex"].invoke
+	task :pdf => ['pdf:texliveonfly', 'pdf:biber', 'pdf:makeindex', 'pdf:pplatex'] do
 		FileUtils.cp 'thesis.pdf', '../Diplomarbeit - Lukas Reinfurt - Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments.pdf'
+		puts generateSeparator('DONE', 0)
 	end
 
 end
 
 desc 'removes pdf and temporary files'
 task :clean do
+	puts generateSeparator('CLEAN')
 	rm_f Dir['*.aux', '*.bbl', '*.bcf', '*.blg', '*.ilg', '*.lof', '*.log', '*.lol', '*.lot', '*.nlo', '*.nls', '*.out', '*.pdf', '*.pyg', '*.xml', '*.gz', '*.toc']
+	puts generateSeparator('DONE')
 end
 
 desc 'show this list (also "rake", "rake -T")'
