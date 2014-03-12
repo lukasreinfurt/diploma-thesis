@@ -14,5 +14,6 @@
 *.pyg
 *.run.xml
 *.synctex.gz
+*.synctex.gz(busy)
 *.toc
 /diploma thesis/src/thesis.pdf
