@@ -1,0 +1,5 @@
+- name: install jdk
+  apt: pkg=openjdk-7-jdk
+
+- name: install maven
+  apt: pkg=maven

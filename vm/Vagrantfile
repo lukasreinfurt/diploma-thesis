@@ -1,14 +1,12 @@
 # Multiple VMs can be defined here
 vms = [
 	{
-		:name            => 'dev',
-		:playbook        => 'dev',
+		:name            => 'thesis_dev',
+		:playbook        => 'thesis_dev',
 		:box             => 'precise32',
 		:url             => 'http://files.vagrantup.com/precise32.box',
 		:memory          => 256,
-		:forwarded_ports => [
-			{:guest => 8080,  :host => 8080}
-		],
+		:forwarded_ports => [],
 		:synced_folders  => [
 			{:host => './ansible', :guest => '/ansible'},
 			{:host => '../diploma thesis', :guest => '/thesis'}
@@ -27,6 +25,18 @@ vms = [
 		],
 		:synced_folders  => [
 			{:host => './ansible', :guest => '/ansible'}
+		]
+	},
+	{
+		:name            => 'impl_dev',
+		:playbook        => 'impl_dev',
+		:box             => 'precise32',
+		:url             => 'http://files.vagrantup.com/precise32.box',
+		:memory          => 256,
+		:forwarded_ports => [],
+		:synced_folders  => [
+			{:host => './ansible', :guest => '/ansible'},
+			{:host => '../implementation', :guest => '/impl'}
 		]
 	}
 ]
@@ -57,13 +67,26 @@ Vagrant.configure("2") do |config|
 			end
 
 			# Setup Ansible
-			vm_config.vm.provision :shell,
-				:inline => "sudo apt-get update " +
-				           "&& sudo apt-get -y install python-software-properties " +
-				           "&& sudo add-apt-repository -y ppa:rquillo/ansible " +
-				           "&& sudo apt-get -y install ansible " +
-				           "&& echo localhost > /etc/ansible/hosts " +
-				           "&& sudo ansible-playbook /ansible/#{vm[:playbook]}.yml --connection=local"
+			$setup_script = <<-SCRIPT
+			if hash ansible-playbook 2>/dev/null; then
+				echo "Ansible installation found."
+			else
+				echo "No Ansible installation found. Installing now...";
+				sudo apt-get update;
+				sudo apt-get -y install python-software-properties;
+				sudo apt-get -y install ansible;
+				echo localhost > /etc/ansible/hosts;
+			fi
+			SCRIPT
+
+			vm_config.vm.provision :shell, :inline => $setup_script
+
+			# Run Ansible
+			$run_script = <<-SCRIPT
+			sudo ansible-playbook /ansible/#{vm[:playbook]}.yml
+			SCRIPT
+
+			vm_config.vm.provision :shell, :inline => $run_script
 		end
 	end
 end
