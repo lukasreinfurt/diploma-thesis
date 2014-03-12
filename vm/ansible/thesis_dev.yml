@@ -51,3 +51,8 @@
     - name: change texliveonfly.py default options
       lineinfile: dest=/usr/bin/texliveonfly.py regexp="^defaultArguments = " line="defaultArguments = \"-synctex=1 -interaction=nonstopmode -shell-escape\""
 
+    - name: donwload pplatex
+      get_url: url=http://dl.dropbox.com/u/12697903/pplatex/pplatex-1.0-rc1-linux.zip dest=/tmp/pplatex.zip
+
+    - name: extract pplatex
+      command: unzip -u /tmp/pplatex.zip -d /opt creates=/opt/pplatex-1.0-rc1

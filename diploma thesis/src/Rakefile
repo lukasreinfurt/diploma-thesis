@@ -7,8 +7,14 @@ namespace :build do
 
 	namespace :pdf do
 
-		task :pdflatex do
+		desc 'build with texliveonfly tp install missing packages'
+		task :texliveonfly do
 			system 'texliveonfly.py thesis.tex'
+		end
+
+		desc 'build with pplatex for prettier output'
+		task :pplatex do
+			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=nonstopmode -shell-escape thesis.tex'
 		end
 
 		task :biber do
@@ -17,10 +23,9 @@ namespace :build do
 	end
 
 	desc 'build a pdf file (output: thesis.pdf)'
-	task :pdf => ['pdf:pdflatex', 'pdf:biber'] do
+	task :pdf => ['pdf:texliveonfly', 'pdf:biber'] do
 		system 'makeindex thesis.nlo -s nomencl.ist -o thesis.nls'
-		Rake::Task["build:pdf:pdflatex"].reenable
-		Rake::Task["build:pdf:pdflatex"].invoke
+		Rake::Task["build:pdf:pplatex"].invoke
 		FileUtils.cp 'thesis.pdf', '../Diplomarbeit - Lukas Reinfurt - Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments.pdf'
 	end
 
