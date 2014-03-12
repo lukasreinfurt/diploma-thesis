@@ -1,6 +1,0 @@
-- hosts: localhost
-  tasks:
-    - name: update apt
-      apt: update_cache=yes
-    - name: install OpenTOSCA Container
-      shell: sudo wget -qO- http://install.opentosca.de | sh

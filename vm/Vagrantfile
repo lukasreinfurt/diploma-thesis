@@ -13,21 +13,6 @@ vms = [
 		]
 	},
 	{
-		:name            => 'opentosca',
-		:playbook        => 'opentosca',
-		:box             => 'precise32',
-		:url             => 'http://files.vagrantup.com/precise32.box',
-		:memory          => 512,
-		:forwarded_ports => [
-			{:guest => 1337,  :host => 1337},
-			{:guest => 8080,  :host => 8080},
-			{:guest => 9443,  :host => 9443}
-		],
-		:synced_folders  => [
-			{:host => './ansible', :guest => '/ansible'}
-		]
-	},
-	{
 		:name            => 'impl_dev',
 		:playbook        => 'impl_dev',
 		:box             => 'precise32',
