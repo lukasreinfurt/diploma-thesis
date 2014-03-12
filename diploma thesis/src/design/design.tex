@@ -76,7 +76,7 @@ The remote component has to be able to provision other components into the same 
 Since itself can be located in any cloud environment, it has to be able to do this in any cloud environment.
 Independent from this, it has to be able to provision to any environment that the user/service package chooses.
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
-We discuss plugins in detail in \autoref{design:plugins}.
+We discuss plugins in detail in \autoref{design:extensibility}.
 
 A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
 More on this in \autoref{design:communication}
@@ -101,6 +101,7 @@ Therefore we can't decide yet if this architecture should be used.
 \textcolor{red}{Decide on one architecture}
 
 \subsection{Extensibility}
+\label{design:extensibility}
 
 The requirements for the bootware component state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 This requirement is intentionally vague to allow to select a fitting extension mechanism during the design process.
@@ -216,4 +217,5 @@ This is not necessarily bad but might show that there will be no future developm
 \nom{OSGi}{Open Service Gateway initiative}\footref{osgi} is a plugin framework standard developed by OSGi Alliance.
 It provides a general-purpose Java framework that supports the deployment of extensible bundles~\autocite{osgi:spec}.
 
-
+\subsection{Communication}
+\label{design:communication}
