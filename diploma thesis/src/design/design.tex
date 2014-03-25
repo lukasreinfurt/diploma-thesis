@@ -5,7 +5,7 @@
 The first question that has to be answered is whether or not it makes sense to divide the bootware component into two or more cooperating components, i.e. a server client division or a similar structure.
 As described in \autoref{related:ondemand} on page \pageref{related:ondemand}, the proposed architecture initially only envisioned one bootware component.
 This architecture was expanded with the introduction of the provisioning manager, as described in \autoref{related:dynamic} on page \pageref{related:dynamic}.
-We will now discuss the viability of these architectures.b
+We will now discuss the viability of these architectures.
 
 \subsubsection{Single Local Component}
 
@@ -58,7 +58,7 @@ The second case would increase monetary and management costs.
 	\centering
 	\includegraphics[resolution=600]{design/assets/simple_2_tier}
 	\caption{Simplified overview of the 2-tier architecture}
-	\label{image:single_2_tier}
+	\label{image:2_tier}
 \end{figure}
 
 Next, we take a look at a 2-tier architecture, where the bootware is divided into two components.
@@ -87,18 +87,22 @@ More on this in \autoref{design:communication}
 	\centering
 	\includegraphics[resolution=600]{design/assets/simple_clone}
 	\caption{Simplified overview of the cloned component architecture}
-	\label{image:single_clone}
+	\label{image:clone}
 \end{figure}
 
 This architecture can be seen as an alternative form of the 2-tier architecture described in \autoref{design:division:2tier}.
-In this case there are also two parts working together and the remote part does the most of the work.
+In this case there are also two parts working together and the remote part does most of the work.
 However, the local and the remote components are identical.
 Instead of provisioning a bigger component in a remote environment, the local component clones itself.
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
 On the other hand, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
 Therefore we can't decide yet if this architecture should be used.
 
-\textcolor{red}{Decide on one architecture}
+\subsubsection{Decision}
+
+Of the four alternative presented here, alternative three - the 2-tier architecture - makes the most sense.
+Therefore it is selected as the alternative of choice and used for further discussion.
+We do however retain the option to transform it into alternative four if this seems advantageous.
 
 \subsection{Extensibility}
 \label{design:extensibility}
@@ -106,13 +110,15 @@ Therefore we can't decide yet if this architecture should be used.
 The requirements for the bootware component state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 This requirement is intentionally vague to allow to select a fitting extension mechanism during the design process.
 
+\subsubsection{Extension Mechanisms}
+
 \textcolor{red}{other mechanisms?}
 
 One possibility that would satisfy this criteria is to design interfaces for all extension points of the bootware component.
 New cloud environments, provisioning engines, or other extension could then implement these interfaces.
 The disadvantage of this approach is that the whole bootware component has to be recompiled, redistributed and redeployed if one extension is added or changed.
 
-To remove this disadvantage, a more flexible architecture is needed, for example a plugin architecture. (textcolor{red}{pattern?})
+To remove this disadvantage, a more flexible architecture is needed, for example a plugin architecture. (\textcolor{red}{pattern?})
 Interfaces for the extension points still exist but the extension are no longer part of the main bootware component.
 They are compiled separately into plugins that can be loaded into the main bootware component on the fly.
 There are several possibilities to realize such an architecture.
@@ -124,6 +130,8 @@ For one, we would reinvent the wheel, since multiple such frameworks already exi
 It would also shift resources away from the actual goal of this thesis, which is designing the bootware component.
 Furthermore it would require a deep understanding of the language used for the implementation (\textcolor{red}{in this case Java}), which is not necessarily given.
 Therefore it seems more reasonable to use one of the already existing plugin frameworks.Three such alternatives will be compared next. (\textcolor{red}{more?})
+
+\subsubsection{Plugin Frameworks}
 
 \begin{savenotes}
 \begin{table}[!htpb]
@@ -180,8 +188,6 @@ Therefore it seems more reasonable to use one of the already existing plugin fra
 
 		\cline{2-5}
 
-		% \multirow{2}{*}{\pbox{2cm}{\vspace{0.9em} \textit{Application} \\ \textit{Servers}}}
-
 	\end{tabular}
 	\caption{Feature comparison of Java plugin frameworks}
 	\label{table:plugin_comparison}
@@ -217,5 +223,146 @@ This is not necessarily bad but might show that there will be no future developm
 \nom{Open Service Gateway initiative}{OSGi}\footref{osgi} is a plugin framework standard developed by OSGi Alliance.
 It provides a general-purpose Java framework that supports the deployment of extensible bundles~\autocite{osgi:spec}.
 
+\textcolor{red}{Decision}
+
+\subsubsection{Plugin Repository}
+
+Now that we have introduced plugins we face new problems.
+\autoref{image:plugins} shows the current architecture, where both bootware components use their own plugins.
+If a plugin is added or updated, the user has to manually copy this plugin to the right folder of one or both of the bootware components.
+Furthermore, if both components use the same plugins, which they will (cloud plugins), we will have duplicate plugins scattered around.
+This is inefficient, probably annoying for the user and possibly dangerous (\textcolor{red}{other world, fehler hervorrufend}) if plugins get out of sync.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_plugins}
+	\caption{Simplified overview of the 2-tier architecture with plugins}
+	\label{image:plugins}
+\end{figure}
+
+To remedy this situation we introduce a central plugin repository, as shown in \autoref{image:plugin_repository}.
+This repository holds all plugins of both components so it eliminates duplicate plugins.
+If plugins are added or modified it has only to be done in one place.
+Plugin synchronization can happen automatically when the bootware components start, so that the user is no longer involved in plugin management.
+The repository also enables easy plugin sharing, which was cumbersome earlier.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_plugin_repository}
+	\caption{Simplified overview of the 2-tier architecture with a plugin repository}
+	\label{image:plugin_repository}
+\end{figure}
+
+While a central plugin repository is a sensible addition to the proposed bootware architecture, its design and implementation are out of scope of this thesis.
+
 \subsection{Communication}
 \label{design:communication}
+
+Since we will use a 2-tiered approach for the bootware component, we now have to decide, how the communication between the two components will work.
+There are several factors that impact this decision.
+
+Communication between the components should be as simple as possible, but has to support some critical features.
+
+Since the provisioning processes kicked off by the bootware can potentially take a lot of time to finish (in the range of minutes to hours), asynchronous communication should be used between the components to avoid timeouts and blocking resources.
+
+For the same reason, there should be some mechanism to get feedback on the current status during a long running provisioning process.
+
+There will be other components that have to call the bootware to start some provisioning process, so communication has to be open for other parties.
+
+The communication with the bootware components will contain sensitive data, for example login information for cloud providers that the bootware needs to do its job, but has to be provided from the outside on a call to call basis.
+This information has to be transported securely to prevent malicious or fraudulent attacks.
+The selected communication method therefore has to support some sort of security mechanisms, ideally end-to-end security via message encryption.
+While these security mechanisms will not be used in this thesis due to time constraints, selecting the right communication method is still critical for future development.
+
+Since this whole project is concerned with services, it \textcolor{red}{liegt nahe} to use web service calls and returns as main communication method, internally as well as  externally.
+This way we offer a consistent interface for all components to use.
+\autoref{image:webservice} shows the addition of asynchronous web service call and return communication to the proposed architecture.
+Using a web service with soap messaging also gives us access to Web Service Security Framework, which supports end-to-end security with encryption and signatures.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_webservice}
+	\caption{Simplified overview of the 2-tier architecture with asynchronous web service communication}
+	\label{image:webservice}
+\end{figure}
+
+Web Services also support asynchronous communication so that long running provisioning processes won't pose a problem.
+We do however still need information during those long running processes to give the user some feedback.
+This can't (\textcolor{red}{???}) be accomplished by this simple request/response pattern.
+For this, a secondary communication mechanism which supports sending multiple feedback messages has to be used.
+
+Since it is not necessary for the successful use of the bootware it would make sense to implement this secondary communication mechanism as a plugin.
+This would allow us to add arbitrary communication plugins to the bootware depending on future needs.
+
+One natural choice for this is the PubSub pattern implemented by some messaging middleware.
+Using this pattern, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
+\autoref{image:queue} shows an additional message queue.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_queue}
+	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and a messaging queue communication}
+	\label{image:queue}
+\end{figure}
+
+\subsection{Internal Communication}
+
+We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugin.
+Ideally, every plugin will be able to react to events from the bootware.
+These event could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
+Since a plugin doesn't know about other plugins, it can't listen for events at other plugins directly.
+The only known constant to a plugin is the bootware core.
+Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
+This essentially describes the publish-subscribe pattern (\textcolor{red}{ref}).
+
+\subsubsection{PubSub}
+
+The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant who aren't necessarily mutually exclusive: Event busses (or message broker), publishers, and subscribers.
+The event bus sits at the center of the communication.
+He receives messages from publishers and distributes them to all subscribers that have voiced their interest in messages of a certain type by subscribing at the event bus.
+
+Using this pattern in our bootware component, we would create an event bus at the bootware core and plugins, as well as other parts of the core, could subscribe at this event bus and also publish messages through this event bus.
+
+\subsubsection{PubSub Libraries}
+
+Many of the well know Messaging Middlewares offer support for PubSub, for example \textcolor{red}{ActiveMQ,...}.
+But, since we are looking for an internal communication mechanism only, all of these solutions are somewhat overpowered.
+We don't need \textcolor{red}{guaranteed delivery, message queuing, scalability,...}.
+Instead, we need a lightweight in-memory solution.
+Therefor we will ignore the middleware heavyweights and look for smaller, more light weight PubSub libraries.
+
+\begin{savenotes}
+\begin{table}[!htpb]
+	\centering
+	\small
+	\begin{tabular}{rl|ccccc}
+
+		&
+		& \multicolumn{5}{c}{\textit{PubSub Libraries}} \\
+
+		&
+		& \begin{sideways} \textbf{MBassador\footnote{\url{https://github.com/bennidi/mbassador}\label{mbassasor}}} \end{sideways}
+		& \begin{sideways} \textbf{Guava Event Bus\footnote{\url{https://code.google.com/p/guava-libraries/wiki/EventBusExplained}\label{guava}}} \end{sideways}
+		& \begin{sideways} \textbf{Simple Java Event Bus\footnote{\url{https://code.google.com/p/simpleeventbus/}\label{simpleeventbus}}} \end{sideways}
+		& \begin{sideways} \textbf{EventBus\footnote{\url{http://eventbus.org/}\label{eventbus}}} \end{sideways}
+		& \begin{sideways} \textbf{Mycila PubSub\footnote{\url{https://github.com/mycila/pubsub}\label{mycilapubsub}}} \end{sideways} \\
+
+		\cline{2-7}
+
+		\multirow{1}{*}{\textit{Features}}
+
+		& \textbf{Something}
+		& \ding{55}    % mbassador
+		& \ding{55}    % guava
+		& \ding{51}    % simpleeventbus
+		& \ding{51}    % eventbus
+		& \ding{51} \\ % mycila
+
+		\cline{2-7}
+
+	\end{tabular}
+	\caption{Feature comparison of Java PubSub libraries}
+	\label{table:pubsub_comparison}
+\end{table}
+\end{savenotes}
+
