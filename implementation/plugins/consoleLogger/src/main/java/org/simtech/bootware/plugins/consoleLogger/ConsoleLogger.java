@@ -10,7 +10,7 @@ import net.engio.mbassy.common.FilteredMessage;
 
 public class ConsoleLogger extends BasePlugin {
 
-	@Handler(priority = 10)
+	@Handler
 	public void handle(BaseEvent event) {
 		System.out.println(event.getTimestamp() + ": " + event.getMessage());
 	}
