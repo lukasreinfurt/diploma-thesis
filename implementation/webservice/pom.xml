@@ -1,0 +1,111 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>Bootware Web Service</name>
+
+	<parent>
+		<groupId>org.simtech</groupId>
+		<artifactId>bootware</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<groupId>org.simtech.bootware</groupId>
+	<artifactId>webservice</artifactId>
+	<version>0.0.1</version>
+
+	<build>
+		<plugins>
+
+			<!-- disable default jar generation -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- <plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<genWsdl>true</genWsdl>
+					<inlineSchemas>true</inlineSchemas>
+					<resourceDestDir>target/generated-resources</resourceDestDir>
+					<sei>org.simtech.bootware.webservice.Hello</sei>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsgen</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> -->
+
+			<!-- generate service.wsdl from java class -->
+			<!-- <plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-java2wsdl-maven-plugin</artifactId>
+				<version>1.6.2</version>
+				<configuration>
+					<className>org.simtech.bootware.webservice.Hello</className>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>java2wsdl</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> -->
+
+			<!-- <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.simtech.bootware.webservice.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin> -->
+
+			<!-- package as .aar -->
+			<plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-aar-maven-plugin</artifactId>
+				<version>1.6.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.simtech.bootware.webservice.Main</mainClass>
+						</manifest>
+					</archive>
+				<!-- <servicesXmlFile>target/generated-sources/axis2/wsdl2code/resources/services.xml</servicesXmlFile> -->
+					<!-- <wsdlFile>target/generated-resources/HelloService.wsdl</wsdlFile> -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>aar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
