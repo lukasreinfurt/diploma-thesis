@@ -14,7 +14,6 @@ public class Main {
 		StateMachine stateMachine = new StateMachine(eventBus);
 		stateMachine.run();
 
-		pluginManager.unloadPlugin("plugins/plugin1-0.0.1.jar");
 		pluginManager.stop();
 
 	}

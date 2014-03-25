@@ -1,7 +1,9 @@
 package org.simtech.bootware.core;
 
+import java.util.Map;
 import java.util.HashMap;
 import java.util.ServiceLoader;
+import java.util.Iterator;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -78,7 +80,21 @@ public class PluginManager {
 		}
 	}
 
+	public void unloadAllPlugins() {
+		Iterator iterator = installedBundles.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry entry = (Map.Entry) iterator.next();
+			try {
+				installedBundles.get(entry.getKey()).uninstall();
+				iterator.remove();
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void stop() {
+		unloadAllPlugins();
 		try {
 			framework.stop();
 		} catch (BundleException e) {
