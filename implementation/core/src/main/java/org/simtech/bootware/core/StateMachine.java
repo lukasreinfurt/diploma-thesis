@@ -52,6 +52,7 @@ public class StateMachine {
 				break;
 			}
 		}
+		stateMachine.terminate(10);
 	}
 
 }
