@@ -16,4 +16,5 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.toc
-/diploma thesis/src/thesis.pdf
+*.thesis.pdf
+target
