@@ -15,6 +15,13 @@
 				<include>**/*.*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>../statemachines/src</directory>
+			<outputDirectory>statemachines</outputDirectory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 	<moduleSets>
 		<moduleSet>

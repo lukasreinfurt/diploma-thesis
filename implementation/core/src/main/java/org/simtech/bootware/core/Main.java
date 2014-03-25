@@ -11,7 +11,7 @@ public class Main {
 		pluginManager.loadPlugin("plugins/consoleLogger-0.0.1.jar");
 		pluginManager.loadPlugin("plugins/plugin1-0.0.1.jar");
 
-		StateMachine stateMachine = new StateMachine(eventBus);
+		StateMachine stateMachine = new StateMachine(eventBus, "statemachines/default.scxml");
 		stateMachine.run();
 
 		pluginManager.stop();

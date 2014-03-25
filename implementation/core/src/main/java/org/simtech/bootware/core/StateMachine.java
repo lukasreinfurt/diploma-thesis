@@ -1,6 +1,8 @@
 package org.simtech.bootware.core;
 
-import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
+import java.io.File;
+
+import org.squirrelframework.foundation.fsm.UntypedStateMachineImporter;
 import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
 import org.squirrelframework.foundation.fsm.UntypedStateMachine;
 import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
@@ -26,33 +28,30 @@ public class StateMachine {
 
 	}
 
-	public StateMachine(EventBus eventBus) {
-		this.eventBus = eventBus;
-		UntypedStateMachineBuilder builder = StateMachineBuilderFactory.create(Machine.class);
-
-		builder.transit().fromAny().toAny().onAny().callMethod("transition");
-
-		builder.externalTransition().from("A").to("B").on(FSMEvent.Continue);
-		builder.externalTransition().from("A").to("A'").on(FSMEvent.Abort);
-
-		builder.externalTransition().from("B").to("C").on(FSMEvent.Continue);
-		builder.externalTransition().from("B").to("B'").on(FSMEvent.Abort);
-
-		stateMachine = builder.newStateMachine("A");
+	public StateMachine(EventBus eventBus, String path) {
+		this.eventBus                      = eventBus;
+		File importFile                    = new File(path);
+		UntypedStateMachineBuilder builder = new UntypedStateMachineImporter().importDefinition(importFile);
+		stateMachine                       = builder.newAnyStateMachine("A");
 	}
 
 	public void run() {
 		stateMachine.start(10);
 		while(true) {
-			SimpleEvent event = new SimpleEvent();
-			event.setMessage(stateMachine.getCurrentState().toString());
+			Object currentState = stateMachine.getCurrentState();
+			SimpleEvent event   = new SimpleEvent();
+			event.setMessage(currentState.toString());
 			eventBus.publish(event);
-			stateMachine.fire(FSMEvent.Continue, 10);
-			if (stateMachine.getCurrentState() == "C") {
+			if (currentState.toString().equals("C")) {
 				break;
 			}
+			stateMachine.fire(FSMEvent.Continue, 10);
 		}
 		stateMachine.terminate(10);
+	}
+
+	public void export() {
+		System.out.println(stateMachine.exportXMLDefinition(true));
 	}
 
 }

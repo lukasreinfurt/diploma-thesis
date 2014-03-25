@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml
+	initial="A"
+	version="1.0"
+	xmlns="http://www.w3.org/2005/07/scxml"
+	xmlns:sqrl="http://squirrelframework.org/squirrel">
+
+	<sqrl:fsm
+		id="default"
+		fsm-type="org.simtech.bootware.core.StateMachine$Machine"
+		state-type="java.lang.String"
+		event-type="org.simtech.bootware.core.StateMachine$FSMEvent"
+		context-type="java.lang.Integer"
+		context-insensitive="true"/>
+
+	<state id="A">
+
+		<transition
+			target="B"
+			event="Continue"
+			sqrl:priority="1"
+			sqrl:type="EXTERNAL"
+			cond="instance#org.squirrelframework.foundation.fsm.Conditions$Always">
+			<sqrl:action content="method#transition:0"/>
+		</transition>
+
+		<transition
+			target="A'"
+			event="Abort"
+			sqrl:priority="1"
+			sqrl:type="EXTERNAL"
+			cond="instance#org.squirrelframework.foundation.fsm.Conditions$Always">
+			<sqrl:action content="method#transition:0"/>
+		</transition>
+
+	</state>
+
+	<state id="B'"/>
+
+	<state id="B">
+
+		<transition
+			target="C"
+			event="Continue"
+			sqrl:priority="1"
+			sqrl:type="EXTERNAL"
+			cond="instance#org.squirrelframework.foundation.fsm.Conditions$Always">
+			<sqrl:action content="method#transition:0"/>
+		</transition>
+
+		<transition
+			target="B'"
+			event="Abort"
+			sqrl:priority="1"
+			sqrl:type="EXTERNAL"
+			cond="instance#org.squirrelframework.foundation.fsm.Conditions$Always">
+			<sqrl:action content="method#transition:0"/>
+		</transition>
+
+	</state>
+
+	<state id="A'"/>
+
+	<state id="C"/>
+</scxml>
