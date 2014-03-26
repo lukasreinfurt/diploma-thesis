@@ -17,5 +17,5 @@
 *.synctex.gz(busy)
 *.toc
 *.txt
-*.thesis.pdf
+thesis.pdf
 target
