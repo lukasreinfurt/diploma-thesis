@@ -11,6 +11,26 @@ end
 
 namespace :build do
 
+	namespace :tex do
+
+		task :latexpand do
+			system 'perl tools/latexpand/latexpand --output=tmp/thesis.tex source/thesis.tex'
+		end
+
+	end
+
+	namespace :txt do
+
+		task :detex do
+			system '/opt/opendetex/delatex -e figure thesis.tex > thesis.txt'
+		end
+
+		task :pdftotext do
+			system 'pdftotext -nopgbrk thesis.pdf thesis.txt'
+		end
+
+	end
+
 	namespace :pdf do
 
 		# build with texliveonfly to install missing packages
@@ -34,7 +54,7 @@ namespace :build do
 		# build with pplatex for prettier output
 		task :pplatex do
 			puts generateSeparator('PPLATEX')
-			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=nonstopmode -shell-escape thesis.tex'
+			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=batchmode -shell-escape thesis.tex'
 		end
 
 	end
@@ -44,6 +64,21 @@ namespace :build do
 		puts generateSeparator('DONE', 0)
 	end
 
+end
+
+namespace :check do
+
+	task :languagetool => ['build:txt:detex'] do
+		system 'java -jar /opt/LanguageTool-2.4/languagetool-commandline.jar thesis.txt'
+	end
+
+end
+
+desc 'install missing packages with texliveonfly'
+task :install do
+	puts generateSeparator('TEXLIVEONFLY', 5)
+	system 'texliveonfly.py -c lualatex -a "-synctex=1 -interaction=nonstopmode -shell-escape" thesis.tex'
+	puts generateSeparator('DONE')
 end
 
 desc 'removes pdf and temporary files'
