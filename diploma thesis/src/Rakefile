@@ -54,7 +54,7 @@ namespace :build do
 		# build with pplatex for prettier output
 		task :pplatex do
 			puts generateSeparator('PPLATEX')
-			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=batchmode -shell-escape thesis.tex'
+			system '/opt/pplatex-1.0-rc1/bin/pplatex -c lualatex -- -synctex=1 -interaction=nonstopmode -shell-escape thesis.tex'
 		end
 
 	end
