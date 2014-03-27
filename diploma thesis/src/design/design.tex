@@ -133,10 +133,10 @@ Therefore it seems more reasonable to use one of the already existing plugin fra
 
 \subsubsection{Plugin Frameworks}
 
-\begin{savenotes}
-\begin{table}[!htpb]
+\begingroup
 	\centering
-	\begin{tabu}{rl|[0.5pt]ccc}
+	\captionsetup{type=table}
+	\begin{tabu}[!htbp]{rl|[0.5pt]ccc}
 
 		&
 		& \multicolumn{3}{c}{\textit{Plugin Frameworks}} \\
@@ -190,8 +190,7 @@ Therefore it seems more reasonable to use one of the already existing plugin fra
 	\end{tabu}
 	\caption{Feature comparison of Java plugin frameworks}
 	\label{table:plugin_comparison}
-\end{table}
-\end{savenotes}
+\endgroup
 
 All of the frameworks that we compare here offer the basic functionality that we need to extend the core bootloader component, i.e. the developer defines interfaces that then are implemented by one or more plugins.
 These plugins are compiled separately from the main component and are then packaged in \textit{.jar} files for distribution.
@@ -330,10 +329,10 @@ We don't need \textcolor{red}{guaranteed delivery, message queuing, scalability,
 Instead, we need a lightweight in-memory solution.
 Therefor we will ignore the middleware heavyweights and look for smaller, more light weight PubSub libraries.
 
-\begin{savenotes}
-\begin{table}[!htpb]
+\begingroup
 	\centering
-	\begin{tabu}{rl|[0.5pt]ccccc}
+	\captionsetup{type=table}
+	\begin{tabu}[!htbp]{rl|[0.5pt]ccccc}
 
 		&
 		& \multicolumn{5}{c}{\textit{PubSub Libraries}} \\
@@ -361,6 +360,4 @@ Therefor we will ignore the middleware heavyweights and look for smaller, more l
 	\end{tabu}
 	\caption{Feature comparison of Java PubSub libraries}
 	\label{table:pubsub_comparison}
-\end{table}
-\end{savenotes}
-
+\endgroup
