@@ -17,5 +17,7 @@
 *.synctex.gz(busy)
 *.toc
 *.txt
+*.~vsdx
+*.~vstx
 target
 /diploma thesis/src/thesis.pdf
