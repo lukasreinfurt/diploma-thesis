@@ -16,9 +16,9 @@ Their approach for dynamic provisioning and deprovisioning of workflow middlewar
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{related/assets/architecture_full_original}
+	\includegraphics[resolution=600]{related/assets/original_architecture}
 	\caption{Proposed architecture~\autocite[based on][]{provisioning:ondemand}.}
-	\label{image:architecture_full_original}
+	\label{image:original_architecture}
 \end{figure}
 
 The architecture they present can be separated into a local part and a cloud part, as well as different phases. In the modeling phase, a scientist uses local modeling and monitoring tools in combination with cloud hosted user and service repositories and a service registry to create a workflow. These components are always running. When he deploys the workflow, the local bootware component kicks of the on demand provisioning process and therefore the second phase, called middlware runtime phase. In this phase, the bootloader deploys a provisioning engine in the cloud, which in turn deploys the workflow middleware. Once the middleware is up and running, the workflow can be executed. During the execution, the ESB receives service calls from the workflow engine. Services, that are not running at this time can then be provisioned by the provisioning engine. This takes place in the third phase, the service runtime phase~\autocite{provisioning:ondemand}.
