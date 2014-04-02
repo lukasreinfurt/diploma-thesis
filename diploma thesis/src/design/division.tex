@@ -1,0 +1,103 @@
+\subsection{Component Division}
+
+The first question that has to be answered is whether or not it makes sense to divide the bootware component into two or more cooperating components, i.e. a server client division or a similar structure.
+As described in \autoref{related:ondemand} on page \pageref{related:ondemand}, the proposed architecture initially only envisioned one bootware component.
+This architecture was expanded with the introduction of the provisioning manager, as described in \autoref{related:dynamic} on page \pageref{related:dynamic}.
+We will now discuss the viability of these architectures.
+
+\subsubsection{Single Local Component}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_local}
+	\caption{Simplified overview of the single local component architecture}
+	\label{image:single_local}
+\end{figure}
+
+First we consider the simplest case: A single local component.
+In this scenario, all provisioning processes are initiated from a component installed locally on the users machine, alongside or as part of the workflow modeler.
+
+The advantages of this architecture lie in its simplicity.
+Only one component has to be created and managed.
+There is no possible overlap in functionality, as in a 2-tier architecture (see \autoref{design:division:2tier}.
+Communication between multiple bootware components doesn't have to be considered.
+
+The disadvantages are caused by the component being local.
+Since all the functionality is concentrated in one component, it can become quite large and complicated, is is one thing that should be avoided according to the requirements.
+A much bigger problem however is the remote communication happening in this scenario.
+All calls to the bootware component from the ESB of the workflow middleware would leave the remote environment.
+Also, all calls from the bootware component to the provisioning engines would enter the remote environment.
+This type of split communication can be costly and slow \textcolor{red}{(add source/description)}.
+
+\subsubsection{Single Remote Component}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_remote}
+	\caption{Simplified overview of the single remote component architecture}
+	\label{image:single_remote}
+\end{figure}
+
+The next obvious choice is to put the single bootware component into a remote environment, where the disadvantages of local to remote communication would disappear.
+
+However, this creates a new problem.
+We don't know where exactly to put the bootware component.
+Since one requirement is that multiple cloud environments should be supported, it's possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
+The communication problem of the single local bootware component still exist.
+
+Another problem is that now we would have to manage some sort of load balancing and the bootware component would have to support multiple tenancy or be stateless, or otherwise every user needs its own remote instance.
+The first case would further complicate the design and implementation of the bootware component.
+The second case would increase monetary and management costs.
+
+\subsubsection{2-Tier Architecture}
+\label{design:division:2tier}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_2_tier}
+	\caption{Simplified overview of the 2-tier architecture}
+	\label{image:2_tier}
+\end{figure}
+
+Next, we take a look at a 2-tier architecture, where the bootware is divided into two components.
+On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment near to the environment, where other components will be provisioned later.
+
+This eliminates the problems of a single bootware component.
+We can now keep the local part as simple as possible and make the remote part as complicated as it has to be.
+We now also can position the remote component close to other remote components to minimize local/remote communication and the problems resulting of it.
+
+But we also introduce new problems.
+For one, we now have duplicate functionality between the two components.
+Both components have to know how to provision a component into multiple cloud environments.
+The local component has to be able to put its remote counterpart into any cloud environment.
+The remote component has to be able to provision other components into the same environment in which it runs (ideally, to minimize costs).
+Since itself can be located in any cloud environment, it has to be able to do this in any cloud environment.
+Independent from this, it has to be able to provision to any environment that the user/service package chooses.
+But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
+We discuss plugins in detail in \autoref{design:extensibility}.
+
+A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
+More on this in \autoref{design:communication}
+
+\subsubsection{Cloning}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_clone}
+	\caption{Simplified overview of the cloned component architecture}
+	\label{image:clone}
+\end{figure}
+
+This architecture can be seen as an alternative form of the 2-tier architecture described in \autoref{design:division:2tier}.
+In this case there are also two parts working together and the remote part does most of the work.
+However, the local and the remote components are identical.
+Instead of provisioning a bigger component in a remote environment, the local component clones itself.
+Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
+On the other hand, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
+Therefore we can't decide yet if this architecture should be used.
+
+\subsubsection{Decision}
+
+Of the four alternative presented here, alternative three - the 2-tier architecture - makes the most sense.
+Therefore it is selected as the alternative of choice and used for further discussion.
+We do however retain the option to transform it into alternative four if this seems advantageous.

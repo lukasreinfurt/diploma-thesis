@@ -1,0 +1,58 @@
+\subsection{Internal Communication}
+
+We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugin.
+Ideally, every plugin will be able to react to events from the bootware.
+These event could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
+Since a plugin doesn't know about other plugins, it can't listen for events at other plugins directly.
+The only known constant to a plugin is the bootware core.
+Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
+This essentially describes the publish-subscribe pattern (\textcolor{red}{ref}).
+
+\subsubsection{PubSub}
+
+The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant who aren't necessarily mutually exclusive: Event busses (or message broker), publishers, and subscribers.
+The event bus sits at the center of the communication.
+He receives messages from publishers and distributes them to all subscribers that have voiced their interest in messages of a certain type by subscribing at the event bus.
+
+Using this pattern in our bootware component, we would create an event bus at the bootware core and plugins, as well as other parts of the core, could subscribe at this event bus and also publish messages through this event bus.
+
+\subsubsection{PubSub Libraries}
+
+Many of the well know Messaging Middlewares offer support for PubSub, for example \textcolor{red}{ActiveMQ,...}.
+But, since we are looking for an internal communication mechanism only, all of these solutions are somewhat overpowered.
+We don't need \textcolor{red}{guaranteed delivery, message queuing, scalability,...}.
+Instead, we need a lightweight in-memory solution.
+Therefor we will ignore the middleware heavyweights and look for smaller, more light weight PubSub libraries.
+
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\begin{tabu}[!htbp]{rl|[0.5pt]ccccc}
+
+		&
+		& \multicolumn{5}{c}{\textit{PubSub Libraries}} \\
+
+		&
+		& \begin{sideways} \textbf{MBassador\footnote{\url{https://github.com/bennidi/mbassador}\label{mbassasor}}} \end{sideways}
+		& \begin{sideways} \textbf{Guava Event Bus\footnote{\url{https://code.google.com/p/guava-libraries/wiki/EventBusExplained}\label{guava}}} \end{sideways}
+		& \begin{sideways} \textbf{Simple Java Event Bus\footnote{\url{https://code.google.com/p/simpleeventbus/}\label{simpleeventbus}}} \end{sideways}
+		& \begin{sideways} \textbf{EventBus\footnote{\url{http://eventbus.org/}\label{eventbus}}} \end{sideways}
+		& \begin{sideways} \textbf{Mycila PubSub\footnote{\url{https://github.com/mycila/pubsub}\label{mycilapubsub}}} \end{sideways} \\
+
+		\tabucline[0.5pt]{2-7}
+
+		\multirow{1}{*}{\textit{Features}}
+
+		& \textbf{Something}
+		& \ding{55}    % mbassador
+		& \ding{55}    % guava
+		& \ding{51}    % simpleeventbus
+		& \ding{51}    % eventbus
+		& \ding{51} \\ % mycila
+
+		\tabucline[0.5pt]{2-7}
+
+	\end{tabu}
+	\caption{Feature comparison of Java PubSub libraries}
+	\label{table:pubsub_comparison}
+\endgroup
