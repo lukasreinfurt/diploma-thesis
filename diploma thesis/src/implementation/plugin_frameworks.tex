@@ -1,0 +1,91 @@
+\subsection{Plugin Frameworks}
+
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\begin{tabu}[!htbp]{rl|[0.5pt]ccc}
+
+		&
+		& \multicolumn{3}{c}{\textit{Plugin Frameworks}} \\
+
+		&
+		& \begin{sideways} \textbf{JSPF\footnote{\url{https://code.google.com/p/jspf/}\label{jspf}}} \end{sideways}
+		& \begin{sideways} \textbf{JPF\footnote{\url{http://jpf.sourceforge.net/}\label{jpf}}} \end{sideways}
+		& \begin{sideways} \textbf{OSGi\footnote{\url{http://www.osgi.org/}\label{osgi}}} \end{sideways} \\
+
+		\tabucline[0.5pt]{2-5}
+
+		\multirow{7}{*}{\textit{Features}}
+
+		& \textbf{Security}
+		& \ding{55}    % jspf
+		& \ding{55}    % jpf
+		& \ding{51} \\ % osgi
+
+		& \textbf{Dynamic Loading}
+		& \ding{55}    % jspf
+		& \ding{51}    % jpf
+		& \ding{51} \\ % osgi
+
+		& \textbf{Complexity}
+		& low     % jspf
+		& medium  % jpf
+		& high \\ % osgi
+
+		& \textbf{Active Development}
+		& \ding{55}    % jspf
+		& \ding{55}    % jpf
+		& \ding{51} \\ % osgi
+
+		& \textbf{Popularity}
+		& low     % jspf
+		& low     % jpf
+		& high \\ % osgi
+
+		& \textbf{Standard}
+		& \ding{55}    % jspf
+		& \ding{55}    % jpf
+		& \ding{51} \\ % osgi
+
+		& \textbf{Used in SimTech}
+		& \ding{55}    % jspf
+		& \ding{55}    % jpf
+		& \ding{51} \\ % osgi
+
+		\tabucline[0.5pt]{2-5}
+
+	\end{tabu}
+	\caption{Feature comparison of Java plugin frameworks}
+	\label{table:plugin_comparison}
+\endgroup
+
+All of the frameworks that we compare here offer the basic functionality that we need to extend the core bootloader component, i.e. the developer defines interfaces that then are implemented by one or more plugins.
+These plugins are compiled separately from the main component and are then packaged in \textit{.jar} files for distribution.
+These packages are loaded during runtime and provide the implementation for the specific interface they implement.
+There are however some advanced functional differences and some non-functional differences that will be considered here.
+
+Dynamic loading allows us to load and replace plugins during runtime, without completely restarting the application.
+While we don't know for certain if dynamic loading is needed in our case, it's one of the advanced features that might be nice to have in the future.
+
+Security is a must have feature but is out of the scope of this thesis.
+Consider the following scenario: The bootware component is used by multiple separate users who can share plugins using a plugin repository.
+Without security features, a malicious user could upload a plugin to this repository which, in theory, could contain any code.
+Therefore it's important to select the right framework now, so that security features can be implemented in the future.
+
+Some non-functional features should also be considered, such as complexity, popularity, and if the framework is still in active development.
+
+\nom{Java Simple Plugin Framework}{JSPF}\footref{jspf} is a plugin framework build for small to medium sized projects.
+Its main focus is simplicity.
+Therefore it does not support many of the advanced features like dynamic loading or security that other solution support.
+The author explicitly states that it is not intended to replace JPF or OSGi~\autocite{jspf:faq}.
+
+\nom{Java Plugin Framework}{JPF}\footref{jpf} is an open-source plugin framework.
+Compared to JSPF it supports some advanced features like dynamic loading of plugins during runtime.
+It is also more popular then JSPF.
+However, the last version was released in 2007.
+This is not necessarily bad but might show that there will be no future development of this framework.
+
+\nom{Open Service Gateway initiative}{OSGi}\footref{osgi} is a plugin framework standard developed by OSGi Alliance.
+It provides a general-purpose Java framework that supports the deployment of extensible bundles~\autocite{osgi:spec}.
+
+\textcolor{red}{Decision}
