@@ -19,7 +19,7 @@ In this scenario, all provisioning processes are initiated from a component inst
 
 The advantages of this architecture lie in its simplicity.
 Only one component has to be created and managed.
-There is no possible overlap in functionality, as in a 2-tier architecture (see \autoref{design:division:2tier}.
+There is no possible overlap in functionality, as in a 2-tier architecture (see \autoref{design:division:2tier}).
 Communication between multiple bootware components doesn't have to be considered.
 
 The disadvantages are caused by the component being local.
@@ -27,7 +27,8 @@ Since all the functionality is concentrated in one component, it can become quit
 A much bigger problem however is the remote communication happening in this scenario.
 All calls to the bootware component from the ESB of the workflow middleware would leave the remote environment.
 Also, all calls from the bootware component to the provisioning engines would enter the remote environment.
-This type of split communication can be costly and slow \textcolor{red}{(add source/description)}.
+This type of split communication can be costly and slow, as shown by Li et al.
+They compared public cloud providers and measured that intra-datacenter communication can be two to three times faster and also cheaper (often free) compared to inter-datacenter communication~\autocite{cloudcmp}.
 
 \subsubsection{Single Remote Component}
 
