@@ -46,14 +46,14 @@ Implementation artifacts represent the interfaces of components.
 Here, an example would be a node that has an interface for starting the particular component described by the node.
 This interfaces could be implemented by an implementation artifact like a \textit{.jar} file.
 
-One or more TOSCA service templates are packaged, together with some meta data, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.bv
+One or more TOSCA service templates are packaged, together with some meta data, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
 CSAR files can then be executed in a TOSCA runtime environment, also called TOSCA container, to create the service described within.
 
 \subsection{OpenTOSCA}
 
-OpenTOSCA is an browser based open-source implementation of a TOSCA container, created at the IAAS at University Stuttgart, which supports the execution of TOSCA CSAR archives.
+OpenTOSCA is a browser based open-source implementation of a TOSCA container, created at the IAAS at University Stuttgart, which supports the execution of TOSCA CSAR archives.
 \autoref{image:tosca:opentosca} shows the architecture of OpenTOSCA.
-The functionality of OpenTOSCA is realized in three main components, which are the Controller, the Implementation Artifact Engine, and the Plan Engine.
+Its functionality is realized in three main components, which are the Controller, the Implementation Artifact Engine, and the Plan Engine.
 After a CSAR is uploaded to OpenTOSCA it can be deployed in three steps.
 In the first step, the CSAR file is unpacked and its content is stored for further use.
 The TOSCA XML files are then loaded and processed by the Controller.
