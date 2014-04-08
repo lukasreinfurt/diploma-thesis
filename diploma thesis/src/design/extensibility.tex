@@ -31,7 +31,7 @@ Now that we have introduced plugins we face new problems.
 \autoref{image:plugins} shows the current architecture, where both bootware components use their own plugins.
 If a plugin is added or updated, the user has to manually copy this plugin to the right folder of one or both of the bootware components.
 Furthermore, if both components use the same plugins, which they will (cloud plugins), we will have duplicate plugins scattered around.
-This is inefficient, probably annoying for the user and possibly dangerous (\textcolor{red}{other world, fehler hervorrufend}) if plugins get out of sync.
+This is inefficient, probably annoying for the user and can possibly cause errors if plugins get out of sync.
 
 \begin{figure}[!htbp]
 	\centering
