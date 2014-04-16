@@ -34,7 +34,7 @@
       get_url: url=http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/1.8/binaries/Linux/biber-linux_x86_32.tar.gz/download dest=/tmp/biber.tar.gz
 
     - name: extract biber
-      action: command tar xzf /tmp/biber.tar.gz -C /usr/bin creates=/usr/bin/biber
+      command: tar xzf /tmp/biber.tar.gz -C /usr/bin creates=/usr/bin/biber
 
     - name: download texliveonfly
       get_url: url=http://mirrors.ctan.org/support/texliveonfly.zip dest=/tmp/texliveonfly.zip
@@ -51,8 +51,44 @@
     - name: change texliveonfly.py default options
       lineinfile: dest=/usr/bin/texliveonfly.py regexp="^defaultArguments = " line="defaultArguments = \"-synctex=1 -interaction=nonstopmode -shell-escape\""
 
-    - name: donwload pplatex
+    - name: download pplatex
       get_url: url=http://dl.dropbox.com/u/12697903/pplatex/pplatex-1.0-rc1-linux.zip dest=/tmp/pplatex.zip
 
     - name: extract pplatex
       command: unzip -u /tmp/pplatex.zip -d /opt creates=/opt/pplatex-1.0-rc1
+
+    - name: download opendetex
+      get_url: url=https://opendetex.googlecode.com/files/opendetex-2.8.1.tar.bz2 dest=/tmp/opendetex.tar.bz2
+
+    - name: extract opendetex
+      command: tar xjvf /tmp/opendetex.tar.bz2 -C /opt creates=/opt/opendetex
+
+    - name: install lex
+      apt: pkg=flex
+
+    - name: build opendetex
+      command: make chdir=/opt/opendetex
+
+    - name: install pdftotext
+      apt: pkg=poppler-utils
+
+    - name: install java
+      apt: pkg=openjdk-7-jre-headless
+
+    - name: download languagetool
+      get_url: url=https://www.languagetool.org/download/LanguageTool-2.4.zip dest=/tmp/languagetool.zip
+
+    - name: extract languagetool
+      command: unzip -u /tmp/languagetool.zip -d /opt creates=/opt/LanguageTool-2.4
+
+    - name: install diction
+      apt: pkg=diction
+
+    - name: install dvi2tty
+      get_url: url=http://mirrors.ctan.org/dviware/dvi2tty.zip dest=/tmp/dvi2tty.zip
+
+    - name: extract dvi2tty
+      command: unzip -u /tmp/dvi2tty.zip -d /opt creates=/opt/dvi2tty
+
+    - name: build dvi2tty
+      command: make chdir=/opt/dvi2tty
