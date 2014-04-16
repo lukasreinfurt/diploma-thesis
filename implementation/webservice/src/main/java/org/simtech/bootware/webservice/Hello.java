@@ -3,8 +3,7 @@ package org.simtech.bootware.webservice;
 import javax.jws.WebService;
 
 @WebService(serviceName  = "Hello",
-            portName     = "HelloPort"/*,
-            wsdlLocation = "META-INF/version.wsdl"*/)
+            portName     = "HelloPort")
 public class Hello {
 	private String message = new String("Hello, ");
 
