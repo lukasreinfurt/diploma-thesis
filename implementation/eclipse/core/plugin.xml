@@ -30,7 +30,7 @@
 			</menu>
 			<action
 				label="Bootware Action"
-				icon="icons/bootware.gif"
+				icon="icons/bootware.png"
 				class="org.simtech.bootware.eclipse.core.actions.Test"
 				tooltip="Bootware"
 				menubarPath="bootwareMenu/bootwareGroup"
