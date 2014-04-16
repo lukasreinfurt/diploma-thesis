@@ -28,6 +28,11 @@
 			<artifactId>plugins</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.simtech.bootware</groupId>
+			<artifactId>eclipse</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

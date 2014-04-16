@@ -44,5 +44,15 @@
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware.eclipse:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>eclipse-plugins</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
 	</moduleSets>
 </assembly>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin
+	name="SimTech Bootware Eclipse Extension Plugin"
+	id="org.simtech.bootware.eclipse.extension"
+	version="0.0.1">
+
+	<extension
+		point="org.simtech.bootware.eclipse.core">
+		<execute
+				class="org.simtech.bootware.eclipse.extension.TestPlugin">
+		</execute>
+	</extension>
+
+</plugin>
