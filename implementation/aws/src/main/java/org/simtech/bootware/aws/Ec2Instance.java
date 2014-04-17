@@ -173,7 +173,7 @@ public class Ec2Instance {
 	}
 
 	private void waitForState(String state) {
-		System.out.print("Waiting for EC2 instance '" + instanceID + "' to reach state '" + state + "' ");
+		System.out.print("Waiting for '" + instanceID + "' to reach state '" + state + "'");
 		label:
 		while (true) {
 			System.out.print(".");
