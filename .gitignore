@@ -21,3 +21,4 @@
 *.~vstx
 target
 /diploma thesis/src/thesis.pdf
+AwsCredentials.properties
