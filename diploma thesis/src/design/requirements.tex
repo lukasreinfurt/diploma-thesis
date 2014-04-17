@@ -1,41 +1,18 @@
 \section{Requirements}
 
-Requirements that should be fulfilled:
+The main goal of this thesis is to lay a ground stone by creating the core design of the bootware component.
+It was clear from the beginning that, because of the limited time available, not every feature that might be necessary for the full operation can be fully implemented.
+Instead, the foundation we develop here should keep future needs in mind and make it simple to extend when needed.
+It is therefore a core requirement to keep the bootware component relatively generic and make it extensible where necessary.
 
-\begin{itemize}
+It should be extensible in two key areas, namely the support for different cloud providers and for different provisioning engines.
+For this thesis, Amazon is the only cloud provider that has to be supported, but it has to be possible to add others in the future.
+Concerning provisioning engines, only OpenTOSCA has to be supported for now, but again with the possibility to add more in the future.
 
-	\item The Bootware component should be as lightweight as possible.
+It is also important that the bootware is easy to use.
+In fact, it should be practically invisible whenever possible.
+It should hook into the already existing process of deploying a workflow without adding unnecessary interaction steps when possible.
+However, It can't be hidden completely, because the user has to specify a cloud provider and the corresponding log-in credentials some where.
+The user should also get some feedback about the progress of the deployment, because this process might take some time and might seem unresponsive without sufficient feedback.
 
-	\item The Bootware component should be as generic as possible.
-
-	\item The Bootware component should be extensible.
-
-	\item Multiple cloud providers should be supported. At least Amazon should be implemented.
-
-	\item Multiple provisioning engines should be supported. At least OpenTosca should be implemented.
-
-	\item It should be possible to start the bootware process by deploying a workflow in the modeler.
-
-	\item Open standards should be used where possible.
-
-	\item As much as possible of the internals of the bootware component should be hidden from the end user
-
-\end{itemize}
-
-Added requirements:
-
-\begin{itemize}
-
-	\item It should be possible to get feedback of the state of the provisioning process. More than start/end of Web Service Call/Return.
-
-\end{itemize}
-
-implicit requirements:
-
-\begin{itemize}
-
-	\item Java 1.6
-
-\end{itemize}
-
-
+A further requirement is that the bootware component should be relatively lightweight and open standards should be used where possible.
