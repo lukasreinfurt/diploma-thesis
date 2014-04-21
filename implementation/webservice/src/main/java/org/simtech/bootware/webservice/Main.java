@@ -5,7 +5,7 @@ import javax.xml.ws.Endpoint;
 public class Main {
 
 	public static void main (String[] args) {
-		final Object implementor = new Hello();
+		final Object implementor = new HelloImpl();
 		final String address     = "http://localhost:8080/axis2/services/Hello";
 		final Endpoint endpoint  = Endpoint.publish(address, implementor);
 
