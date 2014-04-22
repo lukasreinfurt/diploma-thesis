@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.lang.InterruptedException;
 import java.util.List;
 
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
@@ -34,12 +37,21 @@ public class Ec2Instance {
 	private String securityGroupName;
 	private String keyName;
 	private String instanceID;
-	private String publicIP;
+	private String publicDNS;
+	private String privateKey;
 
 	public Ec2Instance() {
 		securityGroupName = "GeneratedSecurityGroup";
 		keyName           = "BootwareKey";
 		createClientInstance();
+	}
+
+	public String getPublicDNS() {
+		return publicDNS;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
 	}
 
 	public void create() {
@@ -123,8 +135,17 @@ public class Ec2Instance {
 
 		KeyPair keyPair   = new KeyPair();
 		keyPair           = result.getKeyPair();
-		String privateKey = keyPair.getKeyMaterial();
+		privateKey        = keyPair.getKeyMaterial();
 		System.out.println("Key pair '" + keyName + "' created.");
+
+		try {
+			PrintWriter keyFile = new PrintWriter("BootwareKey.pem");
+			keyFile.println(privateKey);
+			keyFile.close();
+		}
+		catch (FileNotFoundException ex) {
+			System.out.println(ex);
+		}
 	}
 
 	private void deleteKeyPair() {
@@ -157,8 +178,10 @@ public class Ec2Instance {
 
 		DescribeInstancesRequest ipRequest = new DescribeInstancesRequest().withInstanceIds(instanceID);
 		DescribeInstancesResult ipResult   = ec2Client.describeInstances(ipRequest);
-		publicIP = ipResult.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
-		System.out.println("EC2 instance '" + instanceID + "' is now reachable at '" + publicIP + "'.");
+		//publicDNS = ipResult.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
+		publicDNS = ipResult.getReservations().get(0).getInstances().get(0).getPublicDnsName();
+		System.out.println("EC2 instance '" + instanceID + "' is now reachable at:");
+		System.out.println("    " + publicDNS);
 	}
 
 	private void terminateEC2Instance() {
