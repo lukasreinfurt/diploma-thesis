@@ -1,6 +1,41 @@
-\section{Provisioning Solutions}
+\section{Provisioning}
 
+\textcolor{red}{redo}
 This section describes some of the provisioning solution available today, in particular TOSCA and Open TOSCA, since those are used in the prototypical implementation later on.
+
+\subsection{Overview}
+
+Setting up a complex distributed system with many different components scattered across multiple environments is a time-consuming task if done by hand.
+For this reason, many provisioning solutions have been created over the years to automate this process.
+They differ in some areas, which we will discuss later, but their core functionality is in basically identical: They prepare all necessary resources for a certain task.
+Let's state that core functionality a little more precise with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"\autocite{def:provisioning}.
+Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
+So for us, provisioning means the creation and deletion of virtual VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs\autocite{towardsprovisioning}
+
+The are many benefits to using an automated provisioning solution in stead of doing things manually.
+The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.
+This makes it possible to manage huge infrastructures with very little resources, which can save money compared to a manual approach.
+Since every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
+This makes the whole process reproducible and less error prone, since the human factor is taken out.
+Parts of such a description can also be shared in a business or even between businesses, which makes the process of creating such a description potentially much more efficient.
+
+The general process of working with provisioning software is very similar with all the different solutions.
+It can be described as a two step process.
+In step one, a description of the whole provisioning process has to be created using the tools provided by the particular solution.
+In general this involves creating a textual description in a certain format that is understood by the provisioning software that is to be used.
+In this description, we tell the software what virtual resources we need, what software should be installed on them and how everything should be configured.
+In step two, we pass this description to the provisioning software, which interprets and executes it.
+
+Many different provisioning solutions exist today.
+Some cloud providers offer provisioning solutions that are particularly tailored to their cloud offerings, for example AWS CloudFormation\footnote{\url{http://aws.amazon.com/cloudformation}}, which can only be used to provision resources in the Amazon cloud.
+Then, there are more generally usable provisioning solutions that are not bound to any particular cloud provider.
+A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, Chef\footnote{\url{http://www.getchef.com/chef}}, and Puppet\footnote{\url{http://puppetlabs.com/}}, and TOSCA, which we will discuss in detail later.
+
+All these solutions differ in some form or another.
+A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
+As already mentioned, AWS CloudFront is bound to Amazons cloud platform, while the other solutions are not.
+Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over SSH and therefor doesn't require additional software on the nodes that are configured.
+\textcolor{red}{more?}
 
 \subsection{TOSCA}
 
