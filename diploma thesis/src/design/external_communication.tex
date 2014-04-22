@@ -14,13 +14,15 @@ There will be other components that have to call the bootware to start some prov
 
 The communication with the bootware components will contain sensitive data, for example login information for cloud providers that the bootware needs to do its job, but has to be provided from the outside on a call to call basis.
 This information has to be transported securely to prevent malicious or fraudulent attacks.
-The selected communication method therefore has to support some sort of security mechanisms, ideally end-to-end security via message encryption.
+The selected communication method therefore has to support some sort of security mechanisms, ideally end-to-end encryption.
 While these security mechanisms will not be used in this thesis due to time constraints, selecting the right communication method is still critical for future development.
+
+\textcolor{red}{REST, RMI (restricted to java clients), EJB, RPC}
 
 Since this whole project is concerned with services, it \textcolor{red}{liegt nahe} to use web service calls and returns as main communication method, internally as well as  externally.
 This way we offer a consistent interface for all components to use.
 \autoref{image:webservice} shows the addition of asynchronous web service call and return communication to the proposed architecture.
-Using a web service with soap messaging also gives us access to Web Service Security Framework, which supports end-to-end security with encryption and signatures.
+Using a web service with soap messaging also gives us access to Web Service Security Framework, which supports end-to-end encryption.
 
 \begin{figure}[!htbp]
 	\centering
@@ -31,7 +33,7 @@ Using a web service with soap messaging also gives us access to Web Service Secu
 
 Web Services also support asynchronous communication so that long running provisioning processes won't pose a problem.
 We do however still need information during those long running processes to give the user some feedback.
-This can't (\textcolor{red}{???}) be accomplished by this simple request/response pattern.
+This can't be accomplished by this simple request/response pattern.
 For this, a secondary communication mechanism which supports sending multiple feedback messages has to be used.
 
 Since it is not necessary for the successful use of the bootware it would make sense to implement this secondary communication mechanism as a plugin.

@@ -6,13 +6,14 @@ This requirement is intentionally vague to allow to select a fitting extension m
 
 \subsubsection{Extension Mechanisms}
 
-\textcolor{red}{other mechanisms?}
+\textcolor{red}{SPI, CDI, other mechanisms?}
+\url{https://vaadin.com/blog/-/blogs/developing-modular-vaadin-applications-without-osgi}
 
 One possibility that would satisfy this criteria is to design interfaces for all extension points of the bootware component.
 New cloud environments, provisioning engines, or other extension could then implement these interfaces.
 The disadvantage of this approach is that the whole bootware component has to be recompiled, redistributed and redeployed if one extension is added or changed.
 
-To remove this disadvantage, a more flexible architecture is needed, for example a plugin architecture. (\textcolor{red}{pattern?})
+To remove this disadvantage, a more flexible architecture is needed, for example a plugin architecture.
 Interfaces for the extension points still exist but the extension are no longer part of the main bootware component.
 They are compiled separately into plugins that can be loaded into the main bootware component on the fly.
 There are several possibilities to realize such an architecture.
@@ -22,7 +23,7 @@ An advantage of this approach would be that the design of the plugin architectur
 But there are also several disadvantages.
 For one, we would reinvent the wheel, since multiple such frameworks already exist.
 It would also shift resources away from the actual goal of this thesis, which is designing the bootware component.
-Furthermore it would require a deep understanding of the language used for the implementation (\textcolor{red}{in this case Java}), which is not necessarily given.
+Furthermore it would require a deep understanding of the language used for the implementation (in this case Java), which is not necessarily given.
 Therefore it seems more reasonable to use one of the already existing plugin frameworks.Three such alternatives will be compared next. (\textcolor{red}{more?})
 
 \subsubsection{Plugin Repository}
