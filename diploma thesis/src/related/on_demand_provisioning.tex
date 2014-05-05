@@ -1,4 +1,4 @@
-\section{On demand Provisioning}
+\section{On-demand Provisioning for Simulation Workflows}
 \label{related:ondemand}
 
 \citeauthor{provisioning:ondemand} identify requirements that need to be addressed to make the current approach for scientific workflows used by the SimTech SWfMS more suitable for scientific simulation work.
@@ -46,5 +46,5 @@ When he deploys the workflow, the local bootware component kicks of the on deman
 In this phase, the bootloader deploys a provisioning engine in the cloud, which in turn deploys the workflow middleware.
 Once the middleware is up and running, the workflow can be executed. During the execution, the ESB receives service calls from the workflow engine.
 Services, that are not running at this time can then be provisioned by the provisioning engine.
-This takes place in the third phase, the service runtime phase~\autocite{provisioning:ondemand}.
-The bars at the bottom of \autoref{image:original_architecture} show, which components are active during which phase.
+This takes place in the third phase, the service runtime phase.
+The bars at the bottom of \autoref{image:original_architecture} show, which components are active during which phase~\autocite{provisioning:ondemand}.

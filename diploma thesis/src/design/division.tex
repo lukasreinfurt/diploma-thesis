@@ -20,7 +20,7 @@ In this scenario, all provisioning processes are initiated from a component inst
 The advantages of this architecture lie in its simplicity.
 Only one component has to be created and managed.
 We wouldn't have to deal with any cloud environments and each user would have his own personal instance, so multi-tenancy wouldn't be an issue.
-There is no possible overlap in functionality, as in a 2-tier architecture (see \autoref{design:division:2tier}) and communication between multiple bootware components doesn't have to be considered.
+There is no possible overlap in functionality, as it would be the case in a 2-tier architecture (see \autoref{design:division:2tier}) and communication between multiple bootware components doesn't have to be considered.
 
 The disadvantages are caused by the component being local.
 Since all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
@@ -46,7 +46,7 @@ Since there aren't any additional components in this scenario that could manage 
 Either the user provisions the bootware once in some cloud environment and then keep this one instance running or she provision it once she needs it and deprovisions it when she is done.
 
 In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware component.
-Since one requirement is that multiple cloud environments should be supported, it's possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
+Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
 The communication problem of the single local bootware component can still occur in these cases.
 
 Another problem is that the bootware would be running all the time, even if the user doesn't need it, which would increase costs.
@@ -54,7 +54,7 @@ This problem could be reduces if this bootware instance is shared with others to
 But then the user would have to manage some sort of load balancing and the bootware component would have to support multi-tenancy or be stateless to be able to cope with potential high usage spikes.
 This would further complicate the design and implementation of the bootware component and possibly increase the running costs.
 
-In the second case the user would provision the bootware whenever she needs it.Now the user would be able to pick a cloud environment that is close to the other components that she plans to provision later.
+In the second case the user would provision the bootware whenever she needs it. Now the user would be able to pick a cloud environment that is close to the other components that she plans to provision later.
 This eliminates the two major problems of the first case but increases the effort that the user has to put into a task that she shouldn't have to do in the first place.
 Life-cycle management of the bootware should be automated completely and hidden away from the user.
 Therefor, this scenario is not appropriate for our case.
@@ -104,7 +104,7 @@ In this case there are also two parts working together and the remote part does 
 However, the local and the remote components are identical.
 Instead of provisioning a bigger component in a remote environment, the local component clones itself.
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
-The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and would contain unnecessary functionality (e.g. a web service interface).
+The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and would contain functionality that it wouldn't require for local operation (e.g. a web service interface).
 However, since we want to keep the whole bootware, including the remote part, fairly lightweight, it's highly unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
 In this case, the advantage of only having to design and implement one component seems to outweigh the disadvantage of a slightly more complex local component (compared to the 2-tier variant).
 Of course, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.

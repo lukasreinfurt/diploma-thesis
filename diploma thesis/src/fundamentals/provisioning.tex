@@ -1,16 +1,16 @@
 \section{Provisioning}
 
-\textcolor{red}{redo}
-This section describes some of the provisioning solution available today, in particular TOSCA and Open TOSCA, since those are used in the prototypical implementation later on.
+This section provides an overview of provisioning in general and describes some of the provisioning solution available today.
+It focuses in particular on TOSCA and Open TOSCA, since those are used in the prototypical implementation later on.
 
 \subsection{Overview}
 
 Setting up a complex distributed system with many different components scattered across multiple environments is a time-consuming task if done by hand.
 For this reason, many provisioning solutions have been created over the years to automate this process.
 They differ in some areas, which we will discuss later, but their core functionality is in basically identical: They prepare all necessary resources for a certain task.
-Let's state that core functionality a little more precise with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"\autocite{def:provisioning}.
+Let's state that core functionality a little more precise with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
 Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
-So for us, provisioning means the creation and deletion of virtual VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs\autocite{towardsprovisioning}
+So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{towardsprovisioning}.
 
 The are many benefits to using an automated provisioning solution in stead of doing things manually.
 The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.

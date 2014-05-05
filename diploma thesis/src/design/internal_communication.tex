@@ -1,6 +1,6 @@
 \subsection{Internal Communication}
 
-We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugin.
+We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugins.
 Ideally, every plugin will be able to react to events from the bootware.
 These event could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
 Since a plugin doesn't know about other plugins, it can't listen for events at other plugins directly.
