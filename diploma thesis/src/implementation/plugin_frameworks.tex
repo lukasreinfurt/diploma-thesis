@@ -1,19 +1,21 @@
 \subsection{Plugin Frameworks}
+\label{pluginframeworks}
 
 \begingroup
 	\centering
 	\captionsetup{type=table}
-	\begin{tabu}[!htbp]{rl|[0.5pt]ccc}
+	\begin{tabu}[!htbp]{rl|[0.5pt]cccc}
 
 		&
-		& \multicolumn{3}{c}{\textit{Plugin Frameworks}} \\
+		& \multicolumn{4}{c}{\textit{Plugin Frameworks}} \\[10pt]
 
 		&
-		& \begin{sideways} \textbf{JSPF\footnote{\url{https://code.google.com/p/jspf/}\label{jspf}}} \end{sideways}
-		& \begin{sideways} \textbf{JPF\footnote{\url{http://jpf.sourceforge.net/}\label{jpf}}} \end{sideways}
-		& \begin{sideways} \textbf{OSGi\footnote{\url{http://www.osgi.org/}\label{osgi}}} \end{sideways} \\
+		& \begin{sideways} \textbf{SPI\footnote{\url{http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html}\label{spi}}} \end{sideways}
+		& \begin{sideways} \textbf{JSPF\footnote{\url{https://code.google.com/p/jspf}\label{jspf}}} \end{sideways}
+		& \begin{sideways} \textbf{JPF\footnote{\url{http://jpf.sourceforge.net}\label{jpf}}} \end{sideways}
+		& \begin{sideways} \textbf{OSGi\footnote{\url{http://www.osgi.org}\label{osgi}}} \end{sideways} \\
 
-		\tabucline[0.5pt]{2-5}
+		\tabucline[0.5pt]{2-6}
 
 		% NO  = \ding{55}
 		% YES = \ding{51}
@@ -21,46 +23,53 @@
 		\multirow{2}{*}{\textit{functional}}
 
 		& \textbf{Dynamic Loading}
+		& \ding{55}    % spi
 		& \ding{55}    % jspf
 		& \ding{51}    % jpf
 		& \ding{51} \\ % osgi
 
 		& \textbf{Security}
+		& \ding{55}    % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
 
-		\tabucline[0.5pt]{2-5}
+		\tabucline[0.5pt]{2-6}
 
 		\multirow{5}{*}{\textit{non-functional}}
 
 		& \textbf{Used in SimTech}
+		& \ding{55}    % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
 
 
 		& \textbf{Standard}
+		& \ding{55}    % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
 
 		& \textbf{Complexity}
+		& \ding{55}    % spi
 		& low     % jspf
 		& medium  % jpf
 		& high \\ % osgi
 
 		& \textbf{Popularity}
+		& \ding{55}    % spi
 		& low     % jspf
 		& low     % jpf
 		& high \\ % osgi
 
 		& \textbf{Active Development}
+		& \ding{55}    % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
 
-		\tabucline[0.5pt]{2-5}
+		\tabucline[0.5pt]{2-6}
 
 	\end{tabu}
 	\caption{Feature comparison of Java plugin frameworks}
@@ -81,6 +90,12 @@ Without security features, a malicious user could upload a plugin to this reposi
 Therefore it's important to select the right framework now, so that security features can be implemented in the future.
 
 Some non-functional features should also be considered, such as complexity, popularity, and if the framework is still in active development.
+
+Java provides an integrated extension mechanism called \nom{Service Provider Interface}{SPI}, which is a little more advanced then the manual extension mechanism described above.
+It is also based on a set of interfaces and abstract classes that have to be implemented by an extension.
+In the case of SPI, these interfaces and abstract classes are called services and a specific implementation of such a service is called service provider.
+However, unlike in the above approach, specific implementations are loaded from .jar files in specific directories or in the class path.
+These .jar files also include metadata to identify the different service providers~\autocite{spi}.
 
 \nom{Java Simple Plugin Framework}{JSPF}\footref{jspf} is a plugin framework build for small to medium sized projects.
 Its main focus is simplicity.
