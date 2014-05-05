@@ -24,3 +24,21 @@ The next section shows Amazon's cloud services in more detail, since those will 
 
 In 2006, Amazon started offering cloud resource under the umbrella of \nom{Amazon Web Services}{AWS}.
 Since then, their offerings steadily increased and do now comprise over 20 different products and services for computing, data storage, content delivery, analytics, deployment, management, and payment in the cloud~\autocite{aws:about}.
+
+The most relevant cloud offering for this thesis is \nom{Elastic Compute Cloud}{EC2}\footnote{\url{http://aws.amazon.com/ec2}}, Amazons IaaS offer.
+It allows customers to rent virtual server instances at an hourly rate.
+These servers are freely configurable, so virtually any software can be installed, making EC2 very versatile~\autocite{aws:ec2}.
+In addition to general purpose instances (M3), Amazon offers a wide selection of specialized instances, which are optimized for a specific purpose.
+These include instances optimized for computation performance (C3), memory-intensive applications (R3), or high storage instances (I2).
+For this thesis we will be using Amazons low cost micro instances (T1)~\autocite{aws:instances}.
+
+Also of interest to this thesis is Elastic Beanstalk\footnote{\url{http://aws.amazon.com/elasticbeanstalk}}, Amazons PaaS offering.
+Customers can upload an application and Elastic Beanstalk takes care of deployment and scaling~\autocite{aws:beanstalk}.
+This makes it easier and quicker to use than EC2, but also less flexible.
+It could be used instead of a more manual approach with EC2.
+
+Amazon offers multiple ways to interact with cloud resources.
+All AWS offerings can be controlled using the AWS Management Console, a web based management interface that allows customers to start, stop, and manage cloud resources on-demand.
+It also provides access to account and billing information~\autocite{aws:managementconsole}.
+Additionally, Amazon provides a command line interface, tools for Eclipse and Visual Studio, and \nom{Software Development Kits}{SDKs} for several programming languages, including Java, .Net, Python, Ruby, and the Android and iOS platforms~\autocite{aws:tools}.
+In this thesis, we will use the AWS Java SDK\footnote{\url{https://aws.amazon.com/sdkforjava}} to interact with Amazons cloud resources programmatically.
