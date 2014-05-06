@@ -1,12 +1,13 @@
 \section{Dynamic Provisioning of Web Services for Simulation Workflows}
 \label{related:dynamic}
 
-\textcolor{red}{VERWIRRUNG}
-
 \citeauthor{provisioning:dynamic} found some problems with the architecture proposed in \autoref{related:ondemand}.
-The original architecture assumes that only one provisioning engine is used.
+The original architecture assumes that only one provisioning engine is used at a time.
+It neglects situations where services might require another (or multiple other) provisioning engines, because their provisioning descriptions aren't available in a format that the currently used provisioning engine understands.
+It also assumes that the \nom{Enterprise Service Bus}{ESB} communicates directly with this provisioning engine to deploy and undeploy other services.
+This implicates that the ESB understands all manner of interfaces provided by various provisioning engines.
 
-that every provisioning engine knows how to communicate with the service repository to get the information and resources it need to provision a service.
+It further assumes that every provisioning engine knows how to communicate with the service repository to get the information and resources it needs to provision a service.
 While this might be true for some provisioning engines, it's certainly not true for all of them.
 This problem is further amplified because there are no standards defined for such a service repository.
 
@@ -21,15 +22,12 @@ If provisioning engines would all use a standardized format (like CSAR), this wo
 	\label{image:valeri_architecture}
 \end{figure}
 
-\citeauthor{provisioning:dynamic} further refines the previously shown middleware architecture by adding a provisioning manager as intermediary between the \nom{Enterprise Service Bus}{ESB} and the provisioning engines~\autocite{provisioning:dynamic}.
+\citeauthor{provisioning:dynamic} further refines the previously shown middleware architecture by adding a provisioning manager as intermediary between the ESB and the provisioning engines~\autocite{provisioning:dynamic}.
 This addition improves the original architecture in three aspects.
 
-The \textcolor{red}{ESB} can now use the stable interface of the provisioning manager to trigger provisioning engines instead of calling those provisioning engines directly.
+The ESB can now use the stable interface of the provisioning manager to trigger provisioning engines instead of calling those provisioning engines directly.
 The provisioning manager handles the differences between the provisioning engines.
 This makes it also possible to use multiple different provisioning engines during one workflow execution.
-
-The provisioning manager also handles the communication with the service registry or possibly multiple service registries for different provisioning engines.
-
+The provisioning manager also handles the communication with the service repository or possibly multiple service repositories for different provisioning engines.
+He can provide information to a particular provisioning engine if it cannot get the information it needs from the service repository on its own.
 The provisioning manager could also translate different service distribution formats so that provisioning engines could be used with formats that they don't support
-
-
