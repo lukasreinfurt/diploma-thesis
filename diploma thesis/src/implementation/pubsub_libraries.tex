@@ -9,6 +9,26 @@ We don't even necessarily need asynchronous communication.
 Instead, we need a lightweight in-memory solution.
 Therefor we will ignore the middleware heavyweights and look for smaller, more light weight PubSub libraries.
 
+We have a few functional requirements that a library has to support for our use case.
+These can be seen on the left-hand side of \autoref{table:pubsub_comparison}.
+Weak references are an important feature, since we have a lot of plugins that will register as listeners to the event bus.
+These plugins can be removed at any time and weak references allow us to remove them without explicitly unregistering them from the event bus.
+Instead of crashing, the event bus will just ignore references to listeners that don't exist anymore.
+Even if we explicitly unregister all our plugins, weak references give us a safety net if we forget it at some point.
+
+We also need support for an event hierarchy.
+This allows us to model our events in a very fine grained modular fashion and organize them into logical groups.
+It also allows listeners to react to a whole group of specific events or only to a small subset of such a group.
+A filtering feature gives us even more control over what events a listener will react to.
+It allows us to filter out specific events, for example by their content, to handle them differently, or to ignore them.
+
+We also want event handlers to be invoked synchronously.
+If an event is published, all event handlers for this event should be executed one after another until they finished execution.
+Only then should the program continue execution.
+But asynchronous invocation might still be useful in some cases, so we also add it here.
+
+We will also consider some non-functional qualities like popularity, maturity and documentation that can give an indication of the usefulness of a library.
+
 \vspace*{\baselineskip}
 \begingroup
 	\centering
@@ -19,10 +39,10 @@ Therefor we will ignore the middleware heavyweights and look for smaller, more l
 		& \multicolumn{5}{c}{\textit{PubSub Libraries}} \\[10pt]
 
 		&
-		& \begin{sideways} \textbf{MBassador\footnote{\url{https://github.com/bennidi/mbassador}\label{mbassasor}}} \end{sideways}
+		& \begin{sideways} \textbf{EventBus\footnote{\url{http://eventbus.org/}\label{eventbus}}} \end{sideways}
 		& \begin{sideways} \textbf{Guava Event Bus\footnote{\url{https://code.google.com/p/guava-libraries/wiki/EventBusExplained}\label{guava}}} \end{sideways}
 		& \begin{sideways} \textbf{Simple Java Event Bus\footnote{\url{https://code.google.com/p/simpleeventbus/}\label{simpleeventbus}}} \end{sideways}
-		& \begin{sideways} \textbf{EventBus\footnote{\url{http://eventbus.org/}\label{eventbus}}} \end{sideways}
+		& \begin{sideways} \textbf{MBassador\footnote{\url{https://github.com/bennidi/mbassador}\label{mbassasor}}} \end{sideways}
 		& \begin{sideways} \textbf{Mycila PubSub\footnote{\url{https://github.com/mycila/pubsub}\label{mycilapubsub}}} \end{sideways} \\
 
 		\tabucline[0.5pt]{2-7}
@@ -30,48 +50,41 @@ Therefor we will ignore the middleware heavyweights and look for smaller, more l
 		% NO  = \ding{55}
 		% YES = \ding{51}
 
-		\multirow{6}{*}{\textit{Features}}
+		\multirow{5}{*}{\textit{functional}}
 
-		& \textbf{Synchronous Invocation}
-		& \ding{51}    % mbassador
-		& \ding{51}    % guava
-		& \ding{51}    % simpleeventbus
+		& \textbf{Weak References}
 		& \ding{51}    % eventbus
+		& \ding{55}    % guava
+		& \ding{51}    % simpleeventbus
+		& \ding{51}    % mbassador
 		& \ding{51} \\ % mycila
 
-		& \textbf{Asynchronous Invocation}
-		& \ding{51}    % mbassador
+		& \textbf{Event Hierarchy}
+		& ?            % eventbus
 		& \ding{51}    % guava
-		& \ding{51}    % simpleeventbus
-		& \ding{51}    % eventbus
+		& ?            % simpleeventbus
+		& \ding{51}    % mbassador
 		& \ding{51} \\ % mycila
 
 		& \textbf{Filtering}
-		& \ding{51}    % mbassador
+		& \ding{51}    % eventbus
 		& \ding{55}    % guava
 		& \ding{51}    % simpleeventbus
-		& \ding{51}    % eventbus
+		& \ding{51}    % mbassador
 		& \ding{55} \\ % mycila
 
-		& \textbf{Event Hierarchy}
-		& \ding{51}    % mbassador
+		& \textbf{Sync. Invocation}
+		& \ding{51}    % eventbus
 		& \ding{51}    % guava
-		& ?            % simpleeventbus
-		& ?            % eventbus
+		& \ding{51}    % simpleeventbus
+		& \ding{51}    % mbassador
 		& \ding{51} \\ % mycila
 
-		& \textbf{Prioritization}
-		& \ding{51}    % mbassador
-		& \ding{55}    % guava
-		& \ding{55}    % simpleeventbus
+		& \textbf{Async. Invocation}
 		& \ding{51}    % eventbus
-		& \ding{55} \\ % mycila
-
-		& \textbf{Weak References}
-		& \ding{51}    % mbassador
-		& \ding{55}    % guava
+		& \ding{51}    % guava
 		& \ding{51}    % simpleeventbus
-		& \ding{51}    % eventbus
+		& \ding{51}    % mbassador
 		& \ding{51} \\ % mycila
 
 		\tabucline[0.5pt]{2-7}
@@ -79,25 +92,25 @@ Therefor we will ignore the middleware heavyweights and look for smaller, more l
 		\multirow{3}{*}{\textit{non-functional}}
 
 		& \textbf{Popularity}
-		& medium % mbassador
+		& high   % eventbus
 		& medium % guava
 		& low    % simpleeventbus
-		& high   % eventbus
+		& medium % mbassador
 		& low \\ % mycila
 
 		& \textbf{Maturity}
-		& medium % mbassador
-		& medium % guava
-		& low    % simpleeventbus
-		& high   % eventbus
-		& low \\ % mycila
+		& high      % eventbus
+		& medium    % guava
+		& medium    % simpleeventbus
+		& medium    % mbassador
+		& medium \\ % mycila
 
 		& \textbf{Documentation}
-		& medium % mbassador
-		& medium % guava
-		& low    % simpleeventbus
-		& high   % eventbus
-		& low \\ % mycila
+		& high      % eventbus
+		& low       % guava
+		& low       % simpleeventbus
+		& medium    % mbassador
+		& medium \\ % mycila
 
 		\tabucline[0.5pt]{2-7}
 
@@ -105,3 +118,24 @@ Therefor we will ignore the middleware heavyweights and look for smaller, more l
 	\caption{Feature comparison of Java PubSub libraries}
 	\label{table:pubsub_comparison}
 \endgroup
+
+The first library we look at is EventBus.
+As can be seen in \autoref{table:pubsub_comparison} on the left, EventBus supports most of the functionality we need.
+From the libraries presented here it is also the oldest one, so it is mature, fairly popular and well documented.
+But its age is also is weakness.
+
+Guava Event Bus is a fairly simple PubSub library.
+It is part of the Google core libraries for Java 1.6+ and is therefore fairly popular, but it lacks in documentation.
+It also doesn't support weak references and filtering, which doesn't make it a good fit for our use case.
+
+Simple Java Event Bus is a simpler alternative to EventBus.
+It lacks some of the advanced features of EventBus but is also simpler to use.
+Compared to the other libraries it is not that popular and lacks in documentation.
+
+MBassador is a light-weight and performance minded PubSub Library.
+As we can see in \autoref{table:pubsub_comparison}, it supports all functional features that we need (and some more).
+It is also relatively mature, has good enough documentation and is somewhat popular.
+
+Finally, we have Mycila PubSub, a modern replacement for EventBus.
+It supports all the functional features we need, except filtering.
+Its documentation is good enough, but since it is relatively new, it's not very popular (yet) and may lack in maturity.

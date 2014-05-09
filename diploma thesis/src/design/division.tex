@@ -9,7 +9,7 @@ The actual provisioning manager handles the communication with the service repos
 A separate bootware component handles the provisioning and deprovisioning of the provisioning engines.
 At the moment, that leaves us with two bootware components, one local and one remote, where the local bootware component kick-starts the remote bootware, which then handles the actual provisioning of provisioning engines.
 The first question that has to be answered is whether or not this division is reasonable, or if another alternative makes more sense.
-We will now discuss the viability of four alternatives.
+We will now discuss the viability of four such alternatives.
 
 \subsubsection{Single Local Component}
 
@@ -49,7 +49,7 @@ The next obvious choice is to put the single bootware component into a remote en
 However, this creates new problems.
 
 Since there aren't any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
-Either the user provisions the bootware once in some cloud environment and then keep this one instance running or she provision it once she needs it and deprovisions it when she is done.
+Either the user provisions the bootware once in some cloud environment and then keep this one instance running, or she provision it once she needs it and deprovisions it when she is done.
 
 In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware component.
 Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
@@ -80,7 +80,7 @@ On the local side we have a small and simple component which has mainly one func
 
 This eliminates the problems of a single local or remote bootware component.
 The user no longer has to be involved in the management of the remote bootware since the local bootware handles all that.
-Since we provision the remote bootware on demand we now also can position the remote component close to other remote components to minimize local/remote communication and the problems resulting of it.
+Since we provision the remote bootware on demand we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.
 We can now keep the local part as simple as possible and make the remote part as complicated as it has to be and since we provision the remote bootware only for one user we don't have to worry about multi-tenancy.
 
 But we also introduce new problems.
@@ -93,8 +93,8 @@ Independent from this, it has to be able to provision to any environment that th
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
 We discuss plugins in detail in \autoref{design:extensibility}.
 
-\textcolor{red}{A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
-More on this in \autoref{design:communication}}
+A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
+More on this in \autoref{design:communication}
 
 \subsubsection{Cloning}
 
@@ -106,9 +106,9 @@ More on this in \autoref{design:communication}}
 \end{figure}
 
 This architecture can be seen as an alternative form of the 2-tier architecture described in \autoref{design:division:2tier}.
-In this case there are also two parts working together and the remote part does most of the work.
-However, the local and the remote components are identical.
-Instead of provisioning a bigger component in a remote environment, the local component clones itself.
+In this case there are also two bootwares working together and the remote bootware does most of the work.
+However, the local and the remote bootware are identical.
+Instead of provisioning a bigger bootware in a remote environment, the local bootware clones itself.
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
 The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and would contain functionality that it wouldn't require for local operation (e.g. a web service interface).
 However, since we want to keep the whole bootware, including the remote part, fairly lightweight, it's highly unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.

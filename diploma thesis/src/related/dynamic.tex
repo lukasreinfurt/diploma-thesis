@@ -4,7 +4,7 @@
 \citeauthor{provisioning:dynamic} found some problems with the architecture proposed in \autoref{related:ondemand}.
 The original architecture assumes that only one provisioning engine is used at a time.
 It neglects situations where services might require another (or multiple other) provisioning engines, because their provisioning descriptions aren't available in a format that the currently used provisioning engine understands.
-It also assumes that the \nom{Enterprise Service Bus}{ESB} communicates directly with this provisioning engine to deploy and undeploy other services.
+It also assumes that the ESB communicates directly with this provisioning engine to deploy and undeploy other services.
 This implicates that the ESB understands all manner of interfaces provided by various provisioning engines.
 
 It further assumes that every provisioning engine knows how to communicate with the service repository to get the information and resources it needs to provision a service.

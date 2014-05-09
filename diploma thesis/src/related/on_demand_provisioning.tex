@@ -25,7 +25,7 @@ In deployment step two, this provisioning engine is used to deploy the actual mi
 Now, the workflow can be deployed on this middleware, which is step three.
 In step four, an instance of this workflow is executed.
 During this execution, some external service might be required that are not yet available.
-The ESB determines this by checking the service registry.
+The \nom{Enterprise Service Bus}{ESB} determines this by checking the service registry.
 If the requested service isn't available, the ESB tells the provisioning engine to provision this service.
 The on-demand provisioning of services is step five, which corresponds to deployment step three in \autoref{image:original_architecture}.
 The service is also deprovisioned if it is no longer needed.
@@ -45,6 +45,6 @@ These components are always running.
 When he deploys the workflow, the local bootware component kicks of the on demand provisioning process and therefore the second phase, called middlware runtime phase.
 In this phase, the bootloader deploys a provisioning engine in the cloud, which in turn deploys the workflow middleware.
 Once the middleware is up and running, the workflow can be executed. During the execution, the ESB receives service calls from the workflow engine.
-Services, that are not running at this time can then be provisioned by the provisioning engine.
+Services that are not running at this time can then be provisioned by the provisioning engine.
 This takes place in the third phase, the service runtime phase.
 The bars at the bottom of \autoref{image:original_architecture} show, which components are active during which phase~\autocite{provisioning:ondemand}.

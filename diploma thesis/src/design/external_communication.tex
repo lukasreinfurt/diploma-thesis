@@ -1,28 +1,30 @@
 \subsection{External Communication}
 \label{design:communication}
 
-Since we will use a 2-tiered approach for the bootware component, we now have to decide, how the communication between the two components will work.
+Since other components will have to call the bootware and since we will use a 2-tiered approach for the bootware component, we now have to decide, how the external communication with the bootware will work.
 There are several factors that impact this decision.
-
 Communication between the components should be as simple as possible, but has to support some critical features.
+To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the ESB.
 
-Since the provisioning processes kicked off by the bootware can potentially take a lot of time to finish (in the range of minutes to hours), asynchronous communication should be used between the components to avoid timeouts and blocking resources.
-
+Since the provisioning processes kicked off by the bootware can potentially take a long time to finish (in the range of minutes to hours), asynchronous communication should be used between the components to avoid timeouts and blocking resources.
 For the same reason, there should be some mechanism to get feedback on the current status during a long running provisioning process.
 
-There will be other components that have to call the bootware to start some provisioning process, so communication has to be open for other parties.
-
-The communication with the bootware components will contain sensitive data, for example login information for cloud providers that the bootware needs to do its job, but has to be provided from the outside on a call to call basis.
-This information has to be transported securely to prevent malicious or fraudulent attacks.
-The selected communication method therefore has to support some sort of security mechanisms, ideally end-to-end encryption.
+The communication with the bootware components will contain sensitive data, for example login information for cloud providers.
+This information has to be provided from the outside on a call to call basis and should be transported securely to prevent malicious or fraudulent attacks.
+The selected communication method therefore has to support some sort of security mechanism, ideally end-to-end encryption.
 While these security mechanisms will not be used in this thesis due to time constraints, selecting the right communication method is still critical for future development.
 
-\textcolor{red}{REST, RMI (restricted to java clients), EJB, RPC}
+Java provides a package for \nom{Remote Method Invocation}{RMI}, which allows object in one Java VM to invoke methods on objects in another Java VM~\autocite{rmi}.
+But since RMI is limited to Java and we might want to communicate with the bootware from a component written in another programming language, RMI doesn't seem like a good fit.
+For communication between programs written in different languages we could use the \nom{Common Object Request Broker Architecture}{CORBA}, a standard defined by the \nom{Object Management Group}{OMG}.
+It supports mappings for common programming languages, like Java, C++, Python, and others.
+Corba also supports asynchronous method invocation via callbacks~\autocite{corba:async} and transport layer encryption and other security features~\autocite{corba:security}.
+Another alternative are web services via \nom{Simple Object Access Protocol}{SOAP} or \nom{Representational State Transfer}{REST}.
+Like CORBA, web services also support asynchronous invocation, as well as security mechanisms~\autocite{ws:security}.
 
-Since this whole project is concerned with services, it \textcolor{red}{liegt nahe} to use web service calls and returns as main communication method, internally as well as  externally.
-This way we offer a consistent interface for all components to use.
+Since the whole SimTech SWfMS already uses SOAP based web service, it would make sense to also use SOAP based web services as external communication mechanism for the bootware component.
+The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA doesn't offer any significant advantages over SOAP based web services.
 \autoref{image:webservice} shows the addition of asynchronous web service call and return communication to the proposed architecture.
-Using a web service with soap messaging also gives us access to Web Service Security Framework, which supports end-to-end encryption.
 
 \begin{figure}[!htbp]
 	\centering
@@ -31,17 +33,16 @@ Using a web service with soap messaging also gives us access to Web Service Secu
 	\label{image:webservice}
 \end{figure}
 
-Web Services also support asynchronous communication so that long running provisioning processes won't pose a problem.
+With asynchronous communication, long running provisioning processes won't pose a problem.
 We do however still need information during those long running processes to give the user some feedback.
-This can't be accomplished by this simple request/response pattern.
+This can't be accomplished by the simple web service request/response pattern.
 For this, a secondary communication mechanism which supports sending multiple feedback messages has to be used.
 
 Since it is not necessary for the successful use of the bootware it would make sense to implement this secondary communication mechanism as a plugin.
 This would allow us to add arbitrary communication plugins to the bootware depending on future needs.
-
-One natural choice for this is the PubSub pattern implemented by some messaging middleware.
-Using this pattern, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
-\autoref{image:queue} shows an additional message queue.
+These secondary communication channels could take any form, but a natural choice for publishing the intermediary state of the bootware would be a message queue system.
+In this case, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
+\autoref{image:queue} shows the proposed architecture with an additional message queue.
 
 \begin{figure}[!htbp]
 	\centering

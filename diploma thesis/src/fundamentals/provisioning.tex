@@ -8,7 +8,7 @@ It focuses in particular on TOSCA and Open TOSCA, since those are used in the pr
 Setting up a complex distributed system with many different components scattered across multiple environments is a time-consuming task if done by hand.
 For this reason, many provisioning solutions have been created over the years to automate this process.
 They differ in some areas, which we will discuss later, but their core functionality is in basically identical: They prepare all necessary resources for a certain task.
-Let's state that core functionality a little more precise with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
+Let's state this core functionality a little more precise with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
 Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{towardsprovisioning}.
 
@@ -29,7 +29,7 @@ In step two, we pass this description to the provisioning software, which interp
 Many different provisioning solutions exist today.
 Some cloud providers offer provisioning solutions that are particularly tailored to their cloud offerings, for example AWS CloudFormation\footnote{\url{http://aws.amazon.com/cloudformation}}, which can only be used to provision resources in the Amazon cloud.
 Then, there are more generally usable provisioning solutions that are not bound to any particular cloud provider.
-A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, Chef\footnote{\url{http://www.getchef.com/chef}}, and Puppet\footnote{\url{http://puppetlabs.com/}}, and TOSCA, which we will discuss in detail later.
+A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, Chef\footnote{\url{http://www.getchef.com/chef}}, Puppet\footnote{\url{http://puppetlabs.com/}}, and TOSCA, which we will discuss in detail later.
 
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
@@ -65,18 +65,18 @@ The edges of the graph represent connections between nodes, which are defined by
 An example for such a connection would be a node A, representing a web service, which is deployed on node B, an application server.
 Relationship types are also used to connect requirements and capabilities.
 
-Orchestration plans, shown on the left of \autoref{image:tosca:servicetemplate}, are used to manage the service that is defined by the service template. TOSCA distinguishes between three types of plans: Build plans, termination plans, and modification plans.
-Build plans describe, how instances of a service are created.
-Termination plans describe, how such a service is removed.
+Orchestration plans, shown on the right of \autoref{image:tosca:servicetemplate}, are used to manage the service that is defined by the service template. TOSCA distinguishes between three types of plans: Build plans, termination plans, and modification plans.
+Build plans describe how instances of a service are created.
+Termination plans describe how such a service is removed.
 Modification plans manage a service during its runtime.
 These plans consist of one or more tasks, i.e., an operation on a node (via an interface) or an external service call, and the order in which these tasks should be performed.
 They can be written in \nom{Business Process Model and Notation}{BPMN} or \nom{Business Process Execution Language}{BPEL}, which are already existing languages to describe process models.
 
-The bottom center of \autoref{image:tosca:servicetemplate} shows artifact templates, which represent artifact.
+The bottom center of \autoref{image:tosca:servicetemplate} shows artifact templates, which represent artifacts.
 Artifacts are things that can be executed directly (e.g.: scripts, archives) or indirectly (e.g.: URL, ports).
 TOSCA further distinguishes between two types of artifacts, namely deployment and implementation artifacts.
 Deployment artifacts materialize instances of a node and are used by a build plan to create a service.
-An example for this is an \nom{Amazon Machine Images}{AMI}, which creates an Apache server once deployed in a VM.
+An example for this is an \nom{Amazon Machine Image}{AMI}, which creates an Apache server once deployed in a VM.
 Implementation artifacts represent the interfaces of components.
 Here, an example would be a node that has an interface for starting the particular component described by the node.
 This interfaces could be implemented by an implementation artifact like a \textit{.jar} file.

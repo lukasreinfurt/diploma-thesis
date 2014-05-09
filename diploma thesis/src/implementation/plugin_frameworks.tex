@@ -1,6 +1,37 @@
 \subsection{Plugin Frameworks}
 \label{pluginframeworks}
 
+All of the frameworks that we compare here offer the basic functionality that we need to extend the core bootloader component, i.e. the developer defines interfaces that then are implemented by one or more plugins.
+These plugins are compiled separately from the main component and are then packaged in \textit{.jar} files for distribution.
+These packages are loaded during runtime and provide the implementation for the specific interface they implement.
+There are however some advanced functional differences and some non-functional differences that will be considered here.
+
+Dynamic loading allows us to load and replace plugins during runtime, without completely restarting the application.
+This is an important feature, since it is possible that the bootware has to use many different plugins during its lifetime.
+For example, this would be the case when several services have to be provisioned, each with different provisioning engines.
+In this case, the bootware has to load the appropriate plugins for every provisioning engine to be able to fulfill its task.
+We could of course just load every plugin at startup, switch between them internally when necessary, and never unload them.
+This could become a problem if the number of available plugins increases in the future.
+Then, loading all plugins could take some time and slow down the entire bootware process.
+In many cases, some or most of the plugins would never be used and loading them wouldn't be necessary at all.
+Therefore, it seems far more reasonable to load and unload plugins dynamically when needed.
+
+Security is also a must have feature.
+Consider the following scenario: The bootware component is used by multiple separate users who can share plugins using a plugin repository.
+A malicious user could create a new plugin and upload it to the repository.
+This plugin can contain virtually any code.
+For example, it could erase all files or open a back door in the system when it is executed.
+Other users might trust the plugin author and try the plugin without checking its code first.
+Proper security feature might be able to prevent harm in such situations.
+Due to time restrictions, plugin security will not be discussed further in this thesis, but it's still vital to select the right framework now, so that security features can be implemented in the future.
+
+We also consider some non-functional features that might influence the selection.
+There is already a plugin framework in use in the SimTech project, so it could be beneficial to choose the same framework, because the necessary knowledge and experience already exists.
+The requirements section also mentioned that using software based on open standards is encouraged.
+If possible, the complexity should be low while still providing all the necessary functional properties.
+Frameworks with high popularity and an active development community might be more mature or provide more documentation and support.
+
+\vspace*{\baselineskip}
 \begingroup
 	\centering
 	\captionsetup{type=table}
@@ -46,25 +77,25 @@
 
 
 		& \textbf{Standard}
-		& \ding{55}    % spi
+		& \textbf{(}\ding{51}\textbf{)} % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
 
 		& \textbf{Complexity}
-		& \ding{55}    % spi
+		& low     % spi
 		& low     % jspf
 		& medium  % jpf
 		& high \\ % osgi
 
 		& \textbf{Popularity}
-		& \ding{55}    % spi
+		& medium  % spi
 		& low     % jspf
-		& low     % jpf
+		& medium  % jpf
 		& high \\ % osgi
 
 		& \textbf{Active Development}
-		& \ding{55}    % spi
+		& \ding{51}    % spi
 		& \ding{55}    % jspf
 		& \ding{55}    % jpf
 		& \ding{51} \\ % osgi
@@ -76,39 +107,30 @@
 	\label{table:plugin_comparison}
 \endgroup
 
-All of the frameworks that we compare here offer the basic functionality that we need to extend the core bootloader component, i.e. the developer defines interfaces that then are implemented by one or more plugins.
-These plugins are compiled separately from the main component and are then packaged in \textit{.jar} files for distribution.
-These packages are loaded during runtime and provide the implementation for the specific interface they implement.
-There are however some advanced functional differences and some non-functional differences that will be considered here.
-
-Dynamic loading allows us to load and replace plugins during runtime, without completely restarting the application.
-While we don't know for certain if dynamic loading is needed in our case, it's one of the advanced features that might be nice to have in the future.
-
-Security is a must have feature but is out of the scope of this thesis.
-Consider the following scenario: The bootware component is used by multiple separate users who can share plugins using a plugin repository.
-Without security features, a malicious user could upload a plugin to this repository which, in theory, could contain any code.
-Therefore it's important to select the right framework now, so that security features can be implemented in the future.
-
-Some non-functional features should also be considered, such as complexity, popularity, and if the framework is still in active development.
-
-Java provides an integrated extension mechanism called \nom{Service Provider Interface}{SPI}, which is a little more advanced then the manual extension mechanism described above.
+\autoref{table:plugin_comparison} shows a comparison of four Java plugin frameworks, the first of which is the \nom{Service Provider Interface}{SPI}.
+It is an extension mechanism integrated in Java which is a little more advanced then the manual extension mechanism described in \autoref{design:extensibility}.
 It is also based on a set of interfaces and abstract classes that have to be implemented by an extension.
 In the case of SPI, these interfaces and abstract classes are called services and a specific implementation of such a service is called service provider.
-However, unlike in the above approach, specific implementations are loaded from .jar files in specific directories or in the class path.
+However, unlike in the manual approach, specific implementations are loaded from .jar files in specific directories or in the class path.
 These .jar files also include metadata to identify the different service providers~\autocite{spi}.
 
-\nom{Java Simple Plugin Framework}{JSPF}\footref{jspf} is a plugin framework build for small to medium sized projects.
-Its main focus is simplicity.
-Therefore it does not support many of the advanced features like dynamic loading or security that other solution support.
-The author explicitly states that it is not intended to replace JPF or OSGi~\autocite{jspf:faq}.
+SPI is easy to use, doesn't depend on any external libraries, is well documented, and mature, since it is used in the \nom{Java Runtime Environment}{JRE}.
+One could also say that it is somewhat standardized, since it is part of Java.
+But as we can see in \autoref{table:plugin_comparison} on the left, it neither supports dynamic loading, nor security features and is therefore not a good fit for our needs.
 
-\nom{Java Plugin Framework}{JPF}\footref{jpf} is an open-source plugin framework.
-Compared to JSPF it supports some advanced features like dynamic loading of plugins during runtime.
-It is also more popular then JSPF.
-However, the last version was released in 2007.
+The next contender is the \nom{Java Simple Plugin Framework}{JSPF}\footref{jspf}, an open-source plugin framework build for small to medium sized projects.
+Its main focus is simplicity and the author explicitly states that it is not intended to replace JPF or OSGi~\autocite{jspf:faq}.
+As a result it is lightweight and easy to use but does not support advanced features like dynamic loading or security.
+
+\nom{Java Plugin Framework}{JPF}\footref{jpf} is another open-source plugin framework.
+Compared to JSPF it's a little more complex and popular.
+As we can see in \autoref{table:plugin_comparison}, it also supports dynamic loading.
+However, the last version was released in 2007 and development seems to have stopped.
 This is not necessarily bad but might show that there will be no future development of this framework.
 
-\nom{Open Service Gateway initiative}{OSGi}\footref{osgi} is a plugin framework standard developed by OSGi Alliance.
+This leaves us with the final contender, which is \nom{Open Service Gateway initiative}{OSGi}\footref{osgi}, a plugin framework standard developed by the OSGi Alliance.
 It provides a general-purpose Java framework that supports the deployment of extensible bundles~\autocite{osgi:spec}.
-
-\textcolor{red}{Decision}
+The right column of \autoref{table:plugin_comparison} shows, that it supports dynamic loading, as well as security.
+OSGi is under active development, fairly popular, and has also been used in the SimTech project.
+Compared to the other alternatives it is pretty complex, but considering the other factors, it is the only real alternative.
+Therefore we will use OSGi to provide the extensibility required for the bootware.
