@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<serviceGroup>
-	<service name="Hello">
-		<parameter name="ServiceClass">org.simtech.bootware.webservice.Hello</parameter>
-		<operation name="sayHello">
-			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
-		</operation>
-	</service>
-</serviceGroup>

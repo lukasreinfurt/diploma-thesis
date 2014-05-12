@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Bootware Eclipse Extension Plugin
-Bundle-SymbolicName: org.simtech.bootware.eclipse.extension;singleton:=true
-Bundle-Version: 0.0.1
-Require-Bundle: org.simtech.bootware.eclipse.core
-Bundle-ActivationPolicy: lazy
