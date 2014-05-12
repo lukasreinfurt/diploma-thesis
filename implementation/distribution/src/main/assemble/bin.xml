@@ -22,6 +22,14 @@
 			</includes>
 		</fileSet>
 
+		<fileSet>
+			<directory>../target/site</directory>
+			<outputDirectory>docs</outputDirectory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
+
 	</fileSets>
 
 	<moduleSets>
