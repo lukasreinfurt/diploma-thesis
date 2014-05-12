@@ -22,14 +22,6 @@
 			</includes>
 		</fileSet>
 
-		<fileSet>
-			<directory>../statemachines/src</directory>
-			<outputDirectory>statemachines</outputDirectory>
-			<includes>
-				<include>**/*.*</include>
-			</includes>
-		</fileSet>
-
 	</fileSets>
 
 	<moduleSets>
@@ -40,6 +32,9 @@
 				<include>org.simtech.bootware:core</include>
 			</includes>
 			<binaries>
+				<outputFileNameMapping>
+					bootware.${artifact.extension}
+				</outputFileNameMapping>
 				<outputDirectory>/</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
