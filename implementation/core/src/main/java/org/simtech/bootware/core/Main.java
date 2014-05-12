@@ -6,9 +6,9 @@ package org.simtech.bootware.core;
 public class Main {
 
 	/**
-	 * Runs the bootware program
+	 * Runs the bootware program.
 	 *
-	 * @param args String[] Commandline arguments
+	 * @param args String[] Commandline arguments.
 	 */
 	public static void main(String[] args) {
 		System.out.println("Bootware");
