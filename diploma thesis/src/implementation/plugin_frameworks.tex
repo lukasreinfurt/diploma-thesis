@@ -134,3 +134,10 @@ The right column of \autoref{table:plugin_comparison} shows, that it supports dy
 OSGi is under active development, fairly popular, and has also been used in the SimTech project.
 Compared to the other alternatives it is pretty complex, but considering the other factors, it is the only real alternative.
 Therefore we will use OSGi to provide the extensibility required for the bootware.
+
+Since OSGi by itself is only a standard, we still have to select an OSGI implementation.
+As with all other libraries and frameworks we use, we are looking for an open-source implementation, so we will ignore commercial OSGi implementations.
+There are three open-source OSGi implementations to choose from: Apache Felix\footnote{\url{http://felix.apache.org}}, Eclipse Equinox\footnote{\url{http://eclipse.org/equinox}}, and Knopflerfish\footnote{\url{http://www.knopflerfish.org}}.
+All of them are under active development and implement the OSGi core framework specification, as well as the OSGi security specification (among others).
+We will be using Apache Felix, since it is already being used in the SimTech project.
+But it should be straight forward to change to another implementation in the future if necessary, since they all implement the same specification and should therefore in theory be completely interchangeable.
