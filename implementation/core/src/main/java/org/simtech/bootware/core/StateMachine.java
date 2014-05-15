@@ -72,6 +72,11 @@ public class StateMachine {
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
+		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+			stateMachine.fire(FSMEvent.Success);
+			//stateMachine.fire(FSMEvent.Failure);
+		}
+
 		protected void wait(String from, String to, FSMEvent fsmEvent, Integer context) {
 			if (counter <= 1) {
 				counter = counter + 1;
@@ -88,7 +93,7 @@ public class StateMachine {
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void loadPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
 			if (counter == 1) {
 				stateMachine.fire(FSMEvent.Deploy);
 			}
@@ -142,12 +147,17 @@ public class StateMachine {
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void unloadPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void returnResponse(String from, String to, FSMEvent fsmEvent, Integer context) {
+			stateMachine.fire(FSMEvent.Success);
+			//stateMachine.fire(FSMEvent.Failure);
+		}
+
+		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -178,36 +188,38 @@ public class StateMachine {
 		builder.externalTransition().from("Start").to("Initialize").on(FSMEvent.Start);
 
 		// initialize
-		buildDefaultTransition("Initialize", "initialize", "Wait", "Cleanup");
+		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
+		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
 
 		builder.onEntry("Wait").callMethod("wait");
 		builder.externalTransition().from("Wait").to("Read_Context").on(FSMEvent.Request);
-		builder.externalTransition().from("Wait").to("Cleanup").on(FSMEvent.Shutdown);
-		builder.externalTransition().from("Wait").to("Cleanup").on(FSMEvent.Failure);
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Shutdown);
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Failure);
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Plugins", "Return_Response");
+		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
 
-		builder.onEntry("Load_Plugins").callMethod("loadPlugins");
-		builder.externalTransition().from("Load_Plugins").to("Provision_Infrastructure").on(FSMEvent.Deploy);
-		builder.externalTransition().from("Load_Plugins").to("Stop_Payload").on(FSMEvent.Undeploy);
-		builder.externalTransition().from("Load_Plugins").to("Unload_Plugins").on(FSMEvent.Failure);
+		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
+		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on(FSMEvent.Deploy);
+		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on(FSMEvent.Undeploy);
+		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(FSMEvent.Failure);
 
 		// deploy
 		buildDefaultTransition("Provision_Infrastructure", "provisionInfrastructure", "Connect", "Deprovision_Infrastructure");
 		buildDefaultTransition("Connect", "connect", "Provision_Payload", "Disconnect");
 		buildDefaultTransition("Provision_Payload", "provisionPayload", "Start_Payload", "Deprovision_Payload");
-		buildDefaultTransition("Start_Payload", "startPayload", "Unload_Plugins", "Stop_Payload");
+		buildDefaultTransition("Start_Payload", "startPayload", "Unload_Request_Plugins", "Stop_Payload");
 
 		// undeploy
 		buildDefaultTransition("Stop_Payload", "stopPayload", "Deprovision_Payload", "Deprovision_Payload");
 		buildDefaultTransition("Deprovision_Payload", "deprovisionPayload", "Disconnect", "Disconnect");
 		buildDefaultTransition("Disconnect", "disconnect", "Deprovision_Infrastructure", "Deprovision_Infrastructure");
-		buildDefaultTransition("Deprovision_Infrastructure", "deprovisionInfrastructure", "Unload_Plugins", "Fatal_Error");
-		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Plugins", "Unload_Plugins");
+		buildDefaultTransition("Deprovision_Infrastructure", "deprovisionInfrastructure", "Unload_Request_Plugins", "Fatal_Error");
+		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");
 
 		// cleanup
-		buildDefaultTransition("Unload_Plugins", "unloadPlugins", "Return_Response", "Return_Response");
+		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Return_Response", "Return_Response");
 		buildDefaultTransition("Return_Response", "returnResponse", "Wait", "Wait");
+		buildDefaultTransition("Unload_Event_Plugins", "unloadEventPlugins", "Cleanup", "Cleanup");
 		buildDefaultTransition("Cleanup", "cleanup", "End", "End");
 
 		// end
