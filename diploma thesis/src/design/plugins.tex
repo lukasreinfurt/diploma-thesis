@@ -1,0 +1,218 @@
+\subsection{Plugin Types}
+\label{design:plugins}
+
+We can already tell from the requirements that we must at least support two different plugin types, one for different cloud providers and one for different provisioning engines.
+The former are required because we may want to provision into different cloud environments.
+The latter are required because we might want to use different provisioning engines to do so.
+
+The cloud provider plugins will be responsible for creating and removing resources in cloud environments and making them available for the user to configure and use.
+This could be barebone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
+If we think about this for a second, we realize that we don't even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computer resource that we can use.
+For example, we could also provide a plugin that starts and stops VMs on our local machine, which could be useful for quick and inexpensive local testing.
+So a better name for these plugins would be \textit{infrastructure plugins}.
+
+The same line of thinking can be used on the provisioning engine plugins.
+All that we care about is that we can get some software running on any given infrastructure and that we get back an URL where we can find this software once it is up and running.
+A better name for these plugins would therefore be \textit{payload plugins}.
+
+Now that we have infrastructure plugins and payload plugins, we should be able to start any infrastructure we need and use payload plugins to install and run any software on them.
+But there is a step in between provisioning the infrastructure and installing the software that we are glancing over: We have to somehow connect to the infrastructure before we can install something.
+The connection functionality could be part of either the infrastructure plugins or the payload plugins, or it could be separated into independent connection plugins.
+
+For the sake of efficiency and extensibility it would be best to use independent connection plugins.
+For example, if a user wanted to add a new connection type that should be used to install x applications in y environments, he could do so by writing one new connection plugin, instead of adding the functionality x-times to all payload plugins, or y-times to all infrastructure plugins.
+This would also reduce code duplication.
+Therefore, a third plugin type is necessary: The \textit{connection plugins}.
+
+In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
+Together with the use of events that we introduced in \autoref{design:internalcomm}, we can see a fourth plugin type emerging: the \textit{event plugins}.
+These plugins are a bit less specific then the three other types.
+They allow users to add functionality that reacts to (or creates) events inside the bootware.
+With this fourth plugin type we have now covered all plugin types we will need.
+We will describe each plugin type in more detail, but before we do this, we will describe the common operations that all plugin types have to implement.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			init
+		& -
+		& -
+		& Is called by the plugin manager when the plugin is loaded \\
+
+			shutdown
+		& -
+		& -
+		& Is called by the plugin manager when the plugin is unloaded \\
+
+	\end{tabu}
+	\caption{Common operations to be implemented by all plugin types}
+	\label{table:all_plugins}
+\endgroup
+
+\autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
+The init operation is called by the plugin manager when he loads a plugin.
+This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
+The shutdown operation is called by the plugin manager when he unloads a plugin.
+It can be useful to clean up plugin resources before it is removed, for example by deleting temporary files or closing a connection.
+
+\subsubsection{Infrastructure Plugins}
+
+Infrastructure plugins are responsible for provisioning any infrastructure that the user wants to use during the bootware process.
+This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
+To be able to do this, an infrastructure plugin has to implement a range of functions using some \nom{Application Programming Interface}{API} or SDK provided by the virtualization software or cloud provider.
+
+\autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
+The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a connection plugin.
+As input it takes login credentials for a cloud provider (if necessary), which are used to authenticate when calling the API or using the SDK.
+These credentials must be supplied by the user at some point before or during the bootware process.
+If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
+
+The undeploy operation removes a resource that was previously deployed using the deploy operation.
+In case of a local VM this could mean that it stops the running VM.
+In case of a cloud resource this could mean that it completely removes the resource so that no further costs are incurred.
+As input it takes an instance object created earlier by the deploy operation.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			deploy
+		& Credentials
+		& Instance
+		& Given the proper credentials, deploys a connection ready instance of some resource and returns an instance object \\
+
+			undeploy
+		& Instance
+		& -
+		& Completely removes a given instance \\
+
+	\end{tabu}
+	\caption{Interfaces to be implemented by infrastructure plugins}
+	\label{table:infra_plugins}
+\endgroup
+
+\subsubsection{Connection Plugins}
+
+Connection plugins are responsible for creating a communication channel to previously deployed resources that can later be used by payload plugins to execute their operations on the resource.
+The connection could be made by using SSH, RDC, VPN, Telnet, or other communication mechanisms supported by the resource.
+The connection plugins should be implemented in a generic fashion, so that they can be used for all kinds of resources.
+
+\autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
+The connect operation establishes a connection to a specific resource.
+The resource is specified by the instance object that is passed as input to the deploy operation.
+If the connection was established successfully, the operation returns a connection object that can be used later by payload plugins to execute operations through this connection.
+The disconnect operation closes a connection that was previously established by the connect operation.
+As input, it takes a connection object that was previously created by the connect operation.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			connect
+		& Instance
+		& Connection
+		& Establishes a connection to the given instance\\
+
+			disconnect
+		& Connection
+		& -
+		& Disconnects a given connection \\
+
+	\end{tabu}
+	\caption{Interfaces to be implemented by connection plugins}
+	\label{table:conn_plugins}
+\endgroup
+
+\subsubsection{Payload Plugins}
+
+Payload plugins are responsible for installing, uninstalling, starting, and stopping software on a resource.
+This process can include the uploading of files and the execution of remote orders on a resource.
+
+\autoref{table:payload_plugins} shows the operations that plugins of this type should implement.
+The deploy operation installs a payload on a resource.
+This can include uploading files from the local machine or downloading files from other machines.
+To execute this operation, a connection to the resource is necessary, which is supplied as input with the connection object.
+The undeploy operation  removes a payload from a resource.
+In most cases this will not be necessary, since the resource will be destroyed in the undeploy phase and with it all the payload data (assuming it wasn't installed in persistent storage).
+This method is provided for completeness and for special cases.
+The start operation starts a payload which previously was installed with the deploy operation.
+If the payload was started successfully, it returns the URL to the running payload.
+The stop operation stops the execution of a previously started payload.
+In most cases this will not be necessary, since the payload will be removed together with the resource in the undeploy phase.
+This method is provided for completeness and for special cases.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			deploy
+		& Connection
+		& -
+		& Deploys the payload over the given connection\\
+
+			undeploy
+		& Connection
+		& -
+		& Undeploys the payload over the given connection\\
+
+			start
+		& Connection
+		& URL
+		& Starts the payload over the given connection\\
+
+			stop
+		& Connection
+		& -
+		& Stops the payload over the given connection\\
+
+	\end{tabu}
+	\caption{Interfaces to be implemented by payload plugins}
+	\label{table:payload_plugins}
+\endgroup
+
+\subsubsection{Event Plugins}
+
+Unlike the other plugin types, the event plugins don't have any more operations to implement then the init and shutdown operations described in \autoref{table:all_plugins}.
+Instead, they implement their specific functionality by defining one ore more event handlers which will react to specific events when these are published at the event bus.
+How exactly these event handlers look is dictated by the PubSub library that is used, which will be discussed later.
