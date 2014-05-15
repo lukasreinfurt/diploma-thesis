@@ -48,6 +48,17 @@
 			</binaries>
 		</moduleSet>
 
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware.plugins.event:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>plugins/event</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
 	</moduleSets>
 
 </assembly>
