@@ -11,6 +11,7 @@ import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
+import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 
 /**
@@ -63,8 +64,8 @@ public class StateMachine {
 		private int counter = 0;
 
 		protected void transition(String from, String to, FSMEvent fsmEvent, Integer context) {
-			InfoEvent event = new InfoEvent();
-			event.setMessage("Transition from '" + from + "' to '" + to + "' on event '" + fsmEvent + "'.");
+			StateTransitionEvent event = new StateTransitionEvent();
+			event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
 			eventBus.publish(event);
 		}
 

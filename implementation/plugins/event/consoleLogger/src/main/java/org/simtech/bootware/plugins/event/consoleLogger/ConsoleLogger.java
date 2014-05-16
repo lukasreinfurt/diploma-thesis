@@ -1,7 +1,7 @@
 package org.simtech.bootware.plugins.event.consoleLogger;
 
 import org.simtech.bootware.core.plugins.BasePlugin;
-import org.simtech.bootware.core.events.BaseEvent;
+import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.WarningEvent;
@@ -14,10 +14,10 @@ import net.engio.mbassy.common.FilteredMessage;
 
 public class ConsoleLogger extends BasePlugin {
 
-	// @Handler
-	// public void handle(BaseEvent event) {
-	// 	System.out.println(event.getTimestamp() + ": " + event.getMessage());
-	// }
+	@Handler
+	public void handle(StateTransitionEvent event) {
+		System.out.println("[TRANSITION] " + event.getMessage());
+	}
 
 	@Handler
 	public void handle(InfoEvent event) {
