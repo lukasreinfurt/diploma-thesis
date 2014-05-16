@@ -14,11 +14,10 @@ public class Main {
 	public static void main(String[] args) {
 		EventBus eventBus = new EventBus();
 
-		PluginManager pluginManager = new PluginManager();
+		PluginManager pluginManager = new PluginManager(eventBus);
 		pluginManager.registerSharedObject(eventBus);
-		pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
 
-		StateMachine stateMachine = new StateMachine(eventBus);
+		StateMachine stateMachine = new StateMachine(eventBus, pluginManager);
 		stateMachine.run();
 
 		pluginManager.stop();

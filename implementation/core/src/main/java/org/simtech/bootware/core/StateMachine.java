@@ -11,7 +11,7 @@ import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
-import org.simtech.bootware.core.events.SimpleEvent;
+import org.simtech.bootware.core.events.InfoEvent;
 
 /**
  * A state machine implementation using squirrelframework.
@@ -20,6 +20,7 @@ import org.simtech.bootware.core.events.SimpleEvent;
 public class StateMachine {
 
 	private static EventBus eventBus;
+	private static PluginManager pluginManager;
 	private UntypedStateMachineBuilder builder;
 	private static UntypedStateMachine stateMachine;
 
@@ -62,7 +63,7 @@ public class StateMachine {
 		private int counter = 0;
 
 		protected void transition(String from, String to, FSMEvent fsmEvent, Integer context) {
-			SimpleEvent event = new SimpleEvent();
+			InfoEvent event = new InfoEvent();
 			event.setMessage("Transition from '" + from + "' to '" + to + "' on event '" + fsmEvent + "'.");
 			eventBus.publish(event);
 		}
@@ -73,6 +74,7 @@ public class StateMachine {
 		}
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+			pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -169,6 +171,9 @@ public class StateMachine {
 
 		protected void end(String from, String to, FSMEvent fsmEvent, Integer context) {
 			stateMachine.terminate(10);
+			InfoEvent event = new InfoEvent();
+			event.setMessage("State machine terminated.");
+			eventBus.publish(event);
 		}
 
 	}
@@ -178,9 +183,10 @@ public class StateMachine {
 	 *
 	 * @param eventBus The event bus to be used by the state machine.
 	 */
-	public StateMachine(EventBus eventBus) {
-		this.eventBus = eventBus;
-		builder       = StateMachineBuilderFactory.create(Machine.class);
+	public StateMachine(EventBus eventBus, PluginManager pluginManager) {
+		this.eventBus      = eventBus;
+		this.pluginManager = pluginManager;
+		builder            = StateMachineBuilderFactory.create(Machine.class);
 
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 

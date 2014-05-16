@@ -16,6 +16,8 @@ import org.osgi.framework.launch.FrameworkFactory;
 import net.engio.mbassy.bus.MBassador;
 
 import org.simtech.bootware.core.plugins.Plugin;
+import org.simtech.bootware.core.events.SuccessEvent;
+import org.simtech.bootware.core.events.ErrorEvent;
 
 /**
  * A wrapper layer around the OSGi framwork.
@@ -23,6 +25,7 @@ import org.simtech.bootware.core.plugins.Plugin;
 
 public class PluginManager {
 
+	private EventBus eventBus;
 	private HashMap<String, String> config;
 	private HashMap<String, Bundle> installedBundles;
 	private FrameworkFactory frameworkFactory;
@@ -33,18 +36,20 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager() {
+	public PluginManager(EventBus eventBus) {
 
+		this.eventBus    = eventBus;
 		config           = new HashMap<String, String>();
 		installedBundles = new HashMap<String, Bundle>();
 
-		// export packages via system bundle to resolve constrains of plugin bundles
-		String extraPackages = "org.simtech.bootware.core," +
-		                       "org.simtech.bootware.core.events," +
-		                       "org.simtech.bootware.core.filters," +
-		                       "org.simtech.bootware.core.plugins," +
-		                       "net.engio.mbassy.listener;version=1.1.2," + // specific version is needed or unresolved constraint
-		                       "net.engio.mbassy.common;version=1.1.2"; // specific version is needed or unresolved constraint
+		// export packages via system bundle to resolve constrains of plugin bundles.
+		// Specific version is needed or unresolved constraint occur.
+		String extraPackages = "org.simtech.bootware.core;version=1.0.0," +
+		                       "org.simtech.bootware.core.events;version=1.0.0," +
+		                       "org.simtech.bootware.core.filters;version=1.0.0," +
+		                       "org.simtech.bootware.core.plugins;version=1.0.0," +
+		                       "net.engio.mbassy.listener;version=1.1.2," +
+		                       "net.engio.mbassy.common;version=1.1.2";
 		config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, extraPackages);
 
 		frameworkFactory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
@@ -78,7 +83,13 @@ public class PluginManager {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
+			SuccessEvent event = new SuccessEvent();
+			event.setMessage("Successfully loaded plugin: " + path + "'.");
+			eventBus.publish(event);
 		} catch (BundleException e) {
+			ErrorEvent event = new ErrorEvent();
+			event.setMessage("Failed to load plugin: " + path + "'.");
+			eventBus.publish(event);
 			e.printStackTrace();
 		}
 	}
@@ -99,7 +110,13 @@ public class PluginManager {
 		try {
 			installedBundles.get(path).uninstall();
 			installedBundles.remove(path);
+			SuccessEvent event = new SuccessEvent();
+			event.setMessage("Successfully unloaded plugin: " + path + "'.");
+			eventBus.publish(event);
 		} catch (BundleException e) {
+			ErrorEvent event = new ErrorEvent();
+			event.setMessage("Failed to unload plugin: " + path + "'.");
+			eventBus.publish(event);
 			e.printStackTrace();
 		}
 	}
@@ -111,12 +128,7 @@ public class PluginManager {
 		Iterator iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry entry = (Map.Entry) iterator.next();
-			try {
-				installedBundles.get(entry.getKey()).uninstall();
-				iterator.remove();
-			} catch (BundleException e) {
-				e.printStackTrace();
-			}
+			unloadPlugin(entry.getKey().toString());
 		}
 	}
 
