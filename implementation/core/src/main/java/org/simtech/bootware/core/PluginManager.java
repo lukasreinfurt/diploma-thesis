@@ -18,6 +18,7 @@ import net.engio.mbassy.bus.MBassador;
 import org.simtech.bootware.core.plugins.Plugin;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.ErrorEvent;
+import org.simtech.bootware.core.exceptions.LoadPluginException;
 
 /**
  * A wrapper layer around the OSGi framwork.
@@ -80,7 +81,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public Plugin loadPlugin(String path) {
+	public Plugin loadPlugin(String path) throws LoadPluginException {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
@@ -91,7 +92,7 @@ public class PluginManager {
 			ErrorEvent event = new ErrorEvent();
 			event.setMessage("Failed to load plugin: " + path + "'.");
 			eventBus.publish(event);
-			e.printStackTrace();
+			throw new LoadPluginException(e);
 		}
 		BundleContext bundleContext = installedBundles.get(path).getBundleContext();
 		ServiceReference<Plugin> serviceReference = bundleContext.getServiceReference(Plugin.class);

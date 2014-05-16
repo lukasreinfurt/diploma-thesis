@@ -14,6 +14,7 @@ import org.squirrelframework.foundation.fsm.DotVisitor;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
+import org.simtech.bootware.core.exceptions.LoadPluginException;
 
 /**
  * A state machine implementation using squirrelframework.
@@ -76,10 +77,15 @@ public class StateMachine {
 		}
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
-			AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
-			pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
+			try {
+				AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
+				pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
+				pluginManager.loadPlugin("plugins/event/error");
+			}
+			catch (LoadPluginException e) {
+				stateMachine.fire(FSMEvent.Failure);
+			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void wait(String from, String to, FSMEvent fsmEvent, Integer context) {
@@ -142,6 +148,7 @@ public class StateMachine {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
+
 		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer context) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
@@ -163,6 +170,7 @@ public class StateMachine {
 		}
 
 		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+			pluginManager.unloadAllPlugins();
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
