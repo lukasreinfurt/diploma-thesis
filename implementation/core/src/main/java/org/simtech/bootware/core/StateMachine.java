@@ -254,7 +254,7 @@ public class StateMachine {
 	public void exportDot() {
 		DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
 		stateMachine.accept(visitor);
-		visitor.convertDotFile("SnakeStateMachine");
+		visitor.convertDotFile("bootware");
 	}
 
 }
