@@ -46,6 +46,7 @@ public class PluginManager {
 		// Specific version is needed or unresolved constraint occur.
 		String extraPackages = "org.simtech.bootware.core;version=1.0.0," +
 		                       "org.simtech.bootware.core.events;version=1.0.0," +
+		                       "org.simtech.bootware.core.exeptions;version=1.0.0," +
 		                       "org.simtech.bootware.core.filters;version=1.0.0," +
 		                       "org.simtech.bootware.core.plugins;version=1.0.0," +
 		                       "net.engio.mbassy.listener;version=1.1.2," +
@@ -79,7 +80,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public void loadPlugin(String path) {
+	public Plugin loadPlugin(String path) {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
@@ -92,9 +93,6 @@ public class PluginManager {
 			eventBus.publish(event);
 			e.printStackTrace();
 		}
-	}
-
-	private Plugin getPlugin(String path) {
 		BundleContext bundleContext = installedBundles.get(path).getBundleContext();
 		ServiceReference<Plugin> serviceReference = bundleContext.getServiceReference(Plugin.class);
 		Plugin plugin = bundleContext.getService(serviceReference);

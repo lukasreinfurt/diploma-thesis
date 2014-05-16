@@ -11,6 +11,7 @@ import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 
@@ -75,7 +76,7 @@ public class StateMachine {
 		}
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
-			pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
+			AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
 			pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
