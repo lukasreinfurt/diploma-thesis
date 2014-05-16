@@ -66,7 +66,7 @@ public class PluginManager {
 
 	/**
 	 * Register an object in the OSGi service registry so that in can be accessed from plugins.
-	 * @see org.simtech.bootware.core.plugins.BasePlugin#getSharedObject
+	 * @see org.simtech.bootware.core.plugins.AbstractBasePlugin#getSharedObject
 	 *
 	 * @param object Object to be registered in the registry.
 	 */
@@ -128,7 +128,19 @@ public class PluginManager {
 		Iterator iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry entry = (Map.Entry) iterator.next();
-			unloadPlugin(entry.getKey().toString());
+			String key = entry.getKey().toString();
+			try {
+				installedBundles.get(key).uninstall();
+				iterator.remove();
+				SuccessEvent event = new SuccessEvent();
+				event.setMessage("Successfully unloaded plugin: " + key + "'.");
+				eventBus.publish(event);
+			} catch (BundleException e) {
+				ErrorEvent event = new ErrorEvent();
+				event.setMessage("Failed to unload plugin: " + key + "'.");
+				eventBus.publish(event);
+				e.printStackTrace();
+			}
 		}
 	}
 

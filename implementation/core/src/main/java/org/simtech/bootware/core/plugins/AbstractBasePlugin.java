@@ -27,7 +27,7 @@ public abstract class AbstractBasePlugin implements Plugin {
 	 * Creates an abstract base plugin.
 	 * <p>
 	 * Subscribes the plugin to the event bus (even if the plugin doesn't actually handle any events).
-	 * Also executes {@link initialize}.
+	 * Also executes {@link #initialize}.
 	 */
 	public AbstractBasePlugin() {
 		context  = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
@@ -50,7 +50,7 @@ public abstract class AbstractBasePlugin implements Plugin {
 	/**
 	 * Is executed when the OSGi bundle is stopped.
 	 * <p>
-	 * Calls {@link unsubscribe}.
+	 * Calls {@link #shutdown}.
 	 * Also unsubscribes the plugin from the event bus.
 	 */
 	public void stop() {
