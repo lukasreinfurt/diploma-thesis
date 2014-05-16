@@ -1,4 +1,4 @@
-\subsection{Component Division}
+\section{Component Division}
 
 As described in \autoref{related:ondemand} on page \pageref{related:ondemand}, the proposed architecture initially only envisioned one bootware component.
 This architecture was expanded with the introduction of the provisioning manager, as described in \autoref{related:dynamic} on page \pageref{related:dynamic}.
@@ -11,7 +11,7 @@ At the moment, that leaves us with two bootware components, one local and one re
 The first question that has to be answered is whether or not this division is reasonable, or if another alternative makes more sense.
 We will now discuss the viability of four such alternatives.
 
-\subsubsection{Single Local Component}
+\subsection{Single Local Component}
 
 \begin{figure}[!htbp]
 	\centering
@@ -36,7 +36,7 @@ Also, all calls from the bootware component to the provisioning engines would en
 This type of split communication can be costly and slow, as shown by Li et al.
 They compared public cloud providers and measured that intra-datacenter communication can be two to three times faster and also cheaper (often free) compared to inter-datacenter communication~\autocite{cloudcmp}.
 
-\subsubsection{Single Remote Component}
+\subsection{Single Remote Component}
 
 \begin{figure}[!htbp]
 	\centering
@@ -65,7 +65,7 @@ This eliminates the two major problems of the first case but increases the effor
 Life-cycle management of the bootware should be automated completely and hidden away from the user.
 Therefor, this scenario is not appropriate for our case.
 
-\subsubsection{2-Tier Architecture}
+\subsection{2-Tier Architecture}
 \label{design:division:2tier}
 
 \begin{figure}[!htbp]
@@ -96,7 +96,7 @@ We discuss plugins in detail in \autoref{design:extensibility}.
 A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
 More on this in \autoref{design:communication}
 
-\subsubsection{Cloning}
+\subsection{Cloning}
 
 \begin{figure}[!htbp]
 	\centering
@@ -116,7 +116,7 @@ In this case, the advantage of only having to design and implement one component
 Of course, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
 Therefore we can't decide yet if this architecture should be used.
 
-\subsubsection{Decision}
+\subsection{Decision}
 
 Of the four alternative presented here, alternative three - the 2-tier architecture - makes the most sense.
 Therefore it is selected as the alternative of choice and used for further discussion.

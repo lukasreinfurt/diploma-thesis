@@ -1,4 +1,4 @@
-\subsection{Internal Communication}
+\section{Internal Communication}
 \label{design:internalcomm}
 
 We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugins.
@@ -9,7 +9,7 @@ The only known constant to a plugin is the bootware core.
 Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
 This essentially describes the publish-subscribe pattern~\autocite{pubsub}.
 
-\subsubsection{PubSub}
+\subsection{PubSub}
 
 The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant: A event bus (or message broker), publishers, and subscribers.
 The event bus sits at the center of the communication.

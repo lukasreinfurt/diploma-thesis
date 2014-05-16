@@ -1,4 +1,4 @@
-\subsection{Plugin Types}
+\section{Plugin Types}
 \label{design:plugins}
 
 We can already tell from the requirements that we must at least support two different plugin types, one for different cloud providers and one for different provisioning engines.
@@ -66,7 +66,7 @@ This operation can be used by plugin authors to initialize the plugin, for examp
 The shutdown operation is called by the plugin manager when he unloads a plugin.
 It can be useful to clean up plugin resources before it is removed, for example by deleting temporary files or closing a connection.
 
-\subsubsection{Infrastructure Plugins}
+\subsection{Infrastructure Plugins}
 
 Infrastructure plugins are responsible for provisioning any infrastructure that the user wants to use during the bootware process.
 This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
@@ -112,7 +112,7 @@ As input it takes an instance object created earlier by the deploy operation.
 	\label{table:infra_plugins}
 \endgroup
 
-\subsubsection{Connection Plugins}
+\subsection{Connection Plugins}
 
 Connection plugins are responsible for creating a communication channel to previously deployed resources that can later be used by payload plugins to execute their operations on the resource.
 The connection could be made by using SSH, RDC, VPN, Telnet, or other communication mechanisms supported by the resource.
@@ -154,7 +154,7 @@ As input, it takes a connection object that was previously created by the connec
 	\label{table:conn_plugins}
 \endgroup
 
-\subsubsection{Payload Plugins}
+\subsection{Payload Plugins}
 
 Payload plugins are responsible for installing, uninstalling, starting, and stopping software on a resource.
 This process can include the uploading of files and the execution of remote orders on a resource.
@@ -211,7 +211,7 @@ This method is provided for completeness and for special cases.
 	\label{table:payload_plugins}
 \endgroup
 
-\subsubsection{Event Plugins}
+\subsection{Event Plugins}
 
 Unlike the other plugin types, the event plugins don't have any more operations to implement then the init and shutdown operations described in \autoref{table:all_plugins}.
 Instead, they implement their specific functionality by defining one ore more event handlers which will react to specific events when these are published at the event bus.

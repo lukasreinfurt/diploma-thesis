@@ -1,11 +1,11 @@
-\subsection{Extensibility}
+\section{Extensibility}
 \label{design:extensibility}
 
 The requirements for the bootware component state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 This requirement is intentionally vague to allow to select a fitting extension mechanism during the design process.
 In this section we will take a look at different extension mechanisms for Java and pick the one that suits our needs best.
 
-\subsubsection{Extension Mechanisms}
+\subsection{Extension Mechanisms}
 
 The simplest way to fulfill the extensibility requirement would be to create a set of interface and abstract classes to define the interfaces and basic functionality that are necessary to work with different cloud environments and provisioning engines.
 These interfaces and abstract classes would then be implemented separately to support different scenarios and would be compiled, together with the rest of the application, into one executable.
@@ -32,7 +32,7 @@ Furthermore it would require a deep understanding of the language used for the i
 Therefore it seems more reasonable to use one of the already existing plugin frameworks.
 Which one exactly will be determined later in \autoref{pluginframeworks}.
 
-\subsubsection{Plugin Repository}
+\subsection{Plugin Repository}
 
 Now that we have introduced plugins we face new problems.
 \autoref{image:plugins} shows the current architecture, where both bootware components use their own plugins.
