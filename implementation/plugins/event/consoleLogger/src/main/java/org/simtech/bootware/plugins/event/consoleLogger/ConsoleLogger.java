@@ -1,6 +1,6 @@
 package org.simtech.bootware.plugins.event.consoleLogger;
 
-import org.simtech.bootware.core.plugins.BasePlugin;
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.SuccessEvent;
@@ -12,7 +12,15 @@ import net.engio.mbassy.listener.Filter;
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
 
-public class ConsoleLogger extends BasePlugin {
+public class ConsoleLogger extends AbstractBasePlugin {
+
+	public void initialize() {
+		// no op
+	}
+
+	public void shutdown() {
+		// no op
+	}
 
 	@Handler
 	public void handle(StateTransitionEvent event) {

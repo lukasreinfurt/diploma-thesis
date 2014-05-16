@@ -9,7 +9,7 @@ package org.simtech.bootware.core.plugins;
 public interface Plugin {
 
 	/**
-	 * Is executed when the OSGi bundle is stopped and can be used for clean up.
+	 * Is executed when the OSGi bundle is stopped.
 	 */
 	public void stop();
 }
