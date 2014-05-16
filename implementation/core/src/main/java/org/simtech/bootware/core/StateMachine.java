@@ -75,6 +75,7 @@ public class StateMachine {
 		}
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+			pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
 			pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
