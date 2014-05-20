@@ -23,3 +23,24 @@ Using this pattern in our bootware component, we would create an event bus at th
 	\caption{Bootware internal communication with PubSub pattern.}
 	\label{image:pubsub}
 \end{figure}
+
+\subsection{Event Types}
+
+When using PubSub and events to communicate, its usually a good idea to not only use one type of event, but many different types.
+As an example, it would make sense to not only use one event type to communicate the bootstrapping process, but to divide those events into distinct groups based on their importance or general contents.
+In this case, we could use four different event types: Info events, success events, warning events, and error events,
+Info events would be used for general, non-critical information.
+Success events would be used each time a process step was completed successfully.
+Warning event would be used when something went slightly wrong but the overall process can still continue.
+Error event would be used if something really went wrong and the bootstrapping process will be aborted as a result of that.
+
+Using different kinds of event allows us to react differently based on the type of the event.
+But what if we want to react to each event type in the same way, for example for logging purposes?
+Now, many different event types complicate things more.
+This is where event hierarchies become useful.
+In an event hierarchy, those four events mentioned before would all be derived from a more generic parent event.
+This makes event handling much easier, since we can now just react to the parent event if we don't need to distinguish between different event types for a particular task.
+
+As we can see, we might benefit from a well thought-out event hierarchy.
+
+\textcolor{red}{MORE}
