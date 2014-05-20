@@ -1,5 +1,7 @@
 package org.simtech.bootware.core;
 
+import javax.jws.WebService;
+
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 import org.squirrelframework.foundation.fsm.UntypedStateMachineImporter;
 import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
@@ -17,10 +19,14 @@ import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 
 /**
- * A state machine implementation using squirrelframework.
+ * The main bootware program.
+ * <p>
+ * Implements a finite state machine using squirrelframework.
+ * The whole bootware process is executed by this state machine.
  */
-
-public class StateMachine {
+@WebService(endpointInterface = "org.simtech.bootware.core.Bootware")
+public class BootwareImpl implements Bootware {
+	private String message = new String("Hello, ");
 
 	private static EventBus eventBus;
 	private static PluginManager pluginManager;
@@ -63,8 +69,6 @@ public class StateMachine {
 	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Integer.class)
 	static class Machine extends AbstractUntypedStateMachine {
 
-		private int counter = 0;
-
 		protected void transition(String from, String to, FSMEvent fsmEvent, Integer context) {
 			StateTransitionEvent event = new StateTransitionEvent();
 			event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
@@ -80,7 +84,6 @@ public class StateMachine {
 			try {
 				AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
 				pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
-				pluginManager.loadPlugin("plugins/event/error");
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);
@@ -89,13 +92,8 @@ public class StateMachine {
 		}
 
 		protected void wait(String from, String to, FSMEvent fsmEvent, Integer context) {
-			if (counter <= 1) {
-				counter = counter + 1;
-				stateMachine.fire(FSMEvent.Request);
-			}
-			else {
-				stateMachine.fire(FSMEvent.Shutdown);
-			}
+			//stateMachine.fire(FSMEvent.Request);
+			//stateMachine.fire(FSMEvent.Shutdown);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
@@ -105,12 +103,8 @@ public class StateMachine {
 		}
 
 		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
-			if (counter == 1) {
-				stateMachine.fire(FSMEvent.Deploy);
-			}
-			else {
-				stateMachine.fire(FSMEvent.Undeploy);
-			}
+			stateMachine.fire(FSMEvent.Deploy);
+			//stateMachine.fire(FSMEvent.Undeploy);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
@@ -176,6 +170,7 @@ public class StateMachine {
 		}
 
 		protected void cleanup(String from, String to, FSMEvent fsmEvent, Integer context) {
+			pluginManager.stop();
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -194,10 +189,11 @@ public class StateMachine {
 	 *
 	 * @param eventBus The event bus to be used by the state machine.
 	 */
-	public StateMachine(EventBus eventBus, PluginManager pluginManager) {
-		this.eventBus      = eventBus;
-		this.pluginManager = pluginManager;
-		builder            = StateMachineBuilderFactory.create(Machine.class);
+	public BootwareImpl() {
+		eventBus      = new EventBus();
+		pluginManager = new PluginManager(eventBus);
+		pluginManager.registerSharedObject(eventBus);
+		builder       = StateMachineBuilderFactory.create(Machine.class);
 
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
@@ -253,6 +249,13 @@ public class StateMachine {
 	}
 
 	/**
+	 * Stops the state machine.
+	 */
+	public void stop() {
+		stateMachine.fire(FSMEvent.Shutdown, 10);
+	}
+
+	/**
 	 * Exports the state machine as XML.
 	 */
 	public void exportXML() {
@@ -268,4 +271,17 @@ public class StateMachine {
 		visitor.convertDotFile("bootware");
 	}
 
+	/**
+	 * Implementation of the web service method.
+	 */
+	@Override
+	public String request(String name) {
+		if (name.equals("request")) {
+			stateMachine.fire(FSMEvent.Request);
+		}
+		else {
+			stateMachine.fire(FSMEvent.Shutdown);
+		}
+		return message + name + ".";
+	}
 }

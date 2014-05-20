@@ -3,7 +3,10 @@ package org.simtech.bootware.core;
 /**
  * @author  Lukas Reinfurt
  * @version 1.0.0
- */
+*/
+
+import javax.xml.ws.Endpoint;
+
 public class Main {
 
 	/**
@@ -11,15 +14,42 @@ public class Main {
 	 *
 	 * @param args Commandline arguments.
 	 */
-	public static void main(String[] args) {
-		EventBus eventBus = new EventBus();
+	public static void main (String[] args) {
 
-		PluginManager pluginManager = new PluginManager(eventBus);
-		pluginManager.registerSharedObject(eventBus);
+		// Publish the bootware as a web service.
+		final BootwareImpl implementor = new BootwareImpl();
+		final String address           = "http://localhost:8080/axis2/services/Bootware";
+		final Endpoint endpoint        = Endpoint.publish(address, implementor);
+		System.out.println("WebService now running at " + address + " ...");
+		implementor.run();
 
-		StateMachine stateMachine = new StateMachine(eventBus, pluginManager);
-		stateMachine.run();
+		// Wait for interrupt (e.g. Ctrl+C in the console)
+		final Thread thread = new Thread() {
+			@Override
+			public void run() {
+				synchronized (this) {
+					while (!Thread.currentThread().isInterrupted()) {
+						try {
+							wait();
+						} catch (InterruptedException e) {
+						}
+					}
+				}
+			}
+		};
 
-		pluginManager.stop();
+		// On interrupt, stop bootware and web service.
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				implementor.stop();
+				endpoint.stop();
+				System.out.println("WebService stopped.");
+				thread.interrupt();
+			}
+		});
+
+		thread.start();
 	}
+
 }
