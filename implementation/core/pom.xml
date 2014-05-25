@@ -16,7 +16,6 @@
 	<groupId>org.simtech.bootware</groupId>
 	<artifactId>core</artifactId>
 	<version>1.0.0</version>
-	<packaging>bundle</packaging>
 
 	<dependencies>
 
@@ -42,6 +41,38 @@
 
 	<build>
 		<plugins>
+
+			<!-- disable default jar generation -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>default-jar</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- package as .aar -->
+			<plugin>
+				<groupId>org.apache.axis2</groupId>
+				<artifactId>axis2-aar-maven-plugin</artifactId>
+				<version>1.6.2</version>
+				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>aar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -70,17 +101,28 @@
 				<artifactId>maven-bundle-plugin</artifactId>
 				<version>2.4.0</version>
 				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
+					<supportedProjectTypes>
+						<supportedProjectType>bundle</supportedProjectType>
+						<supportedProjectType>jar</supportedProjectType>
+						<supportedProjectType>war</supportedProjectType>
+					</supportedProjectTypes>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
+							<classpathPrefix>lib</classpathPrefix>
 							<mainClass>org.simtech.bootware.core.Main</mainClass>
 						</manifest>
 					</archive>
-					<instructions>
-						<Private-Package>org.simtech.bootware.core.*</Private-Package>
-					</instructions>
 				</configuration>
 			</plugin>
 

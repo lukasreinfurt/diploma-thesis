@@ -41,7 +41,7 @@
 			</includes>
 			<binaries>
 				<outputFileNameMapping>
-					bootware.${artifact.extension}
+					bootware.aar
 				</outputFileNameMapping>
 				<outputDirectory>/</outputDirectory>
 				<unpack>false</unpack>
