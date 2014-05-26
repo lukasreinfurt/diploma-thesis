@@ -8,5 +8,5 @@ import javax.jws.WebMethod;
  */
 @WebService
 public interface Bootware {
-	@WebMethod String request(String name);
+	@WebMethod String deploy(Context context);
 }

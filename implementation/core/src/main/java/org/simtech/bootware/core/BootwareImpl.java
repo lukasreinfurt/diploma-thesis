@@ -26,12 +26,13 @@ import org.simtech.bootware.core.exceptions.LoadPluginException;
  */
 @WebService(endpointInterface = "org.simtech.bootware.core.Bootware")
 public class BootwareImpl implements Bootware {
-	private String message = new String("Hello, ");
 
 	private static EventBus eventBus;
 	private static PluginManager pluginManager;
 	private UntypedStateMachineBuilder builder;
 	private static UntypedStateMachine stateMachine;
+
+	private static Context context;
 
 	/**
 	 * State transition events.
@@ -69,18 +70,18 @@ public class BootwareImpl implements Bootware {
 	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Integer.class)
 	static class Machine extends AbstractUntypedStateMachine {
 
-		protected void transition(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void transition(String from, String to, FSMEvent fsmEvent, Integer c) {
 			StateTransitionEvent event = new StateTransitionEvent();
 			event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
 			eventBus.publish(event);
 		}
 
-		protected void initialize(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void initialize(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
 				AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
 				pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
@@ -91,91 +92,94 @@ public class BootwareImpl implements Bootware {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void wait(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void wait(String from, String to, FSMEvent fsmEvent, Integer c) {
 			//stateMachine.fire(FSMEvent.Request);
 			//stateMachine.fire(FSMEvent.Shutdown);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void readContext(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void readContext(String from, String to, FSMEvent fsmEvent, Integer c) {
+			System.out.println("InfrastructureType: " + context.getInfrastructureType());
+			System.out.println("ConnectionType: " + context.getConnectionType());
+			System.out.println("PayloadType: " + context.getPayloadType());
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Deploy);
 			//stateMachine.fire(FSMEvent.Undeploy);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void connect(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void connect(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void provisionPayload(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void provisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void startPayload(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void startPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void stopPayload(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void stopPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void deprovisionPayload(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void deprovisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void disconnect(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void disconnect(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void fatalError(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void fatalError(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void returnResponse(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void returnResponse(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			pluginManager.unloadAllPlugins();
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void cleanup(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void cleanup(String from, String to, FSMEvent fsmEvent, Integer c) {
 			pluginManager.stop();
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void end(String from, String to, FSMEvent fsmEvent, Integer context) {
+		protected void end(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.terminate(10);
 			InfoEvent event = new InfoEvent();
 			event.setMessage("State machine terminated.");
@@ -271,17 +275,10 @@ public class BootwareImpl implements Bootware {
 		visitor.convertDotFile("bootware");
 	}
 
-	/**
-	 * Implementation of the web service method.
-	 */
 	@Override
-	public String request(String name) {
-		if (name.equals("request")) {
-			stateMachine.fire(FSMEvent.Request);
-		}
-		else {
-			stateMachine.fire(FSMEvent.Shutdown);
-		}
-		return message + name + ".";
+	public String deploy(Context context) {
+		this.context = context;
+		stateMachine.fire(FSMEvent.Request);
+		return "Test 123";
 	}
 }

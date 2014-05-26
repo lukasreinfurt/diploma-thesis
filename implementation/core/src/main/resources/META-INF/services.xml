@@ -2,7 +2,7 @@
 <serviceGroup>
 	<service name="Bootware">
 		<parameter name="ServiceClass">org.simtech.bootware.core.Bootware</parameter>
-		<operation name="request">
+		<operation name="deploy">
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 		</operation>
 	</service>
