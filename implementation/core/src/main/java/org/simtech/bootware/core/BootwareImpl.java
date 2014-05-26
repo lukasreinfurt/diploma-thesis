@@ -33,6 +33,7 @@ public class BootwareImpl implements Bootware {
 	private static UntypedStateMachine stateMachine;
 
 	private static Context context;
+	private static String response;
 
 	/**
 	 * State transition events.
@@ -77,6 +78,12 @@ public class BootwareImpl implements Bootware {
 		}
 
 		protected void initialize(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -107,62 +114,129 @@ public class BootwareImpl implements Bootware {
 		}
 
 		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Deploy);
 			//stateMachine.fire(FSMEvent.Undeploy);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void connect(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void provisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void startPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void stopPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void deprovisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void disconnect(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void fatalError(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
+			try {
+				Thread.sleep(1000);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void returnResponse(String from, String to, FSMEvent fsmEvent, Integer c) {
+			response = "Response";
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -279,6 +353,6 @@ public class BootwareImpl implements Bootware {
 	public String deploy(Context context) {
 		this.context = context;
 		stateMachine.fire(FSMEvent.Request);
-		return "Test 123";
+		return response;
 	}
 }
