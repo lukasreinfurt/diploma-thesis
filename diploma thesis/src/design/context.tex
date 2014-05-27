@@ -1,2 +1,25 @@
 \section{Context}
 \label{context}
+
+During the bootstrapping process, the bootware has to know certain things to be able do its job.
+This includes the type of a request (e.g. deploy, undeploy, etc.) and which plugins it should use to provision the infrastructure, connect to it, and deploy the payload.
+This also includes login credentials for cloud providers, which are necessary to provision the infrastructure in the first place.
+This information can be combined into one object which describes the whole context of the current bootstrapping process.
+Hence we will call such an object the context from now on.
+
+\vspace{1em}
+\begin{listing}[!htbp]
+	\begin{xmlcode*}{label=context.xml,
+	                 frame=topline}
+<context>
+	<infrastructureType>...</infrastructureType>
+	<connectionType>...</connectionType>
+	<payloadType>...</payloadType>
+	<credentials>
+		<credential for="...">...</credential>
+	</credentials>
+<context>
+	\end{xmlcode*}
+	\caption{Sample context represented in XML.}
+	\label{lst:context:sample}
+\end{listing}
