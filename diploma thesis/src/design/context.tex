@@ -9,17 +9,18 @@ Hence we will call such an object the context from now on.
 
 \vspace{1em}
 \begin{listing}[!htbp]
-	\begin{xmlcode*}{label=context.xml,
-	                 frame=topline}
-<context>
-	<infrastructureType>...</infrastructureType>
-	<connectionType>...</connectionType>
-	<payloadType>...</payloadType>
-	<credentials>
-		<credential for="...">...</credential>
-	</credentials>
-<context>
-	\end{xmlcode*}
+	\inputminted[
+		label=context.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/context.xml}
 	\caption{Sample context represented in XML.}
 	\label{lst:context:sample}
 \end{listing}
+
+\autoref{lst:context:sample} shows an exemplary context in XML form.
+It defines

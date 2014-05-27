@@ -1,0 +1,11 @@
+<context>
+	<infrastructureType>aws-1.0.0.jar</infrastructureType>
+	<connectionType>ssh-1.0.0.jar</connectionType>
+	<payloadType>opentosca-1.0.0.jar</payloadType>
+	<credentials>
+		<credential for="aws">
+			<secretKey>8d2cdbd7f909a7989352d085978915c1</secretKey>
+			<accessKey>d589033fe6479a</accessKey>
+		</credential>
+	</credentials>
+<context>
