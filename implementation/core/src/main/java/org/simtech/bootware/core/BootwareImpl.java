@@ -14,9 +14,13 @@ import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
+import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
+import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
+import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
 /**
  * The main bootware program.
@@ -34,6 +38,10 @@ public class BootwareImpl implements Bootware {
 
 	private static Context context;
 	private static String response;
+
+	private static AbstractInfrastructurePlugin infrastructurePlugin;
+	private static AbstractConnectionPlugin connectionPlugin;
+	private static AbstractPayloadPlugin payloadPlugin;
 
 	/**
 	 * State transition events.
@@ -78,20 +86,14 @@ public class BootwareImpl implements Bootware {
 		}
 
 		protected void initialize(String from, String to, FSMEvent fsmEvent, Integer c) {
-			try {
-				Thread.sleep(1000);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				AbstractBasePlugin test = (AbstractBasePlugin)pluginManager.loadPlugin("plugins/event/fileLogger-1.0.0.jar");
-				pluginManager.loadPlugin("plugins/event/consoleLogger-1.0.0.jar");
+				pluginManager.loadPlugin(AbstractBasePlugin.class, "plugins/event/fileLogger-1.0.0.jar");
+				pluginManager.loadPlugin(AbstractBasePlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);
@@ -115,19 +117,20 @@ public class BootwareImpl implements Bootware {
 
 		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				infrastructurePlugin = pluginManager.loadPlugin(AbstractInfrastructurePlugin.class, "plugins/infrastructure/" + context.getInfrastructureType());
+				connectionPlugin     = pluginManager.loadPlugin(AbstractConnectionPlugin.class, "plugins/connection/" + context.getConnectionType());
+				payloadPlugin        = pluginManager.loadPlugin(AbstractPayloadPlugin.class, "plugins/payload/" + context.getPayloadType());
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (LoadPluginException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Deploy);
 			//stateMachine.fire(FSMEvent.Undeploy);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				infrastructurePlugin.test();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -138,7 +141,7 @@ public class BootwareImpl implements Bootware {
 
 		protected void connect(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				connectionPlugin.test();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -149,7 +152,7 @@ public class BootwareImpl implements Bootware {
 
 		protected void provisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				payloadPlugin.test();
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -226,13 +229,17 @@ public class BootwareImpl implements Bootware {
 
 		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				infrastructurePlugin = null;
+				connectionPlugin     = null;
+				payloadPlugin        = null;
+				pluginManager.unloadPlugin("plugins/infrastructure/" + context.getInfrastructureType());
+				pluginManager.unloadPlugin("plugins/connection/" + context.getConnectionType());
+				pluginManager.unloadPlugin("plugins/payload/" + context.getPayloadType());
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (UnloadPluginException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void returnResponse(String from, String to, FSMEvent fsmEvent, Integer c) {
@@ -242,15 +249,23 @@ public class BootwareImpl implements Bootware {
 		}
 
 		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
-			pluginManager.unloadAllPlugins();
+			try {
+				pluginManager.unloadAllPlugins();
+			}
+			catch (UnloadPluginException e) {
+				stateMachine.fire(FSMEvent.Failure);
+			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void cleanup(String from, String to, FSMEvent fsmEvent, Integer c) {
-			pluginManager.stop();
+			try {
+				pluginManager.stop();
+			}
+			catch (UnloadPluginException e) {
+				stateMachine.fire(FSMEvent.Failure);
+			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void end(String from, String to, FSMEvent fsmEvent, Integer c) {
@@ -271,7 +286,7 @@ public class BootwareImpl implements Bootware {
 		eventBus      = new EventBus();
 		pluginManager = new PluginManager(eventBus);
 		pluginManager.registerSharedObject(eventBus);
-		builder       = StateMachineBuilderFactory.create(Machine.class);
+		builder = StateMachineBuilderFactory.create(Machine.class);
 
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 

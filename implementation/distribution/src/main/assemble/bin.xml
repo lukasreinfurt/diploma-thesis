@@ -51,6 +51,39 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
+				<include>org.simtech.bootware.plugins.infrastructure:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>plugins/infrastructure</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware.plugins.connection:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>plugins/connection</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware.plugins.payload:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>plugins/payload</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
 				<include>org.simtech.bootware.plugins.event:*</include>
 			</includes>
 			<binaries>

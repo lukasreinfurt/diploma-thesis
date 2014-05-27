@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Event Plugins</name>
+	<name>Connection Plugins</name>
 
 	<parent>
 		<groupId>org.simtech.bootware</groupId>
@@ -14,13 +14,13 @@
 	</parent>
 
 	<groupId>org.simtech.bootware.plugins</groupId>
-	<artifactId>event</artifactId>
+	<artifactId>connection</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>consoleLogger</module>
-		<module>fileLogger</module>
+		<module>c1</module>
+		<module>c2</module>
 	</modules>
 
 	<build>

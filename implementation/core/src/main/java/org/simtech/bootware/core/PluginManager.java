@@ -19,6 +19,7 @@ import org.simtech.bootware.core.plugins.Plugin;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.ErrorEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
+import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
 /**
  * A wrapper layer around the OSGi framwork.
@@ -81,23 +82,22 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public Plugin loadPlugin(String path) throws LoadPluginException {
+	public <T> T loadPlugin(Class<T> type, String path) throws LoadPluginException {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
 			SuccessEvent event = new SuccessEvent();
-			event.setMessage("Successfully loaded plugin: " + path + "'.");
+			event.setMessage("Successfully loaded plugin: '" + path + "'.");
 			eventBus.publish(event);
 		} catch (BundleException e) {
 			ErrorEvent event = new ErrorEvent();
-			event.setMessage("Failed to load plugin: " + path + "'.");
+			event.setMessage("Failed to load plugin: '" + path + "'.");
 			eventBus.publish(event);
 			throw new LoadPluginException(e);
 		}
 		BundleContext bundleContext = installedBundles.get(path).getBundleContext();
-		ServiceReference<Plugin> serviceReference = bundleContext.getServiceReference(Plugin.class);
-		Plugin plugin = bundleContext.getService(serviceReference);
-		return plugin;
+		ServiceReference serviceReference = bundleContext.getServiceReference(type.getName());
+		return type.cast(bundleContext.getService(serviceReference));
 	}
 
 	/**
@@ -105,25 +105,28 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public void unloadPlugin(String path) {
-		try {
-			installedBundles.get(path).uninstall();
-			installedBundles.remove(path);
-			SuccessEvent event = new SuccessEvent();
-			event.setMessage("Successfully unloaded plugin: " + path + "'.");
-			eventBus.publish(event);
-		} catch (BundleException e) {
-			ErrorEvent event = new ErrorEvent();
-			event.setMessage("Failed to unload plugin: " + path + "'.");
-			eventBus.publish(event);
-			e.printStackTrace();
+	public void unloadPlugin(String path) throws UnloadPluginException {
+		Bundle bundle = installedBundles.get(path);
+		if (bundle != null) {
+			try {
+				bundle.uninstall();
+				installedBundles.remove(path);
+				SuccessEvent event = new SuccessEvent();
+				event.setMessage("Successfully unloaded plugin: '" + path + "'.");
+				eventBus.publish(event);
+			} catch (BundleException e) {
+				ErrorEvent event = new ErrorEvent();
+				event.setMessage("Failed to unload plugin: '" + path + "'.");
+				eventBus.publish(event);
+				throw new UnloadPluginException(e);
+			}
 		}
 	}
 
 	/**
 	 * Unloads all loaded plugins.
 	 */
-	public void unloadAllPlugins() {
+	public void unloadAllPlugins() throws UnloadPluginException {
 		Iterator iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry entry = (Map.Entry) iterator.next();
@@ -132,13 +135,13 @@ public class PluginManager {
 				installedBundles.get(key).uninstall();
 				iterator.remove();
 				SuccessEvent event = new SuccessEvent();
-				event.setMessage("Successfully unloaded plugin: " + key + "'.");
+				event.setMessage("Successfully unloaded plugin: '" + key + "'.");
 				eventBus.publish(event);
 			} catch (BundleException e) {
 				ErrorEvent event = new ErrorEvent();
-				event.setMessage("Failed to unload plugin: " + key + "'.");
+				event.setMessage("Failed to unload plugin: '" + key + "'.");
 				eventBus.publish(event);
-				e.printStackTrace();
+				throw new UnloadPluginException(e);
 			}
 		}
 	}
@@ -147,7 +150,7 @@ public class PluginManager {
 	 * Stop the OSGi framework.
 	 * If there are still plugins loaded, they will be unloaded before the framework is stopped.
 	 */
-	public void stop() {
+	public void stop() throws UnloadPluginException {
 		unloadAllPlugins();
 		try {
 			framework.stop();

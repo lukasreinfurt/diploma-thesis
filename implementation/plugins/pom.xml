@@ -19,6 +19,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>infrastructure</module>
+		<module>connection</module>
+		<module>payload</module>
 		<module>event</module>
 	</modules>
 
