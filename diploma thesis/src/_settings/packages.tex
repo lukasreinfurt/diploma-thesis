@@ -20,6 +20,7 @@
 % syntax highlighting with pygments (requires Python)
 % http://code.google.com/p/minted/
 \usepackage[chapter]{minted}
+\usemintedstyle{bw}
 \renewcommand\listoflistingscaption{List of Listings}
 \providecommand*{\listingautorefname}{Listing}
 \newminted{java}{linenos,
@@ -27,6 +28,11 @@
                  tabsize=2,
                  framesep=0.3cm,
                  fontsize=\footnotesize}
+\newminted{xml}{linenos,
+                frame=lines,
+                tabsize=2,
+                framesep=0.3cm,
+                fontsize=\footnotesize}
 \newminted{cfg}{linenos,
                 frame=lines,
                 tabsize=2,
@@ -87,7 +93,13 @@
 	]
 {Roboto}
 
-\setmonofont[Path = _settings/assets/fonts/Droid_Sans_Mono/]{DroidSansMono}
+\setmonofont[Path = _settings/assets/fonts/SourceCodePro/,
+	UprightFont = *-Regular,
+	ItalicFont = *-Regular,
+	BoldFont = *-Semibold,
+	BoldItalicFont = *-Semibold
+	]
+{SourceCodePro}
 
 \newfontfamily\droidserif[Path = _settings/assets/fonts/Roboto/,
 	UprightFont = *-Bold,
