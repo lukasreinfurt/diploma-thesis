@@ -23,4 +23,32 @@ Hence we will call such an object the context from now on.
 \end{listing}
 
 \autoref{lst:context:sample} shows an exemplary context in XML form.
-It defines
+It defines.
+As we can see in line 2-4, it defines the plugins that should be used during the bootstrapping process by using the name of the plugin \textit{.jar}.
+The name also includes the plugin version, so it would be possible to have different versions of the same plugin and switch between them if necessary.
+In line 5-10 we can see the login credentials for a specific cloud provider, in this case Amazon AWS.
+These credentials have to be provided, so that the infrastructure plugins are able to connect to a specific user account at a cloud provider.
+In the future, the context might be extended to hold additional information, but for this thesis, this context will be sufficient.
+
+Now that we have defined how the context will look like, we need to find a way to actually get it to the bootware.
+There are a few things that we have to keep in mind when doing this.
+First, these values have to be changeable by the user, so it doesn't make sense to hard-code them into the bootware.
+Furthermore, the lifetime of the information carried in the context varies quite a bit.
+The plugin types are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
+Therefore, we must provide the plugin types on a per request basis.
+Since we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
+
+The cloud credentials on the other hand aren't likely to change between requests.
+Additionally, we have other components calling the bootware who don't know (and maybe shouldn't know) anything about login credentials, for example the provisioning manager.
+While this might change in the future, it would make sense to be able to set the login credentials once when starting the bootware, so that they don't have to be delivered with each request and so that other components, who don't know them, can still use the bootware.
+It should however still be possible to override or update the login credentials at a later point.
+Overriding would allow any request to temporarily use other login credentials if necessary.
+Updating the login credentials at a later point could be useful, for example if the user accidentally provided the wrong credentials at the beginning.
+Without this functionality, the whole bootware process could fail (even while provisioning the very last service) and would have to be started again from the beginning.
+This could be avoided by providing the functionality to change login credentials even during the bootstrapping process.
+
+For setting the login credentials at the beginning and for updating them later during the process, a \textit{setCredentials} method will be added to the bootware web service.
+The credentials set by this method will be treated as the default credentials by the Bootware.
+If no other credentials are provided, these will be used during the process.
+If however a request is send with a context that also contains login credentials, these credentials will override already existing default credentials temporarily for this request.
+This behavior could also be extended to other parts of the context in future, if necessary.
