@@ -23,8 +23,8 @@ import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
-import org.simtech.bootware.core.exceptions.ConnectException;
-import org.simtech.bootware.core.exceptions.DisconnectException;
+import org.simtech.bootware.core.exceptions.ConnectConnectionException;
+import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 
 /**
  * The main bootware program.
@@ -149,7 +149,7 @@ public class BootwareImpl implements Bootware {
 			try {
 				connection = connectionPlugin.connect(instance);
 			}
-			catch (ConnectException e) {
+			catch (ConnectConnectionException e) {
 				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
@@ -203,7 +203,7 @@ public class BootwareImpl implements Bootware {
 			try {
 				connectionPlugin.disconnect(connection);
 			}
-			catch (DisconnectException e) {
+			catch (DisconnectConnectionException e) {
 				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
