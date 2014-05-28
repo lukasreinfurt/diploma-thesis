@@ -1,6 +1,6 @@
 package org.simtech.bootware.plugins.event.fileLogger;
 
-import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.AbstractEventPlugin;
 import org.simtech.bootware.core.events.BaseEvent;
 
 import net.engio.mbassy.listener.Handler;
@@ -11,7 +11,7 @@ import net.engio.mbassy.common.FilteredMessage;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 
-public class FileLogger extends AbstractBasePlugin {
+public class FileLogger extends AbstractEventPlugin {
 
 	private PrintWriter writer;
 

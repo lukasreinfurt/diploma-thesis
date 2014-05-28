@@ -14,7 +14,7 @@ import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
-import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.AbstractEventPlugin;
 import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
 import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
 import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
@@ -104,8 +104,8 @@ public class BootwareImpl implements Bootware {
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				pluginManager.loadPlugin(AbstractBasePlugin.class, "plugins/event/fileLogger-1.0.0.jar");
-				pluginManager.loadPlugin(AbstractBasePlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
+				pluginManager.loadPlugin(AbstractEventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
+				pluginManager.loadPlugin(AbstractEventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);
