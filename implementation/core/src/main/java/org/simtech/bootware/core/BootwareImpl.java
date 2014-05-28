@@ -21,6 +21,8 @@ import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
+import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
+import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
 
 /**
  * The main bootware program.
@@ -37,6 +39,7 @@ public class BootwareImpl implements Bootware {
 	private static UntypedStateMachine stateMachine;
 
 	private static Context context;
+	private static Instance instance;
 	private static String response;
 
 	private static AbstractInfrastructurePlugin infrastructurePlugin;
@@ -130,13 +133,13 @@ public class BootwareImpl implements Bootware {
 
 		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				infrastructurePlugin.test();
+				Credentials credentials = new Credentials();
+				instance = infrastructurePlugin.provision(credentials);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (ProvisionInfrastructureException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void connect(String from, String to, FSMEvent fsmEvent, Integer c) {
@@ -207,13 +210,12 @@ public class BootwareImpl implements Bootware {
 
 		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				infrastructurePlugin.deprovision(instance);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (DeprovisionInfrastructureException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void fatalError(String from, String to, FSMEvent fsmEvent, Integer c) {
