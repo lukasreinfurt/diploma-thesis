@@ -96,7 +96,7 @@ public class PluginManager {
 			throw new LoadPluginException(e);
 		}
 		BundleContext bundleContext = installedBundles.get(path).getBundleContext();
-		ServiceReference serviceReference = bundleContext.getServiceReference(type.getName());
+		ServiceReference<?> serviceReference = bundleContext.getServiceReference(type.getName());
 		return type.cast(bundleContext.getService(serviceReference));
 	}
 
@@ -127,9 +127,9 @@ public class PluginManager {
 	 * Unloads all loaded plugins.
 	 */
 	public void unloadAllPlugins() throws UnloadPluginException {
-		Iterator iterator = installedBundles.entrySet().iterator();
+		Iterator<Map.Entry<String, Bundle>> iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
-			Map.Entry entry = (Map.Entry) iterator.next();
+			Map.Entry<String, Bundle> entry = iterator.next();
 			String key = entry.getKey().toString();
 			try {
 				installedBundles.get(key).uninstall();
