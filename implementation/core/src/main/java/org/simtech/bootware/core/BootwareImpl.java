@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import java.net.URL;
 import javax.jws.WebService;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -25,6 +26,10 @@ import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
+import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
+import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
+import org.simtech.bootware.core.exceptions.StartPayloadException;
+import org.simtech.bootware.core.exceptions.StopPayloadException;
 
 /**
  * The main bootware program.
@@ -43,6 +48,7 @@ public class BootwareImpl implements Bootware {
 	private static Context context;
 	private static Instance instance;
 	private static Connection connection;
+	private static URL url;
 	private static String response;
 
 	private static AbstractInfrastructurePlugin infrastructurePlugin;
@@ -128,6 +134,7 @@ public class BootwareImpl implements Bootware {
 				payloadPlugin        = pluginManager.loadPlugin(AbstractPayloadPlugin.class, "plugins/payload/" + context.getPayloadType());
 			}
 			catch (LoadPluginException e) {
+				e.printStackTrace();
 				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Deploy);
@@ -157,46 +164,42 @@ public class BootwareImpl implements Bootware {
 
 		protected void provisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				payloadPlugin.test();
+				payloadPlugin.provision(connection);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (ProvisionPayloadException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void startPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				url = payloadPlugin.start(connection);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (StartPayloadException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void stopPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				payloadPlugin.stop(connection);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (StopPayloadException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void deprovisionPayload(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Thread.sleep(1000);
+				payloadPlugin.deprovision(connection);
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (DeprovisionPayloadException e) {
+				stateMachine.fire(FSMEvent.Failure);
 			}
 			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void disconnect(String from, String to, FSMEvent fsmEvent, Integer c) {
