@@ -1,5 +1,6 @@
 package org.simtech.bootware.core.exceptions;
 
+@SuppressWarnings("serial")
 public class ProvisionInfrastructureException extends InfrastructureException {
 	public ProvisionInfrastructureException() { super(); }
 	public ProvisionInfrastructureException(String message) { super(message); }

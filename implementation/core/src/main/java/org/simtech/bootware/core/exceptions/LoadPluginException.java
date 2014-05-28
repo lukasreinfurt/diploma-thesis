@@ -1,5 +1,6 @@
 package org.simtech.bootware.core.exceptions;
 
+@SuppressWarnings("serial")
 public class LoadPluginException extends PluginException {
 	public LoadPluginException() { super(); }
 	public LoadPluginException(String message) { super(message); }

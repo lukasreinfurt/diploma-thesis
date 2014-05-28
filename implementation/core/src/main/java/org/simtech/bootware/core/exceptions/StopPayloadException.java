@@ -1,5 +1,6 @@
 package org.simtech.bootware.core.exceptions;
 
+@SuppressWarnings("serial")
 public class StopPayloadException extends PayloadException {
 	public StopPayloadException() { super(); }
 	public StopPayloadException(String message) { super(message); }

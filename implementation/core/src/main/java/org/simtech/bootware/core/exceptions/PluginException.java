@@ -1,5 +1,6 @@
 package org.simtech.bootware.core.exceptions;
 
+@SuppressWarnings("serial")
 public class PluginException extends Exception {
 	public PluginException() { super(); }
 	public PluginException(String message) { super(message); }
