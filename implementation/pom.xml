@@ -32,6 +32,9 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+					<compilerArguments>
+						<bootclasspath>/usr/lib/jvm/java-1.6.0-openjdk-i386/jre/lib/rt.jar</bootclasspath>
+					</compilerArguments>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
