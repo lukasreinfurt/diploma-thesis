@@ -372,7 +372,7 @@ public class BootwareImpl implements Bootware {
 
 	@Override
 	public String deploy(Context context) {
-		this.context = context;
+		BootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
 		return response;
 	}
