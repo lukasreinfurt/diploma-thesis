@@ -6,10 +6,6 @@ import org.simtech.bootware.core.Instance;
 
 public class C1 extends AbstractConnectionPlugin {
 
-	public C1() {
-		super();
-	}
-
 	public void initialize() {
 		// no op
 	}

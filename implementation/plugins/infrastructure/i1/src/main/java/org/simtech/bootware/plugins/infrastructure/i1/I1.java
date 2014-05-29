@@ -6,10 +6,6 @@ import org.simtech.bootware.core.Instance;
 
 public class I1 extends AbstractInfrastructurePlugin {
 
-	public I1() {
-		super();
-	}
-
 	public void initialize() {
 		// no op
 	}

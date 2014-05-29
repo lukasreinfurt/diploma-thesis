@@ -8,10 +8,6 @@ import org.simtech.bootware.core.exceptions.StartPayloadException;
 
 public class P1 extends AbstractPayloadPlugin {
 
-	public P1() {
-		super();
-	}
-
 	public void initialize() {
 		// no op
 	}
