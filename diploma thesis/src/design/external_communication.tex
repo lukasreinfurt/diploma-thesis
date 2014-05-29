@@ -61,7 +61,7 @@ We obviously need the two main operations, deploy and undeploy, to be available 
 The \textit{deploy} operation will be called by at least three different components.
 Once by the bootware modeler plugin to deploy the remote bootware, \textcolor{red}{once again when the provisioning engine for provisioning the workflow middleware is deployed}, and then each time the provisioning manager needs to provision a new service during a workflow execution.
 
-\vspace{1em}
+\vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
 		label=deploy-request.xml,
@@ -81,7 +81,7 @@ In line 6 we can see that the deploy method is called with the context provided 
 The response that is return once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
 It contains a endpoint reference element in line 6-9 which contains a reference to the payload that was deployed during the request.
 
-\vspace{1em}
+\vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
 		label=deploy-response.xml,
@@ -103,7 +103,7 @@ Like the \textit{deploy} operation, the \textit{undeploy} operation will be call
 As argument it contains one or more endpoint references to already deployed payloads, as can be seen in line 7-13.
 When all payloads have been undeployed successfully, a response will be send to.
 
-\vspace{1em}
+\vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
 		label=undeploy-request.xml,
@@ -126,7 +126,7 @@ Using this operation, login credentials can be set independently from deploy req
 In line 7-14, it contains one or more credentials as argument.
 If the credentials where set successfully, a response will be returned.
 
-\vspace{1em}
+\vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
 		label=setCredentials-request.xml,
