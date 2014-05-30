@@ -7,7 +7,11 @@ package org.simtech.bootware.core;
 
 import javax.xml.ws.Endpoint;
 
-public class Main {
+public final class Main {
+
+	private Main() {
+		// not called
+	}
 
 	/**
 	 * Runs the bootware program.
