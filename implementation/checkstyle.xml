@@ -27,6 +27,7 @@
 		<module name="HideUtilityClassConstructor"/>
 		<module name="DesignForExtension"/>
 		<module name="MutableException"/>
+		<module name="ThrowsCount"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
