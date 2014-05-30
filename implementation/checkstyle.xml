@@ -47,7 +47,7 @@
 		<module name="RedundantImport"/>
 		<module name="UnusedImports"/>
 		<module name="ImportOrder">
-			<property name="groups" value="/^javax?\./,org"/>
+			<property name="groups" value="/^javax?\./,org,net"/>
 			<property name="separated" value="true"/>
 		</module>
 
