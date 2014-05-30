@@ -35,6 +35,7 @@
 		<module name="AvoidInlineConditionals"/>
 		<module name="CovariantEquals"/>
 		<module name="EmptyStatement"/>
+		<module name="EqualsAvoidNull"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
