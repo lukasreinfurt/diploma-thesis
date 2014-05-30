@@ -42,6 +42,7 @@
 		<module name="IllegalToken"/>
 		<module name="InnerAssignment"/>
 		<module name="MagicNumber"/>
+		<module name="MissingSwitchDefault"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
