@@ -31,7 +31,8 @@ public class Main {
 					while (!Thread.currentThread().isInterrupted()) {
 						try {
 							wait();
-						} catch (InterruptedException e) {
+						}
+						catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}

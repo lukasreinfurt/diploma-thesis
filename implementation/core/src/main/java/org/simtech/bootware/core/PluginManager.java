@@ -56,7 +56,8 @@ public class PluginManager {
 
 		try {
 			framework.start();
-		} catch (BundleException e) {
+		}
+		catch (BundleException e) {
 			e.printStackTrace();
 		}
 
@@ -85,7 +86,8 @@ public class PluginManager {
 			SuccessEvent event = new SuccessEvent();
 			event.setMessage("Successfully loaded plugin: '" + path + "'.");
 			eventBus.publish(event);
-		} catch (BundleException e) {
+		}
+		catch (BundleException e) {
 			ErrorEvent event = new ErrorEvent();
 			event.setMessage("Failed to load plugin: '" + path + "'.");
 			eventBus.publish(event);
@@ -110,7 +112,8 @@ public class PluginManager {
 				SuccessEvent event = new SuccessEvent();
 				event.setMessage("Successfully unloaded plugin: '" + path + "'.");
 				eventBus.publish(event);
-			} catch (BundleException e) {
+			}
+			catch (BundleException e) {
 				ErrorEvent event = new ErrorEvent();
 				event.setMessage("Failed to unload plugin: '" + path + "'.");
 				eventBus.publish(event);
@@ -133,7 +136,8 @@ public class PluginManager {
 				SuccessEvent event = new SuccessEvent();
 				event.setMessage("Successfully unloaded plugin: '" + key + "'.");
 				eventBus.publish(event);
-			} catch (BundleException e) {
+			}
+			catch (BundleException e) {
 				ErrorEvent event = new ErrorEvent();
 				event.setMessage("Failed to unload plugin: '" + key + "'.");
 				eventBus.publish(event);
@@ -150,7 +154,8 @@ public class PluginManager {
 		unloadAllPlugins();
 		try {
 			framework.stop();
-		} catch (BundleException e) {
+		}
+		catch (BundleException e) {
 			e.printStackTrace();
 		}
 	}
