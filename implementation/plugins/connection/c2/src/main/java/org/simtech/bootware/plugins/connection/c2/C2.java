@@ -1,8 +1,8 @@
 package org.simtech.bootware.plugins.connection.c2;
 
-import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.Instance;
+import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
 
 public class C2 extends AbstractConnectionPlugin {
 

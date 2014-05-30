@@ -1,15 +1,15 @@
 package org.simtech.bootware.plugins.event.consoleLogger;
 
-import org.simtech.bootware.core.plugins.AbstractEventPlugin;
-import org.simtech.bootware.core.events.StateTransitionEvent;
+import org.simtech.bootware.core.events.ErrorEvent;
 import org.simtech.bootware.core.events.InfoEvent;
+import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.WarningEvent;
-import org.simtech.bootware.core.events.ErrorEvent;
+import org.simtech.bootware.core.plugins.AbstractEventPlugin;
 
-import net.engio.mbassy.listener.Handler;
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
+import net.engio.mbassy.listener.Handler;
 
 public class ConsoleLogger extends AbstractEventPlugin {
 

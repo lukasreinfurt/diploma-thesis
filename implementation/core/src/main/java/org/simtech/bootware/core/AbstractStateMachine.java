@@ -2,30 +2,29 @@ package org.simtech.bootware.core;
 
 import java.net.URL;
 
-import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
-import org.squirrelframework.foundation.fsm.UntypedStateMachine;
-import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
-import org.squirrelframework.foundation.fsm.annotation.StateMachineParameters;
+import org.simtech.bootware.core.events.InfoEvent;
+import org.simtech.bootware.core.events.StateTransitionEvent;
+import org.simtech.bootware.core.exceptions.ConnectConnectionException;
+import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
+import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
+import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
+import org.simtech.bootware.core.exceptions.LoadPluginException;
+import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
+import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
+import org.simtech.bootware.core.exceptions.StartPayloadException;
+import org.simtech.bootware.core.exceptions.StopPayloadException;
+import org.simtech.bootware.core.exceptions.UnloadPluginException;
+import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
+import org.simtech.bootware.core.plugins.AbstractEventPlugin;
+import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
+import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
 
 import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.DotVisitor;
-
-import org.simtech.bootware.core.plugins.AbstractEventPlugin;
-import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
-import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
-import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
-import org.simtech.bootware.core.events.StateTransitionEvent;
-import org.simtech.bootware.core.events.InfoEvent;
-import org.simtech.bootware.core.exceptions.LoadPluginException;
-import org.simtech.bootware.core.exceptions.UnloadPluginException;
-import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
-import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
-import org.simtech.bootware.core.exceptions.ConnectConnectionException;
-import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
-import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
-import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
-import org.simtech.bootware.core.exceptions.StartPayloadException;
-import org.simtech.bootware.core.exceptions.StopPayloadException;
+import org.squirrelframework.foundation.fsm.UntypedStateMachine;
+import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
+import org.squirrelframework.foundation.fsm.annotation.StateMachineParameters;
+import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
 
 /**
  * The main bootware program.

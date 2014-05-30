@@ -1,7 +1,7 @@
 package org.simtech.bootware.core.events;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Abstract base event that should be used as baseline for all Bootware events.

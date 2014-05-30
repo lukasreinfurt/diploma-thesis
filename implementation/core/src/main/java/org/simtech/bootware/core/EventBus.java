@@ -1,10 +1,10 @@
 package org.simtech.bootware.core;
 
+import org.simtech.bootware.core.events.Event;
+
+import net.engio.mbassy.IPublicationErrorHandler.ConsoleLogger;
 import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
-import net.engio.mbassy.IPublicationErrorHandler.ConsoleLogger;
-
-import org.simtech.bootware.core.events.Event;
 
 /**
  * A thin wrapper layer around the MBassador library.

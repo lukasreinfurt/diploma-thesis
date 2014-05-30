@@ -1,10 +1,10 @@
 package org.simtech.bootware.core.plugins;
 
-import org.simtech.bootware.core.EventBus;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+
+import org.simtech.bootware.core.EventBus;
 
 /**
  * Abstract base plugin that should be used as baseline for all Bootware plugins.

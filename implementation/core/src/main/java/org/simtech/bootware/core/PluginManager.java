@@ -1,27 +1,26 @@
 package org.simtech.bootware.core;
 
-import java.util.Map;
 import java.util.HashMap;
-import java.util.ServiceLoader;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
-import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.ErrorEvent;
+import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
 /**
  * A wrapper layer around the OSGi framwork.
  */
-
 public class PluginManager {
 
 	private EventBus eventBus;
