@@ -52,6 +52,7 @@
 			<property name="max" value="2"/>
 		</module>
 		<module name="NestedIfDepth"/>
+		<module name="NestedTryDepth"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
