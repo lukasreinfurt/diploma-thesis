@@ -3,12 +3,9 @@ package org.simtech.bootware.core.plugins;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import org.simtech.bootware.core.plugins.Plugin;
-
 /**
  * Abstract activator class that should be used as baseline for all Bootware plugin activators.
  */
-
 public abstract class AbstractActivator implements BundleActivator {
 
 	private Plugin plugin;
