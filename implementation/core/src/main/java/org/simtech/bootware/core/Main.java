@@ -32,6 +32,7 @@ public class Main {
 						try {
 							wait();
 						} catch (InterruptedException e) {
+							e.printStackTrace();
 						}
 					}
 				}
