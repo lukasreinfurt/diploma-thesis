@@ -52,3 +52,10 @@ Using traditional programming methods like if/else blocks to implement this proc
 Therefore it could be advantageous to use other methods that are more fitting for this process.
 Since we already describes the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
 Fortunately this is possible by implementing the process using a \nom{finite state machine}{FSM}.
+
+\subsection{Finite State Machine}
+
+A \nom{Finite State Machine}{FSM} is an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
+The machine is in only one state at a time, its current state.
+At the start of the machine execution, it will be in the start state.
+From there, it can transition from one state to another when certain event are triggered or conditions are met, until it finally reaches an end state.
