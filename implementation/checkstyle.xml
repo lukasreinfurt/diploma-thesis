@@ -30,6 +30,9 @@
 		<module name="ThrowsCount"/>
 		<module name="InnerTypeLast"/>
 
+		<!-- coding -->
+		<module name="ArrayTrailingComma"/>
+
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
 		<module name="AvoidStaticImport"/>
