@@ -28,6 +28,7 @@
 		<module name="DesignForExtension"/>
 		<module name="MutableException"/>
 		<module name="ThrowsCount"/>
+		<module name="InnerTypeLast"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
