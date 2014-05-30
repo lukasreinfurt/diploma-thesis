@@ -10,6 +10,7 @@
 		<!-- block -->
 		<module name="EmptyBlock"/>
 		<module name="LeftCurly"/>
+		<module name="NeedBraces"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
