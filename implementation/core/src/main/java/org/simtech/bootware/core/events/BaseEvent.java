@@ -32,8 +32,8 @@ public class BaseEvent implements Event {
 	 *
 	 * @param message The event message.
 	 */
-	public final void setMessage(String message) {
-		this.message = message;
+	public final void setMessage(String m) {
+		message = m;
 	}
 
 	/**

@@ -34,9 +34,9 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager(EventBus eventBus) {
+	public PluginManager(EventBus eb) {
 
-		this.eventBus    = eventBus;
+		eventBus         = eb;
 		config           = new HashMap<String, String>();
 		installedBundles = new HashMap<String, Bundle>();
 
