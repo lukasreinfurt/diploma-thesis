@@ -22,6 +22,7 @@
 		<module name="VisibilityModifier">
 			<property name="protectedAllowed" value="true"/>
 		</module>
+		<module name="FinalClass"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
