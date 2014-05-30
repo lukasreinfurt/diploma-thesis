@@ -14,6 +14,7 @@
 		<module name="RightCurly">
 			<property name="option" value="alone"/>
 		</module>
+		<module name="AvoidNestedBlocks"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
