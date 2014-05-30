@@ -3,6 +3,8 @@
 	"-//Puppy Crawl//DTD Check Configuration 1.3//EN"
 	"http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
+<!-- for descriptions see:
+     http://checkstyle.sourceforge.net/checks.html -->
 <module name="Checker">
 
 	<module name="TreeWalker">
@@ -15,6 +17,11 @@
 			<property name="option" value="alone"/>
 		</module>
 		<module name="AvoidNestedBlocks"/>
+
+		<!-- class design -->
+		<module name="VisibilityModifier">
+			<property name="protectedAllowed" value="true"/>
+		</module>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
