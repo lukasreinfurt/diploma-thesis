@@ -11,7 +11,7 @@ public abstract class AbstractAcceptString implements IMessageFilter{
 
 	@Override
 	public final boolean accepts(Object message, MessageHandlerMetadata metadata) {
-		BaseEvent event = (BaseEvent) message;
+		final BaseEvent event = (BaseEvent) message;
 		if (event.getMessage().equals(string())) {
 			return true;
 		}

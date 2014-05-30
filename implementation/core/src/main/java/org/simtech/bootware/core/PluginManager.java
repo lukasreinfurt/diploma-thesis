@@ -42,13 +42,13 @@ public class PluginManager {
 
 		// export packages via system bundle to resolve constrains of plugin bundles.
 		// Specific version is needed or unresolved constraint occur.
-		String extraPackages = "org.simtech.bootware.core;version=1.0.0," +
-		                       "org.simtech.bootware.core.events;version=1.0.0," +
-		                       "org.simtech.bootware.core.exceptions;version=1.0.0," +
-		                       "org.simtech.bootware.core.filters;version=1.0.0," +
-		                       "org.simtech.bootware.core.plugins;version=1.0.0," +
-		                       "net.engio.mbassy.listener;version=1.1.2," +
-		                       "net.engio.mbassy.common;version=1.1.2";
+		final String extraPackages = "org.simtech.bootware.core;version=1.0.0," +
+		                             "org.simtech.bootware.core.events;version=1.0.0," +
+		                             "org.simtech.bootware.core.exceptions;version=1.0.0," +
+		                             "org.simtech.bootware.core.filters;version=1.0.0," +
+		                             "org.simtech.bootware.core.plugins;version=1.0.0," +
+		                             "net.engio.mbassy.listener;version=1.1.2," +
+		                             "net.engio.mbassy.common;version=1.1.2";
 		config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, extraPackages);
 
 		frameworkFactory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
@@ -83,18 +83,18 @@ public class PluginManager {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
-			SuccessEvent event = new SuccessEvent();
+			final SuccessEvent event = new SuccessEvent();
 			event.setMessage("Successfully loaded plugin: '" + path + "'.");
 			eventBus.publish(event);
 		}
 		catch (BundleException e) {
-			ErrorEvent event = new ErrorEvent();
+			final ErrorEvent event = new ErrorEvent();
 			event.setMessage("Failed to load plugin: '" + path + "'.");
 			eventBus.publish(event);
 			throw new LoadPluginException(e);
 		}
-		BundleContext bundleContext = installedBundles.get(path).getBundleContext();
-		ServiceReference<?> serviceReference = bundleContext.getServiceReference(type.getName());
+		final BundleContext bundleContext = installedBundles.get(path).getBundleContext();
+		final ServiceReference<?> serviceReference = bundleContext.getServiceReference(type.getName());
 		return type.cast(bundleContext.getService(serviceReference));
 	}
 
@@ -104,17 +104,17 @@ public class PluginManager {
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
 	public final void unloadPlugin(String path) throws UnloadPluginException {
-		Bundle bundle = installedBundles.get(path);
+		final Bundle bundle = installedBundles.get(path);
 		if (bundle != null) {
 			try {
 				bundle.uninstall();
 				installedBundles.remove(path);
-				SuccessEvent event = new SuccessEvent();
+				final SuccessEvent event = new SuccessEvent();
 				event.setMessage("Successfully unloaded plugin: '" + path + "'.");
 				eventBus.publish(event);
 			}
 			catch (BundleException e) {
-				ErrorEvent event = new ErrorEvent();
+				final ErrorEvent event = new ErrorEvent();
 				event.setMessage("Failed to unload plugin: '" + path + "'.");
 				eventBus.publish(event);
 				throw new UnloadPluginException(e);
@@ -126,19 +126,19 @@ public class PluginManager {
 	 * Unloads all loaded plugins.
 	 */
 	public final void unloadAllPlugins() throws UnloadPluginException {
-		Iterator<Map.Entry<String, Bundle>> iterator = installedBundles.entrySet().iterator();
+		final Iterator<Map.Entry<String, Bundle>> iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
-			Map.Entry<String, Bundle> entry = iterator.next();
-			String key = entry.getKey().toString();
+			final Map.Entry<String, Bundle> entry = iterator.next();
+			final String key = entry.getKey().toString();
 			try {
 				installedBundles.get(key).uninstall();
 				iterator.remove();
-				SuccessEvent event = new SuccessEvent();
+				final SuccessEvent event = new SuccessEvent();
 				event.setMessage("Successfully unloaded plugin: '" + key + "'.");
 				eventBus.publish(event);
 			}
 			catch (BundleException e) {
-				ErrorEvent event = new ErrorEvent();
+				final ErrorEvent event = new ErrorEvent();
 				event.setMessage("Failed to unload plugin: '" + key + "'.");
 				eventBus.publish(event);
 				throw new UnloadPluginException(e);

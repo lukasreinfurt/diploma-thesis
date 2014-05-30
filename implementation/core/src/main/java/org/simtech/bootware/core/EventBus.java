@@ -19,7 +19,7 @@ public class EventBus {
 	public EventBus() {
 		eventBus = new MBassador<Event>(BusConfiguration.Default());
 
-		ConsoleLogger error = new ConsoleLogger();
+		final ConsoleLogger error = new ConsoleLogger();
 		eventBus.addErrorHandler(error);
 
 	}

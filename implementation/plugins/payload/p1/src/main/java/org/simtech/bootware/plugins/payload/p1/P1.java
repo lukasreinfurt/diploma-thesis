@@ -27,7 +27,7 @@ public class P1 extends AbstractPayloadPlugin {
 	public final URL start(Connection connection) throws StartPayloadException {
 		System.out.println("P1: start");
 		try {
-			URL url = new URL("http://www.example.com");
+			final URL url = new URL("http://www.example.com");
 			return url;
 		}
 		catch (Exception e) {

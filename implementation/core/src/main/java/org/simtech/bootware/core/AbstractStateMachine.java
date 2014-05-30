@@ -104,7 +104,7 @@ public abstract class AbstractStateMachine {
 	 * Exports the state machine as .dot file for GraphViz.
 	 */
 	public final void exportDot() {
-		DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
+		final DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
 		stateMachine.accept(visitor);
 		visitor.convertDotFile("bootware");
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractStateMachine {
 
 		protected void transition(String from, String to, FSMEvent fsmEvent, Integer c) {
 			if (eventBus != null) {
-				StateTransitionEvent event = new StateTransitionEvent();
+				final StateTransitionEvent event = new StateTransitionEvent();
 				event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
 				eventBus.publish(event);
 			}
@@ -172,7 +172,7 @@ public abstract class AbstractStateMachine {
 
 		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent, Integer c) {
 			try {
-				Credentials credentials = new Credentials();
+				final Credentials credentials = new Credentials();
 				instance = infrastructurePlugin.provision(credentials);
 			}
 			catch (ProvisionInfrastructureException e) {
@@ -305,7 +305,7 @@ public abstract class AbstractStateMachine {
 
 		protected void end(String from, String to, FSMEvent fsmEvent, Integer c) {
 			stateMachine.terminate(10);
-			InfoEvent event = new InfoEvent();
+			final InfoEvent event = new InfoEvent();
 			event.setMessage("State machine terminated.");
 			eventBus.publish(event);
 		}

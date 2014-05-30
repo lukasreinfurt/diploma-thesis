@@ -43,7 +43,7 @@ public abstract class AbstractBasePlugin implements Plugin {
 	 * @return The object.
 	 */
 	protected final <T> T getSharedObject(Class<T> type) {
-		ServiceReference<?> serviceReference = context.getServiceReference(type.getName());
+		final ServiceReference<?> serviceReference = context.getServiceReference(type.getName());
 		return type.cast(context.getService(serviceReference));
 	}
 

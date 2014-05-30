@@ -15,8 +15,8 @@ public class BaseEvent implements Event {
 	 * Creates a base event and sets its timestamp to the current time.
 	 */
 	protected BaseEvent() {
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss:SSS");
+		final Date date = new Date();
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss:SSS");
 		timestamp = sdf.format(date);
 	}
 
