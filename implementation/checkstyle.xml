@@ -32,6 +32,7 @@
 
 		<!-- coding -->
 		<module name="ArrayTrailingComma"/>
+		<module name="AvoidInlineConditionals"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
