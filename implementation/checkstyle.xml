@@ -43,6 +43,7 @@
 		<module name="InnerAssignment"/>
 		<module name="MagicNumber"/>
 		<module name="MissingSwitchDefault"/>
+		<module name="ModifiedControlVariable"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
