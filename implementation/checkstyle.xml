@@ -41,6 +41,7 @@
 		<module name="HiddenField"/>
 		<module name="IllegalToken"/>
 		<module name="InnerAssignment"/>
+		<module name="MagicNumber"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
