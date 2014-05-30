@@ -1,17 +1,13 @@
 package org.simtech.bootware.core;
 
 import java.net.URL;
-import javax.jws.WebService;
 
-import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
-import org.squirrelframework.foundation.fsm.UntypedStateMachineImporter;
 import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
 import org.squirrelframework.foundation.fsm.UntypedStateMachine;
 import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
 import org.squirrelframework.foundation.fsm.annotation.StateMachineParameters;
 
 import org.squirrelframework.foundation.component.SquirrelProvider;
-import org.squirrelframework.foundation.fsm.Visitor;
 import org.squirrelframework.foundation.fsm.DotVisitor;
 
 import org.simtech.bootware.core.plugins.AbstractEventPlugin;

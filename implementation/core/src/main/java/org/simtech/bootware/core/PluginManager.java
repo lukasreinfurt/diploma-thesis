@@ -13,9 +13,6 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
-import net.engio.mbassy.bus.MBassador;
-
-import org.simtech.bootware.core.plugins.Plugin;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.ErrorEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;

@@ -8,7 +8,6 @@ import org.simtech.bootware.core.events.WarningEvent;
 import org.simtech.bootware.core.events.ErrorEvent;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Filter;
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
 

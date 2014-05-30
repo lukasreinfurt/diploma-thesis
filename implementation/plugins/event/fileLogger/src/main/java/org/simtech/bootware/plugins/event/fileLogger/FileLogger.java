@@ -4,7 +4,6 @@ import org.simtech.bootware.core.plugins.AbstractEventPlugin;
 import org.simtech.bootware.core.events.BaseEvent;
 
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.Filter;
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
 

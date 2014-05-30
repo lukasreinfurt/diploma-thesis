@@ -4,7 +4,6 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
-import org.squirrelframework.foundation.fsm.annotation.StateMachineParameters;
 
 /**
  * The main bootware program.
