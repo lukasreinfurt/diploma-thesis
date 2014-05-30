@@ -8,6 +8,7 @@
 	<module name="TreeWalker">
 
 		<!-- imports -->
+		<module name="AvoidStarImport"/>
 		<module name="RedundantImport"/>
 		<module name="UnusedImports"/>
 		<module name="ImportOrder">
