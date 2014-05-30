@@ -33,6 +33,7 @@
 		<!-- coding -->
 		<module name="ArrayTrailingComma"/>
 		<module name="AvoidInlineConditionals"/>
+		<module name="CovariantEquals"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
