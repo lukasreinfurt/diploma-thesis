@@ -45,6 +45,7 @@
 		<module name="MissingSwitchDefault"/>
 		<module name="ModifiedControlVariable"/>
 		<module name="RedundantThrows"/>
+		<module name="SimplifyBooleanExpression"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
