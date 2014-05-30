@@ -34,6 +34,7 @@
 		<module name="ArrayTrailingComma"/>
 		<module name="AvoidInlineConditionals"/>
 		<module name="CovariantEquals"/>
+		<module name="EmptyStatement"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
