@@ -46,6 +46,7 @@
 		<module name="ModifiedControlVariable"/>
 		<module name="RedundantThrows"/>
 		<module name="SimplifyBooleanExpression"/>
+		<module name="SimplifyBooleanReturn"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
