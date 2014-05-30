@@ -6,20 +6,20 @@ import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
 
 public class I1 extends AbstractInfrastructurePlugin {
 
-	public void initialize() {
+	public final void initialize() {
 		// no op
 	}
 
-	public void shutdown() {
+	public final void shutdown() {
 		// no op
 	}
 
-	public Instance provision(Credentials credentials) {
+	public final Instance provision(Credentials credentials) {
 		System.out.println("I1: provision");
 		return new Instance();
 	}
 
-	public void deprovision(Instance instance) {
+	public final void deprovision(Instance instance) {
 		System.out.println("I1: deprovision");
 	}
 

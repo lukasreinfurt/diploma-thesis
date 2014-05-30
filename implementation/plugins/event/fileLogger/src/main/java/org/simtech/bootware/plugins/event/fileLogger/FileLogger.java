@@ -14,7 +14,7 @@ public class FileLogger extends AbstractEventPlugin {
 
 	private PrintWriter writer;
 
-	public void initialize() {
+	public final void initialize() {
 		try {
 			writer = new PrintWriter("filelogger.log", "UTF-8");
 		}
@@ -26,22 +26,22 @@ public class FileLogger extends AbstractEventPlugin {
 		}
 	}
 
-	public void shutdown() {
+	public final void shutdown() {
 		writer.close();
 	}
 
 	@Handler
-	public void handle(BaseEvent event) {
+	public final void handle(BaseEvent event) {
 		writer.println(event.getTimestamp() + ": " + event.getMessage());
 	}
 
 	@Handler
-	public void handle(DeadMessage message) {
+	public final void handle(DeadMessage message) {
 		writer.println("DeadMessage: " + message.getMessage());
 	}
 
 	@Handler
-	public void handle(FilteredMessage message) {
+	public final void handle(FilteredMessage message) {
 		writer.println("FilteredMessage: " + message.getMessage());
 	}
 

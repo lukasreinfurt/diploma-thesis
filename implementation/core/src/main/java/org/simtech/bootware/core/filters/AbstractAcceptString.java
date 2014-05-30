@@ -10,7 +10,7 @@ public abstract class AbstractAcceptString implements IMessageFilter{
 	protected abstract String string();
 
 	@Override
-	public boolean accepts(Object message, MessageHandlerMetadata metadata) {
+	public final boolean accepts(Object message, MessageHandlerMetadata metadata) {
 		BaseEvent event = (BaseEvent) message;
 		if (event.getMessage().equals(string())) {
 			return true;

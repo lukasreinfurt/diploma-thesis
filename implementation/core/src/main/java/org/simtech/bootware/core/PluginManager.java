@@ -70,7 +70,7 @@ public class PluginManager {
 	 *
 	 * @param object Object to be registered in the registry.
 	 */
-	public void registerSharedObject(Object object) {
+	public final void registerSharedObject(Object object) {
 		context.registerService(object.getClass().getName(), object, null);
 	}
 
@@ -79,7 +79,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public <T> T loadPlugin(Class<T> type, String path) throws LoadPluginException {
+	public final <T> T loadPlugin(Class<T> type, String path) throws LoadPluginException {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
@@ -103,7 +103,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public void unloadPlugin(String path) throws UnloadPluginException {
+	public final void unloadPlugin(String path) throws UnloadPluginException {
 		Bundle bundle = installedBundles.get(path);
 		if (bundle != null) {
 			try {
@@ -125,7 +125,7 @@ public class PluginManager {
 	/**
 	 * Unloads all loaded plugins.
 	 */
-	public void unloadAllPlugins() throws UnloadPluginException {
+	public final void unloadAllPlugins() throws UnloadPluginException {
 		Iterator<Map.Entry<String, Bundle>> iterator = installedBundles.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<String, Bundle> entry = iterator.next();
@@ -150,7 +150,7 @@ public class PluginManager {
 	 * Stop the OSGi framework.
 	 * If there are still plugins loaded, they will be unloaded before the framework is stopped.
 	 */
-	public void stop() throws UnloadPluginException {
+	public final void stop() throws UnloadPluginException {
 		unloadAllPlugins();
 		try {
 			framework.stop();

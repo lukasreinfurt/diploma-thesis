@@ -23,7 +23,7 @@ public class BaseEvent implements Event {
 	/**
 	 * @return The event timestamp in the format "yyyy/MM/dd hh:mm:ss:SSS".
 	 */
-	public String getTimestamp() {
+	public final String getTimestamp() {
 		return timestamp;
 	}
 
@@ -32,14 +32,14 @@ public class BaseEvent implements Event {
 	 *
 	 * @param message The event message.
 	 */
-	public void setMessage(String message) {
+	public final void setMessage(String message) {
 		this.message = message;
 	}
 
 	/**
 	 * @return The event message
 	 */
-	public String getMessage() {
+	public final String getMessage() {
 		return message;
 	}
 }

@@ -8,23 +8,23 @@ import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
 
 public class P1 extends AbstractPayloadPlugin {
 
-	public void initialize() {
+	public final void initialize() {
 		// no op
 	}
 
-	public void shutdown() {
+	public final void shutdown() {
 		// no op
 	}
 
-	public void provision(Connection connection) {
+	public final void provision(Connection connection) {
 		System.out.println("P1: provision");
 	}
 
-	public void deprovision(Connection connection) {
+	public final void deprovision(Connection connection) {
 		System.out.println("P1: deprovision");
 	}
 
-	public URL start(Connection connection) throws StartPayloadException {
+	public final URL start(Connection connection) throws StartPayloadException {
 		System.out.println("P1: start");
 		try {
 			URL url = new URL("http://www.example.com");
@@ -35,7 +35,7 @@ public class P1 extends AbstractPayloadPlugin {
 		}
 	}
 
-	public void stop(Connection connection) {
+	public final void stop(Connection connection) {
 		System.out.println("P1: stop");
 	}
 

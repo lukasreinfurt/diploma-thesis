@@ -76,7 +76,7 @@ public class BootwareImpl extends AbstractStateMachine {
 	}
 
 	@WebMethod
-	public String deploy(Context context) {
+	public final String deploy(Context context) {
 		BootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
 		return response;

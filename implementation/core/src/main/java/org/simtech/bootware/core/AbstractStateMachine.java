@@ -70,7 +70,7 @@ public abstract class AbstractStateMachine {
 	 * @param successState The state to which should be transitioned if entryMethod was successful.
 	 * @param tailureState The state to which should be transitioned if entryMethod was unsuccessful.
 	 */
-	protected void buildDefaultTransition(String state,
+	protected final void buildDefaultTransition(String state,
 	                                      String entryMethod,
 	                                      String successState,
 	                                      String failureState) {
@@ -285,28 +285,28 @@ public abstract class AbstractStateMachine {
 	/**
 	 * Starts the state machine.
 	 */
-	public void run() {
+	public final void run() {
 		stateMachine.fire(FSMEvent.Start, 10);
 	}
 
 	/**
 	 * Stops the state machine.
 	 */
-	public void stop() {
+	public final void stop() {
 		stateMachine.fire(FSMEvent.Shutdown, 10);
 	}
 
 	/**
 	 * Exports the state machine as XML.
 	 */
-	public void exportXML() {
+	public final void exportXML() {
 		System.out.println(stateMachine.exportXMLDefinition(true));
 	}
 
 	/**
 	 * Exports the state machine as .dot file for GraphViz.
 	 */
-	public void exportDot() {
+	public final void exportDot() {
 		DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
 		stateMachine.accept(visitor);
 		visitor.convertDotFile("bootware");

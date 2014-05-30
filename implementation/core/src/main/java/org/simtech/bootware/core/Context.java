@@ -5,27 +5,27 @@ public class Context {
 	private String connectionType;
 	private String payloadType;
 
-	public void setInfrastructureType(String type) {
+	public final void setInfrastructureType(String type) {
 		this.infrastructureType = type;
 	}
 
-	public String getInfrastructureType() {
+	public final String getInfrastructureType() {
 		return infrastructureType;
 	}
 
-	public void setConnectionType(String type) {
+	public final void setConnectionType(String type) {
 		this.connectionType = type;
 	}
 
-	public String getConnectionType() {
+	public final String getConnectionType() {
 		return connectionType;
 	}
 
-	public void setPayloadType(String type) {
+	public final void setPayloadType(String type) {
 		this.payloadType = type;
 	}
 
-	public String getPayloadType() {
+	public final String getPayloadType() {
 		return payloadType;
 	}
 }

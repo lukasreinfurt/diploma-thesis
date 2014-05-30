@@ -29,7 +29,7 @@ public class EventBus {
 	 *
 	 * @param event Event to be published.
 	 */
-	public void publish(Event event) {
+	public final void publish(Event event) {
 		eventBus.publish(event);
 	}
 
@@ -38,7 +38,7 @@ public class EventBus {
 	 *
 	 * @param subscriber Object to be subscribed.
 	 */
-	public void subscribe(Object subscriber) {
+	public final void subscribe(Object subscriber) {
 		eventBus.subscribe(subscriber);
 	}
 
@@ -47,7 +47,7 @@ public class EventBus {
 	 *
 	 * @param subscriber Object to be unsubscribed.
 	 */
-	public void unsubscribe(Object subscriber) {
+	public final void unsubscribe(Object subscriber) {
 		eventBus.unsubscribe(subscriber);
 	}
 }

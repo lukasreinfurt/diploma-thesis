@@ -6,20 +6,20 @@ import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
 
 public class C2 extends AbstractConnectionPlugin {
 
-	public void initialize() {
+	public final void initialize() {
 		// no op
 	}
 
-	public void shutdown() {
+	public final void shutdown() {
 		// no op
 	}
 
-	public Connection connect(Instance instance) {
+	public final Connection connect(Instance instance) {
 		System.out.println("C2: connect");
 		return new Connection();
 	}
 
-	public void disconnect(Connection connection) {
+	public final void disconnect(Connection connection) {
 		System.out.println("C2: disconnect");
 	}
 

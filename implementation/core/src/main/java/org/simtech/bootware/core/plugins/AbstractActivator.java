@@ -12,7 +12,7 @@ public abstract class AbstractActivator implements BundleActivator {
 
 	protected abstract Plugin getPluginInstance();
 
-	public void start(BundleContext context) {
+	public final void start(BundleContext context) {
 		plugin = getPluginInstance();
 		// TODO: This should be done differently.
 		//
@@ -29,7 +29,7 @@ public abstract class AbstractActivator implements BundleActivator {
 		context.registerService(plugin.getClass().getSuperclass().getName(), plugin, null);
 	}
 
-	public void stop(BundleContext context) {
+	public final void stop(BundleContext context) {
 		// service is automatically unregistered
 		plugin.stop();
 	}
