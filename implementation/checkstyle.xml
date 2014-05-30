@@ -23,6 +23,7 @@
 			<property name="protectedAllowed" value="true"/>
 		</module>
 		<module name="FinalClass"/>
+		<module name="InterfaceIsType"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
