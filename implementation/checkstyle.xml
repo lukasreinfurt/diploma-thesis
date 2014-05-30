@@ -7,6 +7,9 @@
 
 	<module name="TreeWalker">
 
+		<!-- block -->
+		<module name="EmptyBlock"/>
+
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
 		<module name="AvoidStaticImport"/>
