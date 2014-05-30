@@ -48,6 +48,9 @@
 		<module name="SimplifyBooleanExpression"/>
 		<module name="SimplifyBooleanReturn"/>
 		<module name="StringLiteralEquality"/>
+		<module name="NestedForDepth">
+			<property name="max" value="2"/>
+		</module>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
