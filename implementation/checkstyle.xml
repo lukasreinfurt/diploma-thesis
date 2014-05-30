@@ -26,6 +26,7 @@
 		<module name="InterfaceIsType"/>
 		<module name="HideUtilityClassConstructor"/>
 		<module name="DesignForExtension"/>
+		<module name="MutableException"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
