@@ -40,6 +40,7 @@
 		<module name="FinalLocalVariable"/>
 		<module name="HiddenField"/>
 		<module name="IllegalToken"/>
+		<module name="InnerAssignment"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
