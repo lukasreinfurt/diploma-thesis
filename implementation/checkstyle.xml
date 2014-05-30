@@ -10,6 +10,10 @@
 		<!-- imports -->
 		<module name="RedundantImport"/>
 		<module name="UnusedImports"/>
+		<module name="ImportOrder">
+			<property name="groups" value="/^javax?\./,org"/>
+			<property name="separated" value="true"/>
+	</module>
 	</module>
 
 </module>
