@@ -80,6 +80,36 @@ public abstract class AbstractStateMachine {
 	}
 
 	/**
+	 * Starts the state machine.
+	 */
+	public final void run() {
+		stateMachine.fire(FSMEvent.Start, 10);
+	}
+
+	/**
+	 * Stops the state machine.
+	 */
+	public final void stop() {
+		stateMachine.fire(FSMEvent.Shutdown, 10);
+	}
+
+	/**
+	 * Exports the state machine as XML.
+	 */
+	public final void exportXML() {
+		System.out.println(stateMachine.exportXMLDefinition(true));
+	}
+
+	/**
+	 * Exports the state machine as .dot file for GraphViz.
+	 */
+	public final void exportDot() {
+		DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
+		stateMachine.accept(visitor);
+		visitor.convertDotFile("bootware");
+	}
+
+	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
 	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Integer.class)
@@ -280,36 +310,6 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(event);
 		}
 
-	}
-
-	/**
-	 * Starts the state machine.
-	 */
-	public final void run() {
-		stateMachine.fire(FSMEvent.Start, 10);
-	}
-
-	/**
-	 * Stops the state machine.
-	 */
-	public final void stop() {
-		stateMachine.fire(FSMEvent.Shutdown, 10);
-	}
-
-	/**
-	 * Exports the state machine as XML.
-	 */
-	public final void exportXML() {
-		System.out.println(stateMachine.exportXMLDefinition(true));
-	}
-
-	/**
-	 * Exports the state machine as .dot file for GraphViz.
-	 */
-	public final void exportDot() {
-		DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
-		stateMachine.accept(visitor);
-		visitor.convertDotFile("bootware");
 	}
 
 }
