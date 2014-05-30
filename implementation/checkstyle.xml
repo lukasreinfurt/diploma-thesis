@@ -10,6 +10,7 @@
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
 		<module name="AvoidStaticImport"/>
+		<module name="IllegalImport"/>
 		<module name="RedundantImport"/>
 		<module name="UnusedImports"/>
 		<module name="ImportOrder">
