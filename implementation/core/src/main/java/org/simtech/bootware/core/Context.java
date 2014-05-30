@@ -1,9 +1,9 @@
 package org.simtech.bootware.core;
 
 public class Context {
-	String infrastructureType;
-	String connectionType;
-	String payloadType;
+	private String infrastructureType;
+	private String connectionType;
+	private String payloadType;
 
 	public void setInfrastructureType(String type) {
 		this.infrastructureType = type;
