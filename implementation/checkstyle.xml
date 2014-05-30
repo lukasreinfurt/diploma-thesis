@@ -9,6 +9,7 @@
 
 		<!-- block -->
 		<module name="EmptyBlock"/>
+		<module name="LeftCurly"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
