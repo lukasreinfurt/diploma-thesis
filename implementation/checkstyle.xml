@@ -24,6 +24,7 @@
 		</module>
 		<module name="FinalClass"/>
 		<module name="InterfaceIsType"/>
+		<module name="HideUtilityClassConstructor"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
