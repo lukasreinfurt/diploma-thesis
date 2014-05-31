@@ -167,6 +167,9 @@
 		<module name="OuterTypeNumber"/>
 		<module name="MethodCount"/>
 
+		<!-- whitespace -->
+		<module name="GenericWhitespace"/>
+
 		<module name="SuppressWarningsHolder"/>
 
 	</module>
