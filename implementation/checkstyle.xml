@@ -120,6 +120,7 @@
 			<property name="excludedClasses" value="\.Main$"/>
 		</module>
 		<module name="UpperEll"/>
+		<module name="ArrayTypeStyle"/>
 
 		<module name="SuppressWarningsHolder"/>
 
