@@ -122,6 +122,13 @@
 		<module name="UpperEll"/>
 		<module name="ArrayTypeStyle"/>
 		<module name="FinalParameters"/>
+		<module name="Indentation">
+			<!-- 8 equals one tab -->
+			<property name="basicOffset" value="8"/>
+			<property name="braceAdjustment" value="0"/>
+			<property name="caseIndent" value="8"/>
+			<property name="throwsIndent" value="8"/>
+		</module>
 
 		<module name="SuppressWarningsHolder"/>
 
