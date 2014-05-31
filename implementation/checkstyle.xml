@@ -172,6 +172,7 @@
 		<module name="EmptyForInitializerPad"/>
 		<module name="EmptyForIteratorPad"/>
 		<module name="MethodParamPad"/>
+		<module name="NoWhitespaceAfter"/>
 
 		<module name="SuppressWarningsHolder"/>
 
