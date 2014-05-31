@@ -159,6 +159,7 @@
 		<module name="LineLength">
 			<property name="max" value="200"/>
 		</module>
+		<module name="MethodLength"/>
 
 		<module name="SuppressWarningsHolder"/>
 
