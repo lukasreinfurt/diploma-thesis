@@ -55,6 +55,7 @@
 		<module name="NestedTryDepth"/>
 		<module name="NoClone"/>
 		<module name="NoFinalizer"/>
+		<module name="SuperClone"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
