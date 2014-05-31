@@ -121,6 +121,7 @@
 		</module>
 		<module name="UpperEll"/>
 		<module name="ArrayTypeStyle"/>
+		<module name="FinalParameters"/>
 
 		<module name="SuppressWarningsHolder"/>
 
