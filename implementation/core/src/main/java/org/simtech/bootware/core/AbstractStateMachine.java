@@ -118,7 +118,7 @@ public abstract class AbstractStateMachine {
 	 */
 	@ContextInsensitive
 	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Void.class)
-	static abstract class AbstractMachine extends AbstractUntypedStateMachine {
+	abstract static class AbstractMachine extends AbstractUntypedStateMachine {
 
 		protected void transition(final String from, final String to, final FSMEvent fsmEvent) {
 			if (eventBus != null) {
