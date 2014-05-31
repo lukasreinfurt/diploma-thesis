@@ -47,6 +47,10 @@ public abstract class AbstractStateMachine {
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
 
+	private static String infrastructurePluginPath = "plugins/infrastructure/";
+	private static String connectionPluginPath     = "plugins/connection/";
+	private static String payloadPluginPath        = "plugins/payload/";
+
 	protected UntypedStateMachineBuilder builder;
 
 	/**
@@ -126,7 +130,7 @@ public abstract class AbstractStateMachine {
 
 		protected void initialize(String from, String to, FSMEvent fsmEvent) {
 			eventBus      = new EventBus();
-			pluginManager = new PluginManager(eventBus);
+			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
@@ -159,9 +163,9 @@ public abstract class AbstractStateMachine {
 
 		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent) {
 			try {
-				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, "plugins/infrastructure/" + context.getInfrastructureType());
-				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, "plugins/connection/" + context.getConnectionType());
-				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, "plugins/payload/" + context.getPayloadType());
+				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructureType());
+				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionType());
+				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadType());
 			}
 			catch (LoadPluginException e) {
 				e.printStackTrace();
@@ -262,9 +266,9 @@ public abstract class AbstractStateMachine {
 				infrastructurePlugin = null;
 				connectionPlugin     = null;
 				payloadPlugin        = null;
-				pluginManager.unloadPlugin("plugins/infrastructure/" + context.getInfrastructureType());
-				pluginManager.unloadPlugin("plugins/connection/" + context.getConnectionType());
-				pluginManager.unloadPlugin("plugins/payload/" + context.getPayloadType());
+				pluginManager.unloadPlugin(infrastructurePluginPath + context.getInfrastructureType());
+				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionType());
+				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadType());
 			}
 			catch (UnloadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);

@@ -16,6 +16,7 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 	/**
 	 * Creates the bootware process as state machine.
 	 */
+	@SuppressWarnings("checkstyle:multiplestringliterals")
 	public BootwareImpl() {
 		builder = StateMachineBuilderFactory.create(Machine.class);
 

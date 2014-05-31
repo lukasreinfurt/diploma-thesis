@@ -13,8 +13,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
-import org.simtech.bootware.core.events.ErrorEvent;
-import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
@@ -23,7 +21,6 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
  */
 public class PluginManager {
 
-	private EventBus eventBus;
 	private Map<String, String> config;
 	private Map<String, Bundle> installedBundles;
 	private FrameworkFactory frameworkFactory;
@@ -34,9 +31,8 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager(EventBus eb) {
+	public PluginManager() {
 
-		eventBus         = eb;
 		config           = new HashMap<String, String>();
 		installedBundles = new HashMap<String, Bundle>();
 
@@ -83,14 +79,8 @@ public class PluginManager {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
-			final SuccessEvent event = new SuccessEvent();
-			event.setMessage("Successfully loaded plugin: '" + path + "'.");
-			eventBus.publish(event);
 		}
 		catch (BundleException e) {
-			final ErrorEvent event = new ErrorEvent();
-			event.setMessage("Failed to load plugin: '" + path + "'.");
-			eventBus.publish(event);
 			throw new LoadPluginException(e);
 		}
 		final BundleContext bundleContext = installedBundles.get(path).getBundleContext();
@@ -109,14 +99,8 @@ public class PluginManager {
 			try {
 				bundle.uninstall();
 				installedBundles.remove(path);
-				final SuccessEvent event = new SuccessEvent();
-				event.setMessage("Successfully unloaded plugin: '" + path + "'.");
-				eventBus.publish(event);
 			}
 			catch (BundleException e) {
-				final ErrorEvent event = new ErrorEvent();
-				event.setMessage("Failed to unload plugin: '" + path + "'.");
-				eventBus.publish(event);
 				throw new UnloadPluginException(e);
 			}
 		}
@@ -133,14 +117,8 @@ public class PluginManager {
 			try {
 				installedBundles.get(key).uninstall();
 				iterator.remove();
-				final SuccessEvent event = new SuccessEvent();
-				event.setMessage("Successfully unloaded plugin: '" + key + "'.");
-				eventBus.publish(event);
 			}
 			catch (BundleException e) {
-				final ErrorEvent event = new ErrorEvent();
-				event.setMessage("Failed to unload plugin: '" + key + "'.");
-				eventBus.publish(event);
 				throw new UnloadPluginException(e);
 			}
 		}
