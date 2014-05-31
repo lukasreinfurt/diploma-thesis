@@ -24,6 +24,9 @@
 
 	<module name="TreeWalker">
 
+		<!-- annotations -->
+		<module name="AnnotationUseStyle"/>
+
 		<!-- block -->
 		<module name="EmptyBlock"/>
 		<module name="LeftCurly"/>
