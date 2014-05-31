@@ -27,6 +27,7 @@
 		<!-- annotations -->
 		<module name="AnnotationUseStyle"/>
 		<module name="MissingDeprecated"/>
+		<module name="MissingOverride"/>
 
 		<!-- block -->
 		<module name="EmptyBlock"/>
