@@ -18,7 +18,7 @@ public final class Main {
 	 *
 	 * @param args Commandline arguments.
 	 */
-	public static void main (final String[] args) {
+	public static void main(final String[] args) {
 
 		// Publish the bootware as a web service.
 		final BootwareImpl implementor = new BootwareImpl();
