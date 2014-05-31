@@ -70,6 +70,7 @@
 		<module name="DefaultComesLast"/>
 		<module name="MissingCtor"/>
 		<module name="FallThrough"/>
+		<module name="MultipleStringLiterals"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
