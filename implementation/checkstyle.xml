@@ -68,6 +68,7 @@
 		<module name="ParameterAssignment"/>
 		<module name="ExplicitInitialization"/>
 		<module name="DefaultComesLast"/>
+		<module name="MissingCtor"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
