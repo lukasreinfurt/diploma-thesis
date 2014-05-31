@@ -108,6 +108,7 @@
 		<module name="ClassDataAbstractionCoupling"/>
 		<module name="ClassFanOutComplexity"/>
 		<module name="CyclomaticComplexity"/>
+		<module name="NPathComplexity"/>
 
 		<module name="SuppressWarningsHolder"/>
 
