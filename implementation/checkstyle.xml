@@ -135,6 +135,7 @@
 
 		<!-- modifiers -->
 		<module name="ModifierOrder"/>
+		<module name="RedundantModifier"/>
 
 		<module name="SuppressWarningsHolder"/>
 
