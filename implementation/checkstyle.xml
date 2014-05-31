@@ -109,6 +109,7 @@
 		<module name="ClassFanOutComplexity"/>
 		<module name="CyclomaticComplexity"/>
 		<module name="NPathComplexity"/>
+		<module name="JavaNCSS"/>
 
 		<module name="SuppressWarningsHolder"/>
 
