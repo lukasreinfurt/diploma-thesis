@@ -65,6 +65,7 @@
 		<module name="ReturnCount"/>
 		<module name="IllegalType"/>
 		<module name="DeclarationOrder"/>
+		<module name="ParameterAssignment"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
