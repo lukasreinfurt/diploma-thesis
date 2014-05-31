@@ -64,6 +64,7 @@
 		<module name="PackageDeclaration"/>
 		<module name="ReturnCount"/>
 		<module name="IllegalType"/>
+		<module name="DeclarationOrder"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
