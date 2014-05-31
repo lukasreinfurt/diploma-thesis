@@ -76,6 +76,7 @@
 		<module name="MultipleVariableDeclarations"/>
 		<!-- <module name="RequireThis"/> -->
 		<module name="UnnecessaryParentheses"/>
+		<module name="OneStatementPerLine"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
