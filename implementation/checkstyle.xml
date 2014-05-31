@@ -177,6 +177,8 @@
 		<module name="OperatorWrap"/>
 		<module name="ParenPad"/>
 		<module name="TypecastParenPad"/>
+		<!-- <module name="FileTabCharacter"/> -->
+		<module name="WhitespaceAfter"/>
 
 		<module name="SuppressWarningsHolder"/>
 
