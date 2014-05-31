@@ -114,6 +114,9 @@
 		<module name="NPathComplexity"/>
 		<module name="JavaNCSS"/>
 
+		<!-- miscellaneous -->
+		<module name="TodoComment"/>
+
 		<module name="SuppressWarningsHolder"/>
 
 	</module>
