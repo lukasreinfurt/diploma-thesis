@@ -73,6 +73,7 @@
 		<module name="MissingCtor"/>
 		<module name="FallThrough"/>
 		<module name="MultipleStringLiterals"/>
+		<module name="MultipleVariableDeclarations"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
