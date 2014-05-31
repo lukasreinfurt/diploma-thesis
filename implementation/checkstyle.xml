@@ -61,6 +61,7 @@
 		<module name="IllegalThrows"/>
 		<module name="PackageDeclaration"/>
 		<module name="ReturnCount"/>
+		<module name="IllegalType"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
