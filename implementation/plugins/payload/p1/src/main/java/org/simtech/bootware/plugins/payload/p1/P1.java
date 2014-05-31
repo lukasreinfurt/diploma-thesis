@@ -1,5 +1,6 @@
 package org.simtech.bootware.plugins.payload.p1;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.simtech.bootware.core.Connection;
@@ -30,7 +31,7 @@ public class P1 extends AbstractPayloadPlugin {
 			final URL url = new URL("http://www.example.com");
 			return url;
 		}
-		catch (Exception e) {
+		catch (MalformedURLException e) {
 			throw new StartPayloadException(e);
 		}
 	}

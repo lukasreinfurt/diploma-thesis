@@ -2,6 +2,7 @@ package org.simtech.bootware.plugins.event.fileLogger;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import org.simtech.bootware.core.events.BaseEvent;
 import org.simtech.bootware.core.plugins.AbstractEventPlugin;
@@ -21,7 +22,7 @@ public class FileLogger extends AbstractEventPlugin {
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		catch (Exception e) {
+		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}
