@@ -19,12 +19,12 @@ public class C1 extends AbstractBasePlugin implements ConnectionPlugin {
 		// no op
 	}
 
-	public final Connection connect(Instance instance) {
+	public final Connection connect(final Instance instance) {
 		System.out.println("C1: connect");
 		return new Connection();
 	}
 
-	public final void disconnect(Connection connection) {
+	public final void disconnect(final Connection connection) {
 		System.out.println("C1: disconnect");
 	}
 

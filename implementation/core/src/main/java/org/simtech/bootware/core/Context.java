@@ -9,7 +9,7 @@ public class Context {
 
 	}
 
-	public final void setInfrastructureType(String type) {
+	public final void setInfrastructureType(final String type) {
 		this.infrastructureType = type;
 	}
 
@@ -17,7 +17,7 @@ public class Context {
 		return infrastructureType;
 	}
 
-	public final void setConnectionType(String type) {
+	public final void setConnectionType(final String type) {
 		this.connectionType = type;
 	}
 
@@ -25,7 +25,7 @@ public class Context {
 		return connectionType;
 	}
 
-	public final void setPayloadType(String type) {
+	public final void setPayloadType(final String type) {
 		this.payloadType = type;
 	}
 

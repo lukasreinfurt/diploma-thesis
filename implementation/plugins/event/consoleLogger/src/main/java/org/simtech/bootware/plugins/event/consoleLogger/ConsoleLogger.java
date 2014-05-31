@@ -27,37 +27,37 @@ public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 	}
 
 	@Handler
-	public final void handle(StateTransitionEvent event) {
+	public final void handle(final StateTransitionEvent event) {
 		System.out.println("[TRANSITION] " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(InfoEvent event) {
+	public final void handle(final InfoEvent event) {
 		System.out.println("[INFO] " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(SuccessEvent event) {
+	public final void handle(final SuccessEvent event) {
 		System.out.println("[SUCCESS] " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(WarningEvent event) {
+	public final void handle(final WarningEvent event) {
 		System.out.println("[WARNING] " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(ErrorEvent event) {
+	public final void handle(final ErrorEvent event) {
 		System.out.println("[ERROR] " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(DeadMessage message) {
+	public final void handle(final DeadMessage message) {
 		System.out.println("DeadMessage: " + message.getMessage());
 	}
 
 	@Handler
-	public final void handle(FilteredMessage message) {
+	public final void handle(final FilteredMessage message) {
 		System.out.println("FilteredMessage: " + message.getMessage());
 	}
 

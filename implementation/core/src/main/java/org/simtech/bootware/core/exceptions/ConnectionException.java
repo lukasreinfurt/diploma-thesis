@@ -3,7 +3,7 @@ package org.simtech.bootware.core.exceptions;
 @SuppressWarnings("serial")
 public class ConnectionException extends Exception {
 	public ConnectionException() { super(); }
-	public ConnectionException(String message) { super(message); }
-	public ConnectionException(String message, Throwable cause) { super(message, cause); }
-	public ConnectionException(Throwable cause) { super(cause); }
+	public ConnectionException(final String message) { super(message); }
+	public ConnectionException(final String message, final Throwable cause) { super(message, cause); }
+	public ConnectionException(final Throwable cause) { super(cause); }
 }

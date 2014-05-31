@@ -19,12 +19,12 @@ public class I2 extends AbstractBasePlugin implements InfrastructurePlugin {
 		// no op
 	}
 
-	public final Instance provision(Credentials credentials) {
+	public final Instance provision(final Credentials credentials) {
 		System.out.println("I2: provision");
 		return new Instance();
 	}
 
-	public final void deprovision(Instance instance) {
+	public final void deprovision(final Instance instance) {
 		System.out.println("I2: deprovision");
 	}
 

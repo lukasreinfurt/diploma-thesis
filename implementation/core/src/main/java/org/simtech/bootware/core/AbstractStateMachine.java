@@ -74,10 +74,10 @@ public abstract class AbstractStateMachine {
 	 * @param successState The state to which should be transitioned if entryMethod was successful.
 	 * @param tailureState The state to which should be transitioned if entryMethod was unsuccessful.
 	 */
-	protected final void buildDefaultTransition(String state,
-	                                            String entryMethod,
-	                                            String successState,
-	                                            String failureState) {
+	protected final void buildDefaultTransition(final String state,
+	                                            final String entryMethod,
+	                                            final String successState,
+	                                            final String failureState) {
 		builder.onEntry(state).callMethod(entryMethod);
 		builder.externalTransition().from(state).to(successState).on(FSMEvent.Success);
 		builder.externalTransition().from(state).to(failureState).on(FSMEvent.Failure);
@@ -120,7 +120,7 @@ public abstract class AbstractStateMachine {
 	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Void.class)
 	static abstract class AbstractMachine extends AbstractUntypedStateMachine {
 
-		protected void transition(String from, String to, FSMEvent fsmEvent) {
+		protected void transition(final String from, final String to, final FSMEvent fsmEvent) {
 			if (eventBus != null) {
 				final StateTransitionEvent event = new StateTransitionEvent();
 				event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
@@ -128,7 +128,7 @@ public abstract class AbstractStateMachine {
 			}
 		}
 
-		protected void initialize(String from, String to, FSMEvent fsmEvent) {
+		protected void initialize(final String from, final String to, final FSMEvent fsmEvent) {
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
@@ -136,7 +136,7 @@ public abstract class AbstractStateMachine {
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent) {
+		protected void loadEventPlugins(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
 				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
@@ -147,13 +147,13 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void wait(String from, String to, FSMEvent fsmEvent) {
+		protected void wait(final String from, final String to, final FSMEvent fsmEvent) {
 			//stateMachine.fire(FSMEvent.Request);
 			//stateMachine.fire(FSMEvent.Shutdown);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void readContext(String from, String to, FSMEvent fsmEvent) {
+		protected void readContext(final String from, final String to, final FSMEvent fsmEvent) {
 			System.out.println("InfrastructureType: " + context.getInfrastructureType());
 			System.out.println("ConnectionType: " + context.getConnectionType());
 			System.out.println("PayloadType: " + context.getPayloadType());
@@ -161,7 +161,7 @@ public abstract class AbstractStateMachine {
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent) {
+		protected void loadRequestPlugins(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructureType());
 				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionType());
@@ -175,7 +175,7 @@ public abstract class AbstractStateMachine {
 			//stateMachine.fire(FSMEvent.Undeploy);
 		}
 
-		protected void provisionInfrastructure(String from, String to, FSMEvent fsmEvent) {
+		protected void provisionInfrastructure(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				final Credentials credentials = new Credentials();
 				instance = infrastructurePlugin.provision(credentials);
@@ -186,7 +186,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void connect(String from, String to, FSMEvent fsmEvent) {
+		protected void connect(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				connection = connectionPlugin.connect(instance);
 			}
@@ -196,7 +196,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void provisionPayload(String from, String to, FSMEvent fsmEvent) {
+		protected void provisionPayload(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				payloadPlugin.provision(connection);
 			}
@@ -206,7 +206,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void startPayload(String from, String to, FSMEvent fsmEvent) {
+		protected void startPayload(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				url = payloadPlugin.start(connection);
 			}
@@ -216,7 +216,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void stopPayload(String from, String to, FSMEvent fsmEvent) {
+		protected void stopPayload(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				payloadPlugin.stop(connection);
 			}
@@ -226,7 +226,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void deprovisionPayload(String from, String to, FSMEvent fsmEvent) {
+		protected void deprovisionPayload(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				payloadPlugin.deprovision(connection);
 			}
@@ -236,7 +236,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void disconnect(String from, String to, FSMEvent fsmEvent) {
+		protected void disconnect(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				connectionPlugin.disconnect(connection);
 			}
@@ -246,7 +246,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void deprovisionInfrastructure(String from, String to, FSMEvent fsmEvent) {
+		protected void deprovisionInfrastructure(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				infrastructurePlugin.deprovision(instance);
 			}
@@ -256,12 +256,12 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void fatalError(String from, String to, FSMEvent fsmEvent) {
+		protected void fatalError(final String from, final String to, final FSMEvent fsmEvent) {
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void unloadRequestPlugins(String from, String to, FSMEvent fsmEvent) {
+		protected void unloadRequestPlugins(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				infrastructurePlugin = null;
 				connectionPlugin     = null;
@@ -276,13 +276,13 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void returnResponse(String from, String to, FSMEvent fsmEvent) {
+		protected void returnResponse(final String from, final String to, final FSMEvent fsmEvent) {
 			response = "Response";
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
-		protected void unloadEventPlugins(String from, String to, FSMEvent fsmEvent) {
+		protected void unloadEventPlugins(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				pluginManager.unloadAllPlugins();
 			}
@@ -292,7 +292,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void cleanup(String from, String to, FSMEvent fsmEvent) {
+		protected void cleanup(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
 				pluginManager.stop();
 			}
@@ -302,7 +302,7 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(FSMEvent.Success);
 		}
 
-		protected void end(String from, String to, FSMEvent fsmEvent) {
+		protected void end(final String from, final String to, final FSMEvent fsmEvent) {
 			stateMachine.terminate();
 			final InfoEvent event = new InfoEvent();
 			event.setMessage("State machine terminated.");

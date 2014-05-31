@@ -67,7 +67,7 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 	}
 
 	@Override
-	public final String deploy(Context context) {
+	public final String deploy(final Context context) {
 		BootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
 		return response;

@@ -22,15 +22,15 @@ public class P2 extends AbstractBasePlugin implements PayloadPlugin {
 		// no op
 	}
 
-	public final void provision(Connection connection) {
+	public final void provision(final Connection connection) {
 		System.out.println("P2: provision");
 	}
 
-	public final void deprovision(Connection connection) {
+	public final void deprovision(final Connection connection) {
 		System.out.println("P2: deprovision");
 	}
 
-	public final URL start(Connection connection) throws StartPayloadException {
+	public final URL start(final Connection connection) throws StartPayloadException {
 		System.out.println("P2: start");
 		try {
 			final URL url = new URL("http://www.example.com");
@@ -41,7 +41,7 @@ public class P2 extends AbstractBasePlugin implements PayloadPlugin {
 		}
 	}
 
-	public final void stop(Connection connection) {
+	public final void stop(final Connection connection) {
 		System.out.println("P2: stop");
 	}
 

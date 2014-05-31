@@ -12,13 +12,13 @@ public abstract class AbstractActivator implements BundleActivator {
 
 	protected abstract Plugin getPluginInstance();
 
-	public final void start(BundleContext context) {
+	public final void start(final BundleContext context) {
 		plugin = getPluginInstance();
 		// We register the service under the name of the first interface that it implements.
 		context.registerService(plugin.getClass().getInterfaces()[0].getName(), plugin, null);
 	}
 
-	public final void stop(BundleContext context) {
+	public final void stop(final BundleContext context) {
 		// service is automatically unregistered
 		plugin.stop();
 	}

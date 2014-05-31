@@ -37,17 +37,17 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	}
 
 	@Handler
-	public final void handle(BaseEvent event) {
+	public final void handle(final BaseEvent event) {
 		writer.println(event.getTimestamp() + ": " + event.getMessage());
 	}
 
 	@Handler
-	public final void handle(DeadMessage message) {
+	public final void handle(final DeadMessage message) {
 		writer.println("DeadMessage: " + message.getMessage());
 	}
 
 	@Handler
-	public final void handle(FilteredMessage message) {
+	public final void handle(final FilteredMessage message) {
 		writer.println("FilteredMessage: " + message.getMessage());
 	}
 

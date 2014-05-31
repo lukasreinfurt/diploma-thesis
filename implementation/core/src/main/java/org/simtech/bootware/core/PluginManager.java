@@ -66,7 +66,7 @@ public class PluginManager {
 	 *
 	 * @param object Object to be registered in the registry.
 	 */
-	public final void registerSharedObject(Object object) {
+	public final void registerSharedObject(final Object object) {
 		context.registerService(object.getClass().getName(), object, null);
 	}
 
@@ -75,7 +75,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public final <T> T loadPlugin(Class<T> type, String path) throws LoadPluginException {
+	public final <T> T loadPlugin(final Class<T> type, final String path) throws LoadPluginException {
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
@@ -93,7 +93,7 @@ public class PluginManager {
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
 	 */
-	public final void unloadPlugin(String path) throws UnloadPluginException {
+	public final void unloadPlugin(final String path) throws UnloadPluginException {
 		final Bundle bundle = installedBundles.get(path);
 		if (bundle != null) {
 			try {
