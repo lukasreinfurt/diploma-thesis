@@ -129,6 +129,7 @@
 			<property name="caseIndent" value="8"/>
 			<property name="throwsIndent" value="8"/>
 		</module>
+		<module name="TrailingComment"/>
 
 		<module name="SuppressWarningsHolder"/>
 
