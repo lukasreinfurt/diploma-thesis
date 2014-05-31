@@ -17,6 +17,9 @@
 	<module name="NewlineAtEndOfFile"/>
 	<module name="UniqueProperties"/>
 
+	<!-- size violations -->
+	<module name="FileLength"/>
+
 	<module name="SuppressWarningsFilter" />
 
 	<module name="TreeWalker">
