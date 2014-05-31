@@ -151,6 +151,9 @@
 		<module name="StaticVariableName"/>
 		<module name="TypeName"/>
 
+		<!-- size violations -->
+		<module name="ExecutableStatementCount"/>
+
 		<module name="SuppressWarningsHolder"/>
 
 	</module>
