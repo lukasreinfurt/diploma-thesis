@@ -66,6 +66,7 @@
 		<module name="IllegalType"/>
 		<module name="DeclarationOrder"/>
 		<module name="ParameterAssignment"/>
+		<module name="ExplicitInitialization"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
