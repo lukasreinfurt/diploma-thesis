@@ -105,6 +105,7 @@
 
 		<!-- metrics -->
 		<module name="BooleanExpressionComplexity"/>
+		<module name="ClassDataAbstractionCoupling"/>
 
 		<module name="SuppressWarningsHolder"/>
 
