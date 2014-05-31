@@ -38,13 +38,13 @@ public class PluginManager {
 
 		// export packages via system bundle to resolve constrains of plugin bundles.
 		// Specific version is needed or unresolved constraint occur.
-		final String extraPackages = "org.simtech.bootware.core;version=1.0.0," +
-		                             "org.simtech.bootware.core.events;version=1.0.0," +
-		                             "org.simtech.bootware.core.exceptions;version=1.0.0," +
-		                             "org.simtech.bootware.core.filters;version=1.0.0," +
-		                             "org.simtech.bootware.core.plugins;version=1.0.0," +
-		                             "net.engio.mbassy.listener;version=1.1.2," +
-		                             "net.engio.mbassy.common;version=1.1.2";
+		final String extraPackages = "org.simtech.bootware.core;version=1.0.0,"
+		                           + "org.simtech.bootware.core.events;version=1.0.0,"
+		                           + "org.simtech.bootware.core.exceptions;version=1.0.0,"
+		                           + "org.simtech.bootware.core.filters;version=1.0.0,"
+		                           + "org.simtech.bootware.core.plugins;version=1.0.0,"
+		                           + "net.engio.mbassy.listener;version=1.1.2,"
+		                           + "net.engio.mbassy.common;version=1.1.2";
 		config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, extraPackages);
 
 		frameworkFactory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
