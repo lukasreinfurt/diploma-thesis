@@ -14,7 +14,8 @@
 	<!-- <module name="JavadocPackage"/> -->
 
 	<!-- miscellaneous -->
-		<module name="NewlineAtEndOfFile"/>
+	<module name="NewlineAtEndOfFile"/>
+	<module name="UniqueProperties"/>
 
 	<module name="SuppressWarningsFilter" />
 
