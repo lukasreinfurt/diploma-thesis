@@ -53,6 +53,8 @@
 		</module>
 		<module name="NestedIfDepth"/>
 		<module name="NestedTryDepth"/>
+		<module name="NoClone"/>
+		<module name="NoFinalizer"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
