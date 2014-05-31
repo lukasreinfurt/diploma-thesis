@@ -160,6 +160,7 @@
 			<property name="max" value="200"/>
 		</module>
 		<module name="MethodLength"/>
+		<module name="AnonInnerLength"/>
 
 		<module name="SuppressWarningsHolder"/>
 
