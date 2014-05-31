@@ -56,6 +56,7 @@
 		<module name="NoClone"/>
 		<module name="NoFinalizer"/>
 		<module name="SuperClone"/>
+		<module name="SuperFinalize"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
