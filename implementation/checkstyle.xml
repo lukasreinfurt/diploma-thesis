@@ -169,6 +169,7 @@
 
 		<!-- whitespace -->
 		<module name="GenericWhitespace"/>
+		<module name="EmptyForInitializerPad"/>
 
 		<module name="SuppressWarningsHolder"/>
 
