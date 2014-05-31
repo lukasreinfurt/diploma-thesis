@@ -156,6 +156,9 @@
 
 		<!-- size violations -->
 		<module name="ExecutableStatementCount"/>
+		<module name="LineLength">
+			<property name="max" value="200"/>
+		</module>
 
 		<module name="SuppressWarningsHolder"/>
 
