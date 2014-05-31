@@ -58,6 +58,7 @@
 		<module name="SuperClone"/>
 		<module name="SuperFinalize"/>
 		<module name="IllegalCatch"/>
+		<module name="IllegalThrows"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
