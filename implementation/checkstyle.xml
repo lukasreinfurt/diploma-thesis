@@ -133,6 +133,9 @@
 		<module name="TrailingComment"/>
 		<module name="OuterTypeFilename"/>
 
+		<!-- modifiers -->
+		<module name="ModifierOrder"/>
+
 		<module name="SuppressWarningsHolder"/>
 
 	</module>
