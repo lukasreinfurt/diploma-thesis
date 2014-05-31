@@ -6,4 +6,9 @@ package org.simtech.bootware.core.events;
  * It contains a timestamp and a message.
  */
 public class InfoEvent extends BaseEvent {
+
+	public InfoEvent() {
+		super();
+	}
+
 }

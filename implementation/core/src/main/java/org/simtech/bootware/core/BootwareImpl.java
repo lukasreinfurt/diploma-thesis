@@ -15,8 +15,6 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 
 	/**
 	 * Creates the bootware process as state machine.
-	 *
-	 * @param eventBus The event bus to be used by the state machine.
 	 */
 	public BootwareImpl() {
 		builder = StateMachineBuilderFactory.create(Machine.class);
@@ -78,6 +76,10 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 	 * Describes the entryMethods for the bootware process.
 	 */
 	static class Machine extends AbstractMachine {
+
+		public Machine() {
+
+		}
 
 	}
 

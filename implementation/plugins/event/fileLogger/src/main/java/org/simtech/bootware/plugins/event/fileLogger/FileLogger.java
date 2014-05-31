@@ -16,6 +16,10 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 
 	private PrintWriter writer;
 
+	public FileLogger() {
+
+	}
+
 	public final void initialize() {
 		try {
 			writer = new PrintWriter("filelogger.log", "UTF-8");

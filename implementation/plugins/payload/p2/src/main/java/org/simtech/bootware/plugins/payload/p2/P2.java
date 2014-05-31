@@ -10,6 +10,10 @@ import org.simtech.bootware.core.plugins.PayloadPlugin;
 
 public class P2 extends AbstractBasePlugin implements PayloadPlugin {
 
+	public P2() {
+
+	}
+
 	public final void initialize() {
 		// no op
 	}

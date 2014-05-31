@@ -7,6 +7,10 @@ import org.simtech.bootware.core.plugins.InfrastructurePlugin;
 
 public class I1 extends AbstractBasePlugin implements InfrastructurePlugin {
 
+	public I1() {
+
+	}
+
 	public final void initialize() {
 		// no op
 	}
