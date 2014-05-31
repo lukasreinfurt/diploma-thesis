@@ -59,6 +59,7 @@
 		<module name="SuperFinalize"/>
 		<module name="IllegalCatch"/>
 		<module name="IllegalThrows"/>
+		<module name="PackageDeclaration"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
