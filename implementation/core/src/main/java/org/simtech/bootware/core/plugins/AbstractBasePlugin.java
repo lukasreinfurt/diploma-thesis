@@ -14,16 +14,6 @@ public abstract class AbstractBasePlugin implements Plugin {
 	protected EventBus eventBus;
 
 	/**
-	 * Is executed when the OSGi bundle is started.
-	 */
-	public abstract void initialize();
-
-	/**
-	 * Is executed when the OSGi bundle is stopped.
-	 */
-	public abstract void shutdown();
-
-	/**
 	 * Creates an abstract base plugin.
 	 * <p>
 	 * Subscribes the plugin to the event bus (even if the plugin doesn't actually handle any events).
@@ -35,6 +25,16 @@ public abstract class AbstractBasePlugin implements Plugin {
 		eventBus.subscribe(this);
 		initialize();
 	}
+
+	/**
+	 * Is executed when the OSGi bundle is started.
+	 */
+	public abstract void initialize();
+
+	/**
+	 * Is executed when the OSGi bundle is stopped.
+	 */
+	public abstract void shutdown();
 
 	/**
 	 * Gets a object that has been shared with the plugins via the OSGi service registry.

@@ -35,20 +35,19 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  */
 public abstract class AbstractStateMachine {
 
-	protected static EventBus eventBus;
-	protected static PluginManager pluginManager;
-	protected UntypedStateMachineBuilder builder;
-	protected static UntypedStateMachine stateMachine;
-
 	protected static Context context;
-	protected static Instance instance;
 	protected static Connection connection;
-	protected static URL url;
-	protected static String response;
-
-	protected static InfrastructurePlugin infrastructurePlugin;
 	protected static ConnectionPlugin connectionPlugin;
+	protected static EventBus eventBus;
+	protected static InfrastructurePlugin infrastructurePlugin;
+	protected static Instance instance;
 	protected static PayloadPlugin payloadPlugin;
+	protected static PluginManager pluginManager;
+	protected static String response;
+	protected static UntypedStateMachine stateMachine;
+	protected static URL url;
+
+	protected UntypedStateMachineBuilder builder;
 
 	/**
 	 * State transition events.

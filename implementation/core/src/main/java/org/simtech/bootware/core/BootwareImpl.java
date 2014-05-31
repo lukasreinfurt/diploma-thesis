@@ -13,20 +13,6 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 @WebService(endpointInterface = "org.simtech.bootware.core.Bootware")
 public class BootwareImpl extends AbstractStateMachine implements Bootware {
 
-	@Override
-	public final String deploy(Context context) {
-		BootwareImpl.context = context;
-		stateMachine.fire(FSMEvent.Request);
-		return response;
-	}
-
-	/**
-	 * Describes the entryMethods for the bootware process.
-	 */
-	static class Machine extends AbstractMachine {
-
-	}
-
 	/**
 	 * Creates the bootware process as state machine.
 	 *
@@ -79,6 +65,20 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 		builder.onEntry("End").callMethod("end");
 
 		stateMachine = builder.newStateMachine("Start");
+	}
+
+	@Override
+	public final String deploy(Context context) {
+		BootwareImpl.context = context;
+		stateMachine.fire(FSMEvent.Request);
+		return response;
+	}
+
+	/**
+	 * Describes the entryMethods for the bootware process.
+	 */
+	static class Machine extends AbstractMachine {
+
 	}
 
 }
