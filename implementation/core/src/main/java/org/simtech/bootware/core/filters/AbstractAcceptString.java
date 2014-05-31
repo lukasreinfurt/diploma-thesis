@@ -5,7 +5,7 @@ import org.simtech.bootware.core.events.BaseEvent;
 import net.engio.mbassy.listener.IMessageFilter;
 import net.engio.mbassy.listener.MessageHandlerMetadata;
 
-public abstract class AbstractAcceptString implements IMessageFilter{
+public abstract class AbstractAcceptString implements IMessageFilter {
 
 	protected abstract String string();
 

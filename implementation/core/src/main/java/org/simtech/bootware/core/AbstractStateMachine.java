@@ -117,7 +117,7 @@ public abstract class AbstractStateMachine {
 	 * Describes the entryMethods for the bootware process.
 	 */
 	@ContextInsensitive
-	@StateMachineParameters(stateType=String.class, eventType=FSMEvent.class, contextType=Void.class)
+	@StateMachineParameters(stateType = String.class, eventType = FSMEvent.class, contextType = Void.class)
 	abstract static class AbstractMachine extends AbstractUntypedStateMachine {
 
 		protected void transition(final String from, final String to, final FSMEvent fsmEvent) {

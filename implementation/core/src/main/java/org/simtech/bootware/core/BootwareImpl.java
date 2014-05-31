@@ -78,9 +78,7 @@ public class BootwareImpl extends AbstractStateMachine implements Bootware {
 	 */
 	static class Machine extends AbstractMachine {
 
-		public Machine() {
-
-		}
+		public Machine() {}
 
 	}
 

@@ -14,9 +14,7 @@ import net.engio.mbassy.listener.Handler;
 
 public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 
-	public ConsoleLogger() {
-
-	}
+	public ConsoleLogger() {}
 
 	public final void initialize() {
 		// no op

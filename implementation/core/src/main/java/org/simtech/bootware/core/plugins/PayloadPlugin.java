@@ -9,7 +9,6 @@ import org.simtech.bootware.core.exceptions.StartPayloadException;
 import org.simtech.bootware.core.exceptions.StopPayloadException;
 
 public interface PayloadPlugin extends Plugin {
-
 	void provision(Connection connect) throws ProvisionPayloadException;
 	void deprovision(Connection connect) throws DeprovisionPayloadException;
 	URL start(Connection connect) throws StartPayloadException;

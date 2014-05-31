@@ -7,9 +7,7 @@ import org.simtech.bootware.core.plugins.ConnectionPlugin;
 
 public class C2 extends AbstractBasePlugin implements ConnectionPlugin {
 
-	public C2() {
-
-	}
+	public C2() {}
 
 	public final void initialize() {
 		// no op

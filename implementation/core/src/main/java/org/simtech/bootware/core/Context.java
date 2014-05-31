@@ -5,9 +5,7 @@ public class Context {
 	private String connectionType;
 	private String payloadType;
 
-	public Context() {
-
-	}
+	public Context() {}
 
 	public final void setInfrastructureType(final String type) {
 		this.infrastructureType = type;

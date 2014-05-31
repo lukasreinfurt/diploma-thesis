@@ -7,4 +7,5 @@ package org.simtech.bootware.core.events;
  * If possible, create new events by extending from {@link BaseEvent}.
  */
 public interface Event {
+
 }

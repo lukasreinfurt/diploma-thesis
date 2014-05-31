@@ -4,10 +4,9 @@ import org.simtech.bootware.core.plugins.AbstractActivator;
 
 public class Activator extends AbstractActivator {
 
-	public Activator() {
-
-	}
+	public Activator() {}
 
 	protected final FileLogger getPluginInstance() { return new FileLogger(); };
+
 }
 
