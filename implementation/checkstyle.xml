@@ -13,6 +13,9 @@
 	<!-- javadoc comments -->
 	<!-- <module name="JavadocPackage"/> -->
 
+	<!-- miscellaneous -->
+		<module name="NewlineAtEndOfFile"/>
+
 	<module name="SuppressWarningsFilter" />
 
 	<module name="TreeWalker">
