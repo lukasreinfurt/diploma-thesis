@@ -69,6 +69,7 @@
 		<module name="ExplicitInitialization"/>
 		<module name="DefaultComesLast"/>
 		<module name="MissingCtor"/>
+		<module name="FallThrough"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
