@@ -3,21 +3,24 @@
 	"-//Puppy Crawl//DTD Check Configuration 1.3//EN"
 	"http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
-<!-- for descriptions see:
-     http://checkstyle.sourceforge.net/checks.html -->
+<!-- see: http://checkstyle.sourceforge.net/checks.html -->
 <module name="Checker">
 
 	<!-- duplicate code -->
+	<!-- see: http://checkstyle.sourceforge.net/config_duplicates.html -->
 	<module name="StrictDuplicateCode"/>
 
 	<!-- javadoc comments -->
+	<!-- see: http://checkstyle.sourceforge.net/config_javadoc.html -->
 	<!-- <module name="JavadocPackage"/> -->
 
 	<!-- miscellaneous -->
+	<!-- see: http://checkstyle.sourceforge.net/config_misc.html -->
 	<module name="NewlineAtEndOfFile"/>
 	<module name="UniqueProperties"/>
 
 	<!-- size violations -->
+	<!-- see: http://checkstyle.sourceforge.net/config_sizes.html -->
 	<module name="FileLength"/>
 
 	<module name="SuppressWarningsFilter" />
@@ -25,12 +28,15 @@
 	<module name="TreeWalker">
 
 		<!-- annotations -->
+		<!-- see: http://checkstyle.sourceforge.net/config_annotation.html -->
 		<module name="AnnotationUseStyle"/>
 		<module name="MissingDeprecated"/>
 		<module name="MissingOverride"/>
 		<module name="PackageAnnotation"/>
+		<module name="SuppressWarningsHolder"/>
 
 		<!-- block -->
+		<!-- see: http://checkstyle.sourceforge.net/config_blocks.html -->
 		<module name="EmptyBlock"/>
 		<module name="LeftCurly"/>
 		<module name="NeedBraces"/>
@@ -40,6 +46,7 @@
 		<module name="AvoidNestedBlocks"/>
 
 		<!-- class design -->
+		<!-- see: http://checkstyle.sourceforge.net/config_design.html -->
 		<module name="VisibilityModifier">
 			<property name="protectedAllowed" value="true"/>
 		</module>
@@ -52,6 +59,7 @@
 		<module name="InnerTypeLast"/>
 
 		<!-- coding -->
+		<!-- see: http://checkstyle.sourceforge.net/config_coding.html -->
 		<module name="ArrayTrailingComma"/>
 		<module name="AvoidInlineConditionals"/>
 		<module name="CovariantEquals"/>
@@ -98,8 +106,10 @@
 		<module name="OneStatementPerLine"/>
 
 		<!-- headers -->
+		<!-- see: http://checkstyle.sourceforge.net/config_header.html -->
 
 		<!-- imports -->
+		<!-- see: http://checkstyle.sourceforge.net/config_imports.html -->
 		<module name="AvoidStarImport"/>
 		<module name="AvoidStaticImport"/>
 		<module name="IllegalImport"/>
@@ -111,12 +121,14 @@
 		</module>
 
 		<!-- javadoc comments -->
+		<!-- see: http://checkstyle.sourceforge.net/config_javadoc.html -->
 		<!-- <module name="JavadocType"/> -->
 		<!-- <module name="JavadocMethod"/> -->
 		<!-- <module name="JavadocVariable"/> -->
 		<!-- <module name="JavadocStyle"/> -->
 
 		<!-- metrics -->
+		<!-- see: http://checkstyle.sourceforge.net/config_metrics.html -->
 		<module name="BooleanExpressionComplexity"/>
 		<module name="ClassDataAbstractionCoupling"/>
 		<module name="ClassFanOutComplexity"/>
@@ -125,6 +137,7 @@
 		<module name="JavaNCSS"/>
 
 		<!-- miscellaneous -->
+		<!-- see: http://checkstyle.sourceforge.net/config_misc.html -->
 		<module name="TodoComment"/>
 		<module name="UncommentedMain">
 			<property name="excludedClasses" value="\.Main$"/>
@@ -143,10 +156,12 @@
 		<module name="OuterTypeFilename"/>
 
 		<!-- modifiers -->
+		<!-- see: http://checkstyle.sourceforge.net/config_modifier.html -->
 		<module name="ModifierOrder"/>
 		<module name="RedundantModifier"/>
 
 		<!-- naming conventions -->
+		<!-- see: http://checkstyle.sourceforge.net/config_naming.html -->
 		<module name="AbstractClassName"/>
 		<module name="ClassTypeParameterName"/>
 		<module name="ConstantName"/>
@@ -161,6 +176,7 @@
 		<module name="TypeName"/>
 
 		<!-- size violations -->
+		<!-- see: http://checkstyle.sourceforge.net/config_sizes.html -->
 		<module name="ExecutableStatementCount"/>
 		<module name="LineLength">
 			<property name="max" value="200"/>
@@ -174,6 +190,7 @@
 		<module name="MethodCount"/>
 
 		<!-- whitespace -->
+		<!-- see: http://checkstyle.sourceforge.net/config_whitespace.html -->
 		<module name="GenericWhitespace"/>
 		<module name="EmptyForInitializerPad"/>
 		<module name="EmptyForIteratorPad"/>
@@ -189,8 +206,6 @@
 			<property name="allowEmptyConstructors" value="true"/>
 			<property name="allowEmptyMethods" value="true"/>
 		</module>
-
-		<module name="SuppressWarningsHolder"/>
 
 	</module>
 
