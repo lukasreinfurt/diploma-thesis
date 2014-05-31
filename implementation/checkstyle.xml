@@ -116,6 +116,9 @@
 
 		<!-- miscellaneous -->
 		<module name="TodoComment"/>
+		<module name="UncommentedMain">
+			<property name="excludedClasses" value="\.Main$"/>
+		</module>
 
 		<module name="SuppressWarningsHolder"/>
 
