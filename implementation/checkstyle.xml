@@ -28,6 +28,7 @@
 		<module name="AnnotationUseStyle"/>
 		<module name="MissingDeprecated"/>
 		<module name="MissingOverride"/>
+		<module name="PackageAnnotation"/>
 
 		<!-- block -->
 		<module name="EmptyBlock"/>
