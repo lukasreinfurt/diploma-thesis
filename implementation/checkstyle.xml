@@ -176,6 +176,7 @@
 		<module name="NoWhitespaceBefore"/>
 		<module name="OperatorWrap"/>
 		<module name="ParenPad"/>
+		<module name="TypecastParenPad"/>
 
 		<module name="SuppressWarningsHolder"/>
 
