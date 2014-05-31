@@ -10,6 +10,9 @@
 	<!-- duplicate code -->
 	<module name="StrictDuplicateCode"/>
 
+	<!-- javadoc comments -->
+	<!-- <module name="JavadocPackage"/> -->
+
 	<module name="SuppressWarningsFilter" />
 
 	<module name="TreeWalker">
@@ -81,6 +84,8 @@
 		<module name="UnnecessaryParentheses"/>
 		<module name="OneStatementPerLine"/>
 
+		<!-- headers -->
+
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
 		<module name="AvoidStaticImport"/>
@@ -91,6 +96,15 @@
 			<property name="groups" value="/^javax?\./,org,net"/>
 			<property name="separated" value="true"/>
 		</module>
+
+		<!-- javadoc comments -->
+		<!-- <module name="JavadocType"/> -->
+		<!-- <module name="JavadocMethod"/> -->
+		<!-- <module name="JavadocVariable"/> -->
+		<!-- <module name="JavadocStyle"/> -->
+
+		<!-- metrics -->
+		<module name="BooleanExpressionComplexity"/>
 
 		<module name="SuppressWarningsHolder"/>
 
