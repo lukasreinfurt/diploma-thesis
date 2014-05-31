@@ -170,6 +170,7 @@
 		<!-- whitespace -->
 		<module name="GenericWhitespace"/>
 		<module name="EmptyForInitializerPad"/>
+		<module name="EmptyForIteratorPad"/>
 
 		<module name="SuppressWarningsHolder"/>
 
