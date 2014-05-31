@@ -67,6 +67,7 @@
 		<module name="DeclarationOrder"/>
 		<module name="ParameterAssignment"/>
 		<module name="ExplicitInitialization"/>
+		<module name="DefaultComesLast"/>
 
 		<!-- imports -->
 		<module name="AvoidStarImport"/>
