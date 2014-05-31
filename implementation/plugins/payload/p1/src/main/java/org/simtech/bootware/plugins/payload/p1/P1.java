@@ -5,9 +5,10 @@ import java.net.URL;
 
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.exceptions.StartPayloadException;
-import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.PayloadPlugin;
 
-public class P1 extends AbstractPayloadPlugin {
+public class P1 extends AbstractBasePlugin implements PayloadPlugin {
 
 	public final void initialize() {
 		// no op

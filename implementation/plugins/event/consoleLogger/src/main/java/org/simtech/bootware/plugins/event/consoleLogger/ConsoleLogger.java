@@ -5,13 +5,14 @@ import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.events.SuccessEvent;
 import org.simtech.bootware.core.events.WarningEvent;
-import org.simtech.bootware.core.plugins.AbstractEventPlugin;
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.EventPlugin;
 
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
 import net.engio.mbassy.listener.Handler;
 
-public class ConsoleLogger extends AbstractEventPlugin {
+public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 
 	public final void initialize() {
 		// no op

@@ -1,6 +1,5 @@
 package org.simtech.bootware.core;
 
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -12,9 +11,9 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
  * The whole bootware process is executed by this state machine.
  */
 @WebService(endpointInterface = "org.simtech.bootware.core.Bootware")
-public class BootwareImpl extends AbstractStateMachine {
+public class BootwareImpl extends AbstractStateMachine implements Bootware {
 
-	@WebMethod
+	@Override
 	public final String deploy(Context context) {
 		BootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);

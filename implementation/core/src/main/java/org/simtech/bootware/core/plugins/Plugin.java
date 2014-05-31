@@ -11,5 +11,5 @@ public interface Plugin {
 	/**
 	 * Is executed when the OSGi bundle is stopped.
 	 */
-	public void stop();
+	public abstract void stop();
 }

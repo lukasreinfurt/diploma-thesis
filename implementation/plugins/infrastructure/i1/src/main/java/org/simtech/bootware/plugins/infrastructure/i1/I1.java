@@ -2,9 +2,10 @@ package org.simtech.bootware.plugins.infrastructure.i1;
 
 import org.simtech.bootware.core.Credentials;
 import org.simtech.bootware.core.Instance;
-import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.InfrastructurePlugin;
 
-public class I1 extends AbstractInfrastructurePlugin {
+public class I1 extends AbstractBasePlugin implements InfrastructurePlugin {
 
 	public final void initialize() {
 		// no op

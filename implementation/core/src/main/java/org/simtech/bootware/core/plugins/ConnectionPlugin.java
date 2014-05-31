@@ -5,7 +5,7 @@ import org.simtech.bootware.core.Instance;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 
-public abstract class AbstractConnectionPlugin extends AbstractBasePlugin {
+public interface ConnectionPlugin extends Plugin {
 
 	public abstract Connection connect(Instance instance) throws ConnectConnectionException;
 	public abstract void disconnect(Connection connect) throws DisconnectConnectionException;

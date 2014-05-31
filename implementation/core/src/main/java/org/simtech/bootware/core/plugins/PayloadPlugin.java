@@ -8,7 +8,7 @@ import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
 import org.simtech.bootware.core.exceptions.StartPayloadException;
 import org.simtech.bootware.core.exceptions.StopPayloadException;
 
-public abstract class AbstractPayloadPlugin extends AbstractBasePlugin {
+public interface PayloadPlugin extends Plugin {
 
 	public abstract void provision(Connection connect) throws ProvisionPayloadException;
 	public abstract void deprovision(Connection connect) throws DeprovisionPayloadException;

@@ -14,10 +14,10 @@ import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
 import org.simtech.bootware.core.exceptions.StartPayloadException;
 import org.simtech.bootware.core.exceptions.StopPayloadException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
-import org.simtech.bootware.core.plugins.AbstractConnectionPlugin;
-import org.simtech.bootware.core.plugins.AbstractEventPlugin;
-import org.simtech.bootware.core.plugins.AbstractInfrastructurePlugin;
-import org.simtech.bootware.core.plugins.AbstractPayloadPlugin;
+import org.simtech.bootware.core.plugins.ConnectionPlugin;
+import org.simtech.bootware.core.plugins.EventPlugin;
+import org.simtech.bootware.core.plugins.InfrastructurePlugin;
+import org.simtech.bootware.core.plugins.PayloadPlugin;
 
 import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.DotVisitor;
@@ -46,9 +46,9 @@ public abstract class AbstractStateMachine {
 	protected static URL url;
 	protected static String response;
 
-	protected static AbstractInfrastructurePlugin infrastructurePlugin;
-	protected static AbstractConnectionPlugin connectionPlugin;
-	protected static AbstractPayloadPlugin payloadPlugin;
+	protected static InfrastructurePlugin infrastructurePlugin;
+	protected static ConnectionPlugin connectionPlugin;
+	protected static PayloadPlugin payloadPlugin;
 
 	/**
 	 * State transition events.
@@ -135,8 +135,8 @@ public abstract class AbstractStateMachine {
 
 		protected void loadEventPlugins(String from, String to, FSMEvent fsmEvent) {
 			try {
-				pluginManager.loadPlugin(AbstractEventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
-				pluginManager.loadPlugin(AbstractEventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
+				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
+				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);
@@ -160,9 +160,9 @@ public abstract class AbstractStateMachine {
 
 		protected void loadRequestPlugins(String from, String to, FSMEvent fsmEvent) {
 			try {
-				infrastructurePlugin = pluginManager.loadPlugin(AbstractInfrastructurePlugin.class, "plugins/infrastructure/" + context.getInfrastructureType());
-				connectionPlugin     = pluginManager.loadPlugin(AbstractConnectionPlugin.class, "plugins/connection/" + context.getConnectionType());
-				payloadPlugin        = pluginManager.loadPlugin(AbstractPayloadPlugin.class, "plugins/payload/" + context.getPayloadType());
+				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, "plugins/infrastructure/" + context.getInfrastructureType());
+				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, "plugins/connection/" + context.getConnectionType());
+				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, "plugins/payload/" + context.getPayloadType());
 			}
 			catch (LoadPluginException e) {
 				e.printStackTrace();

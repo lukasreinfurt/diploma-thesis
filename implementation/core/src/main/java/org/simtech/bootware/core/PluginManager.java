@@ -24,8 +24,8 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
 public class PluginManager {
 
 	private EventBus eventBus;
-	private HashMap<String, String> config;
-	private HashMap<String, Bundle> installedBundles;
+	private Map<String, String> config;
+	private Map<String, Bundle> installedBundles;
 	private FrameworkFactory frameworkFactory;
 	private Framework framework;
 	private BundleContext context;

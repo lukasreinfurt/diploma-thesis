@@ -5,13 +5,14 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 import org.simtech.bootware.core.events.BaseEvent;
-import org.simtech.bootware.core.plugins.AbstractEventPlugin;
+import org.simtech.bootware.core.plugins.AbstractBasePlugin;
+import org.simtech.bootware.core.plugins.EventPlugin;
 
 import net.engio.mbassy.common.DeadMessage;
 import net.engio.mbassy.common.FilteredMessage;
 import net.engio.mbassy.listener.Handler;
 
-public class FileLogger extends AbstractEventPlugin {
+public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 
 	private PrintWriter writer;
 

@@ -14,19 +14,8 @@ public abstract class AbstractActivator implements BundleActivator {
 
 	public final void start(BundleContext context) {
 		plugin = getPluginInstance();
-		// TODO: This should be done differently.
-		//
-		// Problem:
-		// The class used here to register the service has to be used later
-		// to retrieve the service again. We use the parent class of the plugin here
-		// because that's all we know at runtime (we don't know the actual plugin
-		// class), but what if the hierarchy gets deeper?
-		//
-		// Solutions:
-		// - Read class name from abstract method.
-		// - Use properties and filters
-		// - figure out a way to pass in a class into this method
-		context.registerService(plugin.getClass().getSuperclass().getName(), plugin, null);
+		// We register the service under the name of the first interface that it implements.
+		context.registerService(plugin.getClass().getInterfaces()[0].getName(), plugin, null);
 	}
 
 	public final void stop(BundleContext context) {
