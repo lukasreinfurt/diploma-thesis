@@ -72,7 +72,7 @@ public abstract class AbstractStateMachine {
 	 * @param state The name of the state that is described.
 	 * @param entryMethod The method that is executed once state is entered.
 	 * @param successState The state to which should be transitioned if entryMethod was successful.
-	 * @param tailureState The state to which should be transitioned if entryMethod was unsuccessful.
+	 * @param failureState The state to which should be transitioned if entryMethod was unsuccessful.
 	 */
 	protected final void buildDefaultTransition(final String state,
 	                                            final String entryMethod,

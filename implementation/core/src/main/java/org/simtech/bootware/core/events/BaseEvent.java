@@ -30,7 +30,7 @@ public class BaseEvent implements Event {
 	/**
 	 * Sets the event message.
 	 *
-	 * @param message The event message.
+	 * @param m The event message.
 	 */
 	public final void setMessage(final String m) {
 		message = m;
