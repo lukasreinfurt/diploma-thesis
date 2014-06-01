@@ -12,7 +12,7 @@
 
 	<!-- javadoc comments -->
 	<!-- see: http://checkstyle.sourceforge.net/config_javadoc.html -->
-	<!-- <module name="JavadocPackage"/> -->
+	<module name="JavadocPackage"/>
 
 	<!-- miscellaneous -->
 	<!-- see: http://checkstyle.sourceforge.net/config_misc.html -->
