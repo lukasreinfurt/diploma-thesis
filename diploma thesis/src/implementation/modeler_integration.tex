@@ -1,0 +1,24 @@
+\section{Modeler Integration}
+\label{implementation:modeler_integration}
+
+In this section we describe the integration between the SimTech SWfMS and the bootware.
+Currently what happens is that, if a workflow is is ready and should be executed, the user clicks on a deploy button and the workflow is deployed on the SimTech SWfMS.
+Now we have to find a way to integrate the bootware into this process.
+The deploy button is realized by an Eclipse plugin that adds SimTech specific functionality to the Modeler (which is based on Eclipse).
+We therefore also have to create some kind of Eclipse plugin to hook into this process.
+There are two scenarios how we could go about this.
+
+We could extend the existing plugin with the functionality that we need for the bootware.
+In this case we would always load the bootware extensions in the Modeler, even if we don't use the bootware at all.
+
+We could also use a feature called extension points.
+Eclipse plugins can declare extensions points, which allow other plugins to extend or customize parts of the plugin~\autocite{extensionpoints}.
+We could define an extenion point in the already existing eclipse plugin and create a second plugin which implements this extension point.
+This way we can separate the bootware functionality from the other SimTech extensions and keep the changes to the existing plugin to a minimum.
+If a user doesn't need the bootware functionality, he doesn't have to load the bootware plugin and the SimTech plugin will continue to function as before.
+
+The second scenario looks preferable to the first one, so this is what we are going to do.
+We will modify the already existing Eclipse plugin with an extension point that is triggered at the beginning of the existing deployment process.
+If the bootware plugin is loaded into the Modeler, it will implement this extension point and set up the SWfMS before the already existing deployment code continues.
+If it is not loaded, nothing new will happen and the existing deployment code will be executed like before.
+The bootware plugin can also add additional extension to the modeler, for example a configuration dialog for setting up the context or a view that shows progress messages from the bootstrapping process.
