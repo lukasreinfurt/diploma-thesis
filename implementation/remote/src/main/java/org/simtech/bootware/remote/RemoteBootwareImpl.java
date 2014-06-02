@@ -48,9 +48,11 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		buildDefaultTransition("Provision_Infrastructure", "provisionInfrastructure", "Connect", "Deprovision_Infrastructure");
 		buildDefaultTransition("Connect", "connect", "Provision_Payload", "Disconnect");
 		buildDefaultTransition("Provision_Payload", "provisionPayload", "Start_Payload", "Deprovision_Payload");
-		buildDefaultTransition("Start_Payload", "startPayload", "Unload_Request_Plugins", "Stop_Payload");
+		buildDefaultTransition("Start_Payload", "startPayload", "Provision_Middleware", "Stop_Payload");
+		buildDefaultTransition("Provision_Middleware", "provisionMiddleware", "Unload_Request_Plugins", "Deprovision_Middleware");
 
 		// undeploy
+		buildDefaultTransition("Deprovision_Middleware", "deprovisionMiddleware", "Stop_Payload", "Stop_Payload");
 		buildDefaultTransition("Stop_Payload", "stopPayload", "Deprovision_Payload", "Deprovision_Payload");
 		buildDefaultTransition("Deprovision_Payload", "deprovisionPayload", "Disconnect", "Disconnect");
 		buildDefaultTransition("Disconnect", "disconnect", "Deprovision_Infrastructure", "Deprovision_Infrastructure");
@@ -82,6 +84,16 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	static class Machine extends AbstractMachine {
 
 		public Machine() {}
+
+		protected void provisionMiddleware(final String from, final String to, final FSMEvent fsmEvent) {
+			stateMachine.fire(FSMEvent.Success);
+			//stateMachine.fire(FSMEvent.Failure);
+		}
+
+		protected void deprovisionMiddleware(final String from, final String to, final FSMEvent fsmEvent) {
+			stateMachine.fire(FSMEvent.Success);
+			//stateMachine.fire(FSMEvent.Failure);
+		}
 
 	}
 
