@@ -31,6 +31,14 @@
 		</fileSet>
 
 		<fileSet>
+			<directory>../remote/target/lib</directory>
+			<outputDirectory>lib</outputDirectory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
 			<directory>../target/site</directory>
 			<outputDirectory>docs</outputDirectory>
 			<includes>
@@ -46,6 +54,17 @@
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
 				<include>org.simtech.bootware:bootware-local</include>
+			</includes>
+			<binaries>
+				<outputDirectory>/</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware:bootware-remote</include>
 			</includes>
 			<binaries>
 				<outputDirectory>/</outputDirectory>

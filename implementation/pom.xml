@@ -15,6 +15,7 @@
 	<modules>
 		<module>core</module>
 		<module>local</module>
+		<module>remote</module>
 		<module>plugins</module>
 		<module>distribution</module>
 	</modules>
