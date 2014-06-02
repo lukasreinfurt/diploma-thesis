@@ -21,9 +21,9 @@ public final class Main {
 	public static void main(final String[] args) {
 
 		// Publish the bootware as a web service.
-		final LocalBootware implementor = new LocalBootware();
-		final String address            = "http://localhost:8080/axis2/services/Bootware";
-		final Endpoint endpoint         = Endpoint.publish(address, implementor);
+		final LocalBootwareImpl implementor = new LocalBootwareImpl();
+		final String address = "http://localhost:8080/axis2/services/Bootware";
+		final Endpoint endpoint = Endpoint.publish(address, implementor);
 		System.out.println("WebService now running at " + address + " ...");
 		implementor.run();
 
