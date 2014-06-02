@@ -116,9 +116,10 @@ public abstract class AbstractStateMachine {
 	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
+	@SuppressWarnings("checkstyle:designforextension")
 	@ContextInsensitive
 	@StateMachineParameters(stateType = String.class, eventType = FSMEvent.class, contextType = Void.class)
-	abstract static class AbstractMachine extends AbstractUntypedStateMachine {
+	protected abstract static class AbstractMachine extends AbstractUntypedStateMachine {
 
 		protected void transition(final String from, final String to, final FSMEvent fsmEvent) {
 			if (eventBus != null) {

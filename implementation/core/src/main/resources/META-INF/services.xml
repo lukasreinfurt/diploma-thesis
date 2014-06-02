@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<serviceGroup>
-	<service name="Bootware">
-		<parameter name="ServiceClass">org.simtech.bootware.core.Bootware</parameter>
-		<operation name="deploy">
-			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
-		</operation>
-	</service>
-</serviceGroup>

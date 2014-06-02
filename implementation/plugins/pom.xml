@@ -26,16 +26,19 @@
 	</modules>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.osgi.core</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.simtech.bootware</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>bootware-core</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
