@@ -1,10 +1,12 @@
 \section{External Communication}
 \label{design:communication}
 
-Since other components will have to call the bootware and since we will use a 2-tiered approach for the bootware component, we now have to decide, how the external communication with the bootware will work.
+In \autoref{design:modeler_integration} we established that a bootware plugin in the modeler has to call the local bootware.
+From \autoref{design:division} we also know that both the local bootware and the provisioning manager have to call the remote bootware.
+We now have to decide, how this external communication with the bootware will work.
 There are several factors that impact this decision.
 Communication between the components should be as simple as possible, but has to support some critical features.
-To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the ESB.
+To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the provisioning manager and the modeler plugin.
 
 \begin{figure}[!htbp]
 	\centering
@@ -17,7 +19,7 @@ Since the provisioning processes kicked off by the bootware can potentially take
 For the same reason, there should be some mechanism to get feedback on the current status during a long running provisioning process.
 
 The communication with the bootware components will contain sensitive data, for example login information for cloud providers.
-This information has to be provided from the outside on a call to call basis and should be transported securely to prevent malicious or fraudulent attacks.
+This information has to be provided from the outside and should be transported securely to prevent malicious or fraudulent attacks.
 The selected communication method therefore has to support some sort of security mechanism, ideally end-to-end encryption.
 While these security mechanisms will not be used in this thesis due to time constraints, selecting the right communication method is still critical for future development.
 
@@ -32,7 +34,7 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[resolution=600]{design/assets/simple_queue}
-	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and a messaging queue communication}
+	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and messaging queue communication}
 	\label{image:queue}
 \end{figure}
 
