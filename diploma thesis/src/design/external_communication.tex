@@ -8,13 +8,6 @@ There are several factors that impact this decision.
 Communication between the components should be as simple as possible, but has to support some critical features.
 To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the provisioning manager and the modeler plugin.
 
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[resolution=600]{design/assets/simple_webservice}
-	\caption{Simplified overview of the 2-tier architecture with asynchronous web service communication}
-	\label{image:webservice}
-\end{figure}
-
 Since the provisioning processes kicked off by the bootware can potentially take a long time to finish (in the range of minutes to hours), asynchronous communication should be used between the components to avoid timeouts and blocking resources.
 For the same reason, there should be some mechanism to get feedback on the current status during a long running provisioning process.
 
@@ -33,9 +26,9 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_queue}
-	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and messaging queue communication}
-	\label{image:queue}
+	\includegraphics[resolution=600]{design/assets/simple_webservice}
+	\caption{Simplified overview of the 2-tier architecture with asynchronous web service communication}
+	\label{image:webservice}
 \end{figure}
 
 Since the whole SimTech SWfMS already uses SOAP based web service, it would make sense to also use SOAP based web services as external communication mechanism for the bootware component.
@@ -47,98 +40,15 @@ We do however still need information during those long running processes to give
 This can't be accomplished by the simple web service request/response pattern.
 For this, a secondary communication mechanism which supports sending multiple feedback messages has to be used.
 
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/simple_queue}
+	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and messaging queue communication}
+	\label{image:queue}
+\end{figure}
+
 Since it is not necessary for the successful use of the bootware it would make sense to implement this secondary communication mechanism as a plugin.
 This would allow us to add arbitrary communication plugins to the bootware depending on future needs.
 These secondary communication channels could take any form, but a natural choice for publishing the intermediary state of the bootware would be a message queue system.
 In this case, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
 \autoref{image:queue} shows the proposed architecture with an additional message queue.
-
-\subsection{Web Service Interface}
-
-Now that we know that we'll use web service calls and returns as external communication mechanism, we need to the define the interface that will be made available by the web service to the outside.
-We obviously need the two main operations, deploy and undeploy, to be available from the outside.
-
-\subsubsection{Deploy}
-
-The \textit{deploy} operation will be called by at least three different components.
-Once by the bootware modeler plugin to deploy the remote bootware, \textcolor{red}{once again when the provisioning engine for provisioning the workflow middleware is deployed}, and then each time the provisioning manager needs to provision a new service during a workflow execution.
-
-\vspace*{\baselineskip}
-\begin{listing}[!htbp]
-	\inputminted[
-		label=deploy-request.xml,
-		frame=topline,
-		linenos,
-		frame=lines,
-		tabsize=2,
-		framesep=0.3cm,
-		fontsize=\small
-	]{xml}{design/assets/deploy-request.xml}
-	\caption{Sample deploy request in a soap message.}
-	\label{lst:webservice:deployrequest}
-\end{listing}
-
-\autoref{lst:webservice:deployrequest} shows an exemplary deploy request as soap message.
-In line 6 we can see that the deploy method is called with the context provided as argument in line 7-11.
-The response that is return once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
-It contains a endpoint reference element in line 6-9 which contains a reference to the payload that was deployed during the request.
-
-\vspace*{\baselineskip}
-\begin{listing}[!htbp]
-	\inputminted[
-		label=deploy-response.xml,
-		frame=topline,
-		linenos,
-		frame=lines,
-		tabsize=2,
-		framesep=0.3cm,
-		fontsize=\small
-	]{xml}{design/assets/deploy-response.xml}
-	\caption{Sample deploy response in a soap message.}
-	\label{lst:webservice:deployresponse}
-\end{listing}
-
-\subsubsection{Undeploy}
-
-Like the \textit{deploy} operation, the \textit{undeploy} operation will be called by multiple components to reverse the actions that where previously made by deploy operations.
-\autoref{lst:webservice:undeployrequest} shows an exemplary undeploy request in a soap message.
-As argument it contains one or more endpoint references to already deployed payloads, as can be seen in line 7-13.
-When all payloads have been undeployed successfully, a response will be send to.
-
-\vspace*{\baselineskip}
-\begin{listing}[!htbp]
-	\inputminted[
-		label=undeploy-request.xml,
-		frame=topline,
-		linenos,
-		frame=lines,
-		tabsize=2,
-		framesep=0.3cm,
-		fontsize=\small
-	]{xml}{design/assets/undeploy-request.xml}
-	\caption{Sample undeploy request in a soap message.}
-	\label{lst:webservice:undeployrequest}
-\end{listing}
-
-\subsubsection{SetCredentials}
-
-In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setCredentials} operation.
-Using this operation, login credentials can be set independently from deploy requests if necessary.
-\autoref{lst:webservice:setCredentialsrequest} shows an exemplary set credentials request.
-In line 7-14, it contains one or more credentials as argument.
-If the credentials where set successfully, a response will be returned.
-
-\vspace*{\baselineskip}
-\begin{listing}[!htbp]
-	\inputminted[
-		label=setCredentials-request.xml,
-		frame=topline,
-		linenos,
-		frame=lines,
-		tabsize=2,
-		framesep=0.3cm,
-		fontsize=\small
-	]{xml}{design/assets/setCredentials-request.xml}
-	\caption{Sample setCredentials request in a soap message.}
-	\label{lst:webservice:setCredentialsrequest}
-\end{listing}
