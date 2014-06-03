@@ -1,53 +1,83 @@
 \section{Execution Flow}
 \label{flow}
 
-Now that we know the different plugin types and their operation that are involved in the bootstrapping process, we can present a step-by-step description of the whole process.
-\autoref{image:flow} shows a graph that represents the major steps during the bootware execution as flow diagram.
+Until now we have established, how the bootware can be called from outside components to start the bootstrapping process.
+Now it's time to take a look at the actual internal steps involved in this process.
+\autoref{image:flow_local} shows a graph that represents the major steps during the bootware execution in the local bootware as flow diagram.
 What follows is the description of the whole process.
-
-The bootstrapping process is started by executing the bootware, which is represented by the start state in the top left corner of \autoref{image:flow}.
-From there, the bootware first does some initializations.
-If these fail for some reason, the cleanup code will be executed before the bootware execution is ended, as can be seen on the top right corner of \autoref{image:flow}.
-In most cases however, the initialization should succeed.
-Then, the bootware will transition to the next state, where it tries to load the event plugins.
-
-The event plugins are loaded once at the beginning of the bootware execution, since they will not change at a per request basis (like the other plugins).
-If loading these plugins fails, the bootware will try to unload them before continuing to the cleanup state.
-If the plugins are loaded successfully, the bootware transitions into the wait state, shown in the top center of \autoref{image:flow}.
-
-Once the bootware is in the wait state it is ready to receive requests from the outside.
-If a shutdown event is received in this state, the bootware will start the shutdown procedure by first unloading the event plugins and then running the cleanup code.
-This is the only normal way to shutdown the bootware.
-If a request is received in the wait state, the bootware transitions to the next state, where it reads the request context.
-
-The request context contains all the information necessary to fulfill the request.
-This includes, among others, the type of the request(deploy or undeploy), the login credentials for a cloud provider, and the names of one of each of the infrastructure, connection, and payload plugin to be used during the bootstraping process.
-If the context can not be read, the bootware returns a response containing an error message before returning into the wait state.
-If the context is read successfully the bootware transitions to the load request plugins state.
-
-In the load request plugins state the three plugins specified in the context are loaded.
-If this fails, the bootware tries to unload them before return an error response and returning to the wait state.
-If the plugins are loaded successfully, the bootware now starts either the deploy process or the undeploy process, shown at the bottom of \autoref{image:flow}, depending on the type of the request.
-
-If the request was a deploy request, the bootware will now execute the deploy, connect, and start operations of the infrastructure, connection, and payload plugins, one after another.
-If one of those operations fails the bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
-This process is the same as the undeploy process trigger by an undeploy request.
-
-If the stop payload, deprovision payload, or disconnect states fail, the bootware just continues with the next undeploy state, since these operations are not considered critical.
-However, if the deprovision infrastructure state fails, the bootware transitions to a fatal error state, show at the right of \autoref{image:flow}, since this step is considered critical.
-This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
-The fatal error state is responsible for informing the user that he has to interfere.
-
-The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the unload request plugin state, where the plugins that where needed for this particular request are unloaded, before a suitable response is returned and the bootware returns to the wait state.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/flow}
-	\caption{Execution flow during the bootstrapping process.}
-	\label{image:flow}
+	\includegraphics[resolution=600]{design/assets/flow_local}
+	\caption{Execution flow in the local bootware.}
+	\label{image:flow_local}
 \end{figure}
 
-As \autoref{image:flow} and the description above show, this is quite a complicated process with many conditional transition.
+The bootstrapping process is started by executing the local bootware, which is represented by the start state in the top left corner of \autoref{image:flow_local}.
+From there, the bootware first does some initializations.
+If these fail for some reason, the cleanup code will be executed before the local bootware execution is ended, as can be seen on the top right corner of \autoref{image:flow_local}.
+In most cases however, the initialization should succeed.
+Then, the local bootware will transition to the next state, where it tries to load the event plugins.
+
+The event plugins are loaded once at the beginning of the local bootware execution, since they will not change at a per request basis (like the other plugins).
+If loading these plugins fails, the local bootware will try to unload them before continuing to the cleanup state.
+If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
+
+Once the local bootware is in the wait state it is ready to receive requests from the outside.
+If a shutdown event is received in this state, the local bootware will start the shutdown procedure by first unloading the event plugins and then running the cleanup code.
+This is the only normal way to shutdown the local bootware.
+If a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
+
+The request context contains all the information necessary to fulfill the request.
+This includes, among others, the type of the request(deploy or undeploy), the login credentials for a cloud provider, and the names of one of each of the infrastructure, connection, and payload plugin to be used during the bootstraping process.
+If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
+If the context is read successfully the local bootware tries to send the request on to the remote bootware.
+For this to work, the remote bootware has already has to exist in the requested cloud environment, which won't be the case during the first execution.
+Therefore, the local bootware first has to provision the remote bootware in the requested cloud environment and so it transitions to the load request plugins state.
+
+In the load request plugins state the three plugins specified in the context are loaded.
+If this fails, the local bootware tries to unload them before return an error response and returning to the wait state.
+If the plugins are loaded successfully, the local bootware now starts either the deploy process or the undeploy process, shown at the bottom of \autoref{image:flow_local}, depending on the type of the request.
+
+If the request was a deploy request, the local bootware will now execute the deploy, connect, and start operations of the infrastructure, connection, and payload plugins, one after another.
+If one of those operations fails the local bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
+This process is the same as the undeploy process trigger by an undeploy request.
+
+If the stop payload, deprovision payload, or disconnect states fail, the local bootware just continues with the next undeploy state, since these operations are not considered critical.
+However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, show at the right of \autoref{image:flow_local}, since this step is considered critical.
+This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
+The fatal error state is responsible for informing the user that he has to interfere.
+
+The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the unload request plugin state, where the plugins that where needed for this particular request are unloaded.
+If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local}.
+The local bootware will wait in this state until she receives a response from the remote bootware.
+
+Now, we move our attention to the remote bootware, where the requests continues to be processed.
+\autoref{image:flow_remote} shows the execution flow of the remote bootware.
+As we can see, it is largely identical to the local bootware, at least at the moment.
+The send to remote state is gone, since we don't need this in the remote bootware.
+Instead, as the bottom of \autoref{image:flow_remote} shows, the provision and deprovision middleware steps were added.
+Other than that, the local and remote processes are the same.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/flow_remote}
+	\caption{Execution flow in the remote bootware.}
+	\label{image:flow_remote}
+\end{figure}
+
+Like the local bootware, the remote bootware went through the initialization steps shown at the top of \autoref{image:flow_remote} when it was started by the local bootware.
+It then waited in the wait state for any request.
+Now, it receives the request from the local bootware, reads the context, loads the request plugins and executes the deploy operation.
+This should result in a provisioning engine being started, which is then used to provision the middleware.
+Once the middleware is running, the remote bootware is finished with this request and returns the endpoint references of the middleware in the response to the local bootware, before returning into the wait state.
+
+This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
+Now, the local bootware can finish its request by sending back a response to the modeler bootware plugin, before returning to the wait state.
+The local bootware is now done until it's time to undeploy the remote bootware.
+Meanwhile, the modeler bootware plugin starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom of \autoref{image:flow_remote}.
+
+As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.
 Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
 Therefore it could be advantageous to use other methods that are more fitting for this process.
 Since we already describes the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
