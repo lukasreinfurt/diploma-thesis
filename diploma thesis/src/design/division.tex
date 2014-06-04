@@ -109,8 +109,9 @@ This architecture can be seen as an alternative form of the 2-tier architecture 
 In this case there are also two bootwares working together and the remote bootware does most of the work.
 However, the local and the remote bootware are identical, as shown in \autoref{image:clone}.
 Instead of provisioning a bigger bootware in a remote environment, the local bootware clones itself.
-Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
-The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and would contain functionality that it wouldn't require for local operation (e.g. a web service interface).
+Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented.
+Duplication of any functionality wouldn't therefore be an issue.
+The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and might contain functionality that it wouldn't require for local operation and vice versa.
 However, since we want to keep the whole bootware, including the remote part, fairly lightweight, it's highly unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
 In this case, the advantage of only having to design and implement one component seems to outweigh the disadvantage of a slightly more complex local component (compared to the 2-tier variant).
 Of course, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
@@ -120,4 +121,4 @@ Therefore we can't decide yet if this architecture should be used.
 
 Of the four alternative presented here, alternative three - the 2-tier architecture - makes the most sense.
 Therefore it is selected as the alternative of choice and used for further discussion.
-We do however retain the option to transform it into alternative four if we discover that both components share much of same functionality, but this can only be judged at a later stage, when we know exactly how the internal functionality of the bootware will work.
+We do however retain the option to transform it into alternative four, if we discover that both components share much of same functionality.But this can only be judged at a later stage, when we know exactly how the internal functionality of the bootware will work.
