@@ -25,9 +25,10 @@ This would also reduce code duplication.
 Therefore, a third plugin type is necessary: The \textit{connection plugins}.
 
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
-Together with the use of events that we introduced in \autoref{design:internalcomm}, we can see a fourth plugin type emerging: the \textit{event plugins}.
+We can generalize this into a more versatile fourth plugin type: The \textit{event plugins}.
 These plugins are a bit less specific then the three other types.
 They allow users to add functionality that reacts to (or creates) events inside the bootware.
+How the actual event system will be implemented will be discussed in \autoref{design:internalcomm}.
 With this fourth plugin type we have now covered all plugin types we will need.
 We will describe each plugin type in more detail, but before we do this, we will describe the common operations that all plugin types have to implement.
 
