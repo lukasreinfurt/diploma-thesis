@@ -26,7 +26,7 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_webservice}
+	\includegraphics[resolution=600]{design/assets/webservice}
 	\caption{Simplified overview of the 2-tier architecture with asynchronous web service communication}
 	\label{image:webservice}
 \end{figure}
@@ -42,13 +42,13 @@ For this, a secondary communication mechanism which supports sending multiple fe
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_queue}
+	\includegraphics[resolution=600]{design/assets/message_queue}
 	\caption{Simplified overview of the 2-tier architecture with asynchronous web service and messaging queue communication}
-	\label{image:queue}
+	\label{image:message_queue}
 \end{figure}
 
 Since it is not necessary for the successful use of the bootware it would make sense to implement this secondary communication mechanism as a plugin.
 This would allow us to add arbitrary communication plugins to the bootware depending on future needs.
 These secondary communication channels could take any form, but a natural choice for publishing the intermediary state of the bootware would be a message queue system.
 In this case, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
-\autoref{image:queue} shows the proposed architecture with an additional message queue.
+\autoref{image:message_queue} shows the proposed architecture with an additional message queue.

@@ -16,9 +16,9 @@ We will now discuss the viability of four such alternatives.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_local}
+	\includegraphics[resolution=600]{design/assets/local}
 	\caption{Simplified overview of the single local component architecture}
-	\label{image:single_local}
+	\label{image:local}
 \end{figure}
 
 First we consider the simplest case: A single local component.
@@ -41,9 +41,9 @@ They compared public cloud providers and measured that intra-datacenter communic
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_remote}
+	\includegraphics[resolution=600]{design/assets/remote}
 	\caption{Simplified overview of the single remote component architecture}
-	\label{image:single_remote}
+	\label{image:remote}
 \end{figure}
 
 The next obvious choice is to put the single bootware component into a remote environment, where the disadvantages of local to remote communication would disappear.
@@ -71,7 +71,7 @@ Therefor, this scenario is not appropriate for our case.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_2_tier}
+	\includegraphics[resolution=600]{design/assets/2_tier}
 	\caption{Simplified overview of the 2-tier architecture}
 	\label{image:2_tier}
 \end{figure}
@@ -101,7 +101,7 @@ More on this in \autoref{design:communication}
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/simple_clone}
+	\includegraphics[resolution=600]{design/assets/clone}
 	\caption{Simplified overview of the cloned component architecture}
 	\label{image:clone}
 \end{figure}
