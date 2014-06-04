@@ -21,7 +21,7 @@ We will now discuss the viability of four such alternatives.
 	\label{image:local}
 \end{figure}
 
-First we consider the simplest case: A single local component.
+First we consider the simplest case: A single local component as shown in \autoref{image:local}.
 In this scenario, all provisioning processes are initiated from a component installed locally on the users machine, alongside or as part of the workflow modeler.
 
 The advantages of this architecture lie in its simplicity.
@@ -32,7 +32,7 @@ There is no possible overlap in functionality, as it would be the case in a 2-ti
 The disadvantages are caused by the component being local.
 Since all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
 A much bigger problem however is the remote communication happening in this scenario.
-All calls to the bootware component from the ESB of the workflow middleware would leave the remote environment.
+As \autoref{image:local} shows, all calls to the bootware component from the provisioning manager would leave the remote environment.
 Also, all calls from the bootware component to the provisioning engines would enter the remote environment.
 This type of split communication can be costly and slow, as shown by Li et al.
 They compared public cloud providers and measured that intra-datacenter communication can be two to three times faster and also cheaper (often free) compared to inter-datacenter communication~\autocite{cloudcmp}.
@@ -46,7 +46,7 @@ They compared public cloud providers and measured that intra-datacenter communic
 	\label{image:remote}
 \end{figure}
 
-The next obvious choice is to put the single bootware component into a remote environment, where the disadvantages of local to remote communication would disappear.
+The next obvious choice, as displayed in \autoref{image:remote}, is to put the single bootware component into a remote environment, where the disadvantages of local to remote communication would disappear.
 However, this creates new problems.
 
 Since there aren't any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
@@ -76,7 +76,7 @@ Therefor, this scenario is not appropriate for our case.
 	\label{image:2_tier}
 \end{figure}
 
-Next, we take a look at a 2-tier architecture, where the bootware is divided into two components.
+Next, we take a look at a 2-tier architecture, as shown in \autoref{image:2_tier}, where the bootware is divided into two components.
 On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment near to the environment, where other components will be provisioned later.
 
 This eliminates the problems of a single local or remote bootware component.
@@ -93,7 +93,6 @@ Since itself can be located in any cloud environment, it has to be able to do th
 Independent from this, it has to be able to provision to any environment that the user/service package chooses.
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
 We discuss plugins in detail in \autoref{design:extensibility}.
-
 A second problem which we can't avoid but can solve is the communication which is now necessary between the different parts of the bootware.
 More on this in \autoref{design:communication}
 
@@ -108,7 +107,7 @@ More on this in \autoref{design:communication}
 
 This architecture can be seen as an alternative form of the 2-tier architecture described in \autoref{design:division:2tier}.
 In this case there are also two bootwares working together and the remote bootware does most of the work.
-However, the local and the remote bootware are identical.
+However, the local and the remote bootware are identical, as shown in \autoref{image:clone}.
 Instead of provisioning a bigger bootware in a remote environment, the local bootware clones itself.
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented and that function duplication is not an issue.
 The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and would contain functionality that it wouldn't require for local operation (e.g. a web service interface).
