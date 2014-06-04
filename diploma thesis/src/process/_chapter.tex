@@ -54,3 +54,17 @@ The eclipse plugin now tells the local bootware (2) to undeploy the remote bootw
 The local bootware removes the remote bootware and returns the success to the eclipse plugin.
 At this point, no remote components should be running anymore.
 The eclipse plugin now tells the local bootware to shutdown (1), which completes the whole process.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{process/assets/startup_sequence}
+	\caption{Sequence diagram of the start up phase.}
+	\label{image:startup_sequence}
+\end{figure}
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{process/assets/execution_sequence}
+	\caption{Sequence diagram of the execution phase.}
+	\label{image:execution_sequence}
+\end{figure}
