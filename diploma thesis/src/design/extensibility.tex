@@ -16,7 +16,6 @@ This extension mechanism is simple, but restricted by its static nature.
 The entire executable has to be recompiled if any implementations are changed or added.
 This may not be a problem if the set of possible extensions that have to be supported is limited and known at the time of implementation or if it changes rarely.
 If the set of necessary extensions is unknown or changing from time to time, implementing new, or changing existing extensions, can get cumbersome, since a new version of the whole software has to be released each time.
-Additionally, if a user wanted to add an extension for a specific use case, he would have to get the source code of the bootware, add his extension and then compile the whole bootware.
 It would be far better if extensions could be implemented separately from the core bootware component and added and removed at will.
 
 A more flexible architecture is needed, for example a plugin architecture.
@@ -53,6 +52,8 @@ This repository holds all plugins of both components so it eliminates duplicate 
 If plugins are added or modified it has only to be done in one place.
 Plugin synchronization can happen automatically when the bootware components start, so that the user is no longer involved in plugin management.
 The repository also enables easy plugin sharing, which was cumbersome earlier.
+While a central plugin repository is a sensible addition to the proposed bootware architecture, its design and implementation are out of scope of this thesis.
+Its design and implementation are left for future work and the plugin repository will not be mentioned in any other figures apart from \autoref{image:plugin_repository}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -60,5 +61,3 @@ The repository also enables easy plugin sharing, which was cumbersome earlier.
 	\caption{Simplified overview of the 2-tier architecture with a plugin repository}
 	\label{image:plugin_repository}
 \end{figure}
-
-While a central plugin repository is a sensible addition to the proposed bootware architecture, its design and implementation are out of scope of this thesis.
