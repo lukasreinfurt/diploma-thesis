@@ -1,0 +1,9 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Body>
+		<ns2:undeployResponse xmlns:ns2="http://core.bootware.simtech.org/">
+			<return>
+				<error/>
+			</return>
+		</ns2:undeployResponse>
+	</S:Body>
+</S:Envelope>
