@@ -178,7 +178,7 @@ public abstract class AbstractStateMachine {
 
 		protected void provisionInfrastructure(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
-				final Credentials credentials = new Credentials();
+				final Credentials credentials = context.getCredentialsFor(context.getInfrastructureType());
 				instance = infrastructurePlugin.provision(credentials);
 			}
 			catch (ProvisionInfrastructureException e) {

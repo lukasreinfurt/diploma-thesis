@@ -19,6 +19,7 @@ public class I2 extends AbstractBasePlugin implements InfrastructurePlugin {
 
 	public final Instance provision(final Credentials credentials) {
 		System.out.println("I2: provision");
+		System.out.println("789: " + credentials.get("789"));
 		return new Instance();
 	}
 
