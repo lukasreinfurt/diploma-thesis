@@ -1,6 +1,7 @@
 package org.simtech.bootware.core;
 
 import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 /**
@@ -8,5 +9,5 @@ import javax.jws.WebService;
  */
 @WebService
 public interface Bootware {
-	@WebMethod String deploy(Context context);
+	@WebMethod String deploy(@WebParam(name = "context") Context context);
 }

@@ -1,6 +1,9 @@
 package org.simtech.bootware.core;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class Context {
+
 	private String infrastructureType;
 	private String connectionType;
 	private String payloadType;
@@ -11,6 +14,7 @@ public class Context {
 		this.infrastructureType = type;
 	}
 
+	@XmlElement(required = true)
 	public final String getInfrastructureType() {
 		return infrastructureType;
 	}
@@ -19,6 +23,7 @@ public class Context {
 		this.connectionType = type;
 	}
 
+	@XmlElement(required = true)
 	public final String getConnectionType() {
 		return connectionType;
 	}
@@ -27,6 +32,7 @@ public class Context {
 		this.payloadType = type;
 	}
 
+	@XmlElement(required = true)
 	public final String getPayloadType() {
 		return payloadType;
 	}
