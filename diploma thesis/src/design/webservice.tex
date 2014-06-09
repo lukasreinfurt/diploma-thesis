@@ -1,0 +1,60 @@
+\section{Web Service Interface}
+\label{design:webservice}
+
+By now, we know that we will use a web service interface for remote communication.
+To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The deploy and the undeploy operation.
+In \autoref{design:context} we also mentioned the \textit{setCredentials} operation for setting or updating the login credentials.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{rcc}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Success Response}} \\
+
+		\tabucline[0.5pt]{1-3}
+
+			deploy
+		& Context
+		& endpoint references \\
+
+			undeploy
+		& endpoint references
+		& success message \\
+
+			setCredentials
+		& credentials list
+		& success message \\
+
+	\end{tabu}
+	\caption{Web service operations provided by the local and remote bootware.}
+	\label{table:webserviceoperations}
+\endgroup
+
+\subsection{deploy}
+
+The deploy operation is called whenever a new payload (e.g. a provisioning engine, or initially, the remote bootware) should be deployed.
+As input it takes a context object as described in \autoref{design:context}.
+If it was able to successfully deploy the requested payload, it responds with a endpoint reference to the payload.
+If the deployment failed, it responds with an error message.
+
+\subsection{undeploy}
+
+The undeploy operation is essentially the reversal of the deploy operation.
+As input it takes an endpoint reference to a payload that should be undeploy.
+If the undeployment succeeds, it responds with a success message.
+If it fails, it responds with an error message.
+
+\subsection{setCredentials}
+
+The setCredentials operation is used to transmit or update the default login credentials used by the infrastructure plugins to authenticate with the infrastructure provider.
+As input it takes a list of credentials that should be saved.
+If the list provided is empty, the default credentials list saved in the bootware will be emptied.
+If the list provided is not empty, the default credentials list saved in the bootware will be overwritten by this list.
+Note: The credentials can still be overwritten on a per request basis if the context send with the request also contains credentials.
+If the credentials were updated successfully, it responds with a success message.
+If the credentials couldn't be updated, it responds with an error message.
