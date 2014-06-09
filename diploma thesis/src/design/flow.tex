@@ -1,9 +1,10 @@
 \section{Execution Flow}
 \label{design:flow}
 
-Until now we have established how the bootware can be called from outside components to start the bootstrapping process.
-Now it's time to take a look at the actual internal steps involved in this process.
-What follows is a step by step description of the whole process.
+Until now we have established how the bootware can be called from outside components using a web service interface and a context to start the bootstrapping process.
+We also established that big parts of this process will be implemented as plugins.
+Now it's time to take a look at the actual internal structure of the bootware.
+What follows is a step by step description of the whole bootstrapping process.
 
 \begin{figure}[!htbp]
 	\centering
