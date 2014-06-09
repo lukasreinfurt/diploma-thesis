@@ -1,1 +1,143 @@
-\subsection{Web Service}
+\section{Web Service Interface}
+\label{implementation:webservice}
+
+In \autoref{design:communication} we decided to use web service calls and returns as external communication mechanism and in \autoref{design:context} we need decided to pass along a context.
+Now, we need to the define the interface that will be made available by the web service to the outside.
+We obviously need the two main operations, deploy and undeploy, to be available from the outside.
+In \autoref{design:context} we also described the \textit{setCredentials} operation that has to be supported.
+
+\subsection{Deploy}
+
+The \textit{deploy} operation will be called by at least two different components.
+Once by the bootware modeler plugin to deploy the remote bootware and the workflow middleware, and then each time the provisioning manager needs to provision a new service during a workflow execution.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=deploy-request.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/deploy-request.xml}
+	\caption{Sample deploy request in a soap message.}
+	\label{lst:webservice:deployrequest}
+\end{listing}
+
+\autoref{lst:webservice:deployrequest} shows an exemplary deploy request as soap message.
+In line 6 we can see that the deploy method is called with the context provided as argument in line 7-11.
+The response that is return once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
+It contains a endpoint reference element in line 6-9 which contains a reference to the payload that was deployed during the request.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=deploy-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/deploy-response.xml}
+	\caption{Sample deploy response in a soap message.}
+	\label{lst:webservice:deployresponse}
+\end{listing}
+
+\subsection{Undeploy}
+
+Like the \textit{deploy} operation, the \textit{undeploy} operation will be called by multiple components to reverse the actions that where previously made by deploy operations.
+\autoref{lst:webservice:undeployrequest} shows an exemplary undeploy request in a soap message.
+As argument it contains one or more endpoint references to already deployed payloads, as can be seen in line 7-13.
+When all payloads have been undeployed successfully, a response will be send to.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=undeploy-request.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/undeploy-request.xml}
+	\caption{Sample undeploy request in a soap message.}
+	\label{lst:webservice:undeployrequest}
+\end{listing}
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=undeploy-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/undeploy-response.xml}
+	\caption{Sample undeploy response in a soap message.}
+	\label{lst:webservice:undeployresponse}
+\end{listing}
+
+\subsection{SetCredentials}
+
+In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setCredentials} operation.
+Using this operation, login credentials can be set independently from deploy requests if necessary.
+\autoref{lst:webservice:setCredentialsrequest} shows an exemplary set credentials request.
+In line 7-14, it contains one or more credentials as argument.
+If the credentials where set successfully, a response will be returned.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=setCredentials-request.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/setCredentials-request.xml}
+	\caption{Sample setCredentials request in a soap message.}
+	\label{lst:webservice:setCredentialsrequest}
+\end{listing}
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=setCredentials-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/setCredentials-response.xml}
+	\caption{Sample setCredentials response in a soap message.}
+	\label{lst:webservice:setCredentialsresponse}
+\end{listing}
+
+\subsection{Error Response}
+
+In case of an error during the processing of a request, the bootware will answer with an error response.
+\autoref{lst:webservice:errorresponse} shows an exemplary error response message.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=error-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{design/assets/error-response.xml}
+	\caption{Sample error response in a soap message.}
+	\label{lst:webservice:errorresponse}
+\end{listing}
+

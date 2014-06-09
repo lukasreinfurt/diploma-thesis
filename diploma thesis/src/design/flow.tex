@@ -1,5 +1,5 @@
 \section{Execution Flow}
-\label{flow}
+\label{design:flow}
 
 Until now we have established how the bootware can be called from outside components to start the bootstrapping process.
 Now it's time to take a look at the actual internal steps involved in this process.
@@ -28,7 +28,7 @@ If a shutdown event is received in this state, the local bootware will start the
 This is the only normal way to shutdown the local bootware.
 If a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
 
-The request context contains all the information necessary to fulfill the request, as described id \autoref{context}.
+The request context contains all the information necessary to fulfill the request, as described id \autoref{design:context}.
 If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
 If the context is read successfully the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
 For this to work, the remote bootware has already has to exist in the requested remote environment, which won't be the case during the first execution.

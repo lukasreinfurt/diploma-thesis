@@ -1,5 +1,5 @@
 \section{Final Bootware Architecture}
-\label{finalarch}
+\label{design:finalarch}
 
 \autoref{image:finalarch} shows the final architecture of the bootware component.
 At the bottom we can see four exemplary event plugins.
@@ -15,7 +15,7 @@ Besides the event plugins there is always the web service interface, shown at th
 All event plugins and the web service interface work by implementing event handlers for certain events published at the event bus, or by publishing events to the event bus themselves.
 As we can see in the center of \autoref{image:finalarch}, the event bus and the state machine form the core of the bootware.
 The event bus is responsible for distributing events between the various plugins and the state machine.
-The state machine implements the entire bootstrapping process, as described earlier in \autoref{flow}.
+The state machine implements the entire bootstrapping process, as described earlier in \autoref{design:flow}.
 At certain points during the bootstrapping process, operations are delegated to the plugin manager to load plugins, and to the infrastructure, connection, and payload plugins, shown at the top of \autoref{image:finalarch}.
 
 \begin{figure}[!htbp]
