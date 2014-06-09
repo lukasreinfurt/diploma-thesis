@@ -2,31 +2,25 @@
 \label{context}
 
 During the bootstrapping process, the bootware has to know certain things to be able do its job.
-This includes the type of a request (e.g. deploy, undeploy, etc.) and which plugins it should use to provision the infrastructure, connect to it, and deploy the payload.
-This also includes login credentials for cloud providers, which are necessary to provision the infrastructure in the first place.
-This information can be combined into one object which describes the whole context of the current bootstrapping process.
-Hence we will call such an object the context from now on.
+This information can be combined in one central object, which defines the nature of the current request: The context.
+In this section we will take a closer look at this context object and its content.
 
-\vspace*{\baselineskip}
-\begin{listing}[!htbp]
-	\inputminted[
-		label=context.xml,
-		frame=topline,
-		linenos,
-		frame=lines,
-		tabsize=2,
-		framesep=0.3cm,
-		fontsize=\small
-	]{xml}{design/assets/context.xml}
-	\caption{Sample context represented in XML.}
-	\label{lst:context:sample}
-\end{listing}
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/context}
+	\caption{Content of the context object.}
+	\label{image:context}
+\end{figure}
 
-\autoref{lst:context:sample} shows an exemplary context in XML form.
-As we can see in line 2-4, it defines the plugins that should be used during the bootstrapping process by using the name of the plugin \textit{.jar}.
-The name also includes the plugin version, so it would be possible to have different versions of the same plugin and switch between them if necessary.
-In line 5-10 we can see the login credentials for a specific cloud provider, in this case Amazon AWS.
-These credentials have to be provided, so that the infrastructure plugins are able to connect to a specific user account at a cloud provider.
+\autoref{image:context} shows the context object and its content.
+As we can see in the upper half of \autoref{image:context}, it defines the plugin types to be used for the current request.
+The infrastructure plugin type defines, which infrastructure plugin should be used to provision the requested infrastructure.
+The connection plugin type selects how the bootware should connect to to this infrastructure.
+The payload plugin type defines the payload that should be provisioned on this infrastrucre, which will be a provisioning engine in most cases.
+Finally, the provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
+It will use the middleware package referende, which is also defined in the context, as input to start the provisioning of the workflow middleware.
+In the bottom half of \autoref{image:context} we can see that the context can also contain login credentials for different infrastructure providers (i.e. cloud providers).
+These will be used by the infrastructure plugins to connect to a specific account at their provider.
 In the future, the context might be extended to hold additional information, but for this thesis, this context will be sufficient.
 
 Now that we have defined how the context will look like, we need to find a way to actually get it to the bootware.
