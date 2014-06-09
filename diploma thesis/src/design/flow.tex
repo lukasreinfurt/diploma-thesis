@@ -81,11 +81,24 @@ As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description a
 Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
 Therefore it could be advantageous to use other methods that are more fitting for this process.
 Since we already describes the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
-Fortunately this is possible by implementing the process using a \nom{finite state machine}{FSM}.
+Fortunately this is possible by implementing the process using a finite state machine.
 
 \subsection{Finite State Machine}
 
-A \nom{Finite State Machine}{FSM} is an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
+In theoretical computer science, a \nom{Finite State Machine}{FSM} is formal, abstract model of computation that "consisting of a set of states, a start state, an input alphabet, and a transition function that maps input symbols and current states to a next state. Computation begins in the start state with an input string. It changes to new states depending on the transition function"~\autocite{fsm}.
+In this context, a state is the "condition of a finite state machine [...] at a certain time. Informally, the content of memory"~\autocite{state}.
+The start state is therefore the initial condition of a FSM.
+The alphabet is a "set of all possible symbols in an application. For instance, input characters used by a finite state machine, letters making up strings in a language, or symbols in a pattern element. In some cases, an alphabet may be infinite"~\autocite{alphabet}.
+The transition function is a "function of the current state and input giving the next state of a finite state machine"~\autocite{transitionfn}.
+FSMs can further be distinguished in deterministic and non-deterministic FSMs.
+A deterministic FSM has "at most one transition for each symbol and state", whereas a non-deterministic FSM can have non, one, or more transitions per symbol and state~\autocite{deterministic}.
+
+Aside from its uses in theoretical computer science, FSMs also have practical applications in digital circuits, software applications, or as lexers in programming language compilers.
+We are only interested in the use of FSMs for building software, so we can redefine what a FSM means for our case.
+We want to use a FSM as an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
 The machine is in only one state at a time, its current state.
 At the start of the machine execution, it will be in the start state.
-From there, it can transition from one state to another when certain event are triggered or conditions are met, until it finally reaches an end state.
+From there, it can transition from one state to another when certain events are triggered or conditions are met, until it finally reaches an end state.
+When it enters a state, it executes a function associated with this state.
+The result of the execution of this function determines to which state the FSM will transition next.
+We will talk more about the actual implementation with FSMs in \autoref{implementation}.
