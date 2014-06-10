@@ -27,20 +27,30 @@ Using this pattern in our bootware component, we would create an event bus at th
 \subsection{Event Types}
 
 When using PubSub and events to communicate, its usually a good idea to not only use one type of event, but many different types.
-As an example, it would make sense to not only use one event type to communicate the bootstrapping process, but to divide those events into distinct groups based on their importance or general contents.
-In this case, we could use four different event types: Info events, success events, warning events, and error events,
-Info events would be used for general, non-critical information.
-Success events would be used each time a process step was completed successfully.
-Warning event would be used when something went slightly wrong but the overall process can still continue.
-Error event would be used if something really went wrong and the bootstrapping process will be aborted as a result of that.
-
-Using different kinds of event allows us to react differently based on the type of the event.
+Using different kinds of event allows us to subscribe only to specific events or react differently based on the type of an event.
 But what if we want to react to each event type in the same way, for example for logging purposes?
 Now, many different event types complicate things more.
 This is where event hierarchies become useful.
-In an event hierarchy, those four events mentioned before would all be derived from a more generic parent event.
+At the core of an event hierarchy is a single base event
+By extending and refining this base event, other, mire specific event types can be created, which again can be used as base type for even more specific events.
+This allows us to create a fine grained hierarchy of events and also enables us to subscribe to particular sub sets of this hierarchy.
 This makes event handling much easier, since we can now just react to the parent event if we don't need to distinguish between different event types for a particular task.
+
+A second mechanism to differentiate between events is some sort of severity value that each event contains.
+Many events will be published in an event system, but not all of them might be of the same importance.
+The majority might be of low value while a few events might be very important.
+For example, for logging purposes we might not be interested in every event, but only warnings and errors.
+By adding a severity attribute to the base event type, all events could be categorized in different severity groups and filtered accordingly if needed.
 
 As we can see, we might benefit from a well thought-out event hierarchy.
 
-\textcolor{red}{MORE}
+\textcolor{red}{
+base event
+	plugin event
+		plugin loading event
+		plugin execution event
+	state machine event
+		transition event
+		start event
+		stop event
+}
