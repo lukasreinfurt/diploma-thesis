@@ -24,6 +24,10 @@ For example, if a user wanted to add a new connection type that should be used t
 This would also reduce code duplication.
 Therefore, a third plugin type is necessary: The \textit{connection plugins}.
 
+The remote bootware also has to handle the initial provisioning of the workflow middleware, which involves calling a provisioning engine to tell it to start the provisioning process.
+Since this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
+We therefore introduce a fourth plugin type: The \textit{provisioning engine plugins}.
+
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
 We can generalize this into a more versatile fourth plugin type: The \textit{event plugins}.
 These plugins are a bit less specific then the three other types.
@@ -210,6 +214,45 @@ This method is provided for completeness and for special cases.
 	\end{tabu}
 	\caption{Interfaces to be implemented by payload plugins}
 	\label{table:payload_plugins}
+\endgroup
+
+\subsection{Provisioning Engine Plugins}
+
+Provisioning engine plugins provide the bootware with a unified way to call provisioning engines an trigger provisioning and deprovisioning operations.
+\autoref{table:provisioningengine_plugins} shows the operations that these plugins should implement.
+The provision operation calls a provisioning engine and trigger the provisioning process.
+It takes two inputs: An endpoint reference, which points to the provisioning engine that should be used, and a service package reference, which points to the service package that the provisioning engine should provision.
+When completed successfully, the provisioning operation returns an endpoint reference to the just provisioned service.
+The deprovision operation calls a provisioning engine and triggers the deprovisioning process.
+It takes the same inputs as the provisioning operation, an endpoint reference to the provisioning engine and a service package reference.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			provision
+		& Endpoint Reference, Service Package
+		& Endpoint Reference
+		& Tells the provisioning engine to provision the given service package\\
+
+			deprovision
+		& Endpoint Reference, Service Package
+		& -
+		& Tells the provisioning engine to deprovision the given service package\\
+
+	\end{tabu}
+	\caption{Interfaces to be implemented by provisioning engine plugins}
+	\label{table:provisioningengine_plugins}
 \endgroup
 
 \subsection{Event Plugins}
