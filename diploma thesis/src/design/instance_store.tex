@@ -1,0 +1,31 @@
+\section{Instance Store}
+\label{design:instancestore}
+
+The instance store stores information about payloads that were deployed by the bootware in the past and are still active.
+In \autoref{design:webservice} we already mentioned that we need to store some information about active payloads, but we didn't explain why.
+There are several reasons why this is useful.
+
+One big reason is that we can't guarantee that an undeploy operation will be called for every payload deployed by the bootware, since we might not have control over all components that ultimately call the bootware.
+We could require that for each deploy call there must eventually be an undeploy call so that everything will be cleaned up in the end, but errors can be made and it's better to have a failsafe in place.
+In the worst case scenario, failing to call undeploy for some payloads could lead to rogue services remaining active after a bootware execution has stopped without the user realizing it, which could get expensive.
+Storing enough information allows us to undeploy remaining payloads before shutting down the bootware even if they were never explicitly undeployed.
+Additionally, a warning could be return by the bootware to inform the user that some non-bootware component should be modified to explicitly undeploy all services he deployed.
+
+Another reason to store some information about deployed payloads is to simplify the interaction with other components.
+If we wouldn't store any information and make the bootware stateless, each component using the bootware (e.g. the bootware modeler plugin, the local bootware, and the provisioning manager) would be required to keep track of all payloads he deployed using the bootware, so that this information can be supplied when it's time to undeploy.
+This places an extra burden on these components and scatters around the information about deployed payloads.
+By storing this information in the bootware we simplify the usage of the bootware for other components and concentrate this information.
+
+We should also think about how such a storage mechanism might be different for the local and remote bootware.
+The local bootware only every deploys the remote bootware, so here we have to keep track of only one thing.
+The remote bootware on the other hand might deploy many payloads during an execution.
+For the local bootware it might be sufficient to store this information in a text file on the local machine where it is executed, whereas the remote bootware might use some sort of persistent storage in the cloud.
+This would allow it to retrieve this information even after a crash.
+For this thesis however we will be using simple in memory storage for both the local and remote bootware.
+Changing that to a more sophisticated storage solution is a possible option for future improvement.
+
+Now that we know why it makes sense to store information about active payloads, we need to discuss what exactly we need to store.
+We need to store enough information to be able to undeploy an active payload without any further input.
+For this we need to know: The infrastructure plugin that was used to provision the infrastructure, the connection plugin that was used to connect to it, the payload plugin that was used to deploy the active payload, and login credentials for the remote environment if necessary.
+This is all contained in the context object that we used in the first place to deploy the payload, so we will just store the whole context object.
+Since we also use this storage for the undeploy operation, where we get an endpoint reference as input, we have to store it in such a way that we can map a particular context object to the provided endpoint reference.

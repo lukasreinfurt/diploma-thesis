@@ -49,6 +49,10 @@ As input it takes an endpoint reference to a payload that should be undeploy.
 If the undeployment succeeds, it responds with a success message.
 If it fails, it responds with an error message.
 
+Unlike the deploy operation it doesn't take a context object as input but the context is still needed for the undeploy operation, since it contains the information about which plugins have to be used.
+This means that we have to store the context object used during each deploy operation so that we can retrieve it later during the corresponding undeploy operation.
+This design is intentional and will be described in more detail in \autoref{design:instancestore}.
+
 \subsection{setCredentials}
 
 The setCredentials operation is used to transmit or update the default login credentials used by the infrastructure plugins to authenticate with the infrastructure provider.
