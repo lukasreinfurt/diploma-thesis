@@ -17,6 +17,7 @@
 		<module>local</module>
 		<module>remote</module>
 		<module>plugins</module>
+		<module>eclipse</module>
 		<module>distribution</module>
 	</modules>
 
