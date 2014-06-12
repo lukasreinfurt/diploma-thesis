@@ -16,7 +16,7 @@
 
 		<fileSet>
 			<directory>../core/target/lib</directory>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>bin/lib</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
 			</includes>
@@ -24,7 +24,7 @@
 
 		<fileSet>
 			<directory>../local/target/lib</directory>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>bin/lib</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
 			</includes>
@@ -32,7 +32,7 @@
 
 		<fileSet>
 			<directory>../remote/target/lib</directory>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>bin/lib</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
 			</includes>
@@ -40,7 +40,7 @@
 
 		<fileSet>
 			<directory>../target/site</directory>
-			<outputDirectory>docs</outputDirectory>
+			<outputDirectory>bin/docs</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
 			</includes>
@@ -53,10 +53,22 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>org.simtech.bootware:bootware-local</include>
+				<include>org.simtech.bootware.eclipse:org.simtech.bootware.eclipse</include>
 			</includes>
 			<binaries>
 				<outputDirectory>/</outputDirectory>
+				<unpack>true</unpack>
+				<includeDependencies>false</includeDependencies>
+			</binaries>
+		</moduleSet>
+
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware:bootware-local</include>
+			</includes>
+			<binaries>
+				<outputDirectory>bin</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
@@ -67,7 +79,7 @@
 				<include>org.simtech.bootware:bootware-remote</include>
 			</includes>
 			<binaries>
-				<outputDirectory>/</outputDirectory>
+				<outputDirectory>bin</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
@@ -78,7 +90,7 @@
 				<include>org.simtech.bootware.plugins.infrastructure:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>plugins/infrastructure</outputDirectory>
+				<outputDirectory>bin/plugins/infrastructure</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
@@ -89,7 +101,7 @@
 				<include>org.simtech.bootware.plugins.connection:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>plugins/connection</outputDirectory>
+				<outputDirectory>bin/plugins/connection</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
@@ -100,7 +112,7 @@
 				<include>org.simtech.bootware.plugins.payload:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>plugins/payload</outputDirectory>
+				<outputDirectory>bin/plugins/payload</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
@@ -111,7 +123,7 @@
 				<include>org.simtech.bootware.plugins.event:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>plugins/event</outputDirectory>
+				<outputDirectory>bin/plugins/event</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
