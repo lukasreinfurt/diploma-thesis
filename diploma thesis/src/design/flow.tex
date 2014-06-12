@@ -97,9 +97,11 @@ A deterministic FSM has "at most one transition for each symbol and state", wher
 Aside from its uses in theoretical computer science, FSMs also have practical applications in digital circuits, software applications, or as lexers in programming language compilers.
 We are only interested in the use of FSMs for building software, so we can redefine what a FSM means for our case.
 We want to use a FSM as an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
+Unlike a traditional FSM, we will not consume symbols from a set alphabet that will trigger state transitions.
+We want the state transitions to be triggered by events that we can emit at any time, so we want a event-driven FSM.
 The machine is in only one state at a time, its current state.
 At the start of the machine execution, it will be in the start state.
-From there, it can transition from one state to another when certain events are triggered or conditions are met, until it finally reaches an end state.
+From there, it can transition from one state to another when certain events are triggered, until it finally reaches an end state.
 When it enters a state, it executes a function associated with this state.
 The result of the execution of this function determines to which state the FSM will transition next.
 We will talk more about the actual implementation with FSMs in \autoref{implementation}.
