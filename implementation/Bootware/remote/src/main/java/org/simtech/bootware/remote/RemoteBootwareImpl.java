@@ -1,9 +1,13 @@
 package org.simtech.bootware.remote;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
+import org.simtech.bootware.core.Endpoints;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -72,10 +76,18 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final String deploy(final Context context) {
+	public final Endpoints deploy(final Context context) {
 		RemoteBootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
-		return response;
+		final Endpoints endpoints = new Endpoints();
+		try {
+			endpoints.add("example", new URL("http://www.example.com"));
+			endpoints.add("google", new URL("http://www.google.com"));
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return endpoints;
 	}
 
 	/**

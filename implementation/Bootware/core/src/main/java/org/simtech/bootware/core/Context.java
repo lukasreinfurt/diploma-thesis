@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import org.simtech.bootware.core.exceptions.CredentialsException;
+
 public class Context {
 
 	private String infrastructureType;
@@ -49,7 +51,11 @@ public class Context {
 		return credentialsList;
 	}
 
-	public final Credentials getCredentialsFor(final String entry) {
-		return credentialsList.get(entry);
+	public final Credentials getCredentialsFor(final String entry) throws CredentialsException {
+		final Credentials credentials = credentialsList.get(entry);
+		if (credentials == null) {
+			throw new CredentialsException("Credentials for " + entry + " could not be found.");
+		}
+		return credentials;
 	}
 }

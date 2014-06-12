@@ -4,6 +4,7 @@ import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
+import org.simtech.bootware.core.Endpoints;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -70,10 +71,11 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final String deploy(final Context context) {
+	public final Endpoints deploy(final Context context) {
 		LocalBootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
-		return response;
+		final Endpoints endpoints = new Endpoints();
+		return endpoints;
 	}
 
 	/**

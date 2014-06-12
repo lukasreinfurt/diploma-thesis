@@ -5,6 +5,7 @@ import java.net.URL;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
+import org.simtech.bootware.core.exceptions.CredentialsException;
 import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
@@ -43,7 +44,6 @@ public abstract class AbstractStateMachine {
 	protected static Instance instance;
 	protected static PayloadPlugin payloadPlugin;
 	protected static PluginManager pluginManager;
-	protected static String response;
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
 
@@ -181,6 +181,10 @@ public abstract class AbstractStateMachine {
 				final Credentials credentials = context.getCredentialsFor(context.getInfrastructureType());
 				instance = infrastructurePlugin.provision(credentials);
 			}
+			catch (CredentialsException e) {
+				System.out.println(e.toString());
+				stateMachine.fire(FSMEvent.Failure);
+			}
 			catch (ProvisionInfrastructureException e) {
 				stateMachine.fire(FSMEvent.Failure);
 			}
@@ -278,7 +282,6 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void returnResponse(final String from, final String to, final FSMEvent fsmEvent) {
-			response = "Response";
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
