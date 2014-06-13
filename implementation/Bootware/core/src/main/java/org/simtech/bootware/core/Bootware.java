@@ -10,6 +10,6 @@ import javax.jws.WebService;
 @WebService
 public interface Bootware {
 	@WebMethod Endpoints deploy(@WebParam(name = "context") Context context);
-	// @WebMethod void undeploy(Endpoints endpoints);
+	@WebMethod void undeploy(Endpoints endpoints);
 	// @WebMethod void setCredentials(Map<String, Credentials> credentials);
 }

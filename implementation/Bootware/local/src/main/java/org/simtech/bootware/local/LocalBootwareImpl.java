@@ -1,5 +1,9 @@
 package org.simtech.bootware.local;
 
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
@@ -76,6 +80,16 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		stateMachine.fire(FSMEvent.Request);
 		final Endpoints endpoints = new Endpoints();
 		return endpoints;
+	}
+
+	@Override
+	public final void undeploy(final Endpoints endpoints) {
+		final Map<String, URL> endpointsList = endpoints.getEndpointsList();
+		final Iterator it = endpointsList.entrySet().iterator();
+		while (it.hasNext()) {
+			final Map.Entry pairs = (Map.Entry) it.next();
+			System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		}
 	}
 
 	/**
