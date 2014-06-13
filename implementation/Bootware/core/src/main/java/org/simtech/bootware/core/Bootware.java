@@ -1,5 +1,7 @@
 package org.simtech.bootware.core;
 
+import java.util.Map;
+
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -11,5 +13,5 @@ import javax.jws.WebService;
 public interface Bootware {
 	@WebMethod Endpoints deploy(@WebParam(name = "context") Context context);
 	@WebMethod void undeploy(Endpoints endpoints);
-	// @WebMethod void setCredentials(Map<String, Credentials> credentials);
+	@WebMethod void setCredentials(Map<String, Credentials> credentials);
 }

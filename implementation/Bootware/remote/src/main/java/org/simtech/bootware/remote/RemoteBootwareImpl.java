@@ -9,6 +9,7 @@ import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
+import org.simtech.bootware.core.Credentials;
 import org.simtech.bootware.core.Endpoints;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -99,6 +100,22 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		while (it.hasNext()) {
 			final Map.Entry pairs = (Map.Entry) it.next();
 			System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		}
+	}
+
+	@Override
+	public final void setCredentials(final Map<String, Credentials> credentials) {
+		final Iterator it = credentials.entrySet().iterator();
+		while (it.hasNext()) {
+			final Map.Entry pairs = (Map.Entry) it.next();
+			System.out.println(pairs.getKey());
+			final Credentials credentialsObject = (Credentials) pairs.getValue();
+			final Map<String, String> credentialsList = credentialsObject.getCredentialsList();
+			final Iterator it2 = credentialsList.entrySet().iterator();
+			while (it2.hasNext()) {
+				final Map.Entry pairs2 = (Map.Entry) it2.next();
+				System.out.println(pairs2.getKey() + " = " + pairs2.getValue());
+			}
 		}
 	}
 
