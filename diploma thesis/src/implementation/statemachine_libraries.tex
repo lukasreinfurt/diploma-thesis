@@ -7,27 +7,26 @@ Therefore, it would be better to use an existing state machine library.
 In general, we are looking for a event-driven FSM, which allows us to define a set of states and transition between those states when specific events occur.
 Ideally we would prefer a standardized way to define the FSM and avoid proprietary formats.
 But we also don't want the FSM to be overly complex to use.
-\autoref{table:statemachine_comparison} shows seven state machine libraries available for Java.
+\autoref{table:statemachine_comparison} shows six state machine libraries available for Java.
 
 \vspace*{\baselineskip}
 \begingroup
 	\centering
 	\captionsetup{type=table}
-	\begin{tabu}[!htbp]{rX[2l]|[0.5pt]X[c]X[c]X[c]X[c]X[c]X[c]X[c]}
+	\begin{tabu}[!htbp]{rX[2l]|[0.5pt]X[c]X[c]X[c]X[c]X[c]X[c]}
 
 		&
-		& \multicolumn{7}{c}{\textit{State Machine Libraries}} \\[10pt]
+		& \multicolumn{6}{c}{\textit{State Machine Libraries}} \\[10pt]
 
 		&
 		& \begin{sideways} \textbf{Commons SCXML\footnote{\url{http://commons.apache.org/proper/commons-scxml/}\label{scxml}}} \end{sideways}
 		& \begin{sideways} \textbf{EasyFlow\footnote{\url{https://github.com/Beh01der/EasyFlow}\label{easyflow}}} \end{sideways}
-		& \begin{sideways} \textbf{Ragel\footnote{\url{http://www.complang.org/ragel/}\label{ragel}}} \end{sideways}
 		& \begin{sideways} \textbf{SMC\footnote{\url{http://smc.sourceforge.net/}\label{smc}}} \end{sideways}
 		& \begin{sideways} \textbf{stateless4j\footnote{\url{https://github.com/oxo42/stateless4j/}\label{stateless4j}}} \end{sideways}
 		& \begin{sideways} \textbf{squirrel-foundation\footnote{\url{https://github.com/hekailiang/squirrel}\label{squirrel}}} \end{sideways}
 		& \begin{sideways} \textbf{Unimod\footnote{\url{http://unimod.sourceforge.net/}\label{unimod}}} \end{sideways} \\
 
-		\tabucline[0.5pt]{2-9}
+		\tabucline[0.5pt]{2-8}
 
 		% NO  = \ding{55}
 		% YES = \ding{51}
@@ -37,63 +36,57 @@ But we also don't want the FSM to be overly complex to use.
 		& \textbf{Event Driven}
 		& \ding{51}    % scxml
 		& \ding{51}    % easyflow
-		& \ding{55}    % ragel
-		& \ding{55}    % smc
+		& \ding{51}    % smc
 		& \ding{51}    % stateless4j
 		& \ding{51}    % squirrel
 		& \ding{51} \\ % unimod
 
 
 		& \textbf{Description \linebreak Language}
-		& SCXML                                            % scxml
-		& Java                                             % easyflow
-		& Regular \linebreak Expression                    % ragel
-		& Proprietary (SM)                                 % smc
-		& Java                                             % stateless4j
-		& Java, SCXML                                      % squirrel
-		& Graphical Model, \linebreak Proprietary (XML) \\ % unimod
+		& SCXML                  % scxml
+		& Java                   % easyflow
+		& .sm                    % smc
+		& Java                   % stateless4j
+		& Java, SCXML            % squirrel
+		& UML, \linebreak XML \\ % unimod
 
-		\tabucline[0.5pt]{2-9}
+		\tabucline[0.5pt]{2-8}
 
-		\multirow{4}{*}{\begin{sideways}\textit{non-functional}\end{sideways}}
+		\multirow{4}{*}{\begin{sideways}\textit{non-func.}\end{sideways}}
 
 		& \textbf{Complexity}
-		& medium    % scxml
+		& med.    % scxml
 		& low    % easyflow
-		& medium    % ragel
-		& medium    % smc
+		& med.    % smc
 		& low    % stateless4j
 		& low    % squirrel
 		& high \\ % unimod
 
 		& \textbf{Popularity}
-		& medium    % scxml
+		& med.    % scxml
 		& low       % easyflow
-		& medium    % ragel
-		& medium    % smc
+		& med.    % smc
 		& low       % stateless4j
-		& medium    % squirrel
-		& medium \\ % unimod
+		& med.    % squirrel
+		& med. \\ % unimod
 
 		& \textbf{Maturity}
 		& low     % scxml
-		& medium  % easyflow
-		& high    % ragel
+		& med.  % easyflow
 		& high    % smc
-		& medium  % stateless4j
-		& medium  % squirrel
+		& med.  % stateless4j
+		& med.  % squirrel
 		& high \\ % unimod
 
 		& \textbf{Documentation}
-		& medium  % scxml
+		& med.  % scxml
 		& low     % easyflow
-		& high    % ragel
 		& high    % smc
 		& low     % stateless4j
 		& high    % squirrel
 		& high \\ % unimod
 
-		\tabucline[0.5pt]{2-9}
+		\tabucline[0.5pt]{2-8}
 
 	\end{tabu}
 	\caption{Feature comparison of Java state machine libraries.}
@@ -111,12 +104,6 @@ EasyFlow\footref{easyflow} is a simple and lightweight FSM for Java.
 It is event-driven, but only supports describing the FSM directly in Java code.
 Compared to the other alternatives, it is not very well documented and not very popular.
 It would however be able to do the job.
-
-
-Ragel\footref{ragel} is a state machine compiler that targets nine different programming languages, including Java.
-Its FSMs are compiled from standard regular expressions combined with action embedding operators.
-This means that it works on an alphabet of symbols, like a traditional FSM, and is therefore more suited for language parsing.
-This doesn't make it a good fit for our needs.
 
 \nom{State Machine Compiler}{SMC}\footref{smc} is a state machine compiler that targets fifteen different programming languages, including Java.
 It generates FSMs from a definition in \textit{.sm} files.
