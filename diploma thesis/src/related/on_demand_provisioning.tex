@@ -25,7 +25,7 @@ In deployment step two, this provisioning engine is used to deploy the actual mi
 Now, the workflow can be deployed on this middleware, which is step three.
 In step four, an instance of this workflow is executed.
 During this execution, some external service might be required that are not yet available.
-The \nom{Enterprise Service Bus}{ESB} determines this by checking the service registry.
+The ESB determines this by checking the service registry.
 If the requested service isn't available, the ESB tells the provisioning engine to provision this service.
 The on-demand provisioning of services is step five, which corresponds to deployment step three in \autoref{image:original_architecture}.
 The service is also deprovisioned if it is no longer needed.

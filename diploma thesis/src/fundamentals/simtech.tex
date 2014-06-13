@@ -12,5 +12,33 @@ The aim of SimTech is to improve existing simulation strategies and to create ne
 In the SimTech project, seven individual research areas collaborate in seven different project networks, one of which is project network 6: \textit{Cyber Infrastructure and Beyond}.
 The goal of this project network is to build an easy-to-use infrastructure that supports scientists in their day to day work with simulations~\autocite{simtech:projectnetwork6}.
 
+\subsection{SimTech SWfMS}
+
 As part of this project, the SimTech \nom{Simulation Workflow Management System}{SWfMS} was developed.
 It is a tool that enables scientists to easily create, manage and execute simulation workflows~\autocite{workflow:simulation:flexibility}.
+
+A workflow is a "computerised facilitation or automation of a business process, in whole or part"~\autocite[p.~6]{workflow:referencemodel}.
+It is defined by a process model that describes tasks and the order in which these tasks should be executed~\autocite[pp.~7-8]{workflow:referencemodel}.
+Until recently, workflows have been mostly used to describe business processes, which lead to the development of business-centered standards like the \nom{Business Process Execution Language}{BPEL}\footnote{\url{http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html}} or the \nom{Business Process Modeling Notation}{BPMN}\footnote{\url{http://www.bpmn.org/}}.
+However, the SimTech SWfMS is used for simulation workflows, a subcategory of scientific workflows, which came more and more into use in recent years.
+These workflows have requirements that cannot be fulfilled by BPEL or BPMN.
+The SimTech SWfMS therefore introduces extensions to the BPEL language that add functionality to support these requirements, such as passing data by reference to support larger amounts of data often found in science~\autocite[also~see][]{workflow:simulation:modelling:datareferences}, or shared context between workflows~\autocite{workflow:simulation:modelling}.
+Other extension introduces by the SimTech SWfMS to support simulation workflows include a service bus that supports late binding, rebinding, and legacy simulation software, as well as the \nom{Simulation Data Management System}{SIMPL} that provides unified access methods for arbitrary external data~\autocite{workflow:simulation:runtime}.
+Additionally extension where also made in the areas of flexibility, to support a "model as you go" approach, and in human user involvement, to support human tasks for decision making, data manipulation, or workflow repair~\autocites{workflow:simulation:flexibility}{workflow:simulation:humanusers}.
+
+The SimTech SWfMS consists of the \nom{SimTech Workflow Modeling \& Monitoring Tool}{Simtech Modeler} and the workflow middleware.
+The SimTech Modeler is based on Eclipse JEE\footnote{\url{http://www.eclipse.org/ide/}} and extends its functionality with various plugins.
+\autoref{image:modeler} shows the SimTech Modeler user interface.
+It allows the user to create simulation workflows using a graph as visual representation, where vertices represent simulation tasks and edges describe the progression between those tasks.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=\textwidth,interpolate=false]{fundamentals/assets/simtech_modeler}
+	\caption{The SimTech Modeler user interface.}
+	\label{image:modeler}
+\end{figure}
+
+Once the user is done modeling the simulation workflow, he clicks on a button to deploy and execute the workflow on the workflow Middleware.
+The Middleware consists of various components that are executed by an application server, in this case Apache Tomcat\footnote{\url{http://tomcat.apache.org/}}.
+The workflow is send to the workflow engine (\nom{ODE Pluggable Framework}{ODE-PGF}\footnote{\url{http://www.iaas.uni-stuttgart.de/forschung/projects/ODE-PGF/}}), which executes the workflow step by step.
+If a step involves the execution of a service, the \nom{Enterprise Service Bus}{ESB} is called, who resolves the services and passes along the request and the response.
