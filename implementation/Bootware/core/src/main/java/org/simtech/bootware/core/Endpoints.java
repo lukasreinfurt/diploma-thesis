@@ -6,23 +6,23 @@ import java.util.Map;
 
 public class Endpoints {
 
-	private Map<String, URL> endpoints = new HashMap<String, URL>();
+	private Map<String, URL> endpointsList = new HashMap<String, URL>();
 
 	public Endpoints() {}
 
-	public final void setEndpoints(final Map<String, URL> map) {
-		endpoints = map;
+	public final void setEndpointsList(final Map<String, URL> map) {
+		endpointsList = map;
 	}
 
-	public final Map<String, URL> getEndpoints() {
-		return endpoints;
+	public final Map<String, URL> getEndpointsList() {
+		return endpointsList;
 	}
 
 	public final URL add(final String entry, final URL endpoint) {
-		return endpoints.put(entry, endpoint);
+		return endpointsList.put(entry, endpoint);
 	}
 
 	public final URL get(final String entry) {
-		return endpoints.get(entry);
+		return endpointsList.get(entry);
 	}
 }
