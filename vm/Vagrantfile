@@ -17,7 +17,7 @@ vms = [
 		:playbook        => 'impl_dev',
 		:box             => 'precise32',
 		:url             => 'http://files.vagrantup.com/precise32.box',
-		:memory          => 256,
+		:memory          => 512,
 		:forwarded_ports => [],
 		:synced_folders  => [
 			{:host => './ansible', :guest => '/ansible'},

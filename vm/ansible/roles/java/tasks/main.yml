@@ -3,3 +3,19 @@
 
 - name: install maven
   apt: pkg=maven
+
+- name: dowload mvnsh
+  get_url:
+    url: http://central.maven.org/maven2/org/sonatype/maven/shell/dist/mvnsh-assembly/1.1.0/mvnsh-assembly-1.1.0-bin.tar.gz
+    dest: /tmp/mvnsh.tar.gz
+
+- name: extract mvnsh
+  command: tar xzf /tmp/mvnsh.tar.gz -C /opt creates=/opt/mvnsh-1.1.0
+
+- name: add mvnsh to path
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    backrefs: yes
+    regexp: 'PATH=(["]*)((?!.*?/opt/mvnsh-1.1.0/bin).*?)(["]*)$'
+    line: 'PATH=\1\2:/opt/mvnsh-1.1.0/bin\3'
