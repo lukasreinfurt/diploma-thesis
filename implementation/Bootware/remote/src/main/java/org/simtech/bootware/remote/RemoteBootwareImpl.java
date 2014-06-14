@@ -122,28 +122,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 	@Override
 	public final void setCredentials(final Map<String, CredentialsWrapper> credentialsList) throws SetCredentialsException {
-		request = new Request();
-		final Iterator it = credentialsList.entrySet().iterator();
-
-		if (!it.hasNext()) {
-			request.fail("Credentials cannot be empty");
-		}
-
-		if (request.isFailing()) {
-			throw new SetCredentialsException((String) request.getResponse());
-		}
-
-		while (it.hasNext()) {
-			final Map.Entry pairs = (Map.Entry) it.next();
-			System.out.println(pairs.getKey());
-			final CredentialsWrapper credentialsObject = (CredentialsWrapper) pairs.getValue();
-			final Map<String, String> credentials = credentialsObject.getCredentials();
-			final Iterator it2 = credentials.entrySet().iterator();
-			while (it2.hasNext()) {
-				final Map.Entry pairs2 = (Map.Entry) it2.next();
-				System.out.println(pairs2.getKey() + " = " + pairs2.getValue());
-			}
-		}
+		defaultCredentialsList = credentialsList;
 	}
 
 	/**

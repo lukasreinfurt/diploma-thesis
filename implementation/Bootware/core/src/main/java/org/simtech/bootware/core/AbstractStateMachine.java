@@ -1,6 +1,7 @@
 package org.simtech.bootware.core;
 
 import java.net.URL;
+import java.util.Map;
 
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
@@ -42,6 +43,7 @@ public abstract class AbstractStateMachine {
 	protected static EventBus eventBus;
 	protected static InfrastructurePlugin infrastructurePlugin;
 	protected static Instance instance;
+	protected static Map<String, CredentialsWrapper> defaultCredentialsList;
 	protected static PayloadPlugin payloadPlugin;
 	protected static PluginManager pluginManager;
 	protected static Request request;
