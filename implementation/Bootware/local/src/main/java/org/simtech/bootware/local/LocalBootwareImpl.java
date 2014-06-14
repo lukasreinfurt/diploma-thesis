@@ -10,6 +10,7 @@ import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.EndpointsWrapper;
+import org.simtech.bootware.core.exceptions.DeployException;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -76,9 +77,15 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final EndpointsWrapper deploy(final Context context) {
+	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		LocalBootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
+		if (error) {
+			error = false;
+			final String message = errorMessage;
+			errorMessage = "";
+			throw new DeployException(message);
+		}
 		final EndpointsWrapper endpoints = new EndpointsWrapper();
 		return endpoints;
 	}
