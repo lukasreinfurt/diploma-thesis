@@ -10,7 +10,7 @@ import javax.jws.WebService;
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.Credentials;
-import org.simtech.bootware.core.Endpoints;
+import org.simtech.bootware.core.EndpointsWrapper;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -79,10 +79,10 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final Endpoints deploy(final Context context) {
+	public final EndpointsWrapper deploy(final Context context) {
 		RemoteBootwareImpl.context = context;
 		stateMachine.fire(FSMEvent.Request);
-		final Endpoints endpoints = new Endpoints();
+		final EndpointsWrapper endpoints = new EndpointsWrapper();
 		try {
 			endpoints.add("example", new URL("http://www.example.com"));
 			endpoints.add("google", new URL("http://www.google.com"));
