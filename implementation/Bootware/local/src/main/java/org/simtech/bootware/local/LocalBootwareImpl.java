@@ -12,6 +12,7 @@ import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.EndpointsWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.UndeployException;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -90,8 +91,18 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void undeploy(final Map<String, URL> endpoints) {
+	public final void undeploy(final Map<String, URL> endpoints) throws UndeployException {
+		request = new Request();
 		final Iterator it = endpoints.entrySet().iterator();
+
+		if (!it.hasNext()) {
+			request.fail("Endpoints cannot be empty");
+		}
+
+		if (request.isFailing()) {
+			throw new UndeployException((String) request.getResponse());
+		}
+
 		while (it.hasNext()) {
 			final Map.Entry pairs = (Map.Entry) it.next();
 			System.out.println(pairs.getKey() + " = " + pairs.getValue());

@@ -8,6 +8,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.UndeployException;
 
 /**
  * Interface that is implemented by the bootware.
@@ -15,6 +16,6 @@ import org.simtech.bootware.core.exceptions.DeployException;
 @WebService
 public interface Bootware {
 	@WebMethod EndpointsWrapper deploy(@WebParam(name = "context") Context context) throws DeployException;
-	@WebMethod void undeploy(@WebParam(name = "endpoints") Map<String, URL> endpoints);
+	@WebMethod void undeploy(@WebParam(name = "endpoints") Map<String, URL> endpoints) throws UndeployException;
 	@WebMethod void setCredentials(@WebParam(name = "credentialsList") Map<String, CredentialsWrapper> credentialsList);
 }
