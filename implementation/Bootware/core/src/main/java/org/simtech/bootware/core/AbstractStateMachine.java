@@ -36,7 +36,6 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  */
 public abstract class AbstractStateMachine {
 
-	protected static Boolean error = false;
 	protected static Context context;
 	protected static Connection connection;
 	protected static ConnectionPlugin connectionPlugin;
@@ -45,7 +44,7 @@ public abstract class AbstractStateMachine {
 	protected static Instance instance;
 	protected static PayloadPlugin payloadPlugin;
 	protected static PluginManager pluginManager;
-	protected static String errorMessage;
+	protected static Request request;
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
 
@@ -158,8 +157,7 @@ public abstract class AbstractStateMachine {
 
 		protected void readContext(final String from, final String to, final FSMEvent fsmEvent) {
 			if ("".equals(context.getInfrastructureType())) {
-				error = true;
-				errorMessage = "infrastructureType cannot be empty";
+				request.fail("infrastructureType cannot be empty");
 				stateMachine.fire(FSMEvent.Failure);
 			}
 			System.out.println("InfrastructureType: " + context.getInfrastructureType());
