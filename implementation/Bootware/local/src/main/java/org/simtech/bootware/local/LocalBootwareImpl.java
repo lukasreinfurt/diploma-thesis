@@ -8,7 +8,7 @@ import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.Context;
-import org.simtech.bootware.core.Credentials;
+import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.EndpointsWrapper;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -93,14 +93,14 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void setCredentials(final Map<String, Credentials> credentials) {
-		final Iterator it = credentials.entrySet().iterator();
+	public final void setCredentials(final Map<String, CredentialsWrapper> credentialsList) {
+		final Iterator it = credentialsList.entrySet().iterator();
 		while (it.hasNext()) {
 			final Map.Entry pairs = (Map.Entry) it.next();
 			System.out.println(pairs.getKey());
-			final Credentials credentialsObject = (Credentials) pairs.getValue();
-			final Map<String, String> credentialsList = credentialsObject.getCredentialsList();
-			final Iterator it2 = credentialsList.entrySet().iterator();
+			final CredentialsWrapper credentialsObject = (CredentialsWrapper) pairs.getValue();
+			final Map<String, String> credentials = credentialsObject.getCredentials();
+			final Iterator it2 = credentials.entrySet().iterator();
 			while (it2.hasNext()) {
 				final Map.Entry pairs2 = (Map.Entry) it2.next();
 				System.out.println(pairs2.getKey() + " = " + pairs2.getValue());

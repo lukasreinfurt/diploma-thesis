@@ -1,7 +1,8 @@
 package org.simtech.bootware.plugins.infrastructure.i2;
 
-import org.simtech.bootware.core.Credentials;
+import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.Instance;
+import org.simtech.bootware.core.exceptions.CredentialsException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.InfrastructurePlugin;
 
@@ -17,9 +18,14 @@ public class I2 extends AbstractBasePlugin implements InfrastructurePlugin {
 		// no op
 	}
 
-	public final Instance provision(final Credentials credentials) {
-		System.out.println("I2: provision");
-		System.out.println("789: " + credentials.get("789"));
+	public final Instance provision(final CredentialsWrapper credentials) {
+		try {
+			System.out.println("I2: provision");
+			System.out.println("789: " + credentials.get("789"));
+		}
+		catch (CredentialsException e) {
+			System.out.println(e.toString());
+		}
 		return new Instance();
 	}
 

@@ -5,22 +5,22 @@ import java.util.Map;
 
 import org.simtech.bootware.core.exceptions.CredentialsException;
 
-public class Credentials {
+public class CredentialsWrapper {
 
-	private Map<String, String> credentialsList = new HashMap<String, String>();
+	private Map<String, String> credentials = new HashMap<String, String>();
 
-	public Credentials() {}
+	public CredentialsWrapper() {}
 
-	public final void setCredentialsList(final Map<String, String> map) {
-		credentialsList = map;
+	public final void setCredentials(final Map<String, String> map) {
+		credentials = map;
 	}
 
-	public final Map<String, String> getCredentialsList() {
-		return credentialsList;
+	public final Map<String, String> getCredentials() {
+		return credentials;
 	}
 
 	public final String get(final String entry) throws CredentialsException {
-		final String credential = credentialsList.get(entry);
+		final String credential = credentials.get(entry);
 		if (credential == null) {
 			throw new CredentialsException("Entry " + entry + " could not be found in credentials.");
 		}

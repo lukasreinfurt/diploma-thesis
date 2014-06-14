@@ -14,5 +14,5 @@ import javax.jws.WebService;
 public interface Bootware {
 	@WebMethod EndpointsWrapper deploy(@WebParam(name = "context") Context context);
 	@WebMethod void undeploy(@WebParam(name = "endpoints") Map<String, URL> endpoints);
-	@WebMethod void setCredentials(@WebParam(name = "credentials") Map<String, Credentials> credentials);
+	@WebMethod void setCredentials(@WebParam(name = "credentialsList") Map<String, CredentialsWrapper> credentialsList);
 }

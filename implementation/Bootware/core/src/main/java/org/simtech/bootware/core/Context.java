@@ -12,7 +12,7 @@ public class Context {
 	private String infrastructureType;
 	private String connectionType;
 	private String payloadType;
-	private Map<String, Credentials> credentialsList = new HashMap<String, Credentials>();
+	private Map<String, CredentialsWrapper> credentialsList = new HashMap<String, CredentialsWrapper>();
 
 	public Context() {}
 
@@ -43,16 +43,16 @@ public class Context {
 		return payloadType;
 	}
 
-	public final void setCredentialsList(final Map<String, Credentials> map) {
+	public final void setCredentialsList(final Map<String, CredentialsWrapper> map) {
 		credentialsList = map;
 	}
 
-	public final Map<String, Credentials> getCredentialsList() {
+	public final Map<String, CredentialsWrapper> getCredentialsList() {
 		return credentialsList;
 	}
 
-	public final Credentials getCredentialsFor(final String entry) throws CredentialsException {
-		final Credentials credentials = credentialsList.get(entry);
+	public final CredentialsWrapper getCredentialsFor(final String entry) throws CredentialsException {
+		final CredentialsWrapper credentials = credentialsList.get(entry);
 		if (credentials == null) {
 			throw new CredentialsException("Credentials for " + entry + " could not be found.");
 		}
