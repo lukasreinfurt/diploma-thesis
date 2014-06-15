@@ -158,22 +158,22 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void readContext(final String from, final String to, final FSMEvent fsmEvent) {
-			if ("".equals(context.getInfrastructureType())) {
+			if ("".equals(context.getInfrastructurePlugin())) {
 				request.fail("infrastructureType cannot be empty");
 				stateMachine.fire(FSMEvent.Failure);
 			}
-			System.out.println("InfrastructureType: " + context.getInfrastructureType());
-			System.out.println("ConnectionType: " + context.getConnectionType());
-			System.out.println("PayloadType: " + context.getPayloadType());
+			System.out.println("InfrastructureType: " + context.getInfrastructurePlugin());
+			System.out.println("ConnectionType: " + context.getConnectionPlugin());
+			System.out.println("PayloadType: " + context.getProvisioningEnginePlugin());
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
 
 		protected void loadRequestPlugins(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
-				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructureType());
-				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionType());
-				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadType());
+				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructurePlugin());
+				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionPlugin());
+				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getProvisioningEnginePlugin());
 			}
 			catch (LoadPluginException e) {
 				e.printStackTrace();
@@ -185,7 +185,7 @@ public abstract class AbstractStateMachine {
 
 		protected void provisionInfrastructure(final String from, final String to, final FSMEvent fsmEvent) {
 			try {
-				final CredentialsWrapper credentials = context.getCredentialsFor(context.getInfrastructureType());
+				final CredentialsWrapper credentials = context.getCredentialsFor(context.getInfrastructurePlugin());
 				instance = infrastructurePlugin.provision(credentials);
 			}
 			catch (CredentialsException e) {
@@ -278,9 +278,9 @@ public abstract class AbstractStateMachine {
 				infrastructurePlugin = null;
 				connectionPlugin     = null;
 				payloadPlugin        = null;
-				pluginManager.unloadPlugin(infrastructurePluginPath + context.getInfrastructureType());
-				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionType());
-				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadType());
+				pluginManager.unloadPlugin(infrastructurePluginPath + context.getInfrastructurePlugin());
+				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionPlugin());
+				pluginManager.unloadPlugin(payloadPluginPath + context.getProvisioningEnginePlugin());
 			}
 			catch (UnloadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);

@@ -9,38 +9,56 @@ import org.simtech.bootware.core.exceptions.CredentialsException;
 
 public class Context {
 
-	private String infrastructureType;
-	private String connectionType;
-	private String payloadType;
+	private String infrastructurePlugin;
+	private String callProvisioningEnginePlugin;
+	private String connectionPlugin;
+	private String servicePackageReference;
+	private String provisioningEnginePlugin;
 	private Map<String, CredentialsWrapper> credentialsList = new HashMap<String, CredentialsWrapper>();
 
 	public Context() {}
 
-	public final void setInfrastructureType(final String type) {
-		infrastructureType = type;
+	public final void setInfrastructurePlugin(final String plugin) {
+		infrastructurePlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getInfrastructureType() {
-		return infrastructureType;
+	public final String getInfrastructurePlugin() {
+		return infrastructurePlugin;
 	}
 
-	public final void setConnectionType(final String type) {
-		connectionType = type;
+	public final void setCallProvisioningEnginePlugin(final String plugin) {
+		callProvisioningEnginePlugin = plugin;
+	}
+
+	public final String getCallProvisioningEnginePlugin() {
+		return callProvisioningEnginePlugin;
+	}
+
+	public final void setConnectionPlugin(final String plugin) {
+		connectionPlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getConnectionType() {
-		return connectionType;
+	public final String getConnectionPlugin() {
+		return connectionPlugin;
 	}
 
-	public final void setPayloadType(final String type) {
-		payloadType = type;
+	public final void setServicePackageReference(final String reference) {
+		servicePackageReference = reference;
+	}
+
+	public final String getServicePackageReference() {
+		return servicePackageReference;
+	}
+
+	public final void setProvisioningEnginePlugin(final String plugin) {
+		provisioningEnginePlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getPayloadType() {
-		return payloadType;
+	public final String getProvisioningEnginePlugin() {
+		return provisioningEnginePlugin;
 	}
 
 	public final void setCredentialsList(final Map<String, CredentialsWrapper> map) {
