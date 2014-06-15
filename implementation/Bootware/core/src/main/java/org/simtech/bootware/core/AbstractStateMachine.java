@@ -164,7 +164,7 @@ public abstract class AbstractStateMachine {
 			}
 			System.out.println("InfrastructureType: " + context.getInfrastructurePlugin());
 			System.out.println("ConnectionType: " + context.getConnectionPlugin());
-			System.out.println("PayloadType: " + context.getProvisioningEnginePlugin());
+			System.out.println("PayloadType: " + context.getPayloadPlugin());
 			stateMachine.fire(FSMEvent.Success);
 			//stateMachine.fire(FSMEvent.Failure);
 		}
@@ -173,7 +173,7 @@ public abstract class AbstractStateMachine {
 			try {
 				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructurePlugin());
 				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionPlugin());
-				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getProvisioningEnginePlugin());
+				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (LoadPluginException e) {
 				e.printStackTrace();
@@ -280,7 +280,7 @@ public abstract class AbstractStateMachine {
 				payloadPlugin        = null;
 				pluginManager.unloadPlugin(infrastructurePluginPath + context.getInfrastructurePlugin());
 				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionPlugin());
-				pluginManager.unloadPlugin(payloadPluginPath + context.getProvisioningEnginePlugin());
+				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (UnloadPluginException e) {
 				stateMachine.fire(FSMEvent.Failure);

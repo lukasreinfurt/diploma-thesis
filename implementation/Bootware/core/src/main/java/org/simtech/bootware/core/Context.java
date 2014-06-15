@@ -10,10 +10,10 @@ import org.simtech.bootware.core.exceptions.CredentialsException;
 public class Context {
 
 	private String infrastructurePlugin;
-	private String callProvisioningEnginePlugin;
+	private String callPayloadPlugin;
 	private String connectionPlugin;
 	private String servicePackageReference;
-	private String provisioningEnginePlugin;
+	private String payloadPlugin;
 	private Map<String, CredentialsWrapper> credentialsList = new HashMap<String, CredentialsWrapper>();
 
 	public Context() {}
@@ -27,12 +27,12 @@ public class Context {
 		return infrastructurePlugin;
 	}
 
-	public final void setCallProvisioningEnginePlugin(final String plugin) {
-		callProvisioningEnginePlugin = plugin;
+	public final void setCallPayloadPlugin(final String plugin) {
+		callPayloadPlugin = plugin;
 	}
 
-	public final String getCallProvisioningEnginePlugin() {
-		return callProvisioningEnginePlugin;
+	public final String getCallPayloadPlugin() {
+		return callPayloadPlugin;
 	}
 
 	public final void setConnectionPlugin(final String plugin) {
@@ -52,13 +52,13 @@ public class Context {
 		return servicePackageReference;
 	}
 
-	public final void setProvisioningEnginePlugin(final String plugin) {
-		provisioningEnginePlugin = plugin;
+	public final void setPayloadPlugin(final String plugin) {
+		payloadPlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getProvisioningEnginePlugin() {
-		return provisioningEnginePlugin;
+	public final String getPayloadPlugin() {
+		return payloadPlugin;
 	}
 
 	public final void setCredentialsList(final Map<String, CredentialsWrapper> map) {
