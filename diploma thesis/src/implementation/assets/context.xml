@@ -1,0 +1,27 @@
+<context>
+	<infrastructurePlugin>aws-ec2.jar</infrastructurePlugin>
+	<connectionPlugin>ssh.jar</connectionPlugin>
+	<payloadPlugin>opentosca.jar</payloadPlugin>
+	<!--Optional:-->
+	<callPayloadPlugin>callopentosca.jar</callPayloadPlugin>
+	<!--Optional:-->
+	<servicePackageReference>opentosca.csar</servicePackageReference>
+	<!--Optional:-->
+	<credentialsList>
+		<entry>
+			<key>AwsCredentials</key>
+			<value>
+				<credentials>
+					<entry>
+						<key>secretKey</key>
+						<value>874w5zhpswe98tzhg0w87ser049tadsiph</value>
+					</entry>
+					<entry>
+						<key>accessKey</key>
+						<value>g9w276og9746gw5</value>
+					</entry>
+				</credentials>
+			</value>
+		</entry>
+	</credentialsList>
+</context>

@@ -1,0 +1,14 @@
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:rem="http://remote.bootware.simtech.org/">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<rem:deploy>
+			<context>
+				<infrastructurePlugin>aws-ec2.jar</infrastructurePlugin>
+				<connectionPlugin>ssh.jar</connectionPlugin>
+				<payloadPlugin>opentosca.jar</payloadPlugin>
+			</context>
+		</rem:deploy>
+	</soapenv:Body>
+</soapenv:Envelope>

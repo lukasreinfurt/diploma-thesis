@@ -1,0 +1,14 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Body>
+		<ns2:deployResponse xmlns:ns2="http://remote.bootware.simtech.org/">
+			<return>
+				<endpoints>
+					<entry>
+						<key>opentosca</key>
+						<value>http://aws.com:8080/</value>
+					</entry>
+				</endpoints>
+			</return>
+		</ns2:deployResponse>
+	</S:Body>
+</S:Envelope>

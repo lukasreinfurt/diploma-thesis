@@ -1,0 +1,15 @@
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:rem="http://remote.bootware.simtech.org/">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<rem:undeploy>
+			<endpoints>
+				<entry>
+					<key>opentosca</key>
+					<value>http://aws.com:8080/</value>
+				</entry>
+			</endpoints>
+		</rem:undeploy>
+	</soapenv:Body>
+</soapenv:Envelope>

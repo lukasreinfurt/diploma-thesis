@@ -1,0 +1,14 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Body>
+		<S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+			<faultcode>S:Server</faultcode>
+			<faultstring>infrastructureType cannot be empty</faultstring>
+			<detail>
+				<ns2:DeployException
+					xmlns:ns2="http://remote.bootware.simtech.org/">
+					<message>infrastructureType cannot be empty</message>
+				</ns2:DeployException>
+			</detail>
+		</S:Fault>
+	</S:Body>
+</S:Envelope>
