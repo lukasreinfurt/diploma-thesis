@@ -9,9 +9,9 @@ The only known constant to a plugin is the bootware core.
 Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
 This essentially describes the publish-subscribe pattern~\autocite{pubsub}.
 
-\subsection{PubSub}
+\subsection{Publish Subscribe Pattern}
 
-The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant: A event bus (or message broker), publishers, and subscribers.
+The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant: An event bus (or message broker), publishers, and subscribers.
 The event bus sits at the center of the communication.
 He receives messages from publishers and distributes them to all subscribers that have voiced their interest in messages of a certain type by subscribing at the event bus~\autocite{pubsub}.
 
