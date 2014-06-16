@@ -26,15 +26,15 @@ In this scenario, all provisioning processes are initiated from a component inst
 
 The advantages of this architecture lie in its simplicity.
 Only one component has to be created and managed.
-We wouldn't have to deal with any cloud environments and each user would have his own personal instance, so multi-tenancy wouldn't be an issue.
-There is no possible overlap in functionality, as it would be the case in a 2-tier architecture (see \autoref{design:division:2tier}) and communication between multiple bootware components doesn't have to be considered.
+We wouldn't have to deal with bringing the bootware into a cloud environment and each user would have his own personal bootware instance, so multi-tenancy wouldn't be an issue.
+There is no possible overlap in functionality, as it would be the case in a 2-tier architecture and communication between multiple bootware components doesn't have to be considered.
 
 The disadvantages are caused by the component being local.
 Since all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
 A much bigger problem however is the remote communication happening in this scenario.
 As \autoref{image:local} shows, all calls to the bootware component from the provisioning manager would leave the remote environment.
 Also, all calls from the bootware component to the provisioning engines would enter the remote environment.
-This type of split communication can be costly and slow, as shown by Li et al.
+This type of split communication can be costly and slow, as shown by \citeauthor*{cloudcmp}~\autocite{cloudcmp}.
 They compared public cloud providers and measured that intra-datacenter communication can be two to three times faster and also cheaper (often free) compared to inter-datacenter communication~\autocite{cloudcmp}.
 
 \subsection{Single Remote Component}
