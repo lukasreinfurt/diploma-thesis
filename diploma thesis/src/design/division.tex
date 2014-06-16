@@ -1,12 +1,12 @@
 \section{Component Division}
 \label{design:division}
 
-As described in \autoref{related:ondemand} on page \pageref{related:ondemand}, the proposed architecture initially only envisioned one bootware component.
-This architecture was expanded with the introduction of the provisioning manager, as described in \autoref{related:dynamic} on page \pageref{related:dynamic}.
-At this stage, the provisioning manager included all the functionality necessary to provision and deprovision provisioning engines in the cloud, in addition to the functionality already mentioned in \autoref{related:dynamic}.
+As described in \autoref{previous:ondemand} on page \pageref{previous:ondemand}, the proposed architecture initially only envisioned one bootware component.
+This architecture was expanded with the introduction of the provisioning manager, as described in \autoref{previous:dynamic} on page \pageref{previous:dynamic}.
+At this stage, the provisioning manager included all the functionality necessary to provision and deprovision provisioning engines in the cloud, in addition to the functionality already mentioned in \autoref{previous:dynamic}.
 This was a somewhat convoluted design where multiple responsibilities where mixed into one component.
 It was later decided that the provisioning manager should be split into two parts.
-The actual provisioning manager handles the communication with the service repository and the various provisioning engines, as described before in \autoref{related:dynamic}.
+The actual provisioning manager handles the communication with the service repository and the various provisioning engines, as described before in \autoref{previous:dynamic}.
 A separate bootware component handles the provisioning and deprovisioning of the provisioning engines.
 At the moment, that leaves us with two bootware components, one local and one remote, where the local bootware component kick-starts the remote bootware, which then handles the actual provisioning of provisioning engines.
 The first question that has to be answered is whether or not this division is reasonable, or if another alternative makes more sense.
