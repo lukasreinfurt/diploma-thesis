@@ -1,8 +1,8 @@
 \section{Provisioning}
 \label{fundamentals:provisioning}
 
-This section provides an overview of provisioning in general and describes some of the provisioning solution available today.
-It focuses in particular on TOSCA and Open TOSCA, since those are used in the prototypical implementation later on.
+This section provides an overview of provisioning in general and describes some of the provisioning solutions available today.
+It focuses in particular on TOSCA and OpenTOSCA, since those are used in the prototypical implementation later on.
 
 \subsection{Overview}
 
@@ -13,11 +13,11 @@ Let's state this core functionality a little more precise with the following def
 Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{towardsprovisioning}.
 
-The are many benefits to using an automated provisioning solution in stead of doing things manually.
+There are many benefits to using an automated provisioning solution in stead of doing things manually.
 The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.
 This makes it possible to manage huge infrastructures with very little resources, which can save money compared to a manual approach.
 Since every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
-This makes the whole process reproducible and less error prone, since the human factor is taken out.
+This makes the whole process reproducible and less error-prone, since the human factor is taken out.
 Parts of such a description can also be shared in a business or even between businesses, which makes the process of creating such a description potentially much more efficient.
 
 The general process of working with provisioning software is very similar with all the different solutions.
@@ -34,9 +34,9 @@ A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, C
 
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
-As already mentioned, AWS CloudFront is bound to Amazons cloud platform, while the other solutions are not.
+As already mentioned, AWS CloudFormation is bound to Amazons cloud platform, while the other solutions are not.
 Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over SSH and therefor doesn't require additional software on the nodes that are configured.
-The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFront.
+The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
 
 \subsection{TOSCA}
 
@@ -54,7 +54,7 @@ TOSCA defines an XML syntax, which describes services and their relations in a s
 	\label{image:tosca:servicetemplate}
 \end{figure}
 
-Topology templates, as seen on the left side of \autoref{image:tosca:servicetemplate}, model the structure of a service as a directed graph.
+Topology templates, as seen on the left side of \autoref{image:tosca:servicetemplate}, model the structure of a service and the middleware and infrastructure supporting it as a directed graph.
 The vertices of the graph represent nodes, which are occurrences of a specific component, for example, an application server or a database.
 These nodes are defined by node types, or by other service templates.
 Node types are reusable entities,  as shown in the top center of \autoref{image:tosca:servicetemplate}.
@@ -71,14 +71,14 @@ Build plans describe how instances of a service are created.
 Termination plans describe how such a service is removed.
 Modification plans manage a service during its runtime.
 These plans consist of one or more tasks, i.e., an operation on a node (via an interface) or an external service call, and the order in which these tasks should be performed.
-They can be written in BPMN or BPEL, which are already existing languages to describe process models.
+They can be written in a process description language like BPMN or BPEL.
 
 The bottom center of \autoref{image:tosca:servicetemplate} shows artifact templates, which represent artifacts.
 Artifacts are things that can be executed directly (e.g.: scripts, archives) or indirectly (e.g.: URL, ports).
 TOSCA further distinguishes between two types of artifacts, namely deployment and implementation artifacts.
 Deployment artifacts materialize instances of a node and are used by a build plan to create a service.
 An example for this is an \nom{Amazon Machine Image}{AMI}, which creates an Apache server once deployed in a VM.
-Implementation artifacts represent the interfaces of components.
+Implementation artifacts implement the interfaces of components.
 Here, an example would be a node that has an interface for starting the particular component described by the node.
 This interfaces could be implemented by an implementation artifact like a \textit{.jar} file.
 
@@ -87,7 +87,7 @@ CSAR files can then be executed in a TOSCA runtime environment, also called TOSC
 
 \subsection{OpenTOSCA}
 
-OpenTOSCA is a browser based open-source implementation of a TOSCA container, created at the IAAS at University Stuttgart, which supports the execution of TOSCA CSAR archives.
+OpenTOSCA is a browser based open-source implementation of a TOSCA container, created at the IAAS at University Stuttgart, which supports the execution of TOSCA CSAR archives~\autocite{opentosca}.
 \autoref{image:tosca:opentosca} shows the architecture of OpenTOSCA.
 Its functionality is realized in three main components, which are the Controller, the Implementation Artifact Engine, and the Plan Engine.
 After a CSAR is uploaded to OpenTOSCA it can be deployed in three steps.
