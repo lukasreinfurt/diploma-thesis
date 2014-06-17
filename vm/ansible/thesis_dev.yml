@@ -87,8 +87,13 @@
     - name: install dvi2tty
       get_url: url=http://mirrors.ctan.org/dviware/dvi2tty.zip dest=/tmp/dvi2tty.zip
 
-    - name: extract dvi2tty
+    - name: extract dvi2tty TODO BUILD
       command: unzip -u /tmp/dvi2tty.zip -d /opt creates=/opt/dvi2tty
 
-    - name: build dvi2tty
-      command: make chdir=/opt/dvi2tty
+    - name: install aspell
+      apt: pkg=aspell
+
+    - name: configure aspell
+      template:
+        src: files/aspell.config
+        dest: /home/vagrant/.aspell.config
