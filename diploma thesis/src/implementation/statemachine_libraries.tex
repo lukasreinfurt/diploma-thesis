@@ -4,7 +4,7 @@
 Since we want to implement the bootware process as a finite state machine, we must now decide how we will do it.
 It would certainly be possible to go with a hand made state machine implementation, but the time for this thesis is limited and we should use it for the actual design of the bootware.
 Therefore, it would be better to use an existing state machine library.
-In general, we are looking for a event-driven FSM, which allows us to define a set of states and transition between those states when specific events occur.
+In general, we are looking for an event-driven FSM, which allows us to define a set of states and transition between those states when specific events occur.
 Ideally we would prefer a standardized way to define the FSM and avoid proprietary formats.
 But we also don't want the FSM to be overly complex to use.
 \autoref{table:statemachine_comparison} shows six state machine libraries available for Java.

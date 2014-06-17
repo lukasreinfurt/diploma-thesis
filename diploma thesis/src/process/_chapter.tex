@@ -35,7 +35,7 @@ If not, the ESB tells the provisioning manager to provision the requested servic
 The provisioning manager checks, if the provisioning engine needed to provision the requested service is already available.
 If it isn't, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
-Once the provisioning engine is up and running, the remote bootware returns a endpoint reference to the provisioning manager.
+Once the provisioning engine is up and running, the remote bootware returns an endpoint reference to the provisioning manager.
 The provisioning manager now calls the provisioning engine (step 12) and tells it to provision the required service (step 13).
 Once the service is available, the provisioning engine returns its endpoint reference to the provisioning manager, who in turn returns it to the ESB.
 The ESB can now call the service (step 14) and use the service response to continue with the workflow execution.

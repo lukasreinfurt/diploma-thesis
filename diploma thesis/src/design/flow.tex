@@ -98,7 +98,7 @@ Aside from its uses in theoretical computer science, FSMs also have practical ap
 We are only interested in the use of FSMs for building software, so we can redefine what a FSM means for our case.
 We want to use a FSM as an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
 Unlike a traditional FSM, we will not consume symbols from a set alphabet that will trigger state transitions.
-We want the state transitions to be triggered by events that we can emit at any time, so we want a event-driven FSM.
+We want the state transitions to be triggered by events that we can emit at any time, so we want an event-driven FSM.
 The machine is in only one state at a time, its current state.
 At the start of the machine execution, it will be in the start state.
 From there, it can transition from one state to another when certain events are triggered, until it finally reaches an end state.
