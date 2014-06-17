@@ -22,7 +22,7 @@ namespace :build do
 	namespace :txt do
 
 		task :detex do
-			system '/opt/opendetex/delatex -e figure thesis.tex > thesis.txt'
+			system '/opt/opendetex/delatex -e tabu,figure,listing thesis.tex > thesis.txt'
 		end
 
 		task :pdftotext do

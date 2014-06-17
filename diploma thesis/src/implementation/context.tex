@@ -17,7 +17,7 @@
 \end{listing}
 
 \autoref{lst:context:sample} shows an exemplary context in XML form.
-As we can see in line 2-4, it is required to defines the infrastructure, connection, and payload plugins that should be used during the bootstrapping process by supplying the name of the plugin \textit{.jar}.
+As we can see in line 2-4, it is required to define the infrastructure, connection, and payload plugins that should be used during the bootstrapping process by supplying the name of the plugin \textit{.jar}.
 It is also possible to specify a call payload plugin, as can be seen in line 6.
 This is optional and will only be used on the first request, when the remote bootware will also call OpenTOSCA to provision the workflow middleware.
 This is also where the service package reference in line 8 will be used, which points to the service package that should be provisioned by the provisioning engine called by the call payload plugin.
