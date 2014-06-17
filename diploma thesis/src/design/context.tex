@@ -17,9 +17,9 @@ How exactly the context is implemented is shown in \autoref{implementation:conte
 As we can see in the upper half of \autoref{image:context}, it defines the plugin types to be used for the current request.
 The infrastructure plugin type defines, which infrastructure plugin should be used to provision the requested infrastructure.
 The connection plugin type selects how the bootware should connect to to this infrastructure.
-The payload plugin type defines the payload that should be provisioned on this infrastrucre, which will be a provisioning engine in most cases.
+The payload plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in most cases.
 Finally, the provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
-It will use the middleware package referende, which is also defined in the context, as input to start the provisioning of the workflow middleware.
+It will use the middleware package reference, which is also defined in the context, as input to start the provisioning of the workflow middleware.
 In the bottom half of \autoref{image:context} we can see that the context can also contain login credentials for different infrastructure providers (i.e. cloud providers).
 These will be used by the infrastructure plugins to connect to a specific account at their provider.
 In the future, the context might be extended to hold additional information, but for this thesis, this context will be sufficient.

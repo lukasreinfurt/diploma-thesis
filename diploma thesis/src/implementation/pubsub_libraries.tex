@@ -1,7 +1,7 @@
 \subsection{PubSub Libraries}
 \label{implementation:selecting:pubsub}
 
-Many of the well know Messaging Middlewares offer support for PubSub, for example ActiveMQ\footnote{\url{http://activemq.apache.org}}, RabbitMQ\footnote{\url{http://www.rabbitmq.com}}, and ZeroMQ\footnote{\url{http://zeromq.org}}.
+Many of the well know messaging middlewares offer support for PubSub, for example ActiveMQ\footnote{\url{http://activemq.apache.org}}, RabbitMQ\footnote{\url{http://www.rabbitmq.com}}, and ZeroMQ\footnote{\url{http://zeromq.org}}.
 But, since we are looking for an internal communication mechanism only, all of these solutions are somewhat overpowered.
 We don't have to worry about network problems, so we don't need guaranteed delivery or message queuing capabilities.
 We also don't need persistence or transactional capabilities

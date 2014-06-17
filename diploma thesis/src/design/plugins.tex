@@ -6,7 +6,7 @@ The former are required because we may want to provision into different cloud en
 The latter are required because we might want to use different provisioning engines to do so.
 
 The cloud provider plugins will be responsible for creating and removing resources in cloud environments and making them available for the user to configure and use.
-This could be barebone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
+This could be bare bone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
 If we think about this for a second, we realize that we don't even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computer resource that we can use.
 For example, we could also provide a plugin that starts and stops VMs on our local machine, which could be useful for quick and inexpensive local testing.
 So a better name for these plugins would be \textit{infrastructure plugins}.

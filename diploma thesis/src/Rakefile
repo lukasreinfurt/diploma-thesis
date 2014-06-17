@@ -72,6 +72,12 @@ namespace :check do
 		system 'java -jar /opt/LanguageTool-2.4/languagetool-commandline.jar thesis.txt'
 	end
 
+	task :aspell do
+		Dir.glob('**/*.tex').each do |file|
+			system "aspell -c -x --home-dir=/home/vagrant --per-conf=.aspell.config -t #{file}"
+		end
+	end
+
 end
 
 desc 'install missing packages with texliveonfly'

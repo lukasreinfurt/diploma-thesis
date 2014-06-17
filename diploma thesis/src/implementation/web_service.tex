@@ -147,7 +147,7 @@ In the example code in line 9, we send one credentials set for AWS, which consis
 	\label{lst:webservice:setcredentialsrequest}
 \end{listing}
 
-If the setCredential operation was successful, the response in \autoref{lst:webservice:setcredentialsresponse} will be returned.
+If the setCredentials operation was successful, the response in \autoref{lst:webservice:setcredentialsresponse} will be returned.
 Again, it is empty, since there is nothing interesting to return.
 
 \vspace*{\baselineskip}
@@ -166,7 +166,7 @@ Again, it is empty, since there is nothing interesting to return.
 \end{listing}
 
 Like the deploy and undeploy operations, the setCredentials operation also returns an error message if the operation failed.
-As can be seen in \autoref{lst:webservice:setcredentialserror}, it also contains a soap fault string in line 5 and the original SetCredentialsException thrown by the setCredential operation in line 7-10.
+As can be seen in \autoref{lst:webservice:setcredentialserror}, it also contains a soap fault string in line 5 and the original SetCredentialsException thrown by the setCredentials operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
