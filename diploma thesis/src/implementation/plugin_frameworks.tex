@@ -107,19 +107,19 @@ Frameworks with high popularity and an active development community might be mor
 	\label{table:plugin_comparison}
 \endgroup
 
-\autoref{table:plugin_comparison} shows a comparison of four Java plugin frameworks, the first of which is the \nom{Service Provider Interface}{SPI}.
+\autoref{table:plugin_comparison} shows a comparison of four Java plugin frameworks, the first of which is the \nom{Service Provider Interface}{SPI}\footnote{\url{http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html}}.
 It is an extension mechanism integrated in Java which is a little more advanced then the manual extension mechanism described in \autoref{design:extensibility}.
 It is also based on a set of interfaces and abstract classes that have to be implemented by an extension.
 In the case of SPI, these interfaces and abstract classes are called services and a specific implementation of such a service is called service provider.
 However, unlike in the manual approach, specific implementations are loaded from .jar files in specific directories or in the class path.
-These .jar files also include metadata to identify the different service providers~\autocite{spi}.
+These .jar files also include metadata to identify the different service providers.
 
 SPI is easy to use, doesn't depend on any external libraries, is well documented, and mature, since it is used in the \nom{Java Runtime Environment}{JRE}.
 One could also say that it is somewhat standardized, since it is part of Java.
 But as we can see in \autoref{table:plugin_comparison} on the left, it neither supports dynamic loading, nor security features and is therefore not a good fit for our needs.
 
 The next contender is the \nom{Java Simple Plugin Framework}{JSPF}\footref{jspf}, an open-source plugin framework build for small to medium sized projects.
-Its main focus is simplicity and the author explicitly states that it is not intended to replace JPF or OSGi~\autocite{jspf:faq}.
+Its main focus is simplicity and the author explicitly states that it is not intended to replace JPF or OSGi\footnote{\url{https://code.google.com/p/jspf/wiki/FAQ}}.
 As a result it is lightweight and easy to use but does not support advanced features like dynamic loading or security.
 
 \nom{Java Plugin Framework}{JPF}\footref{jpf} is another open-source plugin framework.
