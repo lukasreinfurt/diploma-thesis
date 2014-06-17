@@ -40,24 +40,28 @@ The solutions also differ in modularity and flexibility. While Ansible, Chef, Pu
 
 \subsection{TOSCA}
 
-\nom{Topology and Orchestration Specification for Cloud Applications}{TOSCA} is a standard that is currently being worked on by the \nom{Organization for the Advancement of Structured Information Standards}{OASIS}\footnote{\url{https://www.oasis-open.org/}}.
+\nom{Topology and Orchestration Specification for Cloud Applications}{TOSCA} is a standard created by the \nom{Organization for the Advancement of Structured Information Standards}{OASIS}\footnote{\url{https://www.oasis-open.org/}}.
 Its development is also supported by various industry partners, which include IBM, Cisco, SAP, HP and others.
 It's aim is to provide a language that can describe service components and their relations in a cloud environment independent fashion~\autocite{tosca:spec}.
 
 TOSCA defines an XML syntax, which describes services and their relations in a so called service template.
-\autoref{image:tosca:servicetemplate} shows that a service template can be made of up of four distinct parts: Topology templates, orchestration plans, reusable entities, and artifact templates.
+All elements needed to define such a service template are provided in the TOSCA definitions document.
+\autoref{image:tosca:definitions} shows such a definitions document.
+Aside from the actual service template, shown on the left, it also contains a number type definitions and some templates based on those definitions.
+These definitions and templates can also be imported from a separate definitions document.
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{fundamentals/assets/service_template}
-	\caption{TOSCA service template structure~\autocite[based on][]{tosca:spec}.}
-	\label{image:tosca:servicetemplate}
+	\includegraphics[resolution=600]{fundamentals/assets/definitions}
+	\caption{TOSCA definitions structure~\autocite[based on][]{tosca:spec}.}
+	\label{image:tosca:definitions}
 \end{figure}
 
-Topology templates, as seen on the left side of \autoref{image:tosca:servicetemplate}, model the structure of a service and the middleware and infrastructure supporting it as a directed graph.
+The service template consists of two parts: A topology template and plans.
+Topology templates, as seen in the center of \autoref{image:tosca:definitions}, model the structure of a service and the middleware and infrastructure supporting it as a directed graph.
 The vertices of the graph represent nodes, which are occurrences of a specific component, for example, an application server or a database.
 These nodes are defined by node types, or by other service templates.
-Node types are reusable entities,  as shown in the top center of \autoref{image:tosca:servicetemplate}.
+Node types are reusable entities,  as shown in the top right of \autoref{image:tosca:definitions}.
 They define the properties of a component, as well as operations to manipulate a component, so called interfaces.
 Additionally, node types can be annotated with requirements and capabilities.
 These, in turn, are defined by requirement and capability types, which also belong to the group of reusable entities.
@@ -66,14 +70,14 @@ The edges of the graph represent connections between nodes, which are defined by
 An example for such a connection would be a node A, representing a web service, which is deployed on node B, an application server.
 Relationship types are also used to connect requirements and capabilities.
 
-Orchestration plans, shown on the right of \autoref{image:tosca:servicetemplate}, are used to manage the service that is defined by the service template. TOSCA distinguishes between three types of plans: Build plans, termination plans, and modification plans.
+Plans, shown on the left of \autoref{image:tosca:definitions}, are used to manage the service that is defined by the service template. TOSCA distinguishes between three types of plans: Build plans, termination plans, and modification plans.
 Build plans describe how instances of a service are created.
 Termination plans describe how such a service is removed.
 Modification plans manage a service during its runtime.
 These plans consist of one or more tasks, i.e., an operation on a node (via an interface) or an external service call, and the order in which these tasks should be performed.
 They can be written in a process description language like BPMN or BPEL.
 
-The bottom center of \autoref{image:tosca:servicetemplate} shows artifact templates, which represent artifacts.
+The bottom right of \autoref{image:tosca:definitions} shows artifact templates, which represent artifacts.
 Artifacts are things that can be executed directly (e.g.: scripts, archives) or indirectly (e.g.: URL, ports).
 TOSCA further distinguishes between two types of artifacts, namely deployment and implementation artifacts.
 Deployment artifacts materialize instances of a node and are used by a build plan to create a service.
@@ -82,7 +86,12 @@ Implementation artifacts implement the interfaces of components.
 Here, an example would be a node that has an interface for starting the particular component described by the node.
 This interfaces could be implemented by an implementation artifact like a \textit{.jar} file.
 
-One or more TOSCA service templates are packaged, together with some meta data, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
+The bottom right of \autoref{image:tosca:definitions} also shows policy templates that refer to specific policy types.
+A policy template can define concrete values for a policy specified in a policy type.
+A node template can then reference a policy template to declare that it supports some non-functional properties or a certain kind of quality-of-service.
+An example would be an node type for an application server that expresses that it supports high availability by referencing a matching policy template.
+
+One or more TOSCA definitions are packaged, together with some meta data and possibly other files, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
 CSAR files can then be executed in a TOSCA runtime environment, also called TOSCA container, to create the service described within.
 
 \subsection{OpenTOSCA}
