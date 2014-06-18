@@ -37,23 +37,23 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
-		builder.externalTransition().from("Start").to("Initialize").on(FSMEvent.Start);
+		builder.externalTransition().from("Start").to("Initialize").on("Start");
 
 		// initialize
 		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
 		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
 
 		builder.onEntry("Wait").callMethod("wait");
-		builder.externalTransition().from("Wait").to("Read_Context").on(FSMEvent.Request);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Shutdown);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Failure);
+		builder.externalTransition().from("Wait").to("Read_Context").on("Request");
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Shutdown");
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Failure");
 
 		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
-		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on(FSMEvent.Deploy);
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on(FSMEvent.Undeploy);
-		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(FSMEvent.Failure);
+		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on("Deploy");
+		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on("Undeploy");
+		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on("Failure");
 
 		// deploy
 		buildDefaultTransition("Provision_Infrastructure", "provisionInfrastructure", "Connect", "Deprovision_Infrastructure");
@@ -86,7 +86,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		RemoteBootwareImpl.context = context;
 		request = new Request();
-		stateMachine.fire(FSMEvent.Request);
+		stateMachine.fire("Request");
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
@@ -128,18 +128,19 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
+	@SuppressWarnings("checkstyle:multiplestringliterals")
 	static class Machine extends AbstractMachine {
 
 		public Machine() {}
 
-		protected void provisionMiddleware(final String from, final String to, final FSMEvent fsmEvent) {
-			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
+		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
+			stateMachine.fire("Success");
+			//stateMachine.fire("Failure");
 		}
 
-		protected void deprovisionMiddleware(final String from, final String to, final FSMEvent fsmEvent) {
-			stateMachine.fire(FSMEvent.Success);
-			//stateMachine.fire(FSMEvent.Failure);
+		protected void deprovisionMiddleware(final String from, final String to, final String fsmEvent) {
+			stateMachine.fire("Success");
+			//stateMachine.fire("Failure");
 		}
 
 	}

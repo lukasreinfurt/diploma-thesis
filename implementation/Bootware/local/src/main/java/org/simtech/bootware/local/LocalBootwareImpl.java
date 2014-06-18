@@ -36,23 +36,28 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
-		builder.externalTransition().from("Start").to("Initialize").on(FSMEvent.Start);
+		builder.externalTransition().from("Start").to("Initialize").on("Start");
 
 		// initialize
 		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
 		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
 
 		builder.onEntry("Wait").callMethod("wait");
-		builder.externalTransition().from("Wait").to("Read_Context").on(FSMEvent.Request);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Shutdown);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(FSMEvent.Failure);
+		builder.externalTransition().from("Wait").to("Read_Context").on("Request");
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Shutdown");
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Failure");
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
+		buildDefaultTransition("Read_Context", "readContext", "Send_To_Remote", "Return_Response");
+
+		builder.onEntry("Send_To_Remote").callMethod("sendToRemote");
+		builder.externalTransition().from("Send_To_Remote").to("Load_Request_Plugins").on("NoRemote");
+		builder.externalTransition().from("Send_To_Remote").to("Return_Response").on("Success");
+		builder.externalTransition().from("Send_To_Remote").to("Return_Response").on("Failure");
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
-		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on(FSMEvent.Deploy);
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on(FSMEvent.Undeploy);
-		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(FSMEvent.Failure);
+		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on("Deploy");
+		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on("Undeploy");
+		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on("Failure");
 
 		// deploy
 		buildDefaultTransition("Provision_Infrastructure", "provisionInfrastructure", "Connect", "Deprovision_Infrastructure");
@@ -68,7 +73,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");
 
 		// cleanup
-		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Return_Response", "Return_Response");
+		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Send_To_Remote", "Send_To_Remote");
 		buildDefaultTransition("Return_Response", "returnResponse", "Wait", "Wait");
 		buildDefaultTransition("Unload_Event_Plugins", "unloadEventPlugins", "Cleanup", "Cleanup");
 		buildDefaultTransition("Cleanup", "cleanup", "End", "End");
@@ -83,7 +88,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		LocalBootwareImpl.context = context;
 		request = new Request();
-		stateMachine.fire(FSMEvent.Request);
+		stateMachine.fire("Request");
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
@@ -121,6 +126,11 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	static class Machine extends AbstractMachine {
 
 		public Machine() {}
+
+		protected void sendToRemote(final String from, final String to, final String fsmEvent) {
+			stateMachine.fire("Success");
+			//stateMachine.fire("Failure");
+		}
 
 	}
 
