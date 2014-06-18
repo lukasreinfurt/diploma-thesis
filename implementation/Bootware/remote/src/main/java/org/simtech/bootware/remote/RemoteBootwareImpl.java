@@ -12,6 +12,7 @@ import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.EndpointsWrapper;
 import org.simtech.bootware.core.Request;
+import org.simtech.bootware.core.StateMachineEvents;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetCredentialsException;
 import org.simtech.bootware.core.exceptions.UndeployException;
@@ -37,23 +38,23 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
-		builder.externalTransition().from("Start").to("Initialize").on("Start");
+		builder.externalTransition().from("Start").to("Initialize").on(StateMachineEvents.START);
 
 		// initialize
 		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
 		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
 
 		builder.onEntry("Wait").callMethod("wait");
-		builder.externalTransition().from("Wait").to("Read_Context").on("Request");
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Shutdown");
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on("Failure");
+		builder.externalTransition().from("Wait").to("Read_Context").on(StateMachineEvents.REQUEST);
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.SHUTDOWN);
+		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.FAILURE);
 
 		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
-		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on("Deploy");
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on("Undeploy");
-		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on("Failure");
+		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Infrastructure").on(StateMachineEvents.DEPLOY);
+		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on(StateMachineEvents.UNDEPLOY);
+		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(StateMachineEvents.FAILURE);
 
 		// deploy
 		buildDefaultTransition("Provision_Infrastructure", "provisionInfrastructure", "Connect", "Deprovision_Infrastructure");
@@ -79,14 +80,14 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		// end
 		builder.onEntry("End").callMethod("end");
 
-		stateMachine = builder.newStateMachine("Start");
+		stateMachine = builder.newStateMachine(StateMachineEvents.START);
 	}
 
 	@Override
 	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		RemoteBootwareImpl.context = context;
 		request = new Request();
-		stateMachine.fire("Request");
+		stateMachine.fire(StateMachineEvents.REQUEST);
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
@@ -128,19 +129,18 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
-	@SuppressWarnings("checkstyle:multiplestringliterals")
 	static class Machine extends AbstractMachine {
 
 		public Machine() {}
 
 		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void deprovisionMiddleware(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 	}

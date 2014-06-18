@@ -35,7 +35,6 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  * Implements a finite state machine using squirrelframework.
  * The whole bootware process is executed by this state machine.
  */
-@SuppressWarnings("checkstyle:multiplestringliterals")
 public abstract class AbstractStateMachine {
 
 	protected static Context context;
@@ -76,8 +75,8 @@ public abstract class AbstractStateMachine {
 	                                            final String successState,
 	                                            final String failureState) {
 		builder.onEntry(state).callMethod(entryMethod);
-		builder.externalTransition().from(state).to(successState).on("Success");
-		builder.externalTransition().from(state).to(failureState).on("Failure");
+		builder.externalTransition().from(state).to(successState).on(StateMachineEvents.SUCCESS);
+		builder.externalTransition().from(state).to(failureState).on(StateMachineEvents.FAILURE);
 	}
 
 	/**
@@ -91,7 +90,7 @@ public abstract class AbstractStateMachine {
 	 * Stops the state machine.
 	 */
 	public final void stop() {
-		stateMachine.fire("Shutdown");
+		stateMachine.fire(StateMachineEvents.SHUTDOWN);
 	}
 
 	/**
@@ -130,8 +129,8 @@ public abstract class AbstractStateMachine {
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void loadEventPlugins(final String from, final String to, final String fsmEvent) {
@@ -140,27 +139,27 @@ public abstract class AbstractStateMachine {
 				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
 			}
 			catch (LoadPluginException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void wait(final String from, final String to, final String fsmEvent) {
-			//stateMachine.fire("Request");
-			//stateMachine.fire("Shutdown");
-			//stateMachine.fire("Failure");
+			//stateMachine.fire(StateMachineEvents.REQUEST);
+			//stateMachine.fire(StateMachineEvents.SHUTDOWN);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void readContext(final String from, final String to, final String fsmEvent) {
 			if ("".equals(context.getInfrastructurePlugin())) {
 				request.fail("infrastructureType cannot be empty");
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			System.out.println("InfrastructureType: " + context.getInfrastructurePlugin());
 			System.out.println("ConnectionType: " + context.getConnectionPlugin());
 			System.out.println("PayloadType: " + context.getPayloadPlugin());
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
@@ -171,10 +170,10 @@ public abstract class AbstractStateMachine {
 			}
 			catch (LoadPluginException e) {
 				e.printStackTrace();
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Deploy");
-			//stateMachine.fire("Undeploy");
+			stateMachine.fire(StateMachineEvents.DEPLOY);
+			//stateMachine.fire(StateMachineEvents.UNDEPLOY);
 		}
 
 		protected void provisionInfrastructure(final String from, final String to, final String fsmEvent) {
@@ -184,12 +183,12 @@ public abstract class AbstractStateMachine {
 			}
 			catch (CredentialsException e) {
 				System.out.println(e.toString());
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			catch (ProvisionInfrastructureException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void connect(final String from, final String to, final String fsmEvent) {
@@ -197,9 +196,9 @@ public abstract class AbstractStateMachine {
 				connection = connectionPlugin.connect(instance);
 			}
 			catch (ConnectConnectionException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void provisionPayload(final String from, final String to, final String fsmEvent) {
@@ -207,9 +206,9 @@ public abstract class AbstractStateMachine {
 				payloadPlugin.provision(connection);
 			}
 			catch (ProvisionPayloadException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void startPayload(final String from, final String to, final String fsmEvent) {
@@ -217,9 +216,9 @@ public abstract class AbstractStateMachine {
 				url = payloadPlugin.start(connection);
 			}
 			catch (StartPayloadException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void stopPayload(final String from, final String to, final String fsmEvent) {
@@ -227,9 +226,9 @@ public abstract class AbstractStateMachine {
 				payloadPlugin.stop(connection);
 			}
 			catch (StopPayloadException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void deprovisionPayload(final String from, final String to, final String fsmEvent) {
@@ -237,9 +236,9 @@ public abstract class AbstractStateMachine {
 				payloadPlugin.deprovision(connection);
 			}
 			catch (DeprovisionPayloadException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void disconnect(final String from, final String to, final String fsmEvent) {
@@ -247,9 +246,9 @@ public abstract class AbstractStateMachine {
 				connectionPlugin.disconnect(connection);
 			}
 			catch (DisconnectConnectionException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void deprovisionInfrastructure(final String from, final String to, final String fsmEvent) {
@@ -257,14 +256,14 @@ public abstract class AbstractStateMachine {
 				infrastructurePlugin.deprovision(instance);
 			}
 			catch (DeprovisionInfrastructureException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void fatalError(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
@@ -277,14 +276,14 @@ public abstract class AbstractStateMachine {
 				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (UnloadPluginException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void returnResponse(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire("Success");
-			//stateMachine.fire("Failure");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void unloadEventPlugins(final String from, final String to, final String fsmEvent) {
@@ -292,9 +291,9 @@ public abstract class AbstractStateMachine {
 				pluginManager.unloadAllPlugins();
 			}
 			catch (UnloadPluginException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void cleanup(final String from, final String to, final String fsmEvent) {
@@ -302,9 +301,9 @@ public abstract class AbstractStateMachine {
 				pluginManager.stop();
 			}
 			catch (UnloadPluginException e) {
-				stateMachine.fire("Failure");
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire("Success");
+			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void end(final String from, final String to, final String fsmEvent) {
