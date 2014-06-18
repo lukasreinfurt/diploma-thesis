@@ -1,0 +1,36 @@
+\chapter{Future Work}
+
+With this diploma thesis we created a foundation which, while functional right now, might still need more work to become fully functional and useful in real working environment.
+In this chapter we present some opportunities for future improvements.
+
+\section{More Plugins and a Plugin Repository}
+
+For this diploma thesis we only implemented a few plugins.
+The plugin selection will certainly have to be extended in the future to cover a wider range of cloud providers (or other infrastructure types), connection mechanisms, and payloads.
+Along with a greater variety of plugins, a plugin repository, as described in \autoref{design:pluginrepository} would be beneficial.
+It would further decrease code duplication and facilitate plugin sharing.
+For this, a fitting repository format would have to be found and various other questions, such as security, need to be answered.
+On the implementation side, the integration of a plugin repository should be fairly straight forward.
+A mechanism to synchronize the local plugin directory with the repository has to be implemented and executed before the plugins are loaded.
+The code for loading plugins that is in place now doesn't necessarily need to be changed for this.
+
+\section{Secure Communication}
+
+As we already mentioned in \autoref{design:communication}, it is necessary to secure the communication with the bootware, since it contains sensitive login information that should not be publicly accessible.
+For this, the communication has to be encrypted, which can be done by using the WS-Security SOAP extension for the web service communication.
+As part of this work, it could also make sense to investigate other possible security enhancements to the bootware components.
+
+\section{Better SimTech Modeler Integration}
+
+The integration of the bootware with the SimTech Modeler using the Bootware Plugin can also be extended in the future.
+The current integration is fairly minimal to support the most basic functionality.
+Improvements could be made to give the user more feedback on the provisioning progress.
+Additionally, a more intuitive way to configure the bootware could be implemented, for example with a graphical configuration interface that allows for the selection of plugins and login credentials.
+
+\section{Better Failure Management}
+
+Currently, the bootware will fail in many cases where it could continue, if the user could influence error recovery.
+For example, if for some reason a connection can't be established with a cloud provider, the bootware will abort and undeploy already provisioned payloads.
+This could happen in the middle of a workflow execution, where multiple services are deployed in different clouds.
+In this scenario, the ability for the user to select an alternative cloud provider could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
+Failure management mechanisms such as this would improve the usability of the bootware.
