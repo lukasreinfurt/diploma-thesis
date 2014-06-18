@@ -29,11 +29,11 @@ Since this has to be done differently for all provisioning engines, it would mak
 We therefore introduce a fourth plugin type: The \textit{provisioning engine plugins}.
 
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
-We can generalize this into a more versatile fourth plugin type: The \textit{event plugins}.
-These plugins are a bit less specific then the three other types.
+We can generalize this into a more versatile fifth plugin type: The \textit{event plugins}.
+These plugins are a bit less specific then the four other types.
 They allow users to add functionality that reacts to (or creates) events inside the bootware.
 How the actual event system will be implemented will be discussed in \autoref{design:internalcomm}.
-With this fourth plugin type we have now covered all plugin types we will need.
+With this fifth plugin type we have now covered all plugin types we will need.
 We will describe each plugin type in more detail, but before we do this, we will describe the common operations that all plugin types have to implement.
 
 \vspace*{\baselineskip}
@@ -162,7 +162,7 @@ As input, it takes a connection object that was previously created by the connec
 \subsection{Payload Plugins}
 
 Payload plugins are responsible for installing, uninstalling, starting, and stopping software on a resource.
-This process can include the uploading of files and the execution of remote orders on a resource.
+This process can include the uploading of files and the execution of remote commands on a resource.
 
 \autoref{table:payload_plugins} shows the operations that plugins of this type should implement.
 The deploy operation installs a payload on a resource.

@@ -24,11 +24,11 @@ In \autoref{design:context} we also mentioned the \textit{setCredentials} operat
 
 			undeploy
 		& endpoint references
-		& success message \\
+		& - \\
 
 			setCredentials
 		& credentials list
-		& success message \\
+		& - \\
 
 	\end{tabu}
 	\caption{Web service operations provided by the local and remote bootware.}
@@ -59,6 +59,6 @@ The setCredentials operation is used to transmit or update the default login cre
 As input it takes a list of credentials that should be saved.
 If the list provided is empty, the default credentials list saved in the bootware will be emptied.
 If the list provided is not empty, the default credentials list saved in the bootware will be overwritten by this list.
-Note: The credentials can still be overwritten on a per request basis if the context send with the request also contains credentials.
+The credentials can still be overwritten on a per request basis if the context send with the request also contains credentials.
 If the credentials were updated successfully, it responds with a success message.
 If the credentials couldn't be updated, it responds with an error message.
