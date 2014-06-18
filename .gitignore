@@ -25,3 +25,4 @@ AwsCredentials.properties
 early_tests
 pom.properties
 *.new
+*.bak

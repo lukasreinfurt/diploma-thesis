@@ -14,7 +14,7 @@ namespace :build do
 	namespace :tex do
 
 		task :latexpand do
-			system 'perl tools/latexpand/latexpand --output=tmp/thesis.tex source/thesis.tex'
+			system 'perl latexpand --output=tmp.tex thesis.tex'
 		end
 
 	end
@@ -27,6 +27,14 @@ namespace :build do
 
 		task :pdftotext do
 			system 'pdftotext -nopgbrk thesis.pdf thesis.txt'
+		end
+
+		task :pandoc => ['build:tex:latexpand'] do
+			system 'pandoc -o thesis.txt tmp.tex'
+		end
+
+		task :removelatex => ['build:tex:latexpand'] do
+			system 'perl removelatexcode.pl -o tmp.tex'
 		end
 
 	end
