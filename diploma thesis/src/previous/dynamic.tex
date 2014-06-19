@@ -18,12 +18,12 @@ If provisioning engines would all use a standardized format (like CSAR), this wo
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[resolution=600]{previous/assets/valeri_architecture}
-	\caption{Extended architecture with added provisioning manager~\autocite[based on][]{provisioning:dynamic}}
+	\caption{Extended architecture with added provisioning manager~\autocite[based on][]{serviceselection}}
 	\label{image:valeri_architecture}
 \end{figure}
 
 \citeauthor*{provisioning:dynamic} further refines the previously shown middleware architecture by adding a provisioning manager as intermediary between the ESB and the provisioning engines~\autocite{provisioning:dynamic}.
-\autoref{image:valeri_architecture} shows the extended architecture with the additional provisioning manager at the top center.
+\autoref{image:valeri_architecture} shows an excerpt of the extended architecture with the additional provisioning manager at the center.
 This addition improves the original architecture in three aspects.
 
 The ESB can now use the stable interface of the provisioning manager to trigger provisioning engines instead of calling those provisioning engines directly.
