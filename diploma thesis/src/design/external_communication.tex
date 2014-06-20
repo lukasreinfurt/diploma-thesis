@@ -21,6 +21,10 @@ But since RMI is limited to Java and we might want to communicate with the bootw
 For communication between programs written in different languages we could use the \nom{Common Object Request Broker Architecture}{CORBA}, a standard defined by the \nom{Object Management Group}{OMG}.
 It supports mappings for common programming languages, like Java, C++, Python, and others.
 CORBA also supports asynchronous method invocation via callbacks~\autocite{corba:async} and transport layer encryption and other security features~\autocite{corba:security}.
+
+As a second alternative, we could communicate with messaging by using message-oriented middleware.
+As explained earlier in \autoref{fundamentals:service} it support communication between different components using adapters and channels.
+It also provides asynchronous communication by using message queues for temporary storage and often provides even additional persistent storage and backups for high availability~\autocite{mom}. \textcolor{red}{security/encryption?}
 Another alternative are web services via \nom{Simple Object Access Protocol}{SOAP} or \nom{Representational State Transfer}{REST}.
 Like CORBA, web services also support asynchronous invocation, as well as security mechanisms~\autocite{ws:security}.
 
