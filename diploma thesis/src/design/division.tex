@@ -55,6 +55,7 @@ Either the user provisions the bootware once in some cloud environment and then 
 In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware component.
 Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
 The communication problem of the single local bootware component can still occur in these cases.
+While the other approaches presented here don't completely eliminate this problem, they at least have the option to move the bootware with each individual bootware execution, while in this first case, the bootware would stay in one place for multiple, possibly many bootware executions.
 
 Another problem is that the bootware would be running all the time, even if the user doesn't need it, which would increase costs.
 This problem could be reduces if this bootware instance is shared with others to assure a more balanced load.
