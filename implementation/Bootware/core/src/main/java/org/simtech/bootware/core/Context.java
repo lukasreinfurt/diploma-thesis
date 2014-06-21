@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import org.simtech.bootware.core.exceptions.CredentialsException;
+import org.simtech.bootware.core.exceptions.ConfigurationException;
 
 public class Context {
 
@@ -14,7 +14,7 @@ public class Context {
 	private String connectionPlugin;
 	private String servicePackageReference;
 	private String payloadPlugin;
-	private Map<String, CredentialsWrapper> credentialsList = new HashMap<String, CredentialsWrapper>();
+	private Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
 
 	public Context() {}
 
@@ -61,19 +61,19 @@ public class Context {
 		return payloadPlugin;
 	}
 
-	public final void setCredentialsList(final Map<String, CredentialsWrapper> map) {
-		credentialsList = map;
+	public final void setConfigurationList(final Map<String, ConfigurationWrapper> map) {
+		configurationList = map;
 	}
 
-	public final Map<String, CredentialsWrapper> getCredentialsList() {
-		return credentialsList;
+	public final Map<String, ConfigurationWrapper> getConfigurationList() {
+		return configurationList;
 	}
 
-	public final CredentialsWrapper getCredentialsFor(final String entry) throws CredentialsException {
-		final CredentialsWrapper credentials = credentialsList.get(entry);
-		if (credentials == null) {
-			throw new CredentialsException("Credentials for " + entry + " could not be found.");
+	public final ConfigurationWrapper getConfigurationFor(final String entry) throws ConfigurationException {
+		final ConfigurationWrapper configuration = configurationList.get(entry);
+		if (configuration == null) {
+			throw new ConfigurationException("Configuration for " + entry + " could not be found.");
 		}
-		return credentials;
+		return configuration;
 	}
 }

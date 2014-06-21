@@ -4,7 +4,7 @@
 In \autoref{design:communication} we decided to use web service calls and returns as external communication mechanism and in \autoref{design:context} we decided to pass along a context.
 Now, we need to the define the interface that will be made available by the web service to the outside.
 We obviously need the two main operations, deploy and undeploy, to be available from the outside.
-In \autoref{design:context} we also described the \textit{setCredentials} operation that has to be supported.
+In \autoref{design:context} we also described the \textit{setConfiguration} operation that has to be supported.
 
 \subsection{Deploy}
 
@@ -123,62 +123,62 @@ It contains a soap fault string in line 5 and the original UndeployException thr
 	\label{lst:webservice:undeployerror}
 \end{listing}
 
-\subsection{SetCredentials}
+\subsection{SetConfiguration}
 
-In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setCredentials} operation.
-Using this operation, login credentials can be set independently from deploy requests if necessary.
-\autoref{lst:webservice:setcredentialsrequest} shows an exemplary set credentials request.
-In line 7-23, it contains a credentials list, which can contain one or more credentials set.
-Each credentials set is made up of one or more credentials, which are key value pairs, where the key describes the credential type and the value the actual credential.
-In the example code in line 9, we send one credentials set for AWS, which consists of two credentials, a secret key in line 12-15 and an accessKey in line 16-19.
+In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setConfiguration} operation.
+Using this operation, the configuration can be set independently from deploy requests if necessary.
+\autoref{lst:webservice:setconfigurationrequest} shows an exemplary setConfiguration request.
+In line 7-23, it contains a configuration list, which can contain one or more configuration set.
+Each configuration set is made up of one or more configuration entries, which are key value pairs, where the key describes the configuration type and the value the actual configuration value.
+In the example code in line 9, we send one configuration set for AWS, which consists of two credentials, a secret key in line 12-15 and an accessKey in line 16-19.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=setCredentials-request.xml,
+		label=setConfiguration-request.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
 		tabsize=2,
 		framesep=0.3cm,
 		fontsize=\small
-	]{xml}{implementation/assets/setCredentials-request.xml}
-	\caption{Sample setCredentials request in a soap message.}
-	\label{lst:webservice:setcredentialsrequest}
+	]{xml}{implementation/assets/setConfiguration-request.xml}
+	\caption{Sample setConfiguration request in a soap message.}
+	\label{lst:webservice:setconfigurationrequest}
 \end{listing}
 
-If the setCredentials operation was successful, the response in \autoref{lst:webservice:setcredentialsresponse} will be returned.
+If the setConfiguration operation was successful, the response in \autoref{lst:webservice:setconfigurationresponse} will be returned.
 Again, it is empty, since there is nothing interesting to return.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=setCredentials-response.xml,
+		label=setConfiguration-response.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
 		tabsize=2,
 		framesep=0.3cm,
 		fontsize=\small
-	]{xml}{implementation/assets/setCredentials-response.xml}
-	\caption{Sample setCredentials response in a soap message.}
-	\label{lst:webservice:setcredentialsresponse}
+	]{xml}{implementation/assets/setConfiguration-response.xml}
+	\caption{Sample setConfiguration response in a soap message.}
+	\label{lst:webservice:setconfigurationresponse}
 \end{listing}
 
-Like the deploy and undeploy operations, the setCredentials operation also returns an error message if the operation failed.
-As can be seen in \autoref{lst:webservice:setcredentialserror}, it also contains a soap fault string in line 5 and the original SetCredentialsException thrown by the setCredentials operation in line 7-10.
+Like the deploy and undeploy operations, the setConfiguration operation also returns an error message if the operation failed.
+As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contains a soap fault string in line 5 and the original SetConfigurationException thrown by the setConfiguration operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=setCredentials-error.xml,
+		label=setConfiguration-error.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
 		tabsize=2,
 		framesep=0.3cm,
 		fontsize=\small
-	]{xml}{implementation/assets/setCredentials-error.xml}
-	\caption{Sample setCredentials error in a soap message.}
-	\label{lst:webservice:setcredentialserror}
+	]{xml}{implementation/assets/setConfiguration-error.xml}
+	\caption{Sample setConfiguration error in a soap message.}
+	\label{lst:webservice:setconfigurationerror}
 \end{listing}

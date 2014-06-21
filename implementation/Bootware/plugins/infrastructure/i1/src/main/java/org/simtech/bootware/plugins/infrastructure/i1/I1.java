@@ -1,8 +1,8 @@
 package org.simtech.bootware.plugins.infrastructure.i1;
 
-import org.simtech.bootware.core.CredentialsWrapper;
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Instance;
-import org.simtech.bootware.core.exceptions.CredentialsException;
+import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.InfrastructurePlugin;
 
@@ -18,13 +18,13 @@ public class I1 extends AbstractBasePlugin implements InfrastructurePlugin {
 		// no op
 	}
 
-	public final Instance provision(final CredentialsWrapper credentials) {
+	public final Instance provision(final ConfigurationWrapper configuration) {
 		System.out.println("I1: provision");
 		try {
-			System.out.println("123: " + credentials.get("123"));
-			System.out.println("456: " + credentials.get("456"));
+			System.out.println("123: " + configuration.get("123"));
+			System.out.println("456: " + configuration.get("456"));
 		}
-		catch (CredentialsException e) {
+		catch (ConfigurationException e) {
 			System.out.println(e.toString());
 		}
 		return new Instance();

@@ -1,0 +1,26 @@
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:rem="http://remote.bootware.simtech.org/">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<rem:setConfiguration>
+			<configurationList>
+				<entry>
+					<key>aws</key>
+					<value>
+						<configuration>
+							<entry>
+								<key>secretKey</key>
+								<value>874w5zhpswe98tzhg0w87ser049tadsiph</value>
+							</entry>
+							<entry>
+								<key>accessKey</key>
+								<value>g9w276og9746gw5</value>
+							</entry>
+						</configuration>
+					</value>
+				</entry>
+			</configurationList>
+		</rem:setConfiguration>
+	</soapenv:Body>
+</soapenv:Envelope>

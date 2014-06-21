@@ -51,7 +51,7 @@ We will describe each plugin type in more detail, but before we do this, we will
 		\tabucline[0.5pt]{1-4}
 
 			init
-		& -
+		& Configuration
 		& -
 		& Is called by the plugin manager when the plugin is loaded \\
 
@@ -68,6 +68,8 @@ We will describe each plugin type in more detail, but before we do this, we will
 \autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
 The init operation is called by the plugin manager when he loads a plugin.
 This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
+It takes a configuration as parameter, which is taken from the request context.
+This allows the plugins to be configured from the outside if necessary.
 The shutdown operation is called by the plugin manager when he unloads a plugin.
 It can be useful to clean up plugin resources before it is removed, for example by deleting temporary files or closing a connection.
 
@@ -79,8 +81,7 @@ To be able to do this, an infrastructure plugin has to implement a range of func
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
 The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a connection plugin.
-As input it takes login credentials for a cloud provider (if necessary), which are used to authenticate when calling the API or using the SDK.
-These credentials must be supplied by the user at some point before or during the bootware process.
+It takes no input parameters, but relies on the configuration passed to the init operation to get the configuration details it needs, like login credentials.
 If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
 
 The undeploy operation removes a resource that was previously deployed using the deploy operation.
@@ -103,9 +104,9 @@ As input it takes an instance object created earlier by the deploy operation.
 		\tabucline[0.5pt]{1-4}
 
 			deploy
-		& Credentials
+		& -
 		& Instance
-		& Given the proper credentials, deploys a connection ready instance of some resource and returns an instance object \\
+		& Deploys a connection ready instance of some resource and returns an instance object \\
 
 			undeploy
 		& Instance

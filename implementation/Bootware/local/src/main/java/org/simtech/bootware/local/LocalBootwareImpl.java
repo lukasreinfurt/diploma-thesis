@@ -7,12 +7,12 @@ import java.util.Map;
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Context;
-import org.simtech.bootware.core.CredentialsWrapper;
 import org.simtech.bootware.core.EndpointsWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.exceptions.DeployException;
-import org.simtech.bootware.core.exceptions.SetCredentialsException;
+import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.UndeployException;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -116,8 +116,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void setCredentials(final Map<String, CredentialsWrapper> credentialsList) throws SetCredentialsException {
-		defaultCredentialsList = credentialsList;
+	public final void setConfiguration(final Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
+		defaultConfigurationList = configurationList;
 	}
 
 	/**

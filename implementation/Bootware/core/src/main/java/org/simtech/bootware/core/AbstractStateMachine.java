@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
+import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
-import org.simtech.bootware.core.exceptions.CredentialsException;
 import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
@@ -43,7 +43,7 @@ public abstract class AbstractStateMachine {
 	protected static EventBus eventBus;
 	protected static InfrastructurePlugin infrastructurePlugin;
 	protected static Instance instance;
-	protected static Map<String, CredentialsWrapper> defaultCredentialsList;
+	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
 	protected static PayloadPlugin payloadPlugin;
 	protected static PluginManager pluginManager;
 	protected static Request request;
@@ -178,10 +178,10 @@ public abstract class AbstractStateMachine {
 
 		protected void provisionInfrastructure(final String from, final String to, final String fsmEvent) {
 			try {
-				final CredentialsWrapper credentials = context.getCredentialsFor(context.getInfrastructurePlugin());
-				instance = infrastructurePlugin.provision(credentials);
+				final ConfigurationWrapper configuration = context.getConfigurationFor(context.getInfrastructurePlugin());
+				instance = infrastructurePlugin.provision(configuration);
 			}
-			catch (CredentialsException e) {
+			catch (ConfigurationException e) {
 				System.out.println(e.toString());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}

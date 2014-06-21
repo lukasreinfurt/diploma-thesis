@@ -3,7 +3,7 @@
 
 By now, we know that we will use a web service interface for remote communication.
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The deploy and the undeploy operation.
-In \autoref{design:context} we also mentioned the \textit{setCredentials} operation for setting or updating the login credentials.
+In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -26,8 +26,8 @@ In \autoref{design:context} we also mentioned the \textit{setCredentials} operat
 		& endpoint references
 		& - \\
 
-			setCredentials
-		& credentials list
+			setConfiguration
+		& configuration list
 		& - \\
 
 	\end{tabu}
@@ -53,12 +53,12 @@ Unlike the deploy operation it doesn't take a context object as input but the co
 This means that we have to store the context object used during each deploy operation so that we can retrieve it later during the corresponding undeploy operation.
 This design is intentional and will be described in more detail in \autoref{design:instancestore}.
 
-\subsection{setCredentials}
+\subsection{setConfiguration}
 
-The setCredentials operation is used to transmit or update the default login credentials used by the infrastructure plugins to authenticate with the infrastructure provider.
-As input it takes a list of credentials that should be saved.
-If the list provided is empty, the default credentials list saved in the bootware will be emptied.
-If the list provided is not empty, the default credentials list saved in the bootware will be overwritten by this list.
-The credentials can still be overwritten on a per request basis if the context send with the request also contains credentials.
-If the credentials were updated successfully, it responds with a success message.
-If the credentials couldn't be updated, it responds with an error message.
+The setConfiguration operation is used to transmit or update the default configuration used by plugins.
+As input it takes a list of configurations that should be saved.
+If the list provided is empty, the default configuration list saved in the bootware will be emptied.
+If the list provided is not empty, the default configuration list saved in the bootware will be overwritten by this list.
+The configuration can still be overwritten on a per request basis if the context send with the request also contains a configuration.
+If the configuration was updated successfully, it responds with a success message.
+If the configuration couldn't be updated, it responds with an error message.

@@ -7,11 +7,11 @@
 	<!--Optional:-->
 	<servicePackageReference>opentosca.csar</servicePackageReference>
 	<!--Optional:-->
-	<credentialsList>
+	<configurationList>
 		<entry>
-			<key>AwsCredentials</key>
+			<key>aws</key>
 			<value>
-				<credentials>
+				<configuration>
 					<entry>
 						<key>secretKey</key>
 						<value>874w5zhpswe98tzhg0w87ser049tadsiph</value>
@@ -20,8 +20,8 @@
 						<key>accessKey</key>
 						<value>g9w276og9746gw5</value>
 					</entry>
-				</credentials>
+				</configuration>
 			</value>
 		</entry>
-	</credentialsList>
+	</configurationList>
 </context>

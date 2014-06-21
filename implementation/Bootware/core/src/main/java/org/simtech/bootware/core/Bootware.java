@@ -8,7 +8,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.exceptions.DeployException;
-import org.simtech.bootware.core.exceptions.SetCredentialsException;
+import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.UndeployException;
 
 /**
@@ -18,5 +18,5 @@ import org.simtech.bootware.core.exceptions.UndeployException;
 public interface Bootware {
 	@WebMethod EndpointsWrapper deploy(@WebParam(name = "context") Context context) throws DeployException;
 	@WebMethod void undeploy(@WebParam(name = "endpoints") Map<String, URL> endpoints) throws UndeployException;
-	@WebMethod void setCredentials(@WebParam(name = "credentialsList") Map<String, CredentialsWrapper> credentialsList) throws SetCredentialsException;
+	@WebMethod void setConfiguration(@WebParam(name = "configurationList") Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException;
 }

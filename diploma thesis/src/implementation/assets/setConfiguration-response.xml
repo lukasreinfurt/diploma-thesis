@@ -1,0 +1,6 @@
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Body>
+		<ns2:setConfigurationResponse
+			xmlns:ns2="http://remote.bootware.simtech.org/"/>
+	</S:Body>
+</S:Envelope>
