@@ -40,7 +40,7 @@ There are no further actions necessary during the shutdown operation, but for sa
 
 This connection plugin allows the bootware to connect to a remote system via SSH.
 It uses the Ganymed SSH-2 library\footnote{https://code.google.com/p/ganymed-ssh-2/}, which implements the SSH-2 protocol in Java.
-\autoref{image:sshplugin} shows a simplified overview of these actions necessary to create a SSH connection and how they map onto the connection plugin operations.
+\autoref{image:sshplugin} shows a simplified overview of the actions necessary to create a SSH connection and how they map onto the connection plugin operations.
 
 \begin{figure}[!htbp]
 	\centering
@@ -58,3 +58,20 @@ Once the connection is authenticated, a connection object is returned, which sup
 
 The disconnect operation simply closes the connection associated with the connection object that is passed into it.
 The disconnect operation is also called by the shutdown operation at the end of the plugin life cycle to close any connection that might still be open.
+
+\subsection{OpenTOSCA Plugin}
+
+This payload plugin allows the bootware to install an OpenTOSCA container on an EC2 instance.
+It executes the installation steps described in the OpenTOSCA manual over a connection provided by a connection plugin.
+\autoref{image:opentoscaplugin} shows a simplified overview of the steps involved in the installation of OpenTOSCA and how they map onto the payload plugin operations.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{implementation/assets/opentosca_plugin}
+	\caption{The operations implemented by the OpenTOSCA plugin.}
+	\label{image:opentoscaplugin}
+\end{figure}
+
+The setup procedure for OpenTOSCA is very simply.
+Only one command has to be executed over ssh, which will automatically download and install all necessary components.
+After that, port 8080 on the EC2 instance is polled periodically until a connection is possible, which means that the installation process is finished.
