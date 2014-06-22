@@ -10,8 +10,8 @@ Dynamic loading allows us to load and replace plugins during runtime, without co
 This is an important feature, since it is possible that the bootware has to use many different plugins during its lifetime.
 For example, this would be the case when several services have to be provisioned, each with different provisioning engines.
 In this case, the bootware has to load the appropriate plugins for every provisioning engine to be able to fulfill its task.
-We could of course just load every plugin at startup, switch between them internally when necessary, and never unload them.
-This could become a problem if the number of available plugins increases in the future.
+We could just load every plugin at startup, switch between them internally when necessary, and never unload them.
+However, this could become a problem if the number of available plugins increases in the future.
 Then, loading all plugins could take some time and slow down the entire bootware process.
 In many cases, some or most of the plugins would never be used and loading them wouldn't be necessary at all.
 Therefore, it seems far more reasonable to load and unload plugins dynamically when needed.
@@ -132,7 +132,7 @@ This leaves us with the final contender, which is \nom{Open Service Gateway init
 It provides a general-purpose Java framework that supports the deployment of extensible bundles~\autocite{osgi:spec}.
 The right column of \autoref{table:plugin_comparison} shows, that it supports dynamic loading, as well as security.
 OSGi is under active development, fairly popular, and has also been used in the SimTech project.
-Compared to the other alternatives it is pretty complex, but considering the other factors, it is the only real alternative.
+Compared to the other alternatives, it is pretty complex, but considering the other factors, it is the only real alternative.
 Therefore we will use OSGi to provide the extensibility required for the bootware.
 
 Since OSGi by itself is only a standard, we still have to select an OSGI implementation.
@@ -140,4 +140,4 @@ As with all other libraries and frameworks we use, we are looking for an open-so
 There are three open-source OSGi implementations to choose from: Apache Felix\footnote{\url{http://felix.apache.org}}, Eclipse Equinox\footnote{\url{http://eclipse.org/equinox}}, and Knopflerfish\footnote{\url{http://www.knopflerfish.org}}.
 All of them are under active development and implement the OSGi core framework specification, as well as the OSGi security specification (among others).
 We will be using Apache Felix, since it is already being used in the SimTech project.
-But it should be straight forward to change to another implementation in the future if necessary, since they all implement the same specification and should therefore in theory be completely interchangeable.
+But it should be straight forward to change to another implementation in the future if necessary, since they all implement the same specification and should therefore be - at least in theory - completely interchangeable.

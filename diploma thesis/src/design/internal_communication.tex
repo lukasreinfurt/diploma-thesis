@@ -31,7 +31,7 @@ Using different kinds of event allows us to subscribe only to specific events or
 But what if we want to react to each event type in the same way, for example for logging purposes?
 Now, many different event types complicate things more.
 This is where event hierarchies become useful.
-At the core of an event hierarchy is a single base event
+At the core of an event hierarchy is a single base event.
 By extending and refining this base event, other, more specific event types can be created, which again can be used as base type for even more specific events.
 This allows us to create a fine grained hierarchy of events and also enables us to subscribe to particular sub sets of this hierarchy.
 This makes event handling much easier, since we can now just react to the parent event if we don't need to distinguish between different event types for a particular task.

@@ -1,9 +1,9 @@
 \section{Requirements}
 
-The main goal of this thesis is to lay a ground stone by creating the core design of the bootware component.
-It was clear from the beginning that, because of the limited time available, not every feature that might be necessary for the full operation can be fully implemented.
-Instead, the foundation we develop here should keep future needs in mind and make it simple to extend when needed.
-It is therefore a core requirement to keep the bootware component relatively generic and make it extensible where necessary.
+The main goal of this thesis is to lay a foundation by creating the core design of the bootware.
+It was clear from the beginning that because of the limited time available not every feature that might be necessary for the full operation can be fully implemented.
+Instead, the foundation we develop here should keep future needs in mind and make it simple to extend the bootware when needed.
+It is therefore a core requirement to keep the bootware relatively generic and make it extensible where necessary.
 
 It should be extensible in two key areas, namely the support for different cloud providers and for different provisioning engines.
 For this thesis, Amazon is the only cloud provider that has to be supported, but it has to be possible to add others in the future.
@@ -13,7 +13,8 @@ It is also important that the bootware is easy to use.
 In fact, it should be practically invisible whenever possible.
 It should hook into the already existing process of executing a workflow without adding unnecessary interaction steps when possible.
 However, It can't be hidden completely, because the user has to specify a cloud provider and the corresponding log-in credentials some where.
-The user should also get some feedback about the progress of the deployment, because this process might take some time and might seem unresponsive without sufficient feedback.
+The user should also get some feedback about the progress of the deployment, because this process might take some time and might seem unresponsive without frequent status updates.
 
 A further requirement is that the bootware component should be relatively lightweight and open standards should be used where possible.
 In this case, lightweight means that the bootware should be small, independent program that does not require a huge supporting infrastructure to be executed.
+It should also be easy to distribute and setup and it has to be able to run on an average personal computer.

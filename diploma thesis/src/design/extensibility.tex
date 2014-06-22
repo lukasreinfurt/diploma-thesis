@@ -2,7 +2,7 @@
 \label{design:extensibility}
 
 In \autoref{design:communication} we mentioned a secondary communication mechanism that would be best implemented in form of an extension to the bootware.
-The requirements for the bootware component also state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
+The requirements for the bootware also state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 These requirements are intentionally vague to allow for the selection of a fitting extension mechanism during the design process.
 In this section we will take a look at different extension mechanisms for Java and pick the one that suits our needs best.
 
@@ -15,7 +15,7 @@ At runtime, a suitable implementation would be selected and used to execute the 
 This extension mechanism is simple, but restricted by its static nature.
 The entire executable has to be recompiled if any implementations are changed or added.
 This may not be a problem if the set of possible extensions that have to be supported is limited and known at the time of implementation or if it changes rarely.
-If the set of necessary extensions is unknown or changing from time to time, implementing new, or changing existing extensions, can get cumbersome, since a new version of the whole software has to be released each time.
+If the set of necessary extensions is unknown or changing from time to time, implementing new or changing existing extensions can get cumbersome, since a new version of the whole software has to be released each time.
 It would be far better if extensions could be implemented separately from the core bootware component and added and removed at will.
 
 A more flexible architecture is needed, for example a plugin architecture.
@@ -54,7 +54,7 @@ If plugins are added or modified it has only to be done in one place.
 Plugin synchronization can happen automatically when the bootware components start, so that the user is no longer involved in plugin management.
 The repository also enables easy plugin sharing, which was cumbersome earlier.
 While a central plugin repository is a sensible addition to the proposed bootware architecture, its design and implementation are out of scope of this thesis.
-Its design and implementation are left for future work and the plugin repository will not be mentioned in any other figures apart from \autoref{image:plugin_repository}.
+This work is left for the future and the plugin repository will not be mentioned in any other figures apart from \autoref{image:plugin_repository}.
 
 \begin{figure}[!htbp]
 	\centering

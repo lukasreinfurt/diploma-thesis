@@ -13,10 +13,10 @@ The goal of this project network is to build an easy-to-use infrastructure that 
 \subsection{SimTech SWfMS}
 
 As part of this project, the SimTech SWfMS was developed.
-It is a system that enables scientists to easily create, manage and execute simulation workflows~\autocite{workflow:simulation:flexibility}.
+It is a system that enables scientists to easily create, manage and execute simulation workflows which are a subcategory of scientific workflows~\autocite{workflow:simulation:flexibility}.
 The SimTech SWfMS introduces extensions to the BPEL language that add functionality to support the requirements of simulation workflows, such as passing data by reference to support larger amounts of data often found in science~\autocite[also~see][]{workflow:simulation:modelling:datareferences}, or shared context between workflows~\autocite{workflow:simulation:modelling}.
 Other extension introduces by the SimTech SWfMS to support simulation workflows include a service bus that supports late binding, rebinding, and legacy simulation software, as well as the \nom{Simulation Data Management System}{SIMPL} that provides unified access methods for arbitrary external data~\autocite{workflow:simulation:runtime}.
-Additionally extension where also made in the areas of flexibility, to support a "model as you go" approach, and in human user involvement, to support human tasks for decision making, data manipulation, or workflow repair~\autocites{workflow:simulation:flexibility}{workflow:simulation:humanusers}.
+Additionally, extension where also made in the areas of flexibility to support a "model as you go" approach and in human user involvement to support human tasks for decision making, data manipulation, or workflow repair~\autocites{workflow:simulation:flexibility}{workflow:simulation:humanusers}.
 
 The SimTech SWfMS consists of the \nom{SimTech Workflow Modeling \& Monitoring Tool}{SimTech Modeler} and the workflow middleware.
 The SimTech Modeler is based on Eclipse JEE\footnote{\url{http://www.eclipse.org/ide/}} and extends its functionality with various plugins.
@@ -32,5 +32,5 @@ It allows the user to create simulation workflows using a graph as visual repres
 
 Once the user is done modeling the simulation workflow, he clicks on a button to execute the workflow on the workflow middleware.
 The middleware consists of various components that are executed by an application server, in this case Apache Tomcat\footnote{\url{http://tomcat.apache.org/}}.
-The workflow is send to the workflow engine (\nom{ODE Pluggable Framework}{ODE-PGF}\footnote{\url{http://www.iaas.uni-stuttgart.de/forschung/projects/ODE-PGF/}}), which executes the workflow step by step.
-If a step involves the execution of a service, the \nom{Enterprise Service Bus}{ESB} is called, who resolves the services and passes along the request and the response.
+The workflow is deployed on the workflow engine, in this case \nom{ODE Pluggable Framework}{ODE-PGF}\footnote{\url{http://www.iaas.uni-stuttgart.de/forschung/projects/ODE-PGF/}}, which executes the workflow step by step.
+If a step involves the execution of a service, the ESB (Apache Service Mix) is called, who resolves the services and passes along the request and the response.

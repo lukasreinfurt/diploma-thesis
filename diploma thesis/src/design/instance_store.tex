@@ -6,8 +6,8 @@ In \autoref{design:webservice} we already mentioned that we need to store some i
 There are several reasons why this is useful.
 
 One big reason is that we can't guarantee that an undeploy operation will be called for every payload deployed by the bootware, since we might not have control over all components that ultimately call the bootware.
-We could require that for each deploy call there must eventually be an undeploy call so that everything will be cleaned up in the end, but errors can be made and it's better to have a failsafe in place.
-In the worst case scenario, failing to call undeploy for some payloads could lead to rogue services remaining active after a bootware execution has stopped without the user realizing it, which could get expensive.
+We could require that for each deploy call there must eventually be an undeploy call so that everything will be cleaned up in the end, but errors can be made and it is better to have a failsafe in place.
+In the worst case scenario, failing to call the undeploy operation for some payloads could lead to rogue services remaining active after a bootware execution has stopped without the user realizing it, which could get expensive.
 Storing enough information allows us to undeploy remaining payloads before shutting down the bootware even if they were never explicitly undeployed.
 Additionally, a warning could be return by the bootware to inform the user that some non-bootware component should be modified to explicitly undeploy all services he deployed.
 
@@ -17,8 +17,8 @@ This places an extra burden on these components and scatters around the informat
 By storing this information in the bootware we simplify the usage of the bootware for other components and concentrate this information.
 
 We should also think about how such a storage mechanism might be different for the local and remote bootware.
-The local bootware only every deploys the remote bootware, so here we have to keep track of only one thing.
-The remote bootware on the other hand might deploy many payloads during an execution.
+The local bootware only ever deploys the remote bootware, so here we have to keep track of only one thing.
+The remote bootware on the other hand might deploy many provisioning engines during an execution.
 For the local bootware it might be sufficient to store this information in a text file on the local machine where it is executed, whereas the remote bootware might use some sort of persistent storage in the cloud.
 This would allow it to retrieve this information even after a crash.
 For this thesis however we will be using simple in memory storage for both the local and remote bootware.

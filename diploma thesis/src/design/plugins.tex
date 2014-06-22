@@ -7,15 +7,15 @@ The latter are required because we might want to use different provisioning engi
 
 The cloud provider plugins will be responsible for creating and removing resources in cloud environments and making them available for the user to configure and use.
 This could be bare bone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
-If we think about this for a second, we realize that we don't even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computer resource that we can use.
+We don't even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computer resource that we can use.
 For example, we could also provide a plugin that starts and stops VMs on our local machine, which could be useful for quick and inexpensive local testing.
 So a better name for these plugins would be \textit{infrastructure plugins}.
 
 The same line of thinking can be used on the provisioning engine plugins.
-All that we care about is that we can get some software running on any given infrastructure and that we get back an URL where we can find this software once it is up and running.
+All that we care about is that we can get some software running on a given infrastructure and that we get back an URL where we can find this software once it is up and running.
 A better name for these plugins would therefore be \textit{payload plugins}.
 
-Now that we have infrastructure plugins and payload plugins, we should be able to start any infrastructure we need and use payload plugins to install and run any software on them.
+Now that we have infrastructure plugins and payload plugins, we should be able to provision the infrastructure we need and use payload plugins to install and run any software on it.
 But there is a step in between provisioning the infrastructure and installing the software that we are glancing over: We have to somehow connect to the infrastructure before we can install something.
 The connection functionality could be part of either the infrastructure plugins or the payload plugins, or it could be separated into independent connection plugins.
 
@@ -68,10 +68,10 @@ We will describe each plugin type in more detail, but before we do this, we will
 \autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
 The init operation is called by the plugin manager when he loads a plugin.
 This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
-It takes a configuration as parameter, which is taken from the request context.
+It takes a configuration object as parameter, which is taken from the request context.
 This allows the plugins to be configured from the outside if necessary.
 The shutdown operation is called by the plugin manager when he unloads a plugin.
-It can be useful to clean up plugin resources before it is removed, for example by deleting temporary files or closing a connection.
+It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a connection.
 
 \subsection{Infrastructure Plugins}
 
@@ -126,7 +126,7 @@ The connection plugins should be implemented in a generic fashion, so that they 
 
 \autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
 The connect operation establishes a connection to a specific resource.
-The resource is specified by the instance object that is passed as input to the deploy operation.
+The resource is specified by the instance object that is passed as input to the connect operation.
 If the connection was established successfully, the operation returns a connection object that can be used later by payload plugins to execute operations through this connection.
 The disconnect operation closes a connection that was previously established by the connect operation.
 As input, it takes a connection object that was previously created by the connect operation.
@@ -162,20 +162,20 @@ As input, it takes a connection object that was previously created by the connec
 
 \subsection{Payload Plugins}
 
-Payload plugins are responsible for installing, uninstalling, starting, and stopping software on a resource.
-This process can include the uploading of files and the execution of remote commands on a resource.
+Payload plugins are responsible for installing, uninstalling, starting, and stopping software on an infrastructure instance.
+This process can include the uploading of files and the execution of remote commands on an instance.
 
 \autoref{table:payload_plugins} shows the operations that plugins of this type should implement.
-The deploy operation installs a payload on a resource.
+The deploy operation installs a payload on an instance.
 This can include uploading files from the local machine or downloading files from other machines.
-To execute this operation, a connection to the resource is necessary, which is supplied as input with the connection object.
-The undeploy operation  removes a payload from a resource.
-In most cases this will not be necessary, since the resource will be destroyed in the undeploy phase and with it all the payload data (assuming it wasn't installed in persistent storage).
+To execute this operation, a connection to the instance is necessary, which is supplied as input with the connection object.
+The undeploy operation  removes a payload from an instance.
+In most cases this will not be necessary, since the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it wasn't installed in persistent storage).
 This method is provided for completeness and for special cases.
 The start operation starts a payload which previously was installed with the deploy operation.
 If the payload was started successfully, it returns the URL to the running payload.
 The stop operation stops the execution of a previously started payload.
-In most cases this will not be necessary, since the payload will be removed together with the resource in the undeploy phase.
+In most cases this will not be necessary, since the payload will be removed together with the instance in the undeploy phase.
 This method is provided for completeness and for special cases.
 
 \vspace*{\baselineskip}
@@ -260,4 +260,4 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 
 Unlike the other plugin types, the event plugins don't have any more operations to implement then the init and shutdown operations described in \autoref{table:all_plugins}.
 Instead, they implement their specific functionality by defining one ore more event handlers which will react to specific events when these are published at the event bus.
-How exactly these event handlers look is dictated by the PubSub library that is used, which will be discussed later.
+How exactly these event handlers work will be discussed later.

@@ -7,6 +7,7 @@ Therefore, it would be better to use an existing state machine library.
 In general, we are looking for an event-driven FSM, which allows us to define a set of states and transition between those states when specific events occur.
 Ideally we would prefer a standardized way to define the FSM and avoid proprietary formats.
 But we also don't want the FSM to be overly complex to use.
+We also want to avoid introducing additional conversion or compilation steps.
 \autoref{table:statemachine_comparison} shows six state machine libraries available for Java.
 
 \vspace*{\baselineskip}
@@ -98,7 +99,7 @@ SCXML is a working draft specification for a general-purpose event-based state m
 Apache Commons SCXML looks like a good match for our needs, since it is event-based and also using a (soon to be) standard.
 But the current state of the implementation seems to be lacking since the SCXML specification has changed a lot.
 The most recent release is version 0.9, which was released in late 2008.
-It is to be replaced by version 2.0 that is currently being worked on and includes major changes, but a release date is not yet in sight~\autocite{scxml:roadmap}.
+It is about to be replaced by version 2.0 that is currently being worked on and includes major changes, but a release date is not yet in sight\footnote{\url{http://commons.apache.org/proper/commons-scxml/roadmap.html}}.
 
 EasyFlow\footref{easyflow} is a simple and lightweight FSM for Java.
 It is event-driven, but only supports describing the FSM directly in Java code.
@@ -107,7 +108,7 @@ It would however be able to do the job.
 
 \nom{State Machine Compiler}{SMC}\footref{smc} is a state machine compiler that targets fifteen different programming languages, including Java.
 It generates FSMs from a definition in \textit{.sm} files.
-SMC is mature and has good documentation, but the use of an extra definition language and the extra step of compiling it into a Java representation seems to be to complicated for our needs.
+SMC is mature and has good documentation, but the use of an extra definition language and the extra step of compiling it into a Java representation seem to be to complicated for our needs.
 
 Stateless4j\footref{stateless4j} is a lightweight library for creating FSMs directly in Java code.
 Compared to the other alternatives, it lacks in documentation and doesn't seem to be very popular.
@@ -119,4 +120,4 @@ For example, it supports SCXML import and export.
 
 Unimod\footref{unimod} is a project that can create FSMs from UML descriptions created by an eclipse plugin.
 Unlike the other alternative, Unimod aims to create a unified methodology for application development and not just a library.
-This seems to be to complex for our needs.
+This seems to be too complex for our needs.

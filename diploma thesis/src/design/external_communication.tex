@@ -16,7 +16,7 @@ This information has to be provided from the outside and should be transported s
 The selected communication method therefore has to support some sort of security mechanism, ideally end-to-end encryption.
 While these security mechanisms will not be used in this thesis due to time constraints, selecting the right communication method is still critical for future development.
 
-Java provides a package for \nom{Remote Method Invocation}{RMI}\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/rmi/package-summary.html\#package_description}}, which allows object in one Java VM to invoke methods on objects in another Java VM.
+Java provides a package for \nom{Remote Method Invocation}{RMI}\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/rmi/package-summary.html\#package_description}}, which allows objects in one Java VM to invoke methods on objects in another Java VM.
 But since RMI is limited to Java and we might want to communicate with the bootware from a component written in another programming language, RMI doesn't seem like a good fit.
 For communication between programs written in different languages we could use the \nom{Common Object Request Broker Architecture}{CORBA}, a standard defined by the \nom{Object Management Group}{OMG}.
 It supports mappings for common programming languages, like Java, C++, Python, and others.
@@ -37,7 +37,7 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 	\label{image:webservice}
 \end{figure}
 
-Since the whole SimTech SWfMS already uses SOAP based web service, it would make sense to also use SOAP based web services as external communication mechanism for the bootware component.
+Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware component.
 The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA doesn't offer any significant advantages over SOAP based web services.
 \autoref{image:webservice} shows the addition of asynchronous web service call and return communication between the modeler bootware plugin and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
 

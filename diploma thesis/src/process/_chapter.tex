@@ -35,12 +35,12 @@ If not, the ESB tells the provisioning manager to provision the requested servic
 The provisioning manager checks, if the provisioning engine needed to provision the requested service is already available.
 If it isn't, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
-Once the provisioning engine is up and running, the remote bootware returns an endpoint reference to the provisioning manager.
+Once the provisioning engine is up and running, the remote bootware returns the endpoint reference of the provisioning engine to the provisioning manager.
 The provisioning manager now calls the provisioning engine (step 12) and tells it to provision the required service (step 13).
 Once the service is available, the provisioning engine returns its endpoint reference to the provisioning manager, who in turn returns it to the ESB.
 The ESB can now call the service (step 14) and use the service response to continue with the workflow execution.
 
-The workflow execution now continues in this fashion, spawning new provisioning engines and services through the provisioning manager and the remote bootware along the way (repeating steps 10, 11, 5, 12, 13 and 14).
+The workflow execution now continues in this fashion, spawning new provisioning engines and services through the provisioning manager and the remote bootware along the way (repeating steps 9, 10, 11, 5, 12, 13 and 14).
 At some point, the workflow will be finished.
 If it hasn't done so already, the provisioning manager calls all relevant provisioning engines to undeploy any services that might still be running (step 12, 13).
 Once all services are undeployed, the work of the workflow middleware is finished.
@@ -51,7 +51,7 @@ Next, the remote bootware undeploys all provisioning engines that might still be
 Once all provisioning engines are gone, the remote bootware returns the success to the local bootware.
 The local bootware removes the remote bootware (step 3) and returns the success to the bootware plugin.
 At this point, no remote components should be running anymore.
-The bootware plugin now tells the local bootware to shutdown (step 1), which completes the whole process.
+The local bootware now shuts down itself, which completes the whole process.
 
 \begin{figure}[!htbp]
 	\centering

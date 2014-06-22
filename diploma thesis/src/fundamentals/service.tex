@@ -16,7 +16,7 @@ The underlying integration middleware can also offer more advanced message excha
 \nom{Service Oriented Architecture}{SOA} is an architecture paradigm that emerged as a result from the lessons learned from the failure of other distributed systems and the success of message-oriented middleware.
 It focuses on loose coupling and dynamic binding between services~\autocite{webservices}.
 In this case, a service is "a logical representation of a repeatable business activity that has a specified outcome"~\autocite{soa}.
-Further characteristics of service are that they are self-contained, that they are composeable, i.e. new services can be build by combining multiple other services, and that they are discoverable based on metadata that describes their various aspects.
+Further characteristics of services are that they are self-contained, that they are composeable, i.e. new services can be build by combining multiple other services, and that they are discoverable based on metadata that describes their various aspects.
 They also operate like black boxes to their consumers, i.e. no information of how they are implemented or provided is needed to use them~\autocite{webservices}.
 
 \begin{figure}[!htbp]
@@ -27,7 +27,7 @@ They also operate like black boxes to their consumers, i.e. no information of ho
 \end{figure}
 
 \autoref{image:triangle} shows the basic principle behind SOA: The SOA triangle, made up of the bind/publish/find approach.
-First, a provider creates an abstract definition of an service that includes enough information to allow others to bind to this service.
+First, a provider creates an abstract definition of a service that includes enough information to allow others to bind to this service.
 The provider then publishes metadata describing this service to a directory or registry.
 A requestor can then use the discovery facility associated with this registry to find services that fulfills his functional and non-functional requirements, based on the available metadata.
 After selecting a service, he then retrieves the corresponding binding information, binds to this service and starts sending requests to it~\autocite{webservices}.
@@ -40,9 +40,9 @@ After selecting a service, he then retrieves the corresponding binding informati
 \end{figure}
 
 To simplify this process for the requestor, a middleware called service bus is introduced, as shown in the middle of \autoref{image:servicebus}.
-The requestor now sends description of the service he intends to use and the data he intends to send to the service to the service bus.
-The bus uses the description to find matching services with the discovery facility, selects one of them, retrieves the binding information and binds to the services.
-Then, he transforms the data send by the requestor if necessary and sends a request to the service.
+The requestor now sends the description of the service he intends to use and the data he intends to send to the service to the service bus.
+The service bus uses the description to find matching services with the discovery facility, selects one of them, retrieves the binding information and binds to the services.
+Then, if necessary, he transforms the data send by the requestor and sends a request to the service.
 The response he receives is passed along to the requestor, who now no longer has to deal with any of the above steps~\autocite{webservices}.
 
 Web service technology is one implementation of a service oriented architecture.
@@ -50,7 +50,7 @@ It uses wrappers to hide implementation specific functionality and therefor allo
 To describe these wrappers, the standardized \nom{Web Service Description Language}{WSDL} is used.
 WSDL describes the interfaces of the wrappers, which allows a requestor to use any wrapper implementing a particular interface, which creates technology abstraction.
 Additionally, quality-of-service descriptions and business-relevant data allow service selection based on business criteria, rather then IT criteria.
-This allows requestors to switch between providers offering identical services dynamically with little or no changes to the application, which creates provider abstraction~\autocite{webservices}.
+This allows requestors to switch dynamically between providers offering identical services with little or no changes to the application, which creates provider abstraction~\autocite{webservices}.
 
 A service bus is also at the center of this implementation.
 It combines a number of SOA capabilities, specified by numerous web service specifications, to offer the discovery, selection, and binding functionality described earlier.

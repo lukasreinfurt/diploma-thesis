@@ -23,7 +23,7 @@ As part of this work, it could also make sense to investigate other possible sec
 \section{Better SimTech Modeler Integration}
 
 The integration of the bootware with the SimTech Modeler using the Bootware Plugin can also be extended in the future.
-The current integration is fairly minimal to support the most basic functionality.
+The current integration is fairly minimal and only supports the most basic functionality.
 Improvements could be made to give the user more feedback on the provisioning progress.
 Additionally, a more intuitive way to configure the bootware could be implemented, for example with a graphical configuration interface that allows for the selection of plugins and configuration values.
 
@@ -32,5 +32,5 @@ Additionally, a more intuitive way to configure the bootware could be implemente
 Currently, the bootware will fail in many cases where it could continue, if the user could influence error recovery.
 For example, if for some reason a connection can't be established with a cloud provider, the bootware will abort and undeploy already provisioned payloads.
 This could happen in the middle of a workflow execution, where multiple services are deployed in different clouds.
-In this scenario, the ability for the user to select an alternative cloud provider could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
+In this scenario, the ability for the user to select an alternative cloud provider for this one service could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
 Failure management mechanisms such as this would improve the usability of the bootware.

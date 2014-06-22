@@ -8,7 +8,7 @@ We also don't need persistence or transactional capabilities
 We don't have to handle millions of subscribers or events, so high scalability isn't a concern.
 We don't even necessarily need asynchronous communication.
 Instead, we need a lightweight in-memory solution.
-Therefor we will ignore the middleware heavyweights and look for smaller, more light weight PubSub libraries.
+Therefor we will ignore the middleware heavyweights and look for smaller PubSub libraries.
 
 We have a few functional requirements that a library has to support for our use case.
 These can be seen on the left-hand side of \autoref{table:pubsub_comparison}.
@@ -24,7 +24,7 @@ A filtering feature gives us even more control over what events a listener will 
 It allows us to filter out specific events, for example by their content, to handle them differently, or to ignore them.
 
 We also want event handlers to be invoked synchronously.
-If an event is published, all event handlers for this event should be executed one after another until they finished execution.
+If an event is published, all event handlers for this event should be executed one after another until they are finished.
 Only then should the program continue execution.
 But asynchronous invocation might still be useful in some cases, so we also add it here.
 
@@ -130,7 +130,7 @@ It is part of the Google core libraries for Java 1.6+ and is therefore fairly po
 It also doesn't support weak references and filtering, which doesn't make it a good fit for our use case.
 
 Simple Java Event Bus is a simpler alternative to EventBus.
-It lacks some of the advanced features of EventBus but is also simpler to use.
+It lacks some of the advanced features of EventBus but is also easier to use.
 Compared to the other libraries it is not that popular and lacks in documentation.
 
 MBassador is a light-weight and performance minded PubSub Library.

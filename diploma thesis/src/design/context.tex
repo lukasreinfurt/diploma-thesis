@@ -14,20 +14,20 @@ How exactly the context is implemented is shown in \autoref{implementation:conte
 \end{figure}
 
 \autoref{image:context} shows the context object and its content.
-As we can see in the upper half of \autoref{image:context}, it defines the plugin types to be used for the current request.
+As we can see in the upper half, it defines the plugin types to be used for the current request.
 The infrastructure plugin type defines, which infrastructure plugin should be used to provision the requested infrastructure.
 The connection plugin type selects how the bootware should connect to to this infrastructure.
-The payload plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in most cases.
+The payload plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in our case.
 Finally, the provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
 It will use the middleware package reference, which is also defined in the context, as input to start the provisioning of the workflow middleware.
 In the bottom half of \autoref{image:context} we can see that the context can also contain configuration for different plugins.
 This is necessary because various plugins might need to be configured properly to be able to fulfill their task.
 For example, most infrastructure plugins will need some kind of login credentials to authenticate with the infrastructure provider.
-When creating a EC2 instance in the Amazon cloud, the user also has to select in which region this instance should be created and which ports should be opened.
+As another example, when creating a EC2 instance in the Amazon cloud, the user also has to select in which region this instance should be created and which ports should be opened.
 These and other configuration details can be supplied from the outside with the context.
 In the future, the context might be extended to hold additional information, but for this thesis, this context will be sufficient.
 
-Now that we have defined how the context will look like, we need to find a way to actually get it to the bootware.
+Now that we have defined what the context will look like, we need to find a way to actually get it to the bootware.
 There are a few things that we have to keep in mind when doing this.
 First, these values have to be changeable by the user, so it doesn't make sense to hard-code them into the bootware.
 Furthermore, the lifetime of the information carried in the context varies quite a bit.
@@ -45,7 +45,7 @@ Without this functionality, the whole bootware process could fail (even while pr
 This could be avoided by providing the functionality to change configuration even during the bootstrapping process.
 
 For setting the configuration at the beginning and for updating it later during the process, a \textit{setConfiguration} method will be added to the bootware web service.
-The configuration set by this method will be treated as the default configuration by the Bootware.
+The configuration set by this method will be treated as the default configuration by the bootware.
 It will be used during the process if no other configuration is provided.
 If however a request is send with a configuration that also contains values already set in the default configuration, these values will override already existing default values temporarily for this request.
-This behavior could also be extended to other parts of the context in future, if necessary.
+This behavior could also be extended to other parts of the context in the future, if necessary.

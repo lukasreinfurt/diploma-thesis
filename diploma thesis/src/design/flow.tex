@@ -21,22 +21,24 @@ In most cases however, the initialization should succeed.
 Then, the local bootware will transition to the next state, where it tries to load the event plugins.
 
 The event plugins are loaded once at the beginning of the local bootware execution, since they will not change at a per request basis (like the other plugins).
-If loading these plugins fails, the local bootware will try to unload them before continuing to the cleanup state.
+If loading one of these plugins fails, the local bootware will try to unload already loaded plugins before continuing to the cleanup state.
 If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
 
 Once the local bootware is in the wait state it is ready to receive requests from the outside.
-If a shutdown event is received in this state, the local bootware will start the shutdown procedure by first unloading the event plugins and then running the cleanup code.
+If a shutdown event is received in this state, the local bootware will first call tell the remote bootware to undeploy all active payloads.
+Next, the local bootware will undeploy the remote bootware by running through the undeploy process shown on the bottom left with the appropriate plugins.
+Then, it will shut itself down by first unloading the event plugins and then running the cleanup code.
 This is the only normal way to shutdown the local bootware.
 If a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
 
-The request context contains all the information necessary to fulfill the request, as described id \autoref{design:context}.
+The request context contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
 If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
 If the context is read successfully the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
-For this to work, the remote bootware has already has to exist in the requested remote environment, which won't be the case during the first execution.
+For this to work, the remote bootware has to exist in the requested remote environment, which won't be the case during the first execution.
 Therefore, the local bootware first has to provision the remote bootware in the requested remote environment and so it transitions to the load request plugins state.
 
 In the load request plugins state the plugins specified in the context are loaded.
-If this fails, the local bootware tries to unload them before return an error response and returning to the wait state.
+If this fails, the local bootware tries to unload already loaded plugins before returning an error response and transitioning to the wait state.
 If the plugins are loaded successfully, the local bootware now starts either the deploy process or the undeploy process, shown at the bottom of \autoref{image:flow_local}, depending on the type of the request.
 
 If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another, which include the deploy, connect, and start operations of the infrastructure, connection, and payload plugins.
@@ -50,7 +52,7 @@ The fatal error state is responsible for taking special actions to remedy this s
 
 The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the unload request plugin state, where the plugins that where needed for this particular request are unloaded.
 If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local}.
-The local bootware will wait in this state until she receives a response from the remote bootware.
+The local bootware will wait in this state until it receives a response from the remote bootware.
 
 Now, we move our attention to the remote bootware, where the requests continues to be processed.
 \autoref{image:flow_remote} shows the execution flow of the remote bootware.
@@ -67,10 +69,10 @@ Other than that, the local and remote processes are the same.
 \end{figure}
 
 Like the local bootware, the remote bootware went through the initialization steps shown at the top of \autoref{image:flow_remote} when it was started by the local bootware.
-It then waited in the wait state for any request.
+It then waited in the wait state for a request.
 Now, it receives the request from the local bootware, reads the context, loads the request plugins and executes the deploy operation.
 This should result in a provisioning engine being started by the payload plugin.
-After that, the remote bootware enters the new provision middleware state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware.
+After that, the remote bootware enters the new provision middleware state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware by executing the provisioning engine plugin.
 Once the middleware is running, the remote bootware is finished with this request and returns the endpoint references of the middleware in the response to the local bootware, before returning into the wait state.
 
 This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
@@ -80,13 +82,13 @@ Meanwhile, the modeler bootware plugin starts the workflow execution on the midd
 
 As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.
 Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
-Therefore it could be advantageous to use other methods that are more fitting for this process.
-Since we already describes the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
-Fortunately this is possible by implementing the process using a finite state machine.
+Therefore, it could be advantageous to use other methods that are more fitting for this process.
+Since we already described the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
+Fortunately, this is possible by implementing the process using a finite state machine.
 
 \subsection{Finite State Machine}
 
-In theoretical computer science, a \nom{Finite State Machine}{FSM} is formal, abstract model of computation that "consisting of a set of states, a start state, an input alphabet, and a transition function that maps input symbols and current states to a next state. Computation begins in the start state with an input string. It changes to new states depending on the transition function"~\autocite{fsm}.
+In theoretical computer science, a \nom{Finite State Machine}{FSM} is a formal, abstract model of computation that "consisting of a set of states, a start state, an input alphabet, and a transition function that maps input symbols and current states to a next state. Computation begins in the start state with an input string. It changes to new states depending on the transition function"~\autocite{fsm}.
 In this context, a state is the "condition of a finite state machine [...] at a certain time. Informally, the content of memory"~\autocite{state}.
 The start state is therefore the initial condition of a FSM.
 The alphabet is a "set of all possible symbols in an application. For instance, input characters used by a finite state machine, letters making up strings in a language, or symbols in a pattern element. In some cases, an alphabet may be infinite"~\autocite{alphabet}.
@@ -96,7 +98,7 @@ A deterministic FSM has at most one transition for each symbol and state, wherea
 
 Aside from its uses in theoretical computer science, FSMs also have practical applications in digital circuits, software applications, or as lexers in programming language compilers.
 We are only interested in the use of FSMs for building software, so we can redefine what a FSM means for our case.
-We want to use a FSM as an abstract machine that is defined by a finite list of states and and some conditions that trigger transitions between those states.
+We want to use a FSM as an abstract machine that is defined by a finite list of states and some conditions that trigger transitions between those states.
 Unlike a traditional FSM, we will not consume symbols from a set alphabet that will trigger state transitions.
 We want the state transitions to be triggered by events that we can emit at any time, so we want an event-driven FSM.
 The machine is in only one state at a time, its current state.

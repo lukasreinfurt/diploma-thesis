@@ -1,23 +1,24 @@
 \section{Provisioning}
 \label{fundamentals:provisioning}
 
-This section provides an overview of provisioning in general and describes some of the provisioning solutions available today.
-It focuses in particular on TOSCA and OpenTOSCA, since those are used in the prototypical implementation later on.
+This section provides an overview of provisioning in the context of computing.
+First, we present a general introduction and describe some of the provisioning solutions available today.
+Then, we focus in particular on TOSCA and OpenTOSCA, since those are used in the prototypical implementation later on.
 
 \subsection{Overview}
 
 Setting up a complex distributed system with many different components scattered across multiple environments is a time-consuming task if done by hand.
 For this reason, many provisioning solutions have been created over the years to automate this process.
-They differ in some areas, which we will discuss later, but their core functionality is in basically identical: They prepare all necessary resources for a certain task.
+They differ in some areas, which we will discuss later, but their core functionality is basically identical: They prepare all necessary resources for a certain task.
 This core functionality can be stated more precisely with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
 Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{provisioning:architecture}.
 
-There are many benefits to using an automated provisioning solution in stead of doing things manually.
+There are many benefits to using an automated provisioning solution in stead of doing the provisioning by hand.
 The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.
 This makes it possible to manage huge infrastructures with very little resources, which can save money compared to a manual approach.
 Since every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
-This makes the whole process reproducible and less error-prone, since the human factor is taken out.
+This makes the whole process reproducible and less error-prone, since the human factor is largely replaced by automation.
 Parts of such a description can also be shared in a business or even between businesses, which makes the process of creating such a description potentially much more efficient.
 
 The general process of working with provisioning software is very similar with all the different solutions.
@@ -30,24 +31,25 @@ In step two, we pass this description to the provisioning software, which interp
 Many different provisioning solutions exist today.
 Some cloud providers offer provisioning solutions that are particularly tailored to their cloud offerings, for example AWS CloudFormation\footnote{\url{http://aws.amazon.com/cloudformation}}, which can only be used to provision resources in the Amazon cloud.
 Then, there are more generally usable provisioning solutions that are not bound to any particular cloud provider.
-A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, Chef\footnote{\url{http://www.getchef.com/chef}}, Puppet\footnote{\url{http://puppetlabs.com/}}, and TOSCA, which we will discuss in detail later.
+A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, Chef\footnote{\url{http://www.getchef.com/chef}}, Puppet\footnote{\url{http://puppetlabs.com/}}, and TOSCA\footnote{\url{https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=tosca}}, which we will discuss in detail later.
 
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
 As already mentioned, AWS CloudFormation is bound to Amazons cloud platform, while the other solutions are not.
 Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over SSH and therefor doesn't require additional software on the nodes that are configured.
-The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
+The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet, and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
 
 \subsection{TOSCA}
 
 \nom{Topology and Orchestration Specification for Cloud Applications}{TOSCA} is a standard created by the \nom{Organization for the Advancement of Structured Information Standards}{OASIS}\footnote{\url{https://www.oasis-open.org/}}.
 Its development is also supported by various industry partners, which include IBM, Cisco, SAP, HP and others.
-It's aim is to provide a language that can describe service components and their relations in a cloud environment independent fashion~\autocite{tosca:spec}.
+It's aim is to provide a language that can describe service components and their relations in a cloud environment independent fashion.
+The following description is based on version 1.0 of the specification~\autocite{tosca:spec}.
 
 TOSCA defines an XML syntax, which describes services and their relations in a so called service template.
 All elements needed to define such a service template are provided in the TOSCA definitions document.
 \autoref{image:tosca:definitions} shows such a definitions document.
-Aside from the actual service template, shown on the left, it also contains a number type definitions and some templates based on those definitions.
+Aside from the actual service template, shown on the left, it also contains a number of type definitions and some templates based on those definitions.
 These definitions and templates can also be imported from a separate definitions document.
 
 \begin{figure}[!htbp]
@@ -60,7 +62,7 @@ These definitions and templates can also be imported from a separate definitions
 The service template consists of two parts: A topology template and plans.
 Topology templates, as seen in the center of \autoref{image:tosca:definitions}, model the structure of a service and the middleware and infrastructure supporting it as a directed graph.
 The vertices of the graph represent nodes, which are occurrences of a specific component, for example, an application server or a database.
-These nodes are defined by node types, or by other service templates.
+These nodes are defined by node types or by other service templates.
 Node types are reusable entities,  as shown in the top right of \autoref{image:tosca:definitions}.
 They define the properties of a component, as well as operations to manipulate a component, so called interfaces.
 Additionally, node types can be annotated with requirements and capabilities.
