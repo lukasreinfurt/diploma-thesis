@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<definitions name="${processName}"
+        targetNamespace="${namespace}/wsdl"
+        xmlns:tns="${namespace}/wsdl"
+        xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        >
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     TYPE DEFINITION - List of services participating in this BPEL process 
+     The default output of the BPEL designer uses strings as input and 
+     output to the BPEL Process. But you can define or import any XML 
+     Schema type and us them as part of the message types.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <types>  
+        <schema attributeFormDefault="unqualified" 
+                elementFormDefault="qualified" 
+                targetNamespace="${namespace}/wsdl" 
+                xmlns="http://www.w3.org/2001/XMLSchema"
+                >
+                
+            <element name="${processName}Request"
+            	type="tns:simulationRequestType">
+
+            </element>
+
+            <complexType name="parameterType">
+            	<simpleContent>
+            		<extension base="string">
+            			<attribute name="name" type="string"></attribute>
+            		</extension>
+            	</simpleContent>
+            </complexType>
+
+            <complexType name="simulationRequestType">
+            	<sequence>
+            		<element name="parameters" type="tns:parametersType"></element>
+            	</sequence>
+            </complexType>
+        
+            <complexType name="parametersType">
+            	<sequence maxOccurs="unbounded" minOccurs="0">
+            		<element name="parameter" type="tns:parameterType"></element>
+            	</sequence>
+            </complexType>
+        </schema>
+    </types>
+  
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     MESSAGE TYPE DEFINITION - Definition of the message types used as 
+     part of the port type defintions
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <message name="${processName}RequestMessage">
+        <part name="payload" element="tns:${processName}Request"/>
+    </message>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PORT TYPE DEFINITION - A port type groups a set of operations into
+     a logical service unit.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- portType implemented by the ${processName} BPEL process -->
+    <portType name="${processName}PT">
+        <operation name="initiate">
+            <input message="tns:${processName}RequestMessage"/>
+        </operation>
+    </portType>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     BINDING DEFINITION - A binding prescribes the transport protocol, 
+     message type and encoding to invoke operations of this service.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <binding name="${processName}Binding" type="tns:${processName}PT">
+    	<soap:binding style="document"
+    		transport="http://schemas.xmlsoap.org/soap/http" />
+    	<operation name="initiate">
+    		<soap:operation
+    			soapAction="${namespace}/wsdl/initiate" />
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    	</operation>
+    </binding>
+    
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     SERVICE DEFINITION - A service contains the location of the service
+     (port) and refers to a binding.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <service name="${processName}Service">
+    	<port name="${processName}Port" binding="tns:${processName}Binding">
+    		<soap:address location="http://localhost:8080/ode/processes/${processName}Service" />
+    	</port>
+    </service>
+    
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PARTNER LINK TYPE DEFINITION
+         the ${processName} partnerLinkType binds the provider and
+         requester portType into an asynchronous conversation.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="${processName}PLT">
+        <plnk:role name="${processName}Provider" portType="tns:${processName}PT"/>
+    </plnk:partnerLinkType>
+</definitions>

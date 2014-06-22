@@ -1,0 +1,7 @@
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" 
+		xmlns:pns="${namespace}">
+  <process name="pns:${processName}">
+    <active>true</active>
+    <retired>false</retired>
+  </process>
+</deploy>

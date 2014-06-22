@@ -1,0 +1,10 @@
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" 
+		xmlns:pns="${namespace}">
+  <process name="pns:${processName}">
+    <active>true</active>
+    <retired>false</retired>
+    <provide partnerLink="client">
+    	<service name="pns:${processName}Service" port="${processName}Port" />
+    </provide>
+  </process>
+</deploy>

@@ -6,7 +6,7 @@
 	version="1.0.0">
 
 	<extension
-		point="org.simtech.bootware.test.eclipse">
+		point="org.eclipse.bpel.ui.bootware">
 		<execute
 				class="org.simtech.bootware.eclipse.Test">
 		</execute>

@@ -3,5 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bootware Eclipse Plugin
 Bundle-SymbolicName: org.simtech.bootware.eclipse;singleton:=true
 Bundle-Version: 1.0.0
-Require-Bundle: org.simtech.bootware.test.eclipse;bundle-version="1.0.0"
+Require-Bundle: org.eclipse.bpel.ui;bundle-version="0.8.0"
 Bundle-ActivationPolicy: lazy
