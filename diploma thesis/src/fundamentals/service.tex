@@ -30,7 +30,7 @@ They also operate like black boxes to their consumers, i.e. no information of ho
 First, a provider creates an abstract definition of a service that includes enough information to allow others to bind to this service.
 The provider then publishes metadata describing this service to a directory or registry.
 A requestor can then use the discovery facility associated with this registry to find services that fulfills his functional and non-functional requirements, based on the available metadata.
-After selecting a service, he then retrieves the corresponding binding information, binds to this service and starts sending requests to it~\autocite{webservices}.
+After selecting a service, the requestor then retrieves the corresponding binding information, binds to this service and starts sending requests to it~\autocite{webservices}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -40,10 +40,10 @@ After selecting a service, he then retrieves the corresponding binding informati
 \end{figure}
 
 To simplify this process for the requestor, a middleware called service bus is introduced, as shown in the middle of \autoref{image:servicebus}.
-The requestor now sends the description of the service he intends to use and the data he intends to send to the service to the service bus.
+The requestor now sends the description of the service it intends to use and the data it intends to send to the service to the service bus.
 The service bus uses the description to find matching services with the discovery facility, selects one of them, retrieves the binding information and binds to the services.
-Then, if necessary, he transforms the data send by the requestor and sends a request to the service.
-The response he receives is passed along to the requestor, who now no longer has to deal with any of the above steps~\autocite{webservices}.
+Then, if necessary, it transforms the data send by the requestor and sends a request to the service.
+The response it receives is passed along to the requestor, who now no longer has to deal with any of the above steps~\autocite{webservices}.
 
 Web service technology is one implementation of a service oriented architecture.
 It uses wrappers to hide implementation specific functionality and therefor allows applications with different programming models to interact with each other.

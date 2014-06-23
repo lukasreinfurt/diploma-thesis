@@ -9,10 +9,10 @@ One big reason is that we can't guarantee that an undeploy operation will be cal
 We could require that for each deploy call there must eventually be an undeploy call so that everything will be cleaned up in the end, but errors can be made and it is better to have a failsafe in place.
 In the worst case scenario, failing to call the undeploy operation for some payloads could lead to rogue services remaining active after a bootware execution has stopped without the user realizing it, which could get expensive.
 Storing enough information allows us to undeploy remaining payloads before shutting down the bootware even if they were never explicitly undeployed.
-Additionally, a warning could be return by the bootware to inform the user that some non-bootware component should be modified to explicitly undeploy all services he deployed.
+Additionally, a warning could be return by the bootware to inform the user that some non-bootware component should be modified to explicitly undeploy all services it deployed.
 
 Another reason to store some information about deployed payloads is to simplify the interaction with other components.
-If we wouldn't store any information and make the bootware stateless, each component using the bootware (e.g. the bootware modeler plugin, the local bootware, and the provisioning manager) would be required to keep track of all payloads he deployed using the bootware, so that this information can be supplied when it's time to undeploy.
+If we wouldn't store any information and make the bootware stateless, each component using the bootware (e.g. the bootware modeler plugin, the local bootware, and the provisioning manager) would be required to keep track of all payloads it deployed using the bootware, so that this information can be supplied when it's time to undeploy.
 This places an extra burden on these components and scatters around the information about deployed payloads.
 By storing this information in the bootware we simplify the usage of the bootware for other components and concentrate this information.
 

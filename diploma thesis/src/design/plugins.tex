@@ -66,11 +66,11 @@ We will describe each plugin type in more detail, but before we do this, we will
 \endgroup
 
 \autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
-The init operation is called by the plugin manager when he loads a plugin.
+The init operation is called by the plugin manager when it loads a plugin.
 This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
 It takes a configuration object as parameter, which is taken from the request context.
 This allows the plugins to be configured from the outside if necessary.
-The shutdown operation is called by the plugin manager when he unloads a plugin.
+The shutdown operation is called by the plugin manager when it unloads a plugin.
 It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a connection.
 
 \subsection{Infrastructure Plugins}
