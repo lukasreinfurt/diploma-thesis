@@ -37,3 +37,11 @@ For example, if for some reason a connection can't be established with a cloud p
 This could happen in the middle of a workflow execution, where multiple services are deployed in different clouds.
 In this scenario, the ability for the user to select an alternative cloud provider for this one service could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
 Failure management mechanisms such as this would improve the usability of the bootware.
+
+\section{Crash Recovery}
+
+In \autoref{design:instancestore} we mentioned that we store active instances in-memory.
+Right now, if the bootware crashes during the bootstrapping process with instances still active, there is no way to continue the process after a restart or at least undeploy remaining instances.
+These remaining instances will have to be removed by hand, which is not ideal.
+This could be improved by storing active instances in some sort of persistent storage, so that they can still be retrieved after a crash for recovery purposes.
+
