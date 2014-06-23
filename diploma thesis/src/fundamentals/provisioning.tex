@@ -36,7 +36,7 @@ A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, C
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
 As already mentioned, AWS CloudFormation is bound to Amazons cloud platform, while the other solutions are not.
-Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over SSH and therefor doesn't require additional software on the nodes that are configured.
+Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over \nom{Secure Shell}{SSH} and therefor doesn't require additional software on the nodes that are configured.
 The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet, and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
 
 \subsection{TOSCA}
@@ -77,7 +77,7 @@ Build plans describe how instances of a service are created.
 Termination plans describe how such a service is removed.
 Modification plans manage a service during its runtime.
 These plans consist of one or more tasks, i.e., an operation on a node (via an interface) or an external service call, and the order in which these tasks should be performed.
-They can be written in a process description language like BPMN or BPEL.
+They can be written in a process description language like \nom{Business Process Execution Language}{BPEL}\footnote{\url{http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html}} or \nom{Business Process Modeling Notation}{BPMN}\footnote{\url{http://www.bpmn.org/}}.
 
 The bottom right of \autoref{image:tosca:definitions} shows artifact templates, which represent artifacts.
 Artifacts are things that can be executed directly (e.g.: scripts, archives) or indirectly (e.g.: URL, ports).
@@ -107,7 +107,7 @@ The TOSCA XML files are then loaded and processed by the Controller.
 The Controller in turn calls the Implementation Artifact Engine and the Plan Engine.
 The Implementation Artifact Engine knows how to deploy and store the provided implementation artifacts via plugins.
 Plans are then run by the Plan Engine, which also uses plugins to support different plan formats.
-OpenTOSCA also offers two APIs, the Container API and the Plan Portability API.
+OpenTOSCA also offers two \nom{application programming interfaces}{APIs}, the Container API and the Plan Portability API.
 The Container API can be used to access the functionality provided by the container from outside and to provide additional interfaces to the container, like the already existing admin UI, self-service portal, or modeling tool.
 The Plan Portability API is used by plans to access topology and instance information~\autocite{opentosca}.
 

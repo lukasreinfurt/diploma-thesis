@@ -77,7 +77,7 @@ It can be useful to clean up plugin resources before the plugin is removed, for 
 
 Infrastructure plugins are responsible for provisioning any infrastructure that the user wants to use during the bootware process.
 This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
-To be able to do this, an infrastructure plugin has to implement a range of functions using some \nom{Application Programming Interface}{API} or SDK provided by the virtualization software or cloud provider.
+To be able to do this, an infrastructure plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
 The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a connection plugin.

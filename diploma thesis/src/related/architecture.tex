@@ -27,7 +27,7 @@ It consists of five different managers for infrastructure, packages, application
 The infrastructure manager abstracts away different APIs of cloud providers for provisioning cloud infrastructure.
 It is used to create new VMs at a specific cloud provider, shown at the top of \autoref{image:automatic_architecture}.
 These can then can be used by the other managers to create the requested cloud service.
-The VM connection manager offers a unified interface for different communication methods, for example \nom{Secure Shell}{SSH}, \nom{Remote Desktop Connection}{RDC}, \nom{Virtual Network Computing}{VNC}, and Telnet.
+The VM connection manager offers a unified interface for different communication methods, for example SSH, \nom{Remote Desktop Connection}{RDC}, \nom{Virtual Network Computing}{VNC}, and Telnet.
 The package, configuration, and application managers use the interface provided by the connection manager to send their commands to the VMs at the cloud provider~\autocite{provisioning:architecture}.
 
 The package manager can install software packages in different environments, for example with existing package managers like \nom{Advanced Packaging Tool}{APT}, or directly on the file system.
