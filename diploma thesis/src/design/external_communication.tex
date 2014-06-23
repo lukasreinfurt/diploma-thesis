@@ -37,7 +37,7 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 	\label{image:webservice}
 \end{figure}
 
-Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware component.
+Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
 The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA doesn't offer any significant advantages over SOAP based web services.
 \autoref{image:webservice} shows the addition of asynchronous web service call and return communication between the modeler bootware plugin and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
 
@@ -54,7 +54,7 @@ For this, a secondary communication mechanism which supports sending multiple fe
 \end{figure}
 
 This secondary communication channel could take any form, but a natural choice for publishing the intermediary state of the bootware would be a message queue system.
-In this case, the remote bootware component pushes messages to a message queue to which the local bootware component (and other components if needs be) can subscribe to receive future messages.
+In this case, the remote bootware pushes messages to a message queue to which the local bootware (and other components if needs be) can subscribe to receive future messages.
 \autoref{image:message_queue} shows the proposed architecture with an additional (and optional) message queue that allows the local bootware or other components to listen to status updates from the remote bootware.
 Since it is not necessary for the successful use of the bootware, it would make sense to implement this secondary communication mechanism as an extension to the bootware.
 This extension would not be part of the core bootware, but rather an additional component that could be used when needed.

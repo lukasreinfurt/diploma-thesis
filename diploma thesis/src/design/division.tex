@@ -8,7 +8,7 @@ This was a somewhat convoluted design where multiple responsibilities where mixe
 It was later decided that the provisioning manager should be split into two parts.
 The actual provisioning manager handles the communication with the service repository and the various provisioning engines, as described before in \autoref{previous:dynamic}.
 A separate bootware component handles the provisioning and deprovisioning of the provisioning engines.
-At the moment, that leaves us with two bootware components, one local and one remote, where the local bootware component kick-starts the remote bootware, which then handles the actual provisioning of provisioning engines.
+At the moment, that leaves us with two bootware components, one local and one remote, where the local bootware kick-starts the remote bootware, which then handles the actual provisioning of provisioning engines.
 The first question that has to be answered is whether or not this division is reasonable, or if another alternative makes more sense.
 We will now discuss the viability of four such alternatives.
 
@@ -32,7 +32,7 @@ There is no possible overlap in functionality, as it would be the case in a 2-ti
 The disadvantages are caused by the component being local.
 Since all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
 A much bigger problem however is the remote communication happening in this scenario.
-As \autoref{image:local} shows, all calls to the bootware component from the provisioning manager would leave the remote environment.
+As \autoref{image:local} shows, all calls to the bootware from the provisioning manager would leave the remote environment.
 Also, all calls from the bootware to the provisioning engines would enter the remote environment.
 This type of split communication can be costly and slow, as shown by \citeauthor*{cloudcmp}~\autocite{cloudcmp}.
 They compared public cloud providers and measured that intra-datacenter communication can be two to three times faster and also cheaper (often free) compared to inter-datacenter communication~\autocite{cloudcmp}.
@@ -52,15 +52,15 @@ However, this creates new problems.
 Since there aren't any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
 Either the user provisions the bootware once in some cloud environment and then keep this one instance running, or they provision it once they need it and deprovisions it when they are done.
 
-In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware component.
-Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
+In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware.
+Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware is not located anywhere near the cloud environment where it should provision further components.
 The communication problem of the single local bootware component can still occur in these cases.
 While the other approaches presented here don't completely eliminate this problem, they at least have the option to move the bootware with each individual bootware execution, while in this first case, the bootware would stay in one place for multiple, possibly many bootware executions.
 
 Another problem is that the bootware would be running all the time, even if the user doesn't need it, which would increase costs.
 This problem could be reduced if this bootware instance is shared with others to assure a more balanced load.
-But then the user would have to manage some sort of load balancing and the bootware component would have to support multi-tenancy or be stateless to be able to cope with potential high usage spikes.
-This would further complicate the design and implementation of the bootware component and possibly increase the running costs.
+But then the user would have to manage some sort of load balancing and the bootware would have to support multi-tenancy or be stateless to be able to cope with potential high usage spikes.
+This would further complicate the design and implementation of the bootware and possibly increase the running costs.
 
 In the second case, the user would provision the bootware whenever they need it. Now the user would be able to pick a cloud environment that is close to the other components that they plan to provision later.
 This eliminates the two major problems of the first case but increases the effort that the user has to put into a task that they shouldn't have to do in the first place.
@@ -87,9 +87,9 @@ We can now keep the local part as simple as possible and make the remote part as
 
 But we also introduce new problems.
 For one, we now have duplicate functionality between the two components.
-Both components have to know how to provision a component into multiple cloud environments.
-The local component has to be able to put its remote counterpart into any cloud environment.
-The remote component has to be able to provision other components into the same environment in which it runs (ideally, to minimize costs).
+Both have to know how to provision a component into multiple cloud environments.
+The local bootware has to be able to put its remote counterpart into any cloud environment.
+The remote bootware has to be able to provision other components into the same environment in which it runs (ideally, to minimize costs).
 Since itself can be located in any cloud environment, it has to be able to do this in any cloud environment.
 Independent from this, it also has to be able to provision to any environment that the user or the service package chooses.
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.

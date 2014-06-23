@@ -1,12 +1,12 @@
 \section{Final Bootware Architecture}
 \label{design:finalarch}
 
-\autoref{image:finalarchlocal} and \autoref{image:finalarchremote} show the final architecture of the local and remote bootware component.
+\autoref{image:finalarchlocal} and \autoref{image:finalarchremote} show the final architecture of the local and remote bootware.
 Since the only difference between them is the provisioning engine plugin shown in the top right corner of \autoref{image:finalarchremote}, we will describe this figure only.
 At the bottom we can see four exemplary event plugins.
 These are loaded at the beginning of the bootware execution by the plugin manager, shown on the left of \autoref{image:finalarchremote}.
 For demonstrations purposes, \autoref{image:finalarchremote} shows a wider range of possible event plugins.
-All these plugins provide some sort of input and/or output mechanism for the bootware component.
+All these plugins provide some sort of input and/or output mechanism for the bootware.
 A \nom{command-line interface}{CLI} plugin could be used to make the bootware operations accessible via a command-line interface.
 A event logger plugin could be used to write all bootware events to a log file.
 We can also imagine an event queue plugin that pushes all bootware events into some message queue, so that they can be consumed by other components.

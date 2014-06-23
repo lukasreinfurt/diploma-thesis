@@ -16,18 +16,18 @@ This extension mechanism is simple, but restricted by its static nature.
 The entire executable has to be recompiled if any implementations are changed or added.
 This may not be a problem if the set of possible extensions that have to be supported is limited and known at the time of implementation or if it changes rarely.
 If the set of necessary extensions is unknown or changing from time to time, implementing new or changing existing extensions can get cumbersome, since a new version of the whole software has to be released each time.
-It would be far better if extensions could be implemented separately from the core bootware component and added and removed at will.
+It would be far better if extensions could be implemented separately from the core bootware components and added and removed at will.
 
 A more flexible architecture is needed, for example a plugin architecture.
-Interfaces for the extension points still exist but the extension are no longer part of the main bootware component.
-They are compiled separately into plugins that can be loaded into the main bootware component on the fly.
+Interfaces for the extension points still exist but the extension are no longer part of the main bootware components.
+They are compiled separately into plugins that can be loaded into the main bootware components on the fly.
 There are several possibilities to realize such an architecture.
 
 It is certainly possible to implement a plugin framework from scratch.
 An advantage of this approach would be that the design of the plugin architecture could be tailored to our use case and would be as simple or complex as needed.
 But there are also several disadvantages.
 For one, we would reinvent the wheel, since multiple such frameworks already exist.
-It would also shift resources away from the actual goal of this thesis, which is designing the bootware component.
+It would also shift resources away from the actual goal of this thesis, which is designing the bootware.
 Furthermore it would require a deep understanding of the language used for the implementation (in this case Java), which is not necessarily given.
 Therefore it seems more reasonable to use one of the already existing plugin frameworks.
 Which one exactly will be determined later in \autoref{implementation:selecting:pluginframeworks}.
