@@ -30,7 +30,7 @@ It allows the user to create simulation workflows using a graph as visual repres
 	\label{image:modeler}
 \end{figure}
 
-Once the user is done modeling the simulation workflow, he clicks on a button to execute the workflow on the workflow middleware.
+Once the user is done modeling the simulation workflow, they click on a button to execute the workflow on the workflow middleware.
 The middleware consists of various components that are executed by an application server, in this case Apache Tomcat\footnote{\url{http://tomcat.apache.org/}}.
 The workflow is deployed on the workflow engine, in this case \nom{ODE Pluggable Framework}{ODE-PGF}\footnote{\url{http://www.iaas.uni-stuttgart.de/forschung/projects/ODE-PGF/}}, which executes the workflow step by step.
 If a step involves the execution of a service, the ESB (Apache Service Mix) is called, who resolves the services and passes along the request and the response.

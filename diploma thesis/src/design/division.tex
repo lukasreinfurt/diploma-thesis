@@ -50,7 +50,7 @@ The next obvious choice, as displayed in \autoref{image:remote}, is to put the s
 However, this creates new problems.
 
 Since there aren't any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
-Either the user provisions the bootware once in some cloud environment and then keep this one instance running, or she provisions it once she needs it and deprovisions it when she is done.
+Either the user provisions the bootware once in some cloud environment and then keep this one instance running, or they provision it once they need it and deprovisions it when they are done.
 
 In the first case the user would only have to provision the bootware once, but this creates a new problem: The user doesn't know where exactly to put the bootware component.
 Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware component is not located anywhere near the cloud environment where it should provision further components.
@@ -62,8 +62,8 @@ This problem could be reduced if this bootware instance is shared with others to
 But then the user would have to manage some sort of load balancing and the bootware component would have to support multi-tenancy or be stateless to be able to cope with potential high usage spikes.
 This would further complicate the design and implementation of the bootware component and possibly increase the running costs.
 
-In the second case, the user would provision the bootware whenever she needs it. Now the user would be able to pick a cloud environment that is close to the other components that she plans to provision later.
-This eliminates the two major problems of the first case but increases the effort that the user has to put into a task that she shouldn't have to do in the first place.
+In the second case, the user would provision the bootware whenever they need it. Now the user would be able to pick a cloud environment that is close to the other components that they plan to provision later.
+This eliminates the two major problems of the first case but increases the effort that the user has to put into a task that they shouldn't have to do in the first place.
 Life-cycle management of the bootware should be automated completely and hidden away from the user.
 Therefor, this scenario is not appropriate for our case.
 

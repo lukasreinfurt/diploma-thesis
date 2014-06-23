@@ -20,7 +20,7 @@ But there is a step in between provisioning the infrastructure and installing th
 The connection functionality could be part of either the infrastructure plugins or the payload plugins, or it could be separated into independent connection plugins.
 
 For the sake of efficiency and extensibility it would be best to use independent connection plugins.
-For example, if a user wanted to add a new connection type that should be used to install x applications in y environments, he could do so by writing one new connection plugin, instead of adding the functionality x-times to all payload plugins, or y-times to all infrastructure plugins.
+For example, if a user wanted to add a new connection type that should be used to install x applications in y environments, they could do so by writing one new connection plugin, instead of adding the functionality x-times to all payload plugins, or y-times to all infrastructure plugins.
 This would also reduce code duplication.
 Therefore, a third plugin type is necessary: The \textit{connection plugins}.
 

@@ -13,7 +13,7 @@ This essentially describes the publish-subscribe pattern~\autocite{pubsub}.
 
 The \nom{publish-subscribe pattern}{PubSub} is a messaging pattern that consists of three types of participant: An event bus (or message broker), publishers, and subscribers.
 The event bus sits at the center of the communication.
-He receives messages from publishers and distributes them to all subscribers that have voiced their interest in messages of a certain type by subscribing at the event bus~\autocite{pubsub}.
+It receives messages from publishers and distributes them to all subscribers that have voiced their interest in messages of a certain type by subscribing at the event bus~\autocite{pubsub}.
 
 Using this pattern in our bootware component, we would create an event bus at the bootware core and plugins, as well as other parts of the core, could subscribe at this event bus and also publish messages through this event bus.
 
