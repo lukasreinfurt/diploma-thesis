@@ -14,10 +14,13 @@ On the implementation side, the integration of a plugin repository should be fai
 A mechanism to synchronize the local plugin directory with the repository has to be implemented and executed before the plugins are loaded.
 The code for loading plugins that is in place now doesn't necessarily need to be changed for this.
 
-\section{Secure Communication}
+\section{Secure Communication and Secure Plugins}
 
 As we already mentioned in \autoref{design:communication}, it is necessary to secure the communication with the bootware, since it contains sensitive login information that should not be publicly accessible.
-For this, the communication has to be encrypted, which can be done by using the WS-Security SOAP extension for the web service communication.
+For this, the communication has to be encrypted, which can be done by using the WS-Security\footnote{\url{https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=wss}} SOAP extension for the web service communication.
+In \autoref{implementation:selecting:pluginframeworks} we also mentioned that security for plugins could be a problem.
+OSGi provides an optional security layer based on Java permissions\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/security/Permission.html}} that can be used to apply permission based security.
+For example, it should be possible to only allow plugins to access specific files or folders with Java file permissions\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/io/FilePermission.html}}.
 As part of this work, it could also make sense to investigate other possible security enhancements to the bootware components.
 
 \section{Better SimTech Modeler Integration}
