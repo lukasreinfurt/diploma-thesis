@@ -1,32 +1,31 @@
 \section{Structure of this Document}
 
-\autoref{fundamentals} introduces some fundamental topics.
-It describes the SimTech project and the SimTech SWfMS, which initiated this diploma thesis.
-It also gives a short introduction into bootstrapping.
-Then, cloud computing in general is explained, followed by a closer look at the Amazon Web Services, which are used in this diploma thesis.
-Finally, provisioning in general, as well as with TOSCA and OpenTOSCA is described.
+We begin with an introduction to some fundamental topics in \autoref{fundamentals}.
+First, we explain bootstrapping, followed by a general overview of provisioning with some details on TOSCA and OpenTOSCA.
+We explain the concept of cloud computing and describe Amazon's cloud platform.
+We also present the basics of service oriented architecture, workflows, and workflow management systems.
+Finally, we describe the SimTech project as well as the SimTech SWfMS.
 
-\autoref{previous} presents previous work on the subject diploma thesis.
-First, the paper that builds the foundation of this diploma thesis is discussed, followed by a previous diploma thesis that extended parts of this paper.
-\autoref{related} also presents some related work, for example another architecture for automatic provisioning of cloud services.
+In \autoref{previous} we present previous work on the subject of this diploma thesis.
+First, we summarize the paper that build the foundation of this diploma thesis.
+Then, we discuss a previous diploma thesis that extended parts of this paper.
+In \autoref{related} we also present some related work.
+We list the requirements that were given for this diploma thesis in \autoref{requirements}.
+We also explain some additional constraints that we introduced.
 
-\autoref{requirements} lists the requirements that were given for this diploma thesis.
-It also introduces some additional constrains that were introduced during the writing of this diploma thesis.
+We present the design of the bootware in \autoref{design}.
+First, we discuss component division, followed by the integration into existing modeler applications.
+Next, we select an external communication mechanism.
+We describe the extensibility mechanism, followed by the different kinds of plugins.
+We also discuss internal communication, the context object, the web service interface, and the instance store.
+Then, we describe the execution flow and the use of finite state machines, before the final bootware architecture is presented.
+We also present a step by step description of the whole bootstrapping process in \autoref{process}.
 
-\autoref{design} presents the design of the bootware.
-First, the component division is discussed, followed by the integration into existing modeler applications.
-Then, an external communication mechanism is selected.
-The extensibility mechanism is described next, followed by the different kinds of plugins.
-Internal communication, the context object, the web service interface, and the instance store are also discussed.
-The execution flow and the use of finite state machines is described, before the final bootware architecture is presented.
-
-\autoref{process} describes the whole bootstrapping process step by step.
-
-\autoref{implementation} presents details on the implementation of the bootware.
-The reasons for the selection of the plugin framework and the PubSub and state machine libraries are discussed.
-Next, the integration into the SimTech Modeler using an Eclipse plugin is described.
-Then, the implementation of the context object and the web service interface are presented.
-
-\autoref{conclusion} summarizes the previous chapters.
-It describes the work that has been done and also the work that still needs to be done, areas that could be improved, and future work that might be useful.
-Finally, a conclusion is presented.
+In \autoref{implementation} we present details on the implementation of the bootware.
+We describe the integration into the SimTech Modeler with an Eclipse plugin.
+We also explain the bootware core library.
+Then, we select the plugin framework, PubSub library, and state machine library that we will use for the implementation.
+We also describe the context object and the web service operation.
+Then, we give an overview over some plugins we implemented.
+In \autoref{future} we list some possibilities for future improvement.
+We summarizes the previous chapters in \autoref{conclusion}, before presenting a conclusion.
