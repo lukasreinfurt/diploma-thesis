@@ -50,7 +50,8 @@ It uses wrappers to hide implementation specific functionality and therefor allo
 To describe these wrappers, the standardized \nom{Web Service Description Language}{WSDL} is used.
 WSDL describes the interfaces of the wrappers, which allows a requestor to use any wrapper implementing a particular interface, which creates technology abstraction.
 Additionally, quality-of-service descriptions and business-relevant data allow service selection based on business criteria, rather then IT criteria.
-This allows requestors to switch dynamically between providers offering identical services with little or no changes to the application, which creates provider abstraction~\autocite{webservices}.
+This allows requestors to switch dynamically between providers offering identical services with little or no changes to the application, which creates provider abstraction.
+\nom{Universal Description, Discovery, and Integration}{UDDI} can be used as a service registry where WSDLs of web services can be published and found~\autocite{webservices}.
 
 A service bus is also at the center of this implementation.
 It combines a number of SOA capabilities, specified by numerous web service specifications, to offer the discovery, selection, and binding functionality described earlier.
