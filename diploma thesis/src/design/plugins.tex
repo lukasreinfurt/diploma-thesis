@@ -50,7 +50,7 @@ We will describe each plugin type in more detail, but before we do this, we will
 
 		\tabucline[0.5pt]{1-4}
 
-			init
+			initialize
 		& Configuration
 		& -
 		& Is called by the plugin manager when the plugin is loaded \\
@@ -66,7 +66,7 @@ We will describe each plugin type in more detail, but before we do this, we will
 \endgroup
 
 \autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
-The init operation is called by the plugin manager when it loads a plugin.
+The initialize operation is called by the plugin manager when it loads a plugin.
 This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
 It takes a configuration object as parameter, which is taken from the request context.
 This allows the plugins to be configured from the outside if necessary.
@@ -81,7 +81,7 @@ To be able to do this, an infrastructure plugin has to implement a range of func
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
 The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a connection plugin.
-It takes no input parameters, but relies on the configuration passed to the init operation to get the configuration details it needs, like login credentials.
+It takes no input parameters, but relies on the configuration passed to the initialize operation to get the configuration details it needs, like login credentials.
 If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
 
 The undeploy operation removes a resource that was previously deployed using the deploy operation.
@@ -258,6 +258,6 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 
 \subsection{Event Plugins}
 
-Unlike the other plugin types, the event plugins don't have any more operations to implement then the init and shutdown operations described in \autoref{table:all_plugins}.
+Unlike the other plugin types, the event plugins don't have any more operations to implement then the initialize and shutdown operations described in \autoref{table:all_plugins}.
 Instead, they implement their specific functionality by defining one ore more event handlers which will react to specific events when these are published at the event bus.
 How exactly these event handlers work will be discussed later.
