@@ -13,6 +13,7 @@ import org.simtech.bootware.core.EndpointsWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
+import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.core.exceptions.UndeployException;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -118,6 +119,11 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void setConfiguration(final Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
 		defaultConfigurationList = configurationList;
+	}
+
+	@Override
+	public final void shutdown() throws ShutdownException {
+		stateMachine.fire(SMEvents.SHUTDOWN);
 	}
 
 	/**
