@@ -34,8 +34,13 @@ Furthermore, the lifetime of the information carried in the context varies quite
 The plugin types are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
 Therefore, we must provide the plugin types on a per request basis.
 Since we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
+Note that this does not include the event plugins.
+Event plugins are not changed with each request.
+They are loaded once when the bootware starts and are unloaded before it stops.
+Therefore they don't belong into the context.
+It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
 
-The configuration on the other hand might not change between requests.
+Unlike the request plugins, the configuration might not change between requests.
 Additionally, we have other components calling the bootware who don't know (and maybe shouldn't know) anything about some content of the configuration, like login credentials.
 While this might change in the future, it would make sense to be able to set the configuration once when starting the bootware, so that it doesn't have to be delivered with each request and so that other components can still use the bootware without also sending a configuration.
 It should however still be possible to override or update the configuration at a later point.
