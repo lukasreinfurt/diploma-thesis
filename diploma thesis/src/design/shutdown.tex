@@ -1,0 +1,20 @@
+\section{Shutdown Trigger}
+\label{design:shutdown}
+
+One thing that we haven't mentioned yet is how the bootware will be shut down.
+The bootware can't just stop.
+It has to make sure that all payloads and all the infrastructure it has provisioned is removed before it shuts down itself.
+But how does the bootware know when it's time to start this procedure?
+After all, this depends on the workflow middleware.
+The shutdown process should start when the workflow middleware is finished with the workflow execution, so the bootware has to be informed of this somehow.
+
+One possibility is to trigger the shutdown procedure from the bootware plugin in the modeler.
+If the bootware plugin can access this information through the modeler, it can call the shutdown operation of the local bootware, which will in turn call the shutdown operation of the remote bootware, which will eventually lead to the removal of all remote components.
+If this is possible using a particular modeler depends on the modeler and the integration possibilities for the bootware plugin.
+
+There is a second possibility that can be used instead of the first one.
+We already introduced the event plugin type, which can also trigger events in the bootware, in particular the shutdown event.
+An event plugin could be created that somehow communicates with the workflow middleware to receive notice when the execution is finish.
+For example, in the SimTech SWfMS, the workflow engine publishes event into a message queue.
+An event plugin could be created that subscribes to this messages queue and reacts to a particular event by triggering the shutdown event inside the bootware.
+This plugin would then be loaded into the local bootware and would trigger the shutdown procedure, which would in turn call the shutdown operation of the remote bootware as before.
