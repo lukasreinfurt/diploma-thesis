@@ -184,6 +184,66 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 	\label{lst:webservice:setconfigurationerror}
 \end{listing}
 
+\subsection{GetActivePayloads}
+
+The getActivePayloads operation is called by the provisioning manager to retrieve already deployed provisioning engines.
+If a provisioning engine it needs is already active, it doesn't have to call the bootware to provision a new one.
+\autoref{lst:webservice:getactivepayloadsrequest} shows a getActivePayloads request in a SOAP message.
+No parameters are required.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=getActivePayloads-request.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/getActivePayloads-request.xml}
+	\caption{Sample getActivePayloads request in a soap message.}
+	\label{lst:webservice:getactivepayloadsrequest}
+\end{listing}
+
+The response that is returned contains a list of all payloads that where active when the request was made.
+As we can see in \autoref{lst:webservice:getactivepayloadsresponse} lines 6-11, it contains a payloads list with zero or more entries.
+Each entry consists of a key/value pair, where the key identifies the payload and the value contains a URL to the payload.
+In this example, the entry points to an OpenTOSCA container instance.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=getActivePayloads-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/getActivePayloads-response.xml}
+	\caption{Sample getActivePayloads response in a soap message.}
+	\label{lst:webservice:getactivepayloadsresponse}
+\end{listing}
+
+If the getActivePayloads request failed for some reason, an error message is returned.
+As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a soap fault string in line 5 and the original GetActivePayloadsException thrown by the getActivePayloads operation in line 7-10.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=getActivePayloads-error.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/getActivePayloads-error.xml}
+	\caption{Sample getActivePayloads error in a soap message.}
+	\label{lst:webservice:getactivepayloadserror}
+\end{listing}
+
 \subsection{Shutdown}
 
 The shutdown operation triggers the shutdown procedure.
