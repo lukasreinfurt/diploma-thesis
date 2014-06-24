@@ -1,0 +1,8 @@
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:rem="http://remote.bootware.simtech.org/">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<rem:shutdown/>
+	</soapenv:Body>
+</soapenv:Envelope>

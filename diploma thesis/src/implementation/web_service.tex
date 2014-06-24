@@ -183,3 +183,61 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 	\caption{Sample setConfiguration error in a soap message.}
 	\label{lst:webservice:setconfigurationerror}
 \end{listing}
+
+\subsection{Shutdown}
+
+The shutdown operation triggers the shutdown procedure.
+During this procedure, all active payloads will be undeployed.
+The local bootware will also forward this request to the remote bootware and wait for a response so that it can deprovision the remote bootware before shutting down itself.
+\autoref{lst:webservice:shutdownrequest} shows a shutdown request in a SOAP message.
+No parameters are required.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=shutdown-request.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/shutdown-request.xml}
+	\caption{Sample shutdown request in a soap message.}
+	\label{lst:webservice:shutdownrequest}
+\end{listing}
+
+If the additional processes executed during shutdown (i.e. undeploy payloads or middleware) were successful, the response in \autoref{lst:webservice:shutdownresponse} will be returned.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=shutdown-response.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/shutdown-response.xml}
+	\caption{Sample shutdown response in a soap message.}
+	\label{lst:webservice:shutdownresponse}
+\end{listing}
+
+If the additional processes failed for some reason, an error response like the one shown in \autoref{lst:webservice:shutdownerror} will be returned.
+It contains a soap fault string in line 5 and the original ShutdownException thrown by the shutdown operation in line 7-10.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=shutdown-error.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/shutdown-error.xml}
+	\caption{Sample shutdown error in a soap message.}
+	\label{lst:webservice:shutdownerror}
+\end{listing}

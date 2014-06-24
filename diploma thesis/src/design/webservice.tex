@@ -4,6 +4,7 @@
 By now, we know that we will use a web service interface for remote communication.
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The deploy and the undeploy operation.
 In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
+We add two additional operation that we also need, the getActivePayloads operation and the shutdown operation.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -29,6 +30,14 @@ In \autoref{design:context} we also mentioned the \textit{setConfiguration} oper
 			setConfiguration
 		& Configuration List
 		& - \\
+
+			getActivePayloads
+		& -
+		& Payload List \\
+
+			shutdown
+		& -
+		& Confirmation Message \\
 
 	\end{tabu}
 	\caption{Web service operations provided by the local and remote bootware.}
@@ -62,3 +71,17 @@ If the list provided is not empty, the default configuration list saved in the b
 The configuration can still be overwritten on a per request basis if the context send with the request also contains a configuration.
 If the configuration was updated successfully, it responds with a success message.
 If the configuration couldn't be updated, it responds with an error message.
+
+\subsection{getActivePayloads}
+
+The getActivePayloads operation is used by the provisioning manager to check if a provisioning engine he needs already exist.
+This operation just returns a list of all active payloads.
+
+\subsection{shutdown}
+
+This operation triggers the shutdown of sequence of the bootware.
+It behaves a little differently in the local and remote bootware.
+In the local bootware it first calls the shutdown operation of the remote bootware.
+When the confirmation response from the remote bootware is received, it deprovisions all active payloads that the local bootware deployed (i.e. the remote bootware).
+In the remote bootware, the shutdown operation first calls a provisioning engine to deprovision the workflow middleware.
+Once this is done, it deprovisions all active payloads that the remote deployed (i.e. the various provisioning engines), before returning a response.
