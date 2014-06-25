@@ -104,20 +104,22 @@ It is about to be replaced by version 2.0 that is currently being worked on and 
 EasyFlow\footref{easyflow} is a simple and lightweight FSM for Java.
 It is event-driven, but only supports describing the FSM directly in Java code.
 Compared to the other alternatives, it is not very well documented and not very popular.
-It would however be able to do the job.
-
-\nom{State Machine Compiler}{SMC}\footref{smc} is a state machine compiler that targets fifteen different programming languages, including Java.
+There also is \nom{State Machine Compiler}{SMC}\footref{smc}, a state machine compiler that targets fifteen different programming languages, including Java.
 It generates FSMs from a definition in \textit{.sm} files.
 SMC is mature and has good documentation, but the use of an extra definition language and the extra step of compiling it into a Java representation seem to be to complicated for our needs.
 
 Stateless4j\footref{stateless4j} is a lightweight library for creating FSMs directly in Java code.
 Compared to the other alternatives, it lacks in documentation and doesn't seem to be very popular.
-
 Squirrel-foundation\footref{squirrel} is a lightweight, flexible, and extensible FSM library for Java.
 Although relatively new, it is feature rich, well documented and relatively popular.
 It also supports some advanced features that might be useful.
 For example, it supports SCXML import and export.
-
-Unimod\footref{unimod} is a project that can create FSMs from UML descriptions created by an eclipse plugin.
+Finally, there is Unimod\footref{unimod}, a project that can create FSMs from UML descriptions created by an eclipse plugin.
 Unlike the other alternative, Unimod aims to create a unified methodology for application development and not just a library.
 This seems to be too complex for our needs.
+
+From the alternatives presented here, Apache Commons SCXML would be our first choice if the standard and the implementation were more mature.
+At this point in time however, this is not the case.
+For this diploma thesis we will use squirrel-foundation to implement the state machine.
+If Apache Commons SCXML becomes a viable option in the future, replacing squirrel-foundation could be considered.
+Since it supports exporting the state machine as SCXML, this could be used to ease a possible transition.
