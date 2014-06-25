@@ -28,7 +28,7 @@
       sudo: true
 
     - name: install euenc package
-      command: sudo tlmgr install euenc creates=/usr/local/texlive/2013/texmf-dist/tex/latex/euenc
+      command: sudo tlmgr install euenc creates=/usr/local/texlive/2014/texmf-dist/tex/latex/euenc
 
     - name: download biber
       get_url: url=http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/1.8/binaries/Linux/biber-linux_x86_32.tar.gz/download dest=/tmp/biber.tar.gz
