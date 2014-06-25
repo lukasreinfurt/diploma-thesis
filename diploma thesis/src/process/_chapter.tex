@@ -18,21 +18,21 @@ We will go through \autoref{image:process} step by step in the following paragra
 	\label{image:process}
 \end{figure}
 
-At the beginning, a user starts the Modeler, which includes the bootware plugin, as seen on the bottom left of \autoref{image:process}.
-If they haven't done so already, they configure the bootware plugin with their cloud login credentials to be used during the bootware process and other parameters that might be needed. They also select, which event plugins the bootware should load.
+At the beginning, a user starts the Modeler, which includes the bootware adapter, as seen on the bottom left of \autoref{image:process}.
+If they haven't done so already, they configure the bootware adapter with their cloud login credentials to be used during the bootware process and other parameters that might be needed. They also select, which event plugins the bootware should load.
 They then use the Modeler to create a workflow as usual.
 Once the workflow is finished and ready to be executed, they click the start button as usual.
 This marks the beginning of the bootstrapping phase.
-The bootware plugin has hooked into the start process and takes over by starting the local bootware (step 1).
+The bootware adapter has hooked into the start process and takes over by starting the local bootware (step 1).
 
-Once the local bootware is up and running, the bootware plugin calls it with the context the user provided (step 2).
+Once the local bootware is up and running, the bootware adapter calls it with the context the user provided (step 2).
 The local bootware first checks, if a remote bootware already exists in the requested remote environment.
 If not, the local bootware provisions a remote bootware using the information provided in the context (step 3).
 Once the remote bootware is deployed, it is called by the local bootware with a deploy request for the provisioning engine that will be used to deploy the workflow middleware (step 4).
 The remote bootware deploys the requested provisioning engine using the information provided in the context (step 5).
 Once the provisioning engine is up and running, the remote bootware calls the provisioning engine (step 6) and tells it to deploy the workflow middleware (step 7).
-Once the workflow middleware is up and running, the provisioning engine returns the endpoint references of the workflow middleware to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware plugin.
-The bootware plugin uses these end point references to link the modeler to the workflow middleware.
+Once the workflow middleware is up and running, the provisioning engine returns the endpoint references of the workflow middleware to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
+The bootware adapter uses these end point references to link the modeler to the workflow middleware.
 This is the end of the bootstrapping phase.
 Now begins the workflow execution phase.
 
@@ -59,7 +59,7 @@ First, the remote bootware calls the provisioning engine that was used to provis
 The provisioning engine returns the success to the remote bootware.
 Next, the remote bootware undeploys all provisioning engines that might still be running (step 5).
 Once all provisioning engines are gone, the remote bootware returns the success to the local bootware.
-The local bootware removes the remote bootware (step 3) and returns the success to the bootware plugin.
+The local bootware removes the remote bootware (step 3) and returns the success to the bootware adapter.
 At this point, no remote components should be running anymore.
 The local bootware now shuts down itself, which completes the whole process.
 
@@ -80,12 +80,12 @@ The end of the lifetime of a component (i.e. when it is shutdown) is marked by a
 \end{figure}
 
 In \autoref{image:startup_sequence} we can clearly see how one component triggers the next one during the bootstrapping phase.
-Starting at the top left, the deploy action starts an escalating process, where one component starts the next, beginning with the modeler starting the bootware plugin.
-The bootware plugin then starts the local bootware and sends a deploy requests.
+Starting at the top left, the deploy action starts an escalating process, where one component starts the next, beginning with the modeler starting the bootware adapter.
+The bootware adapter then starts the local bootware and sends a deploy requests.
 The local bootware deploys and starts the remote bootware and forwards the deploy request.
 The remote bootware deploys and starts a provisioning engine, which it then calls to provision the workflow middleware.
-Once the workflow middleware is running, every component returns a response to the component who called it, which ends when the bootware plugin receives a response from the local bootware.
-This response contains the endpoint references to the workflow middleware, which the bootware plugin uses to configure the connection between the modeler and the workflow middleware.
+Once the workflow middleware is running, every component returns a response to the component who called it, which ends when the bootware adapter receives a response from the local bootware.
+This response contains the endpoint references to the workflow middleware, which the bootware adapter uses to configure the connection between the modeler and the workflow middleware.
 The modeler can now deploy and start the workflow on the workflow middleware, which concludes the bootstrapping phase.
 
 \begin{figure}[!htbp]

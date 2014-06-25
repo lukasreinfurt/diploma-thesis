@@ -9,8 +9,8 @@ After all, this depends on the workflow middleware.
 The shutdown process should start when the workflow middleware is finished with the workflow execution, so the bootware has to be informed of this somehow.
 
 One possibility is to trigger the shutdown procedure from the bootware plugin in the modeler.
-If the bootware plugin can access this information through the modeler, it can call the shutdown operation of the local bootware, which will in turn call the shutdown operation of the remote bootware, which will eventually lead to the removal of all remote components.
-If this is possible using a particular modeler depends on the modeler and the integration possibilities for the bootware plugin.
+If the bootware adapter can access this information through the modeler, it can call the shutdown operation of the local bootware, which will in turn call the shutdown operation of the remote bootware, which will eventually lead to the removal of all remote components.
+If this is possible using a particular modeler depends on the modeler and the integration possibilities for the bootware adapter.
 
 There is a second possibility that can be used instead of the first one.
 We already introduced the event plugin type, which can also trigger events in the bootware, in particular the shutdown event.

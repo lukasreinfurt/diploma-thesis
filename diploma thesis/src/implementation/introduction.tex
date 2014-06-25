@@ -10,7 +10,7 @@ In our case these are the local and remote bootwares and their plugins, as well 
 The specific and the generic components have to work together, but there should be no need to make huge modifications to either one to do so.
 Therefore, we need adapter components in some places, which are shown in gray in \autoref{image:generic}.
 They are responsible for gluing together specific and generic components where necessary and should be the only components that have to be modified or created from scratch to fit to a specific environment.
-In our case this is the bootware plugin loaded in the SimTech Modeler on the bottom left.
+In our case this is the bootware plugin, an implementation of the bootware adapter described in \autoref{design:modeler_integration}, loaded in the SimTech Modeler on the bottom left.
 There also is an adapter component between the SimTech ODE and Apache Service Mix, which is not shown here.
 
 \begin{figure}[!htbp]

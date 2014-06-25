@@ -1,7 +1,7 @@
 \section{External Communication}
 \label{design:communication}
 
-In \autoref{design:modeler_integration} we established that a bootware plugin in the modeler has to call the local bootware.
+In \autoref{design:modeler_integration} we established that a bootware adapter in the modeler has to call the local bootware.
 From \autoref{design:division} we also know that both the local bootware and the provisioning manager have to call the remote bootware.
 We now have to decide, how this external communication with the bootware will work.
 There are several factors that impact this decision.
@@ -39,7 +39,7 @@ Like CORBA, web services also support asynchronous invocation, as well as securi
 
 Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
 The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA doesn't offer any significant advantages over SOAP based web services.
-\autoref{image:webservice} shows the addition of asynchronous web service call and return communication between the modeler bootware plugin and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
+\autoref{image:webservice} shows the addition of asynchronous web service call and return communication between the bootware adapter and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
 
 With asynchronous communication, long running provisioning processes won't pose a problem.
 We do however still need information during those long running processes to give the user some feedback.

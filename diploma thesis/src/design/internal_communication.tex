@@ -40,16 +40,30 @@ Many events will be published in an event system, but not all of them might be o
 The majority might be of low value while a few events might be very important.
 For example, for logging purposes we might not be interested in every event, but only warnings and errors.
 By adding a severity attribute to the base event type, all events could be categorized in different severity groups and filtered accordingly if needed.
-
 As we can see, we might benefit from a well thought-out event hierarchy.
 
-\textcolor{red}{
-base event
-	plugin event
-		plugin loading event
-		plugin execution event
-	state machine event
-		transition event
-		start event
-		stop event
-}
+\begin{description}
+	\item[BaseEvent] on which all other events are based
+	\begin{description}
+		\item[CoreEvent] published by the bootware core
+		\begin{description}
+			\item[PluginManagerEvent] -
+			\begin{description}
+				\item[PluginLoadEvent] -
+				\item[PluginUnloadEvent] -
+				\item[\ldots] -
+			\end{description}
+			\item[\ldots] -
+		\end{description}
+	\end{description}
+	\begin{description}
+		\item[PluginEvent] published by a plugin
+		\begin{description}
+			\item[InfrastructurePluginEvent] -
+			\item[ConnectionPluginEvent] -
+			\item[PayloadPluginEvent] -
+			\item[ProvisioningEnginePluginEvent] -
+			\item[EventPluginEvent] -
+		\end{description}
+	\end{description}
+\end{description}

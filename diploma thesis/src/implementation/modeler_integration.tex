@@ -2,10 +2,12 @@
 \label{implementation:modeler_integration}
 
 In this section we describe the integration between the SimTech SWfMS and the bootware.
-Currently, what happens is that if a workflow is is ready and should be executed, the user clicks on a button and the workflow is deployed and executed on the SimTech SWfMS.
+Currently, what happens is that if a workflow is is ready and should be executed, the user clicks on a button in the SimTech Modeler and the workflow is deployed and executed on the SimTech SWfMS.
 Now we have to find a way to integrate the bootware into this process.
+We described this as a generic bootware adapter in \autoref{design:modeler_integration}, but now we need an actual implementation of this adapter, which wil be specific to the SimTech Modeler
 The button is realized by an Eclipse plugin that adds SimTech specific functionality to the Modeler (which is based on Eclipse).
 We therefore also have to create some kind of Eclipse plugin to hook into this process.
+We call it the bootware plugin.
 There are two scenarios how we could go about this.
 
 We could extend the existing plugin with the functionality that we need for the bootware.

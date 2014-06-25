@@ -76,9 +76,9 @@ After that, the remote bootware enters the new provision middleware state at the
 Once the middleware is running, the remote bootware is finished with this request and returns the endpoint references of the middleware in the response to the local bootware, before returning into the wait state.
 
 This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
-Now, the local bootware can finish its request by sending back a response to the modeler bootware plugin, before returning to the wait state.
+Now, the local bootware can finish its request by sending back a response to the bootware adapter, before returning to the wait state.
 The local bootware is now done until it's time to undeploy the remote bootware.
-Meanwhile, the modeler bootware plugin starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom of \autoref{image:flow_remote}.
+Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom of \autoref{image:flow_remote}.
 
 As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.
 Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
