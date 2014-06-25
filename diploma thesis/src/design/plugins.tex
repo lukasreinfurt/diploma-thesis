@@ -26,7 +26,7 @@ Therefore, a third plugin type is necessary: The \textit{connection plugins}.
 
 The remote bootware also has to handle the initial provisioning of the workflow middleware, which involves calling a provisioning engine to tell it to start the provisioning process.
 Since this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
-We therefore introduce a fourth plugin type: The \textit{provisioning engine plugins}.
+We therefore introduce a fourth plugin type: The \textit{call provisioning engine plugins}.
 
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
 We can generalize this into a more versatile fifth plugin type: The \textit{event plugins}.
@@ -217,9 +217,9 @@ This method is provided for completeness and for special cases.
 	\label{table:payload_plugins}
 \endgroup
 
-\subsection{Provisioning Engine Plugins}
+\subsection{Call Provisioning Engine Plugins}
 
-Provisioning engine plugins provide the bootware with a unified way to call provisioning engines an trigger provisioning and deprovisioning operations.
+Call provisioning engine plugins provide the bootware with a unified way to call provisioning engines an trigger provisioning and deprovisioning operations.
 \autoref{table:provisioningengine_plugins} shows the operations that these plugins should implement.
 The provision operation calls a provisioning engine and trigger the provisioning process.
 It takes two inputs: An endpoint reference, which points to the provisioning engine that should be used, and a service package reference, which points to the service package that the provisioning engine should provision.
@@ -252,7 +252,7 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 		& Tells the provisioning engine to deprovision the given service package\\
 
 	\end{tabu}
-	\caption{Interfaces to be implemented by provisioning engine plugins}
+	\caption{Interfaces to be implemented by call provisioning engine plugins}
 	\label{table:provisioningengine_plugins}
 \endgroup
 

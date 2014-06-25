@@ -72,7 +72,7 @@ Like the local bootware, the remote bootware went through the initialization ste
 It then waited in the wait state for a request.
 Now, it receives the request from the local bootware, reads the context, loads the request plugins and executes the deploy operation.
 This should result in a provisioning engine being started by the payload plugin.
-After that, the remote bootware enters the new provision middleware state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware by executing the provisioning engine plugin.
+After that, the remote bootware enters the new provision middleware state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware by executing the call provisioning engine plugin.
 Once the middleware is running, the remote bootware is finished with this request and returns the endpoint references of the middleware in the response to the local bootware, before returning into the wait state.
 
 This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.

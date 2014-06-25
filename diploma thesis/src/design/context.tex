@@ -18,7 +18,7 @@ As we can see in the upper half, it defines the plugin types to be used for the 
 The infrastructure plugin type defines, which infrastructure plugin should be used to provision the requested infrastructure.
 The connection plugin type selects how the bootware should connect to to this infrastructure.
 The payload plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in our case.
-Finally, the provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
+Finally, the call provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
 It will use the middleware package reference, which is also defined in the context, as input to start the provisioning of the workflow middleware.
 In the bottom half of \autoref{image:context} we can see that the context can also contain configuration for different plugins.
 This is necessary because various plugins might need to be configured properly to be able to fulfill their task.

@@ -17,7 +17,7 @@ All event plugins and the web service interface work by implementing event handl
 As we can see in the center of both figures, the event bus and the state machine form the core of the bootware.
 The event bus is responsible for distributing events between the various plugins and the state machine.
 The state machine implements the entire bootstrapping process, as described earlier in \autoref{design:flow}.
-At certain points during the bootstrapping process, operations are delegated to the plugin manager to load plugins, and to the infrastructure, connection, payload, and provisioning engine plugins, shown at the top of both figures.
+At certain points during the bootstrapping process, operations are delegated to the plugin manager to load plugins, and to the infrastructure, connection, payload, and call provisioning engine plugins, shown at the top of both figures.
 
 \begin{figure}[!htbp]
 	\centering
@@ -38,7 +38,7 @@ At the top, both figures show an exemplary result of these bootstrapping operati
 In this particular case, the infrastructure plugin started a VM, to which the connection plugin set up a communication channel.
 The payload plugin then used this communication channel to provision the payload inside the VM.
 The provisioning engine plugin is only available in the remote bootware and allows it to call a provisioning engine with the details necessary to provision the workflow middleware.
-This is shown in \autoref{image:finalarchremote} as an additional function call from the provisioning engine plugin to the previously deployed payload.
+This is shown in \autoref{image:finalarchremote} as an additional function call from the call provisioning engine plugin to the previously deployed payload.
 During the bootstrapping procedure, events are sent from all these plugins back to the event bus to be delivered to the loaded event plugins.
 
 As we can now see, the local and the remote bootware are quite similar, but differ in enough ways that a cloned architecture, as described in \autoref{design:division}, might not be the best choice, especially since both components might drift further apart in their functionality in the future.
