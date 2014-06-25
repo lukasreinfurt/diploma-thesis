@@ -42,28 +42,43 @@ For example, for logging purposes we might not be interested in every event, but
 By adding a severity attribute to the base event type, all events could be categorized in different severity groups and filtered accordingly if needed.
 As we can see, we might benefit from a well thought-out event hierarchy.
 
-\begin{description}
-	\item[BaseEvent] on which all other events are based
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=figure}
 	\begin{description}
-		\item[CoreEvent] published by the bootware core
+		\item[BaseEvent] on which all other events are based
 		\begin{description}
-			\item[PluginManagerEvent] -
+			\item[CoreEvent] published by the bootware core
 			\begin{description}
-				\item[PluginLoadEvent] -
-				\item[PluginUnloadEvent] -
-				\item[\ldots] -
+				\item[PluginManagerEvent] for loading and unloading plugins
+				\begin{description}
+					\item[PluginLoadEvent] could be info, success, warning, or error
+					\item[PluginUnloadEvent] could be info, success, warning, or error
+					\item[\ldots] ~
+				\end{description}
+				\item[\ldots] ~
 			\end{description}
-			\item[\ldots] -
 		\end{description}
-	\end{description}
-	\begin{description}
-		\item[PluginEvent] published by a plugin
 		\begin{description}
-			\item[InfrastructurePluginEvent] -
-			\item[ConnectionPluginEvent] -
-			\item[PayloadPluginEvent] -
-			\item[ProvisioningEnginePluginEvent] -
-			\item[EventPluginEvent] -
+			\item[PluginEvent] published by a plugin
+			\begin{description}
+				\item[InfrastructurePluginEvent] contains further child events defined by plugin
+				\item[ConnectionPluginEvent] contains further child events defined by plugin
+				\item[PayloadPluginEvent] contains further child events defined by plugin
+				\item[EventPluginEvent] contains further child events defined by plugin
+				\item[\ldots] ~
+			\end{description}
 		\end{description}
 	\end{description}
-\end{description}
+	\caption{Exemplary event hierarchy.}
+	\label{figure:eventhierarchy}
+\endgroup
+
+\autoref{figure:eventhierarchy} shows an exemplary event hierarchy for the bootware.
+As we can, every event is is based on the BaseEvent, shown at the top.
+Events can be further divided into core events that are published by the bootware core and plugin events that are published by plugins.
+Core events contain events from the various core components of the bootware, for example the plugin manager.
+The plugin manager events are further divided into events for certain operation that can also have different severity values (i.e. info, success, warning, and error).
+Plugin events are be divided by plugin types.
+Different plugins can also add further child events to these event types.
