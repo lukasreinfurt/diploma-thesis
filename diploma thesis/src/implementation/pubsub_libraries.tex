@@ -28,8 +28,6 @@ If an event is published, all event handlers for this event should be executed o
 Only then should the program continue execution.
 But asynchronous invocation might still be useful in some cases, so we also add it here.
 
-We will also consider some non-functional qualities like popularity, maturity and documentation that can give an indication of the usefulness of a library.
-
 \vspace*{\baselineskip}
 \begingroup
 	\centering
@@ -123,20 +121,20 @@ We will also consider some non-functional qualities like popularity, maturity an
 The first library we look at is EventBus.
 As can be seen in \autoref{table:pubsub_comparison} on the left, EventBus supports most of the functionality we need.
 From the libraries presented here it is also the oldest one, so it is mature, fairly popular and well documented.
-But its age is also is weakness.
-
-Guava Event Bus is a fairly simple PubSub library.
+However, outdated coding practices and many features also make it fairly heavyweight.
+Guava Event Bus on the other hand is a rather simple PubSub library.
 It is part of the Google core libraries for Java 1.6+ and is therefore fairly popular, but it lacks in documentation.
 It also doesn't support weak references and filtering, which doesn't make it a good fit for our use case.
 
 Simple Java Event Bus is a simpler alternative to EventBus.
 It lacks some of the advanced features of EventBus but is also easier to use.
 Compared to the other libraries it is not that popular and lacks in documentation.
-
-MBassador is a light-weight and performance minded PubSub Library.
-As we can see in \autoref{table:pubsub_comparison}, it supports all functional features that we need (and some more).
+MBassador is a light-weight and performance minded PubSub library.
+As we can see in \autoref{table:pubsub_comparison}, it supports all functional features that we need and some more.
 It is also relatively mature, has good enough documentation and is somewhat popular.
-
 Finally, we have Mycila PubSub, a modern replacement for EventBus.
 It supports all the functional features we need, except filtering.
-Its documentation is good enough, but since it is relatively new, it's not very popular (yet) and may lack in maturity.
+Its documentation is good enough, but since it is relatively new, it's not very popular yet and may lack in maturity.
+
+From the alternatives presented here, MBassador seems to be the only one that offers all the functionality we need combined with relative maturity and good documentation.
+We will therefore use it for our implementation.
