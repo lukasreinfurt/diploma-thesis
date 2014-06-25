@@ -5,6 +5,7 @@ By now, we know that we will use a web service interface for remote communicatio
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The deploy and the undeploy operation.
 In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
 We add two additional operation that we also need, the getActivePayloads operation and the shutdown operation.
+Both the local and the remote bootware will have to implement all of these operations, except the getActivePayloads operation, which is only needed in the remote bootware.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -31,7 +32,7 @@ We add two additional operation that we also need, the getActivePayloads operati
 		& Configuration List
 		& - \\
 
-			getActivePayloads
+			getActivePayloads\footnote{only in remote bootware}
 		& -
 		& Payload List \\
 
@@ -76,6 +77,7 @@ If the configuration couldn't be updated, it responds with an error message.
 
 The getActivePayloads operation is used by the provisioning manager to check if a provisioning engine he needs already exist.
 This operation just returns a list of all active payloads.
+There is no reason for this operation to be called on the local bootware, so this operation will be implemented in the remote bootware only.
 
 \subsection{Shutdown}
 

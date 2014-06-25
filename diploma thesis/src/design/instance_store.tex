@@ -12,9 +12,11 @@ Storing enough information allows us to undeploy remaining payloads before shutt
 Additionally, a warning could be return by the bootware to inform the user that some non-bootware component should be modified to explicitly undeploy all services it deployed.
 
 Another reason to store some information about deployed payloads is to simplify the interaction with other components.
-If we wouldn't store any information and make the bootware stateless, each component using the bootware (e.g. the bootware modeler plugin, the local bootware, and the provisioning manager) would be required to keep track of all payloads it deployed using the bootware, so that this information can be supplied when it's time to undeploy.
+If we wouldn't store any information and make the bootware stateless, each component using the bootware (e.g. the bootware adapter, the local bootware, and the provisioning manager) would be required to keep track of all payloads it deployed using the bootware, so that this information can be supplied when it's time to undeploy.
 This places an extra burden on these components and scatters around the information about deployed payloads.
-By storing this information in the bootware we simplify the usage of the bootware for other components and concentrate this information.
+By storing this information in the bootware we simplify the usage of the bootware for other components and concentrate this information in one place.
+With the getActivePayloads operation introduced in \autoref{design:webservice} and offered by the remote bootware, other components can always get a list of all active payloads if they need it.
+This operation also uses the information stored in the instance store.
 
 We should also think about how such a storage mechanism might be different for the local and remote bootware.
 The local bootware only ever deploys the remote bootware, so here we have to keep track of only one thing.

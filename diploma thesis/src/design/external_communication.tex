@@ -6,7 +6,7 @@ From \autoref{design:division} we also know that both the local bootware and the
 We now have to decide, how this external communication with the bootware will work.
 There are several factors that impact this decision.
 Communication between the components should be as simple as possible, but has to support some critical features.
-To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the provisioning manager and the modeler plugin.
+To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the provisioning manager and the bootware adapter.
 
 Since the provisioning processes kicked off by the bootware can potentially take a long time to finish (in the range of minutes to hours), we face possible timeouts when using synchronous communication.
 As alternative we could use asynchronous communication with callbacks.
