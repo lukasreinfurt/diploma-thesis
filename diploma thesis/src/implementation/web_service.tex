@@ -123,7 +123,7 @@ It contains a soap fault string in line 5 and the original UndeployException thr
 	\label{lst:webservice:undeployerror}
 \end{listing}
 
-\subsection{SetConfiguration}
+\subsection{Set Configuration}
 
 In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setConfiguration} operation.
 Using this operation, the configuration can be set independently from deploy requests if necessary.
@@ -184,7 +184,7 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 	\label{lst:webservice:setconfigurationerror}
 \end{listing}
 
-\subsection{GetActivePayloads}
+\subsection{Get Active Payloads}
 
 The getActivePayloads operation is called by the provisioning manager to retrieve already deployed provisioning engines.
 If a provisioning engine it needs is already active, it doesn't have to call the bootware to provision a new one.

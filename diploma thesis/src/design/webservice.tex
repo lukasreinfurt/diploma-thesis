@@ -44,14 +44,14 @@ We add two additional operation that we also need, the getActivePayloads operati
 	\label{table:webserviceoperations}
 \endgroup
 
-\subsection{deploy}
+\subsection{Deploy}
 
 The deploy operation is called whenever a new payload (e.g. a provisioning engine, or initially, the remote bootware) should be deployed.
 As input it takes a context object as described in \autoref{design:context}.
 If it was able to successfully deploy the requested payload, it responds with an endpoint reference to the payload.
 If the deployment failed, it responds with an error message.
 
-\subsection{undeploy}
+\subsection{Undeploy}
 
 The undeploy operation is essentially the reversal of the deploy operation.
 As input it takes an endpoint reference to a payload that should be undeploy.
@@ -62,7 +62,7 @@ Unlike the deploy operation it doesn't take a context object as input, but the c
 This means that we have to store the context object used during each deploy operation so that we can retrieve it later during the corresponding undeploy operation.
 This design is intentional and will be described in more detail in \autoref{design:instancestore}.
 
-\subsection{setConfiguration}
+\subsection{Set Configuration}
 
 The setConfiguration operation is used to transmit or update the default configuration used by plugins.
 As input it takes a list of configurations that should be saved.
@@ -72,12 +72,12 @@ The configuration can still be overwritten on a per request basis if the context
 If the configuration was updated successfully, it responds with a success message.
 If the configuration couldn't be updated, it responds with an error message.
 
-\subsection{getActivePayloads}
+\subsection{Get Active Payloads}
 
 The getActivePayloads operation is used by the provisioning manager to check if a provisioning engine he needs already exist.
 This operation just returns a list of all active payloads.
 
-\subsection{shutdown}
+\subsection{Shutdown}
 
 This operation triggers the shutdown of sequence of the bootware.
 It behaves a little differently in the local and remote bootware.
