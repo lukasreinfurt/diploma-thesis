@@ -21,20 +21,8 @@ namespace :build do
 
 	namespace :txt do
 
-		task :detex do
-			system '/opt/opendetex/delatex -e tabu,figure,listing thesis.tex > thesis.txt'
-		end
-
-		task :pdftotext do
-			system 'pdftotext -nopgbrk thesis.pdf thesis.txt'
-		end
-
-		task :pandoc => ['build:tex:latexpand'] do
-			system 'pandoc -o thesis.txt tmp.tex'
-		end
-
-		task :removelatex => ['build:tex:latexpand'] do
-			system 'perl removelatexcode.pl -o tmp.tex'
+		task :customdelatex => ['build:tex:latexpand'] do
+			system 'ruby customdelatex.rb'
 		end
 
 	end
@@ -76,7 +64,7 @@ end
 
 namespace :check do
 
-	task :languagetool => ['build:txt:detex'] do
+	task :languagetool => ['build:txt:customdelatex'] do
 		system 'java -jar /opt/LanguageTool-2.4/languagetool-commandline.jar thesis.txt'
 	end
 
