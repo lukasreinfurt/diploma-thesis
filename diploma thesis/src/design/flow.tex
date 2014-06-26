@@ -25,11 +25,13 @@ If loading one of these plugins fails, the local bootware will try to unload alr
 If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
 
 Once the local bootware is in the wait state it is ready to receive requests from the outside.
-If a shutdown event is received in this state, the local bootware will first call tell the remote bootware to undeploy all active payloads.
+If a shutdown event is received in this state, the local bootware will first tell the remote bootware to undeploy all active payloads.
 Next, the local bootware will undeploy the remote bootware by running through the undeploy process shown on the bottom left with the appropriate plugins.
 Then, it will shut itself down by first unloading the event plugins and then running the cleanup code.
 This is the only normal way to shutdown the local bootware.
-If a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
+We only hint at the setConfiguration request here, since it is so simple that it could also be handled in the wait state.
+Deploy and undeploy requests however are more complicated.
+If such a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
 
 The request context contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
 If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
@@ -59,6 +61,7 @@ Now, we move our attention to the remote bootware, where the requests continues 
 As we can see, it is largely identical to the local bootware, at least at the moment.
 The send to remote state is gone, since we don't need this in the remote bootware.
 Instead, as the bottom of \autoref{image:flow_remote} shows, the provision and deprovision middleware steps were added.
+The remote bootware also supports the getActivePayloads request.
 Other than that, the local and remote processes are the same.
 
 \begin{figure}[!htbp]
@@ -78,7 +81,7 @@ Once the middleware is running, the remote bootware is finished with this reques
 This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
 Now, the local bootware can finish its request by sending back a response to the bootware adapter, before returning to the wait state.
 The local bootware is now done until it's time to undeploy the remote bootware.
-Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom of \autoref{image:flow_remote}.
+Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom, or the getActivePayloads operation only hinted at in \autoref{image:flow_remote}.
 
 As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.
 Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
