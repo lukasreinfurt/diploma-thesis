@@ -19,7 +19,7 @@ These are loaded at the beginning of the bootware execution by the plugin manage
 For demonstrations purposes, both figures shows a wider range of possible event plugins.
 All these plugins provide some sort of input and/or output mechanism for the bootware.
 A \nom{command-line interface}{CLI} plugin, as shown in \autoref{image:finalarchlocal}, could be used to make the bootware operations accessible via a command-line interface.
-A event logger plugin could be used to write all bootware events to a log file.
+An event logger plugin could be used to write all bootware events to a log file.
 We can also imagine an event queue plugin that pushes all bootware events into some message queue at the remote bootware, so that they can be consumed by other components, like the local bootware.
 Finally, an undeploy trigger plugin in the local bootware, as shown in \autoref{image:finalarchlocal}, could trigger the undeployment of the bootware and all running payloads by listening for a specific message at the workflow middleware.
 Besides the event plugins there is always the web service interface, shown at the bottom right of both figures, which provides the standard way to interact with the bootware.

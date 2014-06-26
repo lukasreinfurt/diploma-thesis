@@ -3,7 +3,7 @@
 
 We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugins.
 Ideally, every plugin will be able to react to events from the bootware.
-These event could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
+These events could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
 Since a plugin doesn't know about other plugins, it can't listen for events at other plugins directly.
 The only known constant to a plugin is the bootware core.
 Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
@@ -25,7 +25,7 @@ Using this pattern, we would create an event bus at the bootware core and plugin
 
 \subsection{Event Types}
 
-When using PubSub and events to communicate, its usually a good idea to not only use one type of event, but many different types.
+When using PubSub and events to communicate, it is usually a good idea to not only use one type of event, but many different types.
 Using different kinds of event allows us to subscribe only to specific events or react differently based on the type of an event.
 But what if we want to react to each event type in the same way, for example for logging purposes?
 Now, many different event types complicate things more.
@@ -76,9 +76,9 @@ As we can see, we might benefit from a well thought-out event hierarchy.
 \endgroup
 
 \autoref{figure:eventhierarchy} shows an exemplary event hierarchy for the bootware.
-As we can, every event is is based on the BaseEvent, shown at the top.
+As we can, every event is based on the BaseEvent, shown at the top.
 Events can be further divided into core events that are published by the bootware core and plugin events that are published by plugins.
 Core events contain events from the various core components of the bootware, for example the plugin manager.
 The plugin manager events are further divided into events for certain operation that can also have different severity values (i.e. info, success, warning, and error).
-Plugin events are be divided by plugin types.
+Plugin events are divided by plugin types.
 Different plugins can also add further child events to these event types.

@@ -51,7 +51,7 @@ The bars at the bottom of \autoref{image:original_architecture} show, which comp
 \autoref{image:original_architecture} shows that the only local components are the modeler and the bootware, while all other components are hosted in the cloud.
 In the modeling phase, a scientist uses local modeling and monitoring tools in combination with cloud hosted repositories and registries to create a workflow.
 These components are always running.
-When they start the execution of the the workflow, the local bootware component kicks of the on demand provisioning process and therefore the second phase, called middleware runtime phase.
+When they start the execution of the workflow, the local bootware component kicks of the on demand provisioning process and therefore the second phase, called middleware runtime phase.
 In this phase, the bootware deploys a provisioning engine in the cloud (step 1), which in turn deploys the workflow middleware (step 2).
 Once the middleware is up and running, the workflow can be executed. During the execution, the ESB receives service calls from the workflow engine.
 Services that are not running at this time can then be provisioned by the provisioning engine (step 3).

@@ -32,7 +32,7 @@ Once the remote bootware is deployed, it is called by the local bootware with a 
 The remote bootware deploys the requested provisioning engine using the information provided in the context (step 5).
 Once the provisioning engine is up and running, the remote bootware calls the provisioning engine (step 6) and tells it to deploy the workflow middleware (step 7).
 Once the workflow middleware is up and running, the provisioning engine returns the endpoint references of the workflow middleware to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
-The bootware adapter uses these end point references to link the modeler to the workflow middleware.
+The bootware adapter uses those end point references to link the modeler to the workflow middleware.
 This is the end of the bootstrapping phase.
 Now begins the workflow execution phase.
 

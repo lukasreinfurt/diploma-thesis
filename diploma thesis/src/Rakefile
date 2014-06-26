@@ -65,7 +65,7 @@ end
 namespace :check do
 
 	task :languagetool => ['build:txt:customdelatex'] do
-		system 'java -jar /opt/LanguageTool-2.4/languagetool-commandline.jar thesis.txt'
+		system 'java -jar /opt/LanguageTool-2.4/languagetool-commandline.jar -l en -d EN_QUOTES thesis.txt'
 	end
 
 	task :aspell do

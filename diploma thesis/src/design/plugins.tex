@@ -30,7 +30,7 @@ We therefore introduce a fourth plugin type: The \textit{call provisioning engin
 
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
 We can generalize this into a more versatile fifth plugin type: The \textit{event plugins}.
-These plugins are a bit less specific then the four other types.
+These plugins are a bit less specific than the four other types.
 They allow users to add functionality that reacts to (or creates) events inside the bootware.
 How the actual event system will be implemented will be discussed in \autoref{design:internalcomm}.
 With this fifth plugin type we have now covered all plugin types we will need.
@@ -122,7 +122,7 @@ As input it takes an instance object created earlier by the deploy operation.
 
 Connection plugins are responsible for creating a communication channel to previously deployed resources that can later be used by payload plugins to execute their operations on the resource.
 The connection could be made by using SSH, RDC, VPN, Telnet, or other communication mechanisms supported by the resource.
-The connection plugins should be implemented in a generic fashion, so that they can be used for all kinds of resources.
+The connection plugins should be implemented generically, so that they can be used for all kinds of resources.
 
 \autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
 The connect operation establishes a connection to a specific resource.
@@ -169,7 +169,7 @@ This process can include the uploading of files and the execution of remote comm
 The deploy operation installs a payload on an instance.
 This can include uploading files from the local machine or downloading files from other machines.
 To execute this operation, a connection to the instance is necessary, which is supplied as input with the connection object.
-The undeploy operation  removes a payload from an instance.
+The undeploy operation removes a payload from an instance.
 In most cases this will not be necessary, since the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it wasn't installed in persistent storage).
 This method is provided for completeness and for special cases.
 The start operation starts a payload which previously was installed with the deploy operation.
@@ -219,7 +219,7 @@ This method is provided for completeness and for special cases.
 
 \subsection{Call Provisioning Engine Plugins}
 
-Call provisioning engine plugins provide the bootware with a unified way to call provisioning engines an trigger provisioning and deprovisioning operations.
+Call provisioning engine plugins provide the bootware with a unified way to call provisioning engines and trigger provisioning and deprovisioning operations.
 \autoref{table:provisioningengine_plugins} shows the operations that these plugins should implement.
 The provision operation calls a provisioning engine and trigger the provisioning process.
 It takes two inputs: An endpoint reference, which points to the provisioning engine that should be used, and a service package reference, which points to the service package that the provisioning engine should provision.
@@ -259,5 +259,5 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 \subsection{Event Plugins}
 
 Unlike the other plugin types, the event plugins don't have any more operations to implement then the initialize and shutdown operations described in \autoref{table:all_plugins}.
-Instead, they implement their specific functionality by defining one ore more event handlers which will react to specific events when these are published at the event bus.
+Instead, they implement their specific functionality by defining one or more event handlers which will react to specific events when these are published at the event bus.
 How exactly these event handlers work will be discussed later.

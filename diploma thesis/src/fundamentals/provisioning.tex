@@ -14,7 +14,7 @@ This core functionality can be stated more precisely with the following definiti
 Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{provisioning:architecture}.
 
-There are many benefits to using an automated provisioning solution in stead of doing the provisioning by hand.
+There are many benefits to using an automated provisioning solution instead of doing the provisioning by hand.
 The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.
 This makes it possible to manage huge infrastructures with very little resources, which can save money compared to a manual approach.
 Since every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
@@ -63,7 +63,7 @@ The service template consists of two parts: A topology template and plans.
 Topology templates, as seen in the center of \autoref{image:tosca:definitions}, model the structure of a service and the middleware and infrastructure supporting it as a directed graph.
 The vertices of the graph represent nodes which are occurrences of a specific component, for example, an application server or a database.
 These nodes are defined by node types or by other service templates.
-Node types are reusable entities,  as shown in the top right of \autoref{image:tosca:definitions}.
+Node types are reusable entities, as shown in the top right of \autoref{image:tosca:definitions}.
 They define the properties of a component, as well as operations to manipulate a component, so called interfaces.
 Additionally, node types can be annotated with requirements and capabilities.
 These, in turn, are defined by requirement and capability types, which also belong to the group of reusable entities.
@@ -91,9 +91,9 @@ This interfaces could be implemented by an implementation artifact like a \texti
 The bottom right of \autoref{image:tosca:definitions} also shows policy templates that refer to specific policy types.
 A policy template can define concrete values for a policy specified in a policy type.
 A node template can then reference a policy template to declare that it supports some non-functional properties or a certain kind of quality-of-service.
-An example would be an node type for an application server that expresses that it supports high availability by referencing a matching policy template.
+An example would be a node type for an application server that expresses that it supports high availability by referencing a matching policy template.
 
-One or more TOSCA definitions are packaged, together with some meta data and possibly other files, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
+One or more TOSCA definitions are packaged, together with some metadata and possibly other files, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
 CSAR files can then be executed in a TOSCA runtime environment, also called TOSCA container, to create the service described within.
 
 \subsection{OpenTOSCA}

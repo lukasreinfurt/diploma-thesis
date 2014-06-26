@@ -4,7 +4,7 @@
 By now, we know that we will use a web service interface for remote communication.
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The deploy and the undeploy operation.
 In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
-We add two additional operation that we also need, the getActivePayloads operation and the shutdown operation.
+We add two additional operations that we also need, the getActivePayloads operation and the shutdown operation.
 Both the local and the remote bootware will have to implement all of these operations, except the getActivePayloads operation, which is only needed in the remote bootware.
 
 \vspace*{\baselineskip}
