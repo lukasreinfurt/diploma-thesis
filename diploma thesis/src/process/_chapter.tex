@@ -41,7 +41,7 @@ The workflow middleware now executes the workflow, during which it might encount
 The remote service call is passed on to the ESB (step 9), which checks if the service is already reachable.
 If it is, execution continues as usual.
 If not, the ESB tells the provisioning manager to provision the requested service (step 10).
-The provisioning manager checks, if the provisioning engine needed to provision the requested service is already available.
+The provisioning manager checks if the provisioning engine needed to provision the requested service is already available.
 If it is not, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
 Once the provisioning engine is up and running, the remote bootware returns the endpoint reference of the provisioning engine to the provisioning manager.
