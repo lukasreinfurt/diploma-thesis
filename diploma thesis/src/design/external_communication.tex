@@ -13,10 +13,10 @@ As alternative we could use asynchronous communication with callbacks.
 This would avoid timeouts but also creates a new problem.
 The callback message send as response is separated from the original message and therefore appears as unsolicited message to the client.
 If the client rejects unsolicited messages, for example because it is located behind a firewall, the callback message might also be blocked.
-This could be a problem, since in the environment where the bootware will most likely be used, i.e. at universities, secure networks are very common and asynchronous callbacks could therefore be problematic.
+This could be a problem because in the environment where the bootware will most likely be used, i.e. at universities, secure networks are very common and asynchronous callbacks could therefore be problematic.
 Another solution is to use polling, i.e. after a request was sent to the bootware, the bootware is polled periodically for a response.
 This also avoids timeouts as well as the firewall problematic.
-Disadvantages of polling, for example when many clients poll a server at the same time and cause a bottleneck, will most likely not be a problem in our case, since we only have a very restricted number of clients for each bootware instance and no multi-tenancy.
+Disadvantages of polling, for example when many clients poll a server at the same time and cause a bottleneck, will most likely not be a problem in our case, because we only have a very restricted number of clients for each bootware instance and no multi-tenancy.
 Since the provisioning process can take very long, there should also be some mechanism to get feedback on the current status during a long running provisioning process.
 
 The communication with the bootware components will contain sensitive data, for example login information for cloud providers.
@@ -26,7 +26,7 @@ While these security mechanisms will not be used in this diploma thesis due to t
 
 Java provides a package for \nom{Remote Method Invocation}{RMI}\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/rmi/package-summary.html\#package_description}}, which allows objects in one Java VM to invoke methods on objects in another Java VM.
 Depending on the implementation, it can be used with polling or asynchronous callbacks.
-But since RMI is limited to Java and we might want to communicate with the bootware from a component written in another programming language, RMI does not seem like a good fit.
+But because RMI is limited to Java and we might want to communicate with the bootware from a component written in another programming language, RMI does not seem like a good fit.
 For communication between programs written in different languages we could use the \nom{Common Object Request Broker Architecture}{CORBA}, a standard defined by the \nom{Object Management Group}{OMG}.
 It supports mappings for common programming languages, like Java, C++, Python, and others.
 CORBA also supports polling and asynchronous method invocation via callbacks~\autocite{corba:async}, as well as transport layer encryption and other security features~\autocite{corba:security}.
@@ -47,8 +47,8 @@ Like CORBA, web services also support polling and asynchronous invocation, as we
 \end{figure}
 
 Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
-The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA does not offer any significant advantages over SOAP based web services.
-Using a message-oriented middleware would also be an option but introducing another component seems to complicated, especially since we do not need most of the features that it offers (e.g.: transactions, persistence, etc.).
+The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially because CORBA does not offer any significant advantages over SOAP based web services.
+Using a message-oriented middleware would also be an option but introducing another component seems to complicated, especially because we do not need most of the features that it offers (e.g.: transactions, persistence, etc.).
 \autoref{image:webservice} shows the addition of web service call and return communication between the bootware adapter and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
 With polling, long running provisioning processes will not pose a problem.
 We do however still need information during those long running processes to give the user some feedback.

@@ -34,7 +34,7 @@ Once it is up and running, the deploy operation is finished and returns an insta
 The undeploy operation reverses the deploy operation.
 First, it terminates the EC2 instance.
 Once the instance is stopped, the key pair and the security group that were created earlier are removed.
-We do not have to close the ports we opened, since they are part of the security group and do not exist anymore once the security group is removed.
+We do not have to close the ports we opened, because they are part of the security group and do not exist anymore once the security group is removed.
 After this, the EC2 instance created earlier is successfully removed.
 There are no further actions necessary during the shutdown operation, but for safety we call the undeploy operation, in case it was not called earlier.
 
@@ -66,7 +66,7 @@ The disconnect operation is also called by the shutdown operation at the end of 
 
 This payload plugin allows the local bootware to install the remote bootware on a remote system.
 \autoref{image:remotebootwareplugin} shows a simplified overview of the steps involved in the installation of the remote bootware and how they map onto the payload plugin operations.
-The undeploy and stop operations where omitted since they are not really required in this case.
+The undeploy and stop operations where omitted because they are not really required in this case.
 
 \begin{figure}[!htbp]
 	\centering
@@ -89,7 +89,7 @@ Finally, the URL to the remote bootware is returned.
 This payload plugin allows the bootware to install an OpenTOSCA container on an EC2 instance.
 It executes the installation steps described in the OpenTOSCA manual over a connection provided by a connection plugin.
 \autoref{image:opentoscaplugin} shows a simplified overview of the steps involved in the installation of OpenTOSCA and how they map onto the payload plugin operations.
-The undeploy and stop operations where omitted since they are not really required in this case.
+The undeploy and stop operations where omitted because they are not really required in this case.
 
 \begin{figure}[!htbp]
 	\centering
@@ -101,7 +101,7 @@ The undeploy and stop operations where omitted since they are not really require
 The setup procedure for OpenTOSCA is very simply.
 Only one command has to be executed over ssh, which will automatically download and install all necessary components.
 After that, port 8080 on the EC2 instance is polled periodically until a connection is possible, which means that the installation process is finished.
-The start operation only has to return the URL pointing to the OpenTOSCA instance, since OpenTOSCA was already started by the installation script.
+The start operation only has to return the URL pointing to the OpenTOSCA instance because OpenTOSCA was already started by the installation script.
 
 \subsection{File Logger Plugin}
 

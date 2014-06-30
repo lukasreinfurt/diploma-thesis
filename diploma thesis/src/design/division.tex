@@ -81,9 +81,9 @@ Next, we take a look at a 2-tier architecture, as shown in \autoref{image:2_tier
 On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment near to the environment, where other components will be provisioned later.
 
 This eliminates the problems of a single local or remote bootware component.
-The user no longer has to be involved in the management of the remote bootware since the local bootware handles all that.
+The user no longer has to be involved in the management of the remote bootware, because the local bootware handles all that.
 Since we provision the remote bootware on demand, we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.
-We can now keep the local part as simple as possible and make the remote part as complicated as it has to be and since we provision the remote bootware only for one user, we do not have to worry about multi-tenancy.
+We can now keep the local part as simple as possible and make the remote part as complicated as it has to be, and because we provision the remote bootware only for one user, we do not have to worry about multi-tenancy.
 
 But we also introduce new problems.
 For one, we now have duplicate functionality between the two components.
@@ -113,7 +113,7 @@ Instead of provisioning a bigger bootware in a remote environment, the local boo
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented.
 Duplication of any functionality would not therefore be an issue.
 The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and might contain functionality that it would not require for local operation and vice versa.
-However, since we want to keep the whole bootware, including the remote part, fairly lightweight, it is unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
+However, because we want to keep the whole bootware, including the remote part, fairly lightweight, it is unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
 In this case, the advantage of only having to design and implement one component seems to outweigh the disadvantage of a slightly more complex local component (compared to the 2-tier variant).
 Of course, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
 Therefore we can not decide yet if this architecture should be used.

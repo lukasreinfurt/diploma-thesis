@@ -17,7 +17,7 @@ The code for loading plugins that is in place now does not necessarily need to b
 
 \section{Secure Communication and Secure Plugins}
 
-As we already mentioned in \autoref{design:communication}, it is necessary to secure the communication with the bootware, since it contains sensitive login information that should not be publicly accessible.
+As we already mentioned in \autoref{design:communication}, it is necessary to secure the communication with the bootware because it contains sensitive login information that should not be publicly accessible.
 For this, the communication has to be encrypted, which can be done by using the WS-Security\footnote{\url{https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=wss}} SOAP extension for the web service communication.
 In \autoref{implementation:selecting:pluginframeworks} we also mentioned that security for plugins could be a problem.
 OSGi provides an optional security layer based on Java permissions\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/security/Permission.html}} that can be used to apply permission based security.

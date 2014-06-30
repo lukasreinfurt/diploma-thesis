@@ -20,7 +20,7 @@ If those fail for some reason, the cleanup code will be executed before the loca
 In most cases however, the initialization should succeed.
 Then, the local bootware will transition to the next state, where it tries to load the event plugins.
 
-The event plugins are loaded once at the beginning of the local bootware execution, since they will not change at a per request basis (like the other plugins).
+The event plugins are loaded once at the beginning of the local bootware execution because they will not change at a per request basis (like the other plugins).
 If loading one of these plugins fails, the local bootware will try to unload already loaded plugins before continuing to the cleanup state.
 If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
 
@@ -29,7 +29,7 @@ If a shutdown event is received in this state, the local bootware will first tel
 Next, the local bootware will undeploy the remote bootware by running through the undeploy process shown on the bottom left with the appropriate plugins.
 Then, it will shut itself down by first unloading the event plugins and then running the cleanup code.
 This is the only normal way to shut down the local bootware.
-We only hint at the setConfiguration request here, since it is so simple that it could also be handled in the wait state.
+We only hint at the setConfiguration request here because it is so simple that it could also be handled in the wait state.
 Deploy and undeploy requests however are more complicated.
 If such a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
 
@@ -47,8 +47,8 @@ If the request was a deploy request, the local bootware will now execute the ste
 If one of those operations fails the local bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
 This process is the same as the undeploy process, shown on the bottom right of \autoref{image:flow_local}, which is triggered by an undeploy request.
 
-If the stop payload, deprovision payload, or disconnect states fail, the local bootware just continues with the next undeploy state, since these operations are not considered critical.
-However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, show at the right of \autoref{image:flow_local}, since this step is considered critical.
+If the stop payload, deprovision payload, or disconnect states fail, the local bootware just continues with the next undeploy state because these operations are not considered critical.
+However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, show at the right of \autoref{image:flow_local}, because this step is considered critical.
 This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
 The fatal error state is responsible for taking special actions to remedy this situation.
 
@@ -59,7 +59,7 @@ The local bootware will wait in this state until it receives a response from the
 Now, we move our attention to the remote bootware, where the requests continues to be processed.
 \autoref{image:flow_remote} shows the execution flow of the remote bootware.
 As we can see, it is largely identical to the local bootware, at least at the moment.
-The send to remote state is gone, since we do not need this in the remote bootware.
+The send to remote state is gone because it is not needed in the remote bootware.
 Instead, as the bottom of \autoref{image:flow_remote} shows, the provision and deprovision middleware steps were added.
 The remote bootware also supports the getActivePayloads request.
 Other than that, the local and remote processes are the same.

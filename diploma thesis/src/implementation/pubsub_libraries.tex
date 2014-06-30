@@ -2,7 +2,7 @@
 \label{implementation:selecting:pubsub}
 
 Many of the well know messaging middlewares offer support for PubSub, for example ActiveMQ\footnote{\url{http://activemq.apache.org}}, RabbitMQ\footnote{\url{http://www.rabbitmq.com}}, and ZeroMQ\footnote{\url{http://zeromq.org}}.
-But, since we are looking for an internal communication mechanism only, all of these solutions are somewhat overpowered.
+But, because we are looking for an internal communication mechanism only, all of these solutions are somewhat overpowered.
 We do not have to worry about network problems, so we do not need guaranteed delivery or message queuing capabilities.
 We also do not need persistence or transactional capabilities
 We do not have to handle millions of subscribers or events, so high scalability is not a concern.
@@ -12,7 +12,7 @@ Therefor we will ignore the middleware heavyweights and look for smaller PubSub 
 
 We have a few functional requirements that a library has to support for our use case.
 These can be seen on the left-hand side of \autoref{table:pubsub_comparison}.
-Weak references are an important feature, since we have a lot of plugins that will register as listeners to the event bus.
+Weak references are an important feature because we have a lot of plugins that will register as listeners to the event bus.
 These plugins can be removed at any time and weak references allow us to remove them without explicitly unregistering them from the event bus.
 Instead of crashing, the event bus will just ignore references to listeners that do not exist anymore.
 Even if we explicitly unregister all our plugins, weak references give us a safety net if we forget it at some point.
@@ -134,7 +134,7 @@ As we can see in \autoref{table:pubsub_comparison}, it supports all functional f
 It is also relatively mature, has good enough documentation and is somewhat popular.
 Finally, we have Mycila PubSub, a modern replacement for EventBus.
 It supports all the functional features we need, except filtering.
-Its documentation is good enough, but since it is relatively new, it is not very popular yet and may lack in maturity.
+Its documentation is good enough, but because it is relatively new, it is not very popular yet and may lack in maturity.
 
 From the alternatives presented here, MBassador seems to be the only one that offers all the functionality we need combined with relative maturity and good documentation.
 We will therefore use it for our implementation.

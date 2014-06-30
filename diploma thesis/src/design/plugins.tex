@@ -170,12 +170,12 @@ The deploy operation installs a payload on an instance.
 This can include uploading files from the local machine or downloading files from other machines.
 To execute this operation, a connection to the instance is necessary, which is supplied as input with the connection object.
 The undeploy operation removes a payload from an instance.
-In most cases this will not be necessary, since the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it was not installed in persistent storage).
+In most cases this will not be necessary, because the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it was not installed in persistent storage).
 This method is provided for completeness and for special cases.
 The start operation starts a payload which previously was installed with the deploy operation.
 If the payload was started successfully, it returns the URL to the running payload.
 The stop operation stops the execution of a previously started payload.
-In most cases this will not be necessary, since the payload will be removed together with the instance in the undeploy phase.
+In most cases this will not be necessary, because the payload will be removed together with the instance in the undeploy phase.
 This method is provided for completeness and for special cases.
 
 \vspace*{\baselineskip}
@@ -259,7 +259,7 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 In parallel to this diploma thesis, another diploma thesis is being written about the provisioning manager, which will also use plugins to call provisioning engines~\autocite{nedim}.
 Since these plugins offer identical functionality, it makes sense to use the same plugins for both the bootware, as well as the provisioning manager.
 In the future, these plugins can be made available via a plugin repository, as described in \autoref{design:pluginrepository}, which will facilitate plugin sharing between the bootware and the provisioning manager.
-The call provisioning manager plugins are described in more detail in~\autocite{nedim}, since they are only a small part of the bootware and are mainly used in the provisioning manager.
+The call provisioning manager plugins are described in more detail in~\autocite{nedim} because they are only a small part of the bootware and are mainly used in the provisioning manager.
 We will use the implementation provided by~\autocite{nedim}.
 
 \subsection{Event Plugins}
