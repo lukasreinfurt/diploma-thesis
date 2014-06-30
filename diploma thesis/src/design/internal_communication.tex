@@ -26,7 +26,7 @@ Using this pattern, we would create an event bus at the bootware core and plugin
 \subsection{Event Types}
 
 When using PubSub and events to communicate, it is usually a good idea to not only use one type of event, but many different types.
-Using different kinds of event allows us to subscribe only to specific events or react differently based on the type of an event.
+Using different kinds of event allows us to subscribe only to specific events or react differently based on the event type.
 But what if we want to react to each event type in the same way, for example for logging purposes?
 Now, many different event types complicate things more.
 This is where event hierarchies become useful.
