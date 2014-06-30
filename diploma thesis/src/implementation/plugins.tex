@@ -54,7 +54,7 @@ It uses the Ganymed SSH-2 library\footnote{\url{https://code.google.com/p/ganyme
 No actions are taken in the initialize operation.
 During the connect operation, we first have to create a connection object, which is bound to a certain host name, i.e. the IP address of the remote system that we want to connect to.
 We get this address from the instance object passed into the connect operation.
-Then we have to authenticate this connection.
+Then, we have to authenticate this connection.
 Multiple authentication methods are supported by SSH-2 protocol, including password and public key authentication.
 The necessary values for these authentication methods are read from the instance object passed into the connect operation.
 Once the connection is authenticated, a connection object is returned, which supports the execute and upload operation that other components can use.
