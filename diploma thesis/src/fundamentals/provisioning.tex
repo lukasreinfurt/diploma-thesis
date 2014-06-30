@@ -35,7 +35,7 @@ A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, C
 
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
-As already mentioned, AWS CloudFormation is bound to Amazons cloud platform, while the other solutions are not.
+As already mentioned, AWS CloudFormation is bound to Amazon's cloud platform, while the other solutions are not.
 Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over \nom{Secure Shell}{SSH} and therefor doesn't require additional software on the nodes that are configured.
 The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet, and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
 
