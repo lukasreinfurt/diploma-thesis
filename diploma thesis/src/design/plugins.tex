@@ -256,6 +256,12 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 	\label{table:provisioningengine_plugins}
 \endgroup
 
+In parallel to this diploma thesis, another diploma thesis is being written about the provisioning manager, which will also use plugins to call provisioning engines~\autocite{nedim}.
+Since these plugins offer identical functionality, it makes sense to use the same plugins for both the bootware, as well as the provisioning manager.
+In the future, these plugins can be made available via a plugin repository, as described in \autoref{design:pluginrepository}, which will facilitate plugin sharing between the bootware and the provisioning manager.
+The call provisioning manager plugins are described in more detail in \autocite{nedim}, since they are only a small part of the bootware and are mainly used in the provisioning manager.
+We will use the implementation provided by \autocite{nedim}.
+
 \subsection{Event Plugins}
 
 Unlike the other plugin types, the event plugins don't have any more operations to implement then the initialize and shutdown operations described in \autoref{table:all_plugins}.
