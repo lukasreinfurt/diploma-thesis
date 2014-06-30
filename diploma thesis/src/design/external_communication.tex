@@ -48,7 +48,7 @@ Like CORBA, web services also support polling and asynchronous invocation, as we
 
 Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
 The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially since CORBA does not offer any significant advantages over SOAP based web services.
-Using a message-oriented middleware would also be an option but introducing another component seems to complicated, especially since we do not need most of the features that it offers (e.g. transactions, persistence, etc.).
+Using a message-oriented middleware would also be an option but introducing another component seems to complicated, especially since we do not need most of the features that it offers (e.g.: transactions, persistence, etc.).
 \autoref{image:webservice} shows the addition of web service call and return communication between the bootware adapter and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
 With polling, long running provisioning processes will not pose a problem.
 We do however still need information during those long running processes to give the user some feedback.

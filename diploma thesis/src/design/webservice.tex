@@ -47,7 +47,7 @@ Both the local and the remote bootware will have to implement all of these opera
 
 \subsection{Deploy}
 
-The deploy operation is called whenever a new payload (e.g. a provisioning engine, or initially, the remote bootware) should be deployed.
+The deploy operation is called whenever a new payload (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
 As input it takes a context object as described in \autoref{design:context}.
 If it was able to successfully deploy the requested payload, it responds with an endpoint reference to the payload.
 If the deployment failed, it responds with an error message.

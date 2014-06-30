@@ -9,7 +9,7 @@ We created a connection plugin that allows the bootware to connect to a remote s
 
 This infrastructure plugin allows the bootware to create and remove EC2 instances in Amazon's cloud.
 It uses the AWS SDK for Java\footnote{\url{http://aws.amazon.com/sdkforjava/}} to implement this functionality.
-This SDK specifies a specific set of action that have to be taken to start an EC2 instance, which we map onto the operations defined by each infrastructure plugin, i.e. initialize, shutdown, deploy, and undeploy, as described in \autoref{design:plugins}.
+This SDK specifies a specific set of action that have to be taken to start an EC2 instance, which we map onto the operations defined by each infrastructure plugin (i.e.: initialize, shutdown, deploy, and undeploy, as described in \autoref{design:plugins}).
 \autoref{image:awsplugin} shows a simplified overview of these actions and how they map onto the infrastructure plugin operations.
 
 \begin{figure}[!htbp]
