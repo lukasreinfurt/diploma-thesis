@@ -37,7 +37,7 @@ Since we already decided that we'll be using web services as external communicat
 Note that this does not include the event plugins.
 Event plugins are not changed with each request.
 They are loaded once when the bootware starts and are unloaded before it stops.
-Therefore they do not belong into the context.
+Therefore, they do not belong into the context.
 It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
 
 Unlike the request plugins, the configuration might not change between requests.

@@ -6,7 +6,7 @@ Ideally, every plugin will be able to react to events from the bootware.
 These events could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
 Since a plugin does not know about other plugins, it can not listen for events at other plugins directly.
 The only known constant to a plugin is the bootware core.
-Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
+Therefore, we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
 This essentially describes the publish-subscribe pattern~\autocite{pubsub}.
 
 \subsection{Publish Subscribe Pattern}
