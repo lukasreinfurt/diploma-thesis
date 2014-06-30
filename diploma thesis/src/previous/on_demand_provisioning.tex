@@ -33,7 +33,7 @@ Now, the workflow can be deployed on this middleware, which is step three.
 In step four, an instance of this workflow is executed.
 During this execution, a task might invoke some external service that is not yet available.
 The ESB determines this by checking the service registry, which stores information about available services.
-If the requested service isn't available, the ESB tells the provisioning engine to provision this service.
+If the requested service is not available, the ESB tells the provisioning engine to provision this service.
 The on-demand provisioning of services is step five, during which the provisioning engine retrieves the artifacts needed to provision the requested service from the service repository.
 The ESB then routes service calls and responses between the invoking workflow activity and the service.
 The service is also deprovisioned by the provisioning engine if it is no longer needed.

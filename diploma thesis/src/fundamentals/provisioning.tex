@@ -11,7 +11,7 @@ Setting up a complex distributed system with many different components scattered
 For this reason, many provisioning solutions have been created over the years to automate this process.
 They differ in some areas that we will discuss later, but their core functionality is basically identical: They prepare all necessary resources for a certain task.
 This core functionality can be stated more precisely with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
-Since we are working in a cloud environment, we won't have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
+Since we are working in a cloud environment, we will not have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{provisioning:architecture}.
 
 There are many benefits to using an automated provisioning solution instead of doing the provisioning by hand.
@@ -36,14 +36,14 @@ A few popular examples include Ansible\footnote{\url{http://www.ansible.com}}, C
 All these solutions differ in some form or another.
 A full feature comparison of different solutions is out of scope for this diploma thesis, but what follows is a short overview of some of the differences.
 As already mentioned, AWS CloudFormation is bound to Amazon's cloud platform, while the other solutions are not.
-Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over \nom{Secure Shell}{SSH} and therefor doesn't require additional software on the nodes that are configured.
+Chef and Puppet both use a client server architecture, where each node that should be configured by them has to run a client program to communicate with a server node, whereas Ansible executes its command over \nom{Secure Shell}{SSH} and therefor does not require additional software on the nodes that are configured.
 The solutions also differ in modularity and flexibility. While Ansible, Chef, Puppet, and TOSCA are highly flexible and can be used in a fine grained modular fashion, this also makes them more complex to use, for example compared to AWS CloudFormation.
 
 \subsection{TOSCA}
 
 \nom{Topology and Orchestration Specification for Cloud Applications}{TOSCA} is a standard created by the \nom{Organization for the Advancement of Structured Information Standards}{OASIS}\footnote{\url{https://www.oasis-open.org/}}.
 Its development is also supported by various industry partners, which include IBM, Cisco, SAP, HP and others.
-It's aim is to provide a language that can describe service components and their relations in a cloud environment independent fashion.
+Its aim is to provide a language that can describe service components and their relations in a cloud environment independent fashion.
 The following description is based on version 1.0 of the specification~\autocite{tosca:spec}.
 
 TOSCA defines an XML syntax, which describes services and their relations in a so called service template.

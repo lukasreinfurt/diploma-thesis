@@ -29,7 +29,7 @@ In the future, the context might be extended to hold additional information, but
 
 Now that we have defined what the context will look like, we need to find a way to actually get it to the bootware.
 There are a few things that we have to keep in mind when doing this.
-First, these values have to be changeable by the user, so it doesn't make sense to hard-code them into the bootware.
+First, these values have to be changeable by the user, so it does not make sense to hard-code them into the bootware.
 Furthermore, the lifetime of the information carried in the context varies quite a bit.
 The plugin types are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
 Therefore, we must provide the plugin types on a per request basis.
@@ -37,12 +37,12 @@ Since we already decided that we'll be using web services as external communicat
 Note that this does not include the event plugins.
 Event plugins are not changed with each request.
 They are loaded once when the bootware starts and are unloaded before it stops.
-Therefore they don't belong into the context.
+Therefore they do not belong into the context.
 It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
 
 Unlike the request plugins, the configuration might not change between requests.
-Additionally, we have other components calling the bootware who don't know (and maybe shouldn't know) anything about some content of the configuration, like login credentials.
-While this might change in the future, it would make sense to be able to set the configuration once when starting the bootware, so that it doesn't have to be delivered with each request and so that other components can still use the bootware without also sending a configuration.
+Additionally, we have other components calling the bootware who do not know (and maybe should not know) anything about some content of the configuration, like login credentials.
+While this might change in the future, it would make sense to be able to set the configuration once when starting the bootware, so that it does not have to be delivered with each request and so that other components can still use the bootware without also sending a configuration.
 It should however still be possible to override or update the configuration at a later point.
 Overriding would allow any request to temporarily use other configuration values if necessary.
 Updating the configuration at a later point could be useful, for example if the user accidentally provided the wrong credentials at the beginning.

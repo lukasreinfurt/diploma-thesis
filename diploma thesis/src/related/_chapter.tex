@@ -3,13 +3,13 @@
 
 This chapter summarizes related work of other authors that is of interest to this diploma thesis.
 Several approaches for on-demand provisioning of services have been presented in~\autocite{applyingwebservice},~\autocite{ondemandbpel}, and~\autocite{provisioning:architecture}.
-They don't rely on existing provisioning solutions and each only use one provisioning mechanism tailored to their specific situation.
-The provisioning mechanisms themselves are also not deployed on-demand, so they don't have the need for a bootstrapping procedure.
+They do not rely on existing provisioning solutions and each only use one provisioning mechanism tailored to their specific situation.
+The provisioning mechanisms themselves are also not deployed on-demand, so they do not have the need for a bootstrapping procedure.
 
 \citeauthor*{applyingwebservice} presented a dynamic service deployment (DSD) architecture for grid computing~\autocite{applyingwebservice}.
 It handles service code retrieval, selects the installation location based on the result of a match making algorithm, and deploys the service at the selected location.
 Their approach relies on already existing resources in the grid and does not have to provision additional infrastructure or install middleware.
-It also doesn't use any existing provisioning solution for the service deployment.
+It also does not use any existing provisioning solution for the service deployment.
 
 \citeauthor*{ondemandbpel} describe a solution for on-demand resource provisioning for BPEL workflow activities in Amazon's EC2~\autocite{ondemandbpel}.
 They introduce a load balancer component that is called by the workflow engine when a service call is made during a workflow execution.
@@ -17,19 +17,19 @@ If there are not enough resources available to run the requested service, it can
 The provisioner can also be extended to support other cloud provider via the use of external configuration files.
 Their approach is limited to starting and stopping preconfigured virtual machines that already contain all middleware necessary to run a service.
 It is not able to create arbitrary infrastructure topologies.
-They also don't handle the provisioning of the workflow middleware.
-They don't rely on already existing provisioning solutions and their provisioner is a fixed part of the load balancer.
+They also do not handle the provisioning of the workflow middleware.
+They do not rely on already existing provisioning solutions and their provisioner is a fixed part of the load balancer.
 
 \citeauthor*{provisioning:architecture} present an extensible architecture for automatic provisioning of cloud infrastructure and services at different cloud providers~\autocite{provisioning:architecture}.
 For this process they designed a so called service orchestrator which uses user defined service models, which describe the topology of a cloud service, to provision new cloud services and to trigger reconfiguration and topology changes of existing services.
 It has an abstraction layer that provides abstract methods to handle the management, installation, configuration, and starting of software via infrastructure, packages, applications, configuration, and VM connection managers.
 Similar to our work, their system is extensible to support different cloud providers, connection types, etc.
-They don't rely on any existing provisioning solutions but rather present a new one.
+They do not rely on any existing provisioning solutions but rather present a new one.
 
 Regarding bootstrapping, \citeauthor*{libi} present the lightweight infrastructure-bootstrapping infrastructure (LIBI), an API specification and a reference implementation that can bootstrap processes in high-performance computing environments~\autocite{libi}.
 Here, it is necessary to start processes on many nodes and supply them with the initial information needed so that they can get into an execution ready state.
 LIBI delivers improved launch time over sequential or parent-creates-children approaches, which suffer from serialization bottlenecks.
-Their bootstrapping approach only has to work in an environment where all the infrastructure is already running, so they don't have to provision VMs or middleware.
+Their bootstrapping approach only has to work in an environment where all the infrastructure is already running, so they do not have to provision VMs or middleware.
 
 Another diploma thesis that is worked on in parallel to this diploma thesis is designing the provisioning manager that was described by \citeauthor*{provisioning:dynamic}~\autocite{nedim}.
 It is the main user of the bootware system designed in this diploma thesis, since it will deploy provisioning engines through the bootware on behalf of the workflow middleware.

@@ -4,7 +4,7 @@
 We also have to consider internal communication between the bootware core and plugins, and possibly also in between plugins.
 Ideally, every plugin will be able to react to events from the bootware.
 These events could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
-Since a plugin doesn't know about other plugins, it can't listen for events at other plugins directly.
+Since a plugin does not know about other plugins, it can not listen for events at other plugins directly.
 The only known constant to a plugin is the bootware core.
 Therefore we need a communication mechanism which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
 This essentially describes the publish-subscribe pattern~\autocite{pubsub}.
@@ -33,7 +33,7 @@ This is where event hierarchies become useful.
 At the core of an event hierarchy is a single base event.
 By extending and refining this base event, other, more specific event types can be created, which again can be used as base type for even more specific events.
 This allows us to create a fine grained hierarchy of events and also enables us to subscribe to particular sub sets of this hierarchy.
-This makes event handling much easier, since we can now just react to the parent event if we don't need to distinguish between different event types for a particular task.
+This makes event handling much easier, since we can now just react to the parent event if we do not need to distinguish between different event types for a particular task.
 
 A second mechanism to differentiate between events is some sort of severity value that each event contains.
 Many events will be published in an event system, but not all of them might be of the same importance.

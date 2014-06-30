@@ -3,7 +3,7 @@
 
 Until now we have established how the bootware can be called from outside components using a web service interface and a context to start the bootstrapping process.
 We also established that big parts of this process will be implemented as plugins.
-Now it's time to take a look at the actual internal structure of the bootware.
+Now it is time to take a look at the actual internal structure of the bootware.
 What follows is a step by step description of the whole bootstrapping process.
 
 \begin{figure}[!htbp]
@@ -36,7 +36,7 @@ If such a request is received in the wait state, the local bootware transitions 
 The request context contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
 If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
 If the context is read successfully the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
-For this to work, the remote bootware has to exist in the requested remote environment, which won't be the case during the first execution.
+For this to work, the remote bootware has to exist in the requested remote environment, which will not be the case during the first execution.
 Therefore, the local bootware first has to provision the remote bootware in the requested remote environment and so it transitions to the load request plugins state.
 
 In the load request plugins state the plugins specified in the context are loaded.
@@ -59,7 +59,7 @@ The local bootware will wait in this state until it receives a response from the
 Now, we move our attention to the remote bootware, where the requests continues to be processed.
 \autoref{image:flow_remote} shows the execution flow of the remote bootware.
 As we can see, it is largely identical to the local bootware, at least at the moment.
-The send to remote state is gone, since we don't need this in the remote bootware.
+The send to remote state is gone, since we do not need this in the remote bootware.
 Instead, as the bottom of \autoref{image:flow_remote} shows, the provision and deprovision middleware steps were added.
 The remote bootware also supports the getActivePayloads request.
 Other than that, the local and remote processes are the same.
@@ -80,7 +80,7 @@ Once the middleware is running, the remote bootware is finished with this reques
 
 This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
 Now, the local bootware can finish its request by sending back a response to the bootware adapter, before returning to the wait state.
-The local bootware is now done until it's time to undeploy the remote bootware.
+The local bootware is now done until it is time to undeploy the remote bootware.
 Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom, or the getActivePayloads operation only hinted at in \autoref{image:flow_remote}.
 
 As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.

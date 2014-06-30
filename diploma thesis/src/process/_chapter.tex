@@ -19,7 +19,7 @@ We will go through \autoref{image:process} step by step in the following paragra
 \end{figure}
 
 At the beginning, a user starts the Modeler, which includes the bootware adapter, as seen on the bottom left of \autoref{image:process}.
-If they haven't done so already, they configure the bootware adapter with their cloud login credentials to be used during the bootware process and other parameters that might be needed. They also select, which event plugins the bootware should load.
+If they have not done so already, they configure the bootware adapter with their cloud login credentials to be used during the bootware process and other parameters that might be needed. They also select, which event plugins the bootware should load.
 They then use the Modeler to create a workflow as usual.
 Once the workflow is finished and ready to be executed, they click the start button as usual.
 This marks the beginning of the bootstrapping phase.
@@ -42,7 +42,7 @@ The remote service call is passed on to the ESB (step 9), which checks if the se
 If it is, execution continues as usual.
 If not, the ESB tells the provisioning manager to provision the requested service (step 10).
 The provisioning manager checks, if the provisioning engine needed to provision the requested service is already available.
-If it isn't, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
+If it is not, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
 Once the provisioning engine is up and running, the remote bootware returns the endpoint reference of the provisioning engine to the provisioning manager.
 The provisioning manager now calls the provisioning engine (step 12) and tells it to provision the required service (step 13).
@@ -52,7 +52,7 @@ The workflow execution now continues in this fashion, spawning new provisioning 
 At some point, the workflow will be finished.
 This marks the end of the workflow execution phase and the start of the shutdown phase.
 
-If it hasn't done so already, the provisioning manager calls all relevant provisioning engines to undeploy any services that might still be running (step 12, 13).
+If it has not done so already, the provisioning manager calls all relevant provisioning engines to undeploy any services that might still be running (step 12, 13).
 Once all services are undeployed, the work of the workflow middleware is finished.
 The bootware is listening at the workflow middleware for this event and triggers the undeploy process once it happens.
 First, the remote bootware calls the provisioning engine that was used to provision the workflow middleware (step 6) and tells it to undeploy the workflow middleware (step 7).
@@ -96,7 +96,7 @@ The modeler can now deploy and start the workflow on the workflow middleware, wh
 \end{figure}
 
 In the workflow execution phase, which is also depicted as a sequence diagram in \autoref{image:execution_sequence}, the workflow middleware might now call external services.
-If these services don't exist already, the workflow middleware has to provision them first (via the provisioning manager).
+If these services do not exist already, the workflow middleware has to provision them first (via the provisioning manager).
 To provision a service, a particular provisioning engine is needed, which also might not exist yet.
 In this case, a deploy request is send from the workflow middleware (i.e. the provisioning manager) to the remote bootware, which then deploys and starts the requested provisioning engine.
 Once the particular provisioning engine exists, the workflow middleware calls it to deploy the service it wants to execute.

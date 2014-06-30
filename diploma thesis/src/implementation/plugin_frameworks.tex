@@ -13,7 +13,7 @@ In this case, the bootware has to load the appropriate plugins for every provisi
 We could just load every plugin at startup, switch between them internally when necessary, and never unload them.
 However, this could become a problem if the number of available plugins increases in the future.
 Then, loading all plugins could take some time and slow down the entire bootware process.
-In many cases, some or most of the plugins would never be used and loading them wouldn't be necessary at all.
+In many cases, some or most of the plugins would never be used and loading them would not be necessary at all.
 Therefore, it seems far more reasonable to load and unload plugins dynamically when needed.
 
 Security is also a must have feature.
@@ -23,7 +23,7 @@ This plugin can contain virtually any code.
 For example, it could erase all files or open a back door in the system when it is executed.
 Other users might trust the plugin author and try the plugin without checking its code first.
 Proper security feature might be able to prevent harm in such situations.
-Due to time restrictions, plugin security will not be discussed further in this diploma thesis, but it's still vital to select the right framework now, so that security features can be implemented in the future.
+Due to time restrictions, plugin security will not be discussed further in this diploma thesis, but it is still vital to select the right framework now, so that security features can be implemented in the future.
 
 We also consider some non-functional features that might influence the selection.
 There is already a plugin framework in use in the SimTech project, so it could be beneficial to choose the same framework, because the necessary knowledge and experience already exists.
@@ -114,7 +114,7 @@ In the case of SPI, these interfaces and abstract classes are called services an
 However, unlike in the manual approach, specific implementations are loaded from \textit{.jar} files in specific directories or in the class path.
 These \textit{.jar} files also include metadata to identify the different service providers.
 
-SPI is easy to use, doesn't depend on any external libraries, is well documented, and mature, since it is used in the \nom{Java Runtime Environment}{JRE}.
+SPI is easy to use, does not depend on any external libraries, is well documented, and mature, since it is used in the \nom{Java Runtime Environment}{JRE}.
 One could also say that it is somewhat standardized, since it is part of Java.
 But as we can see in \autoref{table:plugin_comparison} on the left, it neither supports dynamic loading, nor security features and is therefore not a good fit for our needs.
 
@@ -123,7 +123,7 @@ Its focus is simplicity and the author explicitly states that it is not intended
 As a result it is lightweight and easy to use but does not support advanced features like dynamic loading or security.
 
 \nom{Java Plugin Framework}{JPF}\footref{jpf} is another open-source plugin framework.
-Compared to JSPF it's a little more complex and popular.
+Compared to JSPF it is a little more complex and popular.
 As we can see in \autoref{table:plugin_comparison}, it also supports dynamic loading.
 However, the last version was released in 2007 and development seems to have stopped.
 This is not necessarily bad but might show that there will be no future development of this framework.

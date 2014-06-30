@@ -187,7 +187,7 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 \subsection{Get Active Payloads}
 
 The getActivePayloads operation is called by the provisioning manager to retrieve already deployed provisioning engines.
-If a provisioning engine it needs is already active, it doesn't have to call the bootware to provision a new one.
+If a provisioning engine it needs is already active, it does not have to call the bootware to provision a new one.
 As already explained in \autoref{design:webservice} this is only needed in the remote bootware and therefor we only implement it there.
 \autoref{lst:webservice:getactivepayloadsrequest} shows a getActivePayloads request in a SOAP message.
 No parameters are required.
