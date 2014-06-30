@@ -1,0 +1,18 @@
+Several approaches for on-demand provisioning of service have been presented, but they all use ...
+
+\citeauthor*{applyingwebservice} presented a dynamic service deployment (DSD) architecture for grid computing.
+It handles service code retrieval, selects the installation location based on the result of a match making algorithm, and deploys the service at the selected location.
+Their approach relies on already existing resources in the grid and does not have to provision additional infrastructure or install middleware.
+It also doesn't use any existing provisioning solution for the service deployment.
+
+\citeauthor*{ondemandbpel} describe a solution for on-demand resource provisioning for BPEL workflow activities in Amazon's EC2.
+They introduce a load balancer component that is called by the workflow engine when a service call is made during a workflow execution.
+If there are not enough resources available to run the requested service,
+it can start new EC2 instances through an internal provisioner.
+The provisioner can also be extended to support other cloud provider via the use of external configuration files.
+Their approach is limited to starting and stopping preconfigured virtual machines that already contain all middleware necessary to run a service.
+It is not able to create arbitrary infrastructure topologies.
+It also does not rely on already existing provisioning solutions.
+
+
+
