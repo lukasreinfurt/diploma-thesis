@@ -4,6 +4,8 @@
 Now, we will describe the implementation of a few plugins.
 We implemented an infrastructure plugin that can create and remove EC2 instances in Amazon's cloud.
 We created a connection plugin that allows the bootware to connect to a remote system via SSH and then execute commands on, or upload files to this system.
+We also implemented two payload plugin, one for the remote bootware itself and one for OpenTOSCA.
+Additionally, we created event plugins, for example a file logger plugin that logs bootware events into a text file.
 
 \subsection{AWS EC2 Plugin}
 
@@ -99,7 +101,7 @@ The undeploy and stop operations where omitted because they are not really requi
 \end{figure}
 
 The setup procedure for OpenTOSCA is very simply.
-Only one command has to be executed over ssh, which will automatically download and install all necessary components.
+Only one command has to be executed over SSH, which will automatically download and install all necessary components.
 After that, port 8080 on the EC2 instance is polled periodically until a connection is possible, which means that the installation process is finished.
 The start operation only has to return the URL pointing to the OpenTOSCA instance because OpenTOSCA was already started by the installation script.
 

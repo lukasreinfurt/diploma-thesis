@@ -34,8 +34,8 @@ Once the user is done modeling the simulation workflow, they click on a button t
 The middleware consists of various components, some of which are shown in \autoref{image:swfms}.
 Most of them are executed by an application server, in this case Apache Tomcat\footnote{\url{http://tomcat.apache.org/}}.
 The workflow is deployed on the workflow engine, in this case \nom{ODE Pluggable Framework}{ODE-PGF}\footnote{\url{http://www.iaas.uni-stuttgart.de/forschung/projects/ODE-PGF/}}, which executes the workflow step by step.
-If a step involves the execution of a service, the ESB (Apache Service Mix\footnote{\url{http://servicemix.apache.org/}}) is called, who resolves the services and passes along the request and the response.
-Further components include for example SimTech Auditing, which is used for auditing purposes.
+If a step involves the execution of a service, the ESB (Apache Service Mix\footnote{\url{http://servicemix.apache.org/}}) is called, which resolves the services and passes along the request and the response.
+Further components include SimTech Auditing, which is used for auditing purposes.
 It is connected to the workflow engine via a messaging middleware (Apache ActiveMQ\footnote{\url{http://activemq.apache.org/}}).
 It is also connected to a database where it stores its data.
 

@@ -7,8 +7,8 @@ The first question we face is: Why even divide the modeler and the local bootwar
 Why not integrate the local bootware functionality into the modeler?
 We go this route because we want the bootware to be as generic as possible.
 The modeler in \autoref{image:2_tier} is not a specific modeler and in theory it should be possible to use the bootware with any modeler (and any workflow middleware) without too much modification.
-So by keeping the bootware as a separate generic component and only implementing a small, modeler specific adapter, we are able to support different environments without changing the core bootware components.
-We call this abstract concept the bootware adapter.
+So, by keeping the bootware as a separate generic component and only implementing a small, modeler specific adapter, we are able to support different environments without changing the core bootware components.
+We call this abstract concept the bootware adapter, as shown in \autoref{image:modeler_plugin}.
 
 In \autoref{requirements} we mentioned that the bootware should hook into the already existing deploy process in the modeler.
 How this deployment process works depends on the actual modeler that is used, so at the moment, we can not say how exactly we can integrate in this process.
@@ -27,8 +27,8 @@ This is shown in \autoref{image:modeler_plugin} as deployment operation from the
 Once the local bootware is running, the bootware adapter has to set up the context for the following requests.
 This includes telling the bootware configuration details, like the credentials for all cloud providers that will be used.
 Once this is done, the modeler has to make one request to the local bootware, containing the cloud provider, the provisioning engine, and the package reference for the workflow middleware, which is shown in \autoref{image:modeler_plugin} as function call from the bootware adapter to the local bootware.
-The local bootware will take this information and provision the remote bootware, a provisioning engine, and the workflow middleware in the specified cloud environment.
-If successful, it returns the endpoint references of the workflow middleware to the bootware adapter, who then has to set up the modeler to use these references for the actual workflow deployment.
+The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine and the workflow middleware in the specified cloud environment.
+If successful, it returns the endpoint references of the workflow middleware to the bootware adapter, which then has to set up the modeler to use these references for the actual workflow deployment.
 
 This is the minimal work the bootware adapter has to do to kick off the bootstrapping process.
 Additional functionality can be implemented if desired, but is not necessary for the core bootstrapping process.

@@ -20,6 +20,7 @@ The connection plugin type selects how the bootware should connect to this infra
 The payload plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in our case.
 Finally, the call provisioning engine plugin type defines the plugin that should be used to call the provisioning engine.
 It will use the middleware package reference, which is also defined in the context, as input to start the provisioning of the workflow middleware.
+
 In the bottom half of \autoref{image:context} we can see that the context can also contain configuration for different plugins.
 This is necessary because various plugins might need to be configured properly to be able to fulfill their task.
 For example, most infrastructure plugins will need some kind of login credentials to authenticate with the infrastructure provider.
@@ -33,7 +34,7 @@ First, these values have to be changeable by the user, so it does not make sense
 Furthermore, the lifetime of the information carried in the context varies quite a bit.
 The plugin types are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
 Therefore, we must provide the plugin types on a per request basis.
-Since we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
+Because we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
 Note that this does not include the event plugins.
 Event plugins are not changed with each request.
 They are loaded once when the bootware starts and are unloaded before it stops.
@@ -41,13 +42,13 @@ Therefore, they do not belong into the context.
 It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
 
 Unlike the request plugins, the configuration might not change between requests.
-Additionally, we have other components calling the bootware who do not know (and maybe should not know) anything about some content of the configuration, like login credentials.
+Additionally, we have other components calling the bootware, which do not know (and maybe should not know) anything about some content of the configuration, like login credentials.
 While this might change in the future, it would make sense to be able to set the configuration once when starting the bootware, so that it does not have to be delivered with each request and so that other components can still use the bootware without also sending a configuration.
 It should however still be possible to override or update the configuration at a later point.
 Overriding would allow any request to temporarily use other configuration values if necessary.
 Updating the configuration at a later point could be useful, for example if the user accidentally provided the wrong credentials at the beginning.
 Without this functionality, the whole bootware process could fail (even while provisioning the very last service) and would have to be started again from the beginning.
-This could be avoided by providing the functionality to change configuration even during the bootstrapping process.
+This could be avoided by providing the functionality to change the configuration even during the bootstrapping process.
 
 For setting the configuration at the beginning and for updating it later during the process, a \textit{setConfiguration} method will be added to the bootware web service.
 The configuration set by this method will be treated as the default configuration by the bootware.

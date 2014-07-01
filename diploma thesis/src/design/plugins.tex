@@ -25,7 +25,7 @@ This would also reduce code duplication.
 Therefore, a third plugin type is necessary: The \textit{connection plugins}.
 
 The remote bootware also has to handle the initial provisioning of the workflow middleware, which involves calling a provisioning engine to tell it to start the provisioning process.
-Since this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
+Because this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
 We therefore introduce a fourth plugin type: The \textit{call provisioning engine plugins}.
 
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
@@ -121,7 +121,7 @@ As input it takes an instance object created earlier by the deploy operation.
 \subsection{Connection Plugins}
 
 Connection plugins are responsible for creating a communication channel to previously deployed resources that can later be used by payload plugins to execute their operations on the resource.
-The connection could be made by using SSH, RDC, VPN, Telnet, or other communication mechanisms supported by the resource.
+The connection could be made by using SSH, \nom{remote desktop connection}{RDC}, \nom{virtual private network}{VPN}, Telnet, or other communication mechanisms supported by the resource.
 The connection plugins should be implemented generically, so that they can be used for all kinds of resources.
 
 \autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
@@ -170,7 +170,7 @@ The deploy operation installs a payload on an instance.
 This can include uploading files from the local machine or downloading files from other machines.
 To execute this operation, a connection to the instance is necessary, which is supplied as input with the connection object.
 The undeploy operation removes a payload from an instance.
-In most cases this will not be necessary, because the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it was not installed in persistent storage).
+In most cases this will not be necessary, because the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it was not installed in some other persistent storage).
 This method is provided for completeness and for special cases.
 The start operation starts a payload which previously was installed with the deploy operation.
 If the payload was started successfully, it returns the URL to the running payload.
@@ -257,10 +257,10 @@ It takes the same inputs as the provisioning operation, an endpoint reference to
 \endgroup
 
 In parallel to this diploma thesis, another diploma thesis is being written about the provisioning manager, which will also use plugins to call provisioning engines~\autocite{nedim}.
-Since these plugins offer identical functionality, it makes sense to use the same plugins for both the bootware and the provisioning manager.
+Because these plugins offer identical functionality, it makes sense to use the same plugins for both the bootware and the provisioning manager.
 In the future, these plugins can be made available via a plugin repository, as described in \autoref{design:pluginrepository}, which will facilitate plugin sharing between the bootware and the provisioning manager.
 The call provisioning manager plugins are described in more detail in~\autocite{nedim} because they are only a small part of the bootware and are mainly used in the provisioning manager.
-We will use the implementation provided by~\autocite{nedim}.
+For these plugins, we will use the implementation provided by~\autocite{nedim}.
 
 \subsection{Event Plugins}
 

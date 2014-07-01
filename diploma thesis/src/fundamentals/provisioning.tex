@@ -11,22 +11,22 @@ Setting up a complex distributed system with many different components scattered
 For this reason, many provisioning solutions have been created over the years to automate this process.
 They differ in some areas that we will discuss later, but their core functionality is basically identical: They prepare all necessary resources for a certain task.
 This core functionality can be stated more precisely with the following definition: Provisioning is, "in telecommunications, the setting in place and configuring of the hardware and software required to activate a telecommunications service for a customer; in many cases the hardware and software may already be in place and provisioning entails only configuration tasks"~\autocite{def:provisioning}.
-Since we are working in a cloud environment, we will not have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
+Because we are working in a cloud environment, we will not have to deal with hardware directly, but rather with \nom{virtual machines}{VMs}.
 So for us, provisioning means the creation and deletion of VMs in a cloud environment, as well as the installation, configuration, monitoring, running and stopping of software on these VMs~\autocite{provisioning:architecture}.
 
 There are many benefits to using an automated provisioning solution instead of doing the provisioning by hand.
 The manual approach is limited by how much work a single person can do at any time, whereas an automatic approach is able to do much more work, in less time, and potentially in parallel.
 This makes it possible to manage huge infrastructures with very little resources, which can save money compared to a manual approach.
-Since every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
+As every step that needs to be done to provision a system has to be written down, a detailed description of the whole provisioning process is created.
 This makes the whole process reproducible and less error-prone, because the human factor is largely replaced by automation.
 Parts of such a description can also be shared in a business or even between businesses, which makes the process of creating such a description potentially much more efficient.
 
 The general process of working with provisioning software is very similar with all the different solutions.
 It can be described as a two step process.
 In step one, a description of the whole provisioning process has to be created using the tools provided by the particular solution.
-In general this involves creating a textual description in a certain format that is understood by the provisioning software that is to be used.
+In general, this involves creating a textual description in a certain format that is understood by the provisioning software that is to be used.
 In this description, we tell the software what virtual resources we need, what software should be installed on them and how everything should be configured.
-In step two, we pass this description to the provisioning software, which interprets and executes it.
+In step two, we pass this description to the provisioning software which interprets and executes it.
 
 Many different provisioning solutions exist today.
 Some cloud providers offer provisioning solutions that are particularly tailored to their cloud offerings, for example AWS CloudFormation\footnote{\url{http://aws.amazon.com/cloudformation}}, which can only be used to provision resources in the Amazon cloud.
@@ -93,7 +93,7 @@ A policy template can define concrete values for a policy specified in a policy 
 A node template can then reference a policy template to declare that it supports some non-functional properties or a certain kind of quality-of-service.
 An example would be a node type for an application server that expresses that it supports high availability by referencing a matching policy template.
 
-One or more TOSCA definitions are packaged, together with some metadata and possibly other files, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a zip file that contains all files necessary to create and manage a service.
+One or more TOSCA definitions are packaged, together with some metadata and possibly other files, into a \nom{Cloud Service Archive}{CSAR}, which is essentially a \textit{zip} file that contains all files necessary to create and manage a service.
 CSAR files can then be executed in a TOSCA runtime environment, also called TOSCA container, to create the service described within.
 
 \subsection{OpenTOSCA}

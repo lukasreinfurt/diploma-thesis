@@ -12,7 +12,7 @@ Therefore, we introduce the bootware core library, which will encapsulate the co
 	\label{image:corelibrary}
 \end{figure}
 
-Since we are using Java for the implementation, the core library will be a \textit{.jar} file containing common classes that will be imported by the local and remote bootware implementations and also by plugin implementations.
+Because we are using Java for the implementation, the core library will be a \textit{.jar} file containing common classes that will be imported by the local and remote bootware implementations and also by plugin implementations.
 \autoref{image:corelibrary} shows a schematic view of the bootware core library and how its classes are used by various components.
 We can see that the library includes an abstract FSM class, which is used by both the local and the remote bootware implementation.
 The abstract FSM class defines common state machine functionality that is used by both bootware components.

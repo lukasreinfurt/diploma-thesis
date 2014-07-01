@@ -1,19 +1,19 @@
 \section{Extensibility}
 \label{design:extensibility}
 
-In \autoref{design:communication} we mentioned a secondary communication mechanism that would be best implemented in form of an extension to the bootware.
+In \autoref{design:communication} we mentioned a secondary communication mechanism that could be implemented in form of an extension to the bootware.
 The requirements for the bootware also state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 These requirements are intentionally vague to allow for the selection of a fitting extension mechanism during the design process.
 In this section we will take a look at different extension mechanisms for Java and pick the one that suits our needs best.
 
 \subsection{Extension Mechanisms}
 
-The simplest way to fulfill the extensibility requirement would be to create a set of interface and abstract classes to define the interfaces and basic functionality that are necessary to work with different cloud environments and provisioning engines.
+The simplest way to fulfill the extensibility requirement would be to create a set of interfaces and abstract classes to define the interfaces and basic functionality that are necessary to work with different cloud environments and provisioning engines.
 These interfaces and abstract classes would then be implemented separately to support different scenarios and would be compiled, together with the rest of the application, into one executable.
 At runtime, a suitable implementation would be selected and used to execute the specific functionality required at this time.
 
 This extension mechanism is simple, but restricted by its static nature.
-The entire executable has to be recompiled if any implementations are changed or added.
+The entire executable has to be recompiled if any extensions are changed or added.
 This may not be a problem if the set of possible extensions that have to be supported is limited and known at the time of implementation or if it changes rarely.
 If the set of necessary extensions is unknown or changing from time to time, implementing new or changing existing extensions can get cumbersome because a new version of the whole software has to be released each time.
 It would be far better if extensions could be implemented separately from the core bootware components and added and removed at will.

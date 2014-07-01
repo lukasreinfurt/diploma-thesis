@@ -28,7 +28,7 @@ The new service binding strategy, shown on the right of \autoref{image:service_b
 
 Their approach for dynamic provisioning and deprovisioning of workflow middleware and simulation services is separated into six steps, as can be seen in \autoref{image:provisioning_steps}.
 The first step is to model and start the execution of a simulation workflow using a local modeling tool like the SimTech Modeler.
-In the second step, the middleware for executing the workflow, e.g. the SimTech SWfMS, and its underlying infrastructure are provisioned to a cloud environment.
+In the second step, the middleware for executing the workflow, e.g. the SimTech SWfMS, and its underlying infrastructure are provisioned in a cloud environment.
 Now, the workflow can be deployed on this middleware, which is step three.
 In step four, an instance of this workflow is executed.
 During this execution, a task might invoke some external service that is not yet available.
@@ -46,8 +46,8 @@ The final step is to deprovision the workflow model and the workflow execution m
 	\label{image:original_architecture}
 \end{figure}
 
-The architecture they present, shown in \autoref{image:original_architecture}, can be separated into a local part at bottom and a cloud part at the top, as well as different phases.
-The bars at the bottom of \autoref{image:original_architecture} show, which components are active during which phase~\autocite{provisioning:ondemand}.
+The architecture they present, shown in \autoref{image:original_architecture}, can be separated into a local part at the bottom and a cloud part at the top, as well as different phases.
+The bars at the bottom of \autoref{image:original_architecture} show, which components are active during which phase.
 \autoref{image:original_architecture} shows that the only local components are the modeler and the bootware, while all other components are hosted in the cloud.
 In the modeling phase, a scientist uses local modeling and monitoring tools in combination with cloud hosted repositories and registries to create a workflow.
 These components are always running.
@@ -55,5 +55,4 @@ When they start the execution of the workflow, the local bootware component kick
 In this phase, the bootware deploys a provisioning engine in the cloud (step 1), which in turn deploys the workflow middleware (step 2).
 Once the middleware is up and running, the workflow can be executed. During the execution, the ESB receives service calls from the workflow engine.
 Services that are not running at this time can then be provisioned by the provisioning engine (step 3).
-This takes place in the third phase, the service runtime phase.
-
+This takes place in the third phase, the service runtime phase~\autocite{provisioning:ondemand}.

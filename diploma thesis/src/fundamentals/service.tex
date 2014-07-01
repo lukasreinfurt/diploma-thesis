@@ -1,7 +1,7 @@
 \section{Service Oriented Architecture}
 \label{fundamentals:service}
 
-In highly dynamic markets, companies must be flexible and adapt their business process quickly to changing environments.
+In highly dynamic markets, companies must be flexible and adapt their business processes quickly to changing environments.
 This often includes cooperating or merging with other businesses, business process optimization, or outsourcing.
 There have been distributed system technologies in the past that were created to support such dynamic processes on an IT level, but their tight coupling and lack of interoperability resulted in islands of middleware and corresponding application.
 The integration between those islands became a new problem that was solved with message oriented middleware~\autocite{webservices}.
@@ -30,7 +30,7 @@ They also operate like black boxes to their consumers, i.e. no information of ho
 First, a provider creates an abstract definition of a service that includes enough information to allow others to bind to this service.
 The provider then publishes metadata describing this service to a directory or registry.
 A requestor can then use the discovery facility associated with this registry to find services that fulfills his functional and non-functional requirements, based on the available metadata.
-After selecting a service, the requestor then retrieves the corresponding binding information, binds to this service and starts sending requests to it~\autocite{webservices}.
+After selecting a service, the requestor then retrieves the corresponding binding information, binds to this service, and starts sending requests to it~\autocite{webservices}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -43,7 +43,7 @@ To simplify this process for the requestor, a middleware called service bus is i
 The requestor now sends the description of the service it intends to use and the data it intends to send to the service to the service bus.
 The service bus uses the description to find matching services with the discovery facility, selects one of them, retrieves the binding information and binds to the services.
 Then, if necessary, it transforms the data send by the requestor and sends a request to the service.
-The response it receives is passed along to the requestor, who now no longer has to deal with any of the above steps~\autocite{webservices}.
+The response it receives is passed along to the requestor, which now no longer has to deal with any of the above steps~\autocite{webservices}.
 
 Web service technology is one implementation of a service oriented architecture.
 It uses wrappers to hide implementation specific functionality and therefor allows applications with different programming models to interact with each other.

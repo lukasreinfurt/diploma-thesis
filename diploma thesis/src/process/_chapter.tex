@@ -46,7 +46,7 @@ If it is not, the provisioning manager calls the remote bootware with a request 
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
 Once the provisioning engine is up and running, the remote bootware returns the endpoint reference of the provisioning engine to the provisioning manager.
 The provisioning manager now calls the provisioning engine (step 12) and tells it to provision the required service (step 13).
-Once the service is available, the provisioning engine returns its endpoint reference to the provisioning manager, who in turn returns it to the ESB.
+Once the service is available, the provisioning engine returns its endpoint reference to the provisioning manager, which in turn returns it to the ESB.
 The ESB can now call the service (step 14) and use the service response to continue with the workflow execution.
 The workflow execution now continues in this fashion, spawning new provisioning engines and services through the provisioning manager and the remote bootware along the way (repeating steps 9, 10, 11, 5, 12, 13 and 14).
 At some point, the workflow will be finished.
@@ -84,7 +84,7 @@ Starting at the top left, the deploy action starts an escalating process, where 
 The bootware adapter then starts the local bootware and sends a deploy requests.
 The local bootware deploys and starts the remote bootware and forwards the deploy request.
 The remote bootware deploys and starts a provisioning engine, which it then calls to provision the workflow middleware.
-Once the workflow middleware is running, every component returns a response to the component who called it, which ends when the bootware adapter receives a response from the local bootware.
+Once the workflow middleware is running, every component returns a response to the component which called it, which ends when the bootware adapter receives a response from the local bootware.
 This response contains the endpoint references to the workflow middleware, which the bootware adapter uses to configure the connection between the modeler and the workflow middleware.
 The modeler can now deploy and start the workflow on the workflow middleware, which concludes the bootstrapping phase.
 
@@ -110,7 +110,7 @@ This process might be repeated multiple times during the whole workflow executio
 \end{figure}
 
 The shutdown phase begins once the workflow execution is finished.
-As we can see in \autoref{image:shutdown_sequence}, the workflow might need to stop and undeploy remaining services by calling the particular provisioning engines via the provisioning manager.
+As we can see in \autoref{image:shutdown_sequence}, the workflow engine might need to stop and undeploy remaining services by calling the particular provisioning engines via the provisioning manager.
 Once all services are removed, the workflow execution is truly finished and an event marking this state is emitted.
 The local bootware has been listening for this event through one of its event plugins and triggers the removal of the remaining components by first calling the shutdown operation of the remote bootware.
 The remote bootware calls a provisioning engine to deprovision the workflow middleware, before deprovisioning all remaining provisioning engines itself.

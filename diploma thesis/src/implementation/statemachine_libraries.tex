@@ -1,7 +1,7 @@
 \subsection{State Machine Libraries}
 \label{implementation:selecting:statemachine}
 
-Since we want to implement the bootware process as a finite state machine, we must now decide how we will do it.
+Because we want to implement the bootware process as a finite state machine, we must now decide how we will do it.
 It would certainly be possible to go with a hand made state machine implementation, but the time for this diploma thesis is limited and we should use it for the actual design of the bootware.
 Therefore, it would be better to use an existing state machine library.
 In general, we are looking for an event-driven FSM, which allows us to define a set of states and transition between those states when specific events occur.
@@ -94,9 +94,9 @@ We also want to avoid introducing additional conversion or compilation steps.
 	\label{table:statemachine_comparison}
 \endgroup
 
-Apache Commons SCXML\footref{scxml} aims to be a java state machine engine that is capable of executing state machines defined as \nom{State Chart XML}{SCXML}.
+Apache Commons SCXML\footref{scxml} aims to be a java state machine engine that is capable of executing state machines defined in \nom{State Chart XML}{SCXML}.
 SCXML is a working draft specification for a general-purpose event-based state machine language that is currently being developed by the \nom{World Wide Web Consortium}{W3C}~\autocite{scxml}.
-Apache Commons SCXML looks like a good match for our needs because it is event-based and also using a (soon to be) standard.
+Apache Commons SCXML looks like a good match for our needs because it is event-based and also uses a (soon to be) standard.
 But the current state of the implementation seems to be lacking because the SCXML specification has changed a lot.
 The most recent release is version 0.9, which was released in late 2008.
 It is about to be replaced by version 2.0 that is currently being worked on and includes major changes, but a release date is not yet in sight\footnote{\url{http://commons.apache.org/proper/commons-scxml/roadmap.html}}.
@@ -119,7 +119,7 @@ Unlike the other alternative, Unimod aims to create a unified methodology for ap
 This seems to be too complex for our needs.
 
 From the alternatives presented here, Apache Commons SCXML would be our first choice if the standard and the implementation were more mature.
-At this point in time however, this is not the case.
+However, at this point in time this is not the case.
 For this diploma thesis we will use squirrel-foundation to implement the state machine.
 If Apache Commons SCXML becomes a viable option in the future, replacing squirrel-foundation could be considered.
-Since it supports exporting the state machine as SCXML, this could be used to ease a possible transition.
+As it supports exporting the state machine as SCXML, this could be used to ease a possible transition.

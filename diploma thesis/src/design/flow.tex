@@ -3,8 +3,8 @@
 
 Until now we have established how the bootware can be called from outside components using a web service interface and a context to start the bootstrapping process.
 We also established that big parts of this process will be implemented as plugins.
-Now it is time to take a look at the actual internal structure of the bootware.
-What follows is a step by step description of the whole bootstrapping process.
+Now, it is time to take a look at the actual internal structure of the bootware.
+What follows is a step by step description of the internal process during a bootstrapping operation.
 
 \begin{figure}[!htbp]
 	\centering
@@ -28,7 +28,7 @@ Once the local bootware is in the wait state it is ready to receive requests fro
 If a shutdown event is received in this state, the local bootware will first tell the remote bootware to undeploy all active payloads.
 Next, the local bootware will undeploy the remote bootware by running through the undeploy process shown on the bottom left with the appropriate plugins.
 Then, it will shut itself down by first unloading the event plugins and then running the cleanup code.
-This is the only normal way to shut down the local bootware.
+This is the only normal way to shut down the bootware.
 We only hint at the setConfiguration request here because it is so simple that it could also be handled in the wait state.
 Deploy and undeploy requests however are more complicated.
 If such a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
@@ -43,17 +43,17 @@ In the load request plugins state the plugins specified in the context are loade
 If this fails, the local bootware tries to unload already loaded plugins before returning an error response and transitioning to the wait state.
 If the plugins are loaded successfully, the local bootware now starts either the deploy process or the undeploy process, shown at the bottom of \autoref{image:flow_local}, depending on the type of the request.
 
-If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another, which include the deploy, connect, and start operations of the infrastructure, connection, and payload plugins.
-If one of those operations fails the local bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
+If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another, which includes calling the deploy, connect, and start operations of the infrastructure, connection, and payload plugins.
+If one of those operations fails, the local bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
 This process is the same as the undeploy process, shown on the bottom right of \autoref{image:flow_local}, which is triggered by an undeploy request.
 
 If the stop payload, deprovision payload, or disconnect states fail, the local bootware just continues with the next undeploy state because these operations are not considered critical.
-However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, show at the right of \autoref{image:flow_local}, because this step is considered critical.
+However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, shown at the right of \autoref{image:flow_local}, because this step is considered critical.
 This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
 The fatal error state is responsible for taking special actions to remedy this situation.
 
 The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the unload request plugin state, where the plugins that where needed for this particular request are unloaded.
-If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local}.
+If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local} with the send to remote state.
 The local bootware will wait in this state until it receives a response from the remote bootware.
 
 Now, we move our attention to the remote bootware, where the requests continues to be processed.
@@ -84,14 +84,14 @@ The local bootware is now done until it is time to undeploy the remote bootware.
 Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom, or the getActivePayloads operation only hinted at in \autoref{image:flow_remote}.
 
 As \autoref{image:flow_local}, \autoref{image:flow_remote} and the description above show, this is quite a complicated process with many conditional transition.
-Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else block.
+Using traditional programming methods like if/else blocks to implement this process would lead to a rather unwieldy and complicated construct with lots of nested if/else blocks.
 Therefore, it could be advantageous to use other methods that are more fitting for this process.
-Since we already described the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
+As we already described the process as a directed graph with states and transition, it would be ideal if we could take this whole graph and use it in the bootware.
 Fortunately, this is possible by implementing the process using a finite state machine.
 
 \subsection{Finite State Machine}
 
-In theoretical computer science, a \nom{Finite State Machine}{FSM} is a formal, abstract model of computation that "consisting of a set of states, a start state, an input alphabet, and a transition function that maps input symbols and current states to a next state. Computation begins in the start state with an input string. It changes to new states depending on the transition function"~\autocite{fsm}.
+In theoretical computer science, a \nom{Finite State Machine}{FSM} is a formal, abstract model of computation "consisting of a set of states, a start state, an input alphabet, and a transition function that maps input symbols and current states to a next state. Computation begins in the start state with an input string. It changes to new states depending on the transition function"~\autocite{fsm}.
 In this context, a state is the "condition of a finite state machine [...] at a certain time. Informally, the content of memory"~\autocite{state}.
 The start state is therefore the initial condition of a FSM.
 The alphabet is a "set of all possible symbols in an application. For instance, input characters used by a finite state machine, letters making up strings in a language, or symbols in a pattern element. In some cases, an alphabet may be infinite"~\autocite{alphabet}.

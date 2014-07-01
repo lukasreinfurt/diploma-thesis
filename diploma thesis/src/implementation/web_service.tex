@@ -5,6 +5,7 @@ In \autoref{design:communication} we decided to use web service calls and return
 Now, we need to the define the interface that will be made available by the web service to the outside.
 We obviously need the two main operations, deploy and undeploy, to be available from the outside.
 In \autoref{design:context} we also described the \textit{setConfiguration} operation that has to be supported.
+Additionally, the getActivePayloads and shutdown operations are needed.
 
 \subsection{Deploy}
 
@@ -29,7 +30,7 @@ In this particular example, only the required plugins are specified, which could
 	\label{lst:webservice:deployrequest}
 \end{listing}
 
-The response that is return once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
+The response that is returned once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
 It contains a list of endpoint references in line 5-10, which contains a reference to the payload that was deployed during the request, in this case OpenTOSCA.
 
 \vspace*{\baselineskip}
@@ -132,6 +133,7 @@ In line 7-23, it contains a configuration list, which can contain one or more co
 Each configuration set is made up of one or more configuration entries, which are key value pairs, where the key describes the configuration type and the value the actual configuration value.
 What content a particular key has to contain depends on what the plugins are looking for when they read the configuration.
 In the example code in line 9, we send one configuration set for AWS, which consists of two credentials, a secret key in line 12-15 and an accessKey in line 16-19.
+Configuration content like this is the reason why the communication with the bootware should be encrypted.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]

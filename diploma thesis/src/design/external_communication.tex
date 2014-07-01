@@ -8,7 +8,7 @@ There are several factors that impact this decision.
 Communication between the components should be as simple as possible, but has to support some critical features.
 To keep it simple, it would make sense to use the same communication mechanism for communication between the bootware components as well as with other external components, like the provisioning manager and the bootware adapter.
 
-Since the provisioning processes kicked off by the bootware can potentially take a long time to finish (in the range of minutes to hours), we face possible timeouts when using synchronous communication.
+As the provisioning processes kicked off by the bootware can potentially take a long time to finish (in the range of minutes to hours), we face possible timeouts when using synchronous communication.
 As alternative we could use asynchronous communication with callbacks.
 This would avoid timeouts but also creates a new problem.
 The callback message send as response is separated from the original message and therefore appears as unsolicited message to the client.
@@ -17,7 +17,6 @@ This could be a problem because in the environment where the bootware will most 
 Another solution is to use polling, i.e. after a request was sent to the bootware, the bootware is polled periodically for a response.
 This also avoids timeouts as well as the firewall problematic.
 Disadvantages of polling, for example when many clients poll a server at the same time and cause a bottleneck, will most likely not be a problem in our case, because we only have a very restricted number of clients for each bootware instance and no multi-tenancy.
-Since the provisioning process can take very long, there should also be some mechanism to get feedback on the current status during a long running provisioning process.
 
 The communication with the bootware components will contain sensitive data, for example login information for cloud providers.
 This information has to be provided from the outside and should be transported securely to prevent malicious or fraudulent attacks.
@@ -46,7 +45,7 @@ Like CORBA, web services also support polling and asynchronous invocation, as we
 	\label{image:webservice}
 \end{figure}
 
-Since the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
+As the whole SimTech SWfMS already uses SOAP based web services, it would make sense to also use SOAP based web services as external communication mechanism for the bootware.
 The technology and knowledge is already in place and introducing a second mechanism like CORBA would unnecessarily increase the complexity of the project, especially because CORBA does not offer any significant advantages over SOAP based web services.
 Using a message-oriented middleware would also be an option but introducing another component seems to complicated, especially because we do not need most of the features that it offers (e.g.: transactions, persistence, etc.).
 \autoref{image:webservice} shows the addition of web service call and return communication between the bootware adapter and the local bootware, and between the remote bootware and the local bootware, as well as the provisioning manager.
@@ -64,7 +63,7 @@ For this, a secondary communication mechanism which supports sending multiple fe
 This secondary communication channel could take any form, but a natural choice for publishing the intermediary state of the bootware would be a message queue system.
 In this case, the remote bootware pushes messages to a message queue to which the local bootware (and other components if needs be) can subscribe to receive future messages.
 \autoref{image:message_queue} shows the proposed architecture with an additional (and optional) message queue that allows the local bootware or other components to listen to status updates from the remote bootware.
-Since it is not necessary for the successful use of the bootware, it would make sense to implement this secondary communication mechanism as an extension to the bootware.
+Because it is not necessary for the successful use of the bootware, it would make sense to implement this secondary communication mechanism as an extension to the bootware.
 This extension would not be part of the core bootware, but rather an additional component that could be used when needed.
 This would allow us to add arbitrary communication extensions to the bootware depending on future needs.
 How this can be done will be discussed in the next section.

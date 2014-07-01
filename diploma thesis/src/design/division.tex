@@ -30,7 +30,7 @@ We would not have to deal with bringing the bootware into a cloud environment an
 There is no possible overlap in functionality, as it would be the case in a 2-tier architecture and communication between multiple bootware components does not have to be considered.
 
 The disadvantages are caused by the component being local.
-Since all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
+Because all the functionality is concentrated in one component, it can become quite large and complicated, which is one thing that should be avoided according to the requirements.
 A much bigger problem however is the remote communication happening in this scenario.
 As \autoref{image:local} shows, all calls to the bootware from the provisioning manager would leave the remote environment.
 Also, all calls from the bootware to the provisioning engines would enter the remote environment.
@@ -49,15 +49,15 @@ They compared public cloud providers and measured that intra-datacenter communic
 The next obvious choice, as displayed in \autoref{image:remote}, is to put the single bootware component into a remote environment, where the disadvantages of local to remote communication would disappear.
 However, this creates new problems.
 
-Since there are not any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
-Either the user provisions the bootware once in some cloud environment and then keep this one instance running, or they provision it once they need it and deprovisions it when they are done.
+Because there are not any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
+Either, the user provisions the bootware once in some cloud environment and then keeps this one instance running, or they provision it once they need it and deprovisions it when they are done.
 
-In the first case the user would only have to provision the bootware once, but this creates a new problem: The user does not know where exactly to put the bootware.
-Since one requirement is that multiple cloud environments should be supported, it is possible that the bootware is not located anywhere near the cloud environment where it should provision further components.
+In the first case, the user would only have to provision the bootware once, but this creates a new problem: The user does not know where exactly to put the bootware.
+Because one requirement is that multiple cloud environments should be supported, it is possible that the bootware is not located anywhere near the cloud environment where it should provision further components.
 The communication problem of the single local bootware component can still occur in these cases.
 While the other approaches presented here do not completely eliminate this problem, they at least have the option to move the bootware with each individual bootware execution, while in this first case, the bootware would stay in one place for multiple, possibly many bootware executions.
 
-Another problem is that the bootware would be running all the time, even if the user does not need it, which would increase costs.
+Another problem in this first case is that the bootware would be running all the time, even if the user does not need it, which would increase costs.
 This problem could be reduced if this bootware instance is shared with others to assure a more balanced load.
 But then the user would have to manage some sort of load balancing and the bootware would have to support multi-tenancy or be stateless to be able to cope with potential high usage spikes.
 This would further complicate the design and implementation of the bootware and possibly increase the running costs.
@@ -78,11 +78,11 @@ Therefor, this scenario is not appropriate for our case.
 \end{figure}
 
 Next, we take a look at a 2-tier architecture, as shown in \autoref{image:2_tier}, where the bootware is divided into two components.
-On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment near to the environment, where other components will be provisioned later.
+On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment, near to the environment where other components will be provisioned later.
 
 This eliminates the problems of a single local or remote bootware component.
 The user no longer has to be involved in the management of the remote bootware, because the local bootware handles all that.
-Since we provision the remote bootware on demand, we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.
+Because we provision the remote bootware on demand, we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.
 We can now keep the local part as simple as possible and make the remote part as complicated as it has to be, and because we provision the remote bootware only for one user, we do not have to worry about multi-tenancy.
 
 But we also introduce new problems.
@@ -90,7 +90,7 @@ For one, we now have duplicate functionality between the two components.
 Both have to know how to provision a component into multiple cloud environments.
 The local bootware has to be able to put its remote counterpart into any cloud environment.
 The remote bootware has to be able to provision other components into the same environment in which it runs (ideally, to minimize costs).
-Since itself can be located in any cloud environment, it has to be able to do this in any cloud environment.
+Because it can be located in any cloud environment, it has to be able to do this in any cloud environment.
 Independent from this, it also has to be able to provision to any environment that the user or the service package chooses.
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
 We discuss plugins in detail in \autoref{design:extensibility}.
@@ -111,7 +111,7 @@ In this case, there are also two bootwares working together and the remote bootw
 However, the local and the remote bootware are identical, as shown in \autoref{image:clone}.
 Instead of provisioning a bigger bootware in a remote environment, the local bootware clones itself.
 Compared to the 2-tier architecture described before, this has the advantage that only one component has to be designed and implemented.
-Duplication of any functionality would not therefore be an issue.
+Duplication of any functionality would therefore not be an issue.
 The disadvantage would be that the local bootware would be exactly as complex as the remote bootware and might contain functionality that it would not require for local operation and vice versa.
 However, because we want to keep the whole bootware, including the remote part, fairly lightweight, it is unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
 In this case, the advantage of only having to design and implement one component seems to outweigh the disadvantage of a slightly more complex local component (compared to the 2-tier variant).
