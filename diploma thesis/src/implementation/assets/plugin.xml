@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+	<extension-point id="hoverHelpers"
+	                 name="%HOVERHELP_HELPER_NAME"
+	                 schema="schema/hoverHelpers.exsd"/>
+	<extension-point id="expressionEditors"
+	                 name="%EXPRESSION_LANGUAGE_EDITORS"
+	                 schema="schemas/expressionEditors.exsd"/>
+	<extension-point id="actions"
+	                 name="%ACTIONS_NAME"
+	                 schema="schemas/actions.exsd"/>
+	<extension-point id="modelListener"
+	                 name="Model Listener"
+	                 schema="schemas/modelListener.exsd"/>
+	<extension-point id="uiObjectFactories"
+	                 name="UIObjectFactories"
+	                 schema="schemas/uiObjectFactories.exsd"/>
+	<extension-point id="bootware"
+	                 name="Bootware"
+	                 schema="schema/bootware.exsd"/>
+
+...

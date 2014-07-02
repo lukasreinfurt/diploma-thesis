@@ -23,3 +23,109 @@ We modify the already existing Eclipse plugin with an extension point that is tr
 If the bootware plugin is loaded into the Modeler, it will implement this extension point and set up the SimTech SWfMS before the already existing deployment code continues.
 If it is not loaded, nothing new will happen and the existing deployment code will be executed like before.
 The bootware plugin can also add additional extension to the modeler, for example a configuration dialog for setting up the context or a view that shows progress messages from the bootstrapping process.
+
+The existing Eclipse plugin that has to be modified is the \textit{org.eclipse.bpel.ui} plugin.
+In its \textit{plugin.xml}, it has already defined some extension points, as can be seen in \autoref{lst:pluginxml} in line 5-19.
+We add another extension point for the bootware, as shown in line 20-22.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=plugin.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/plugin.xml}
+	\caption{Extension points defined in org.eclipse.bpel.ui.}
+	\label{lst:pluginxml}
+\end{listing}
+
+Now, we have to integrate this extension point into the already existing deploy process that is executed when the user click the start button in the SimTech Modeler.
+This button and the class that implements its functionality are defined further down in the \textit{plugin.xml}, as shown in \autoref{lst:pluginaction}.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=plugin.xml,
+		frame=topline,
+		linenos,
+		firstnumber=1185,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{xml}{implementation/assets/plugin_action.xml}
+	\caption{Definition of the action button.}
+	\label{lst:pluginaction}
+\end{listing}
+
+As we can see in line 1188, the class that implements the button functionality is \textit{org.eclipse.bpel.ui.agora.actions.StartAction}.
+We modify the run method of the StartAction class to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
+As shown in \autoref{lst:startaction}, we have to get all extensions that implement the bootware extension point from the extension registry (line 50-52) and create an object of the \textit{IBootwarePlugin} type (line 55-56).
+Now, we are able to call any method defined by this object, in this case the execute method (line 57).
+After this method has finished, the original code continues its execution (line 60).
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=StartAction.java,
+		frame=topline,
+		linenos,
+		firstnumber=44,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{java}{implementation/assets/StartAction.java}
+	\caption{The modified run method in the StartAction class.\protect\footnotemark}
+	\label{lst:startaction}
+\end{listing}
+
+\footnotetext{Note: The code shown here was shortened for presentation and is not complete. The main elements are however present.}
+
+Now that we have all code in place to execute the bootware extension, all we have to do is to create a bootware plugin that implements the bootware extension point and the execute method.
+Like the Eclipse plugin we just modified, the bootware plugin has a \textit{plugin.xml}, shown in \autoref{lst:bootwarepluginxml}.
+Here, we just declare an extension in line 8-13 that implements the bootware extension point (line 9) with the org.simtech.bootware.eclipse.BootwarePlugin class (line 11).
+This is also the place where other integration functionality could be implemented in the future, for example by adding new menus for configuring the context object, or new views that show the bootstrapping process.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=plugin.xml,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{java}{implementation/assets/bootware_plugin.xml}
+	\caption{The bootware plugin plugin.xml.}
+	\label{lst:bootwarepluginxml}
+\end{listing}
+
+The BootwarePlugin class, shown in \autoref{lst:bootwareplugin}, implements the execute method called by the extension point.
+In this method we do everything we need to do to integrate the bootware into the start process.
+Due to limited space we can not present the actual code here, but the process is roughly as follows:
+First, the local bootware has to be started by calling the executable.
+Once it is running, a deploy request is send to it, containing a context object with all necessary configuration parameters.
+Now, the bootware plugin has to wait for the deploy request to be executed.
+Once the request is finished, the endpoint references to various workflow middleware components returned in the response message are used to set up the connection from the SimTech modeler to the middleware.
+The bootstrapping process is now finished and the original deploy code continues.
+
+\vspace*{\baselineskip}
+\begin{listing}[!htbp]
+	\inputminted[
+		label=BootwarePlugin.java,
+		frame=topline,
+		linenos,
+		frame=lines,
+		tabsize=2,
+		framesep=0.3cm,
+		fontsize=\small
+	]{java}{implementation/assets/BootwarePlugin.java}
+	\caption{The bootware plugin implementation.}
+	\label{lst:bootwareplugin}
+\end{listing}

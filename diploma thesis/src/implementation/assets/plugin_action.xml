@@ -1,0 +1,16 @@
+...
+
+<action
+	class="org.eclipse.bpel.ui.agora.actions.StartAction"
+	disabledIcon="icons/elcl16/resume_co.gif"
+	enablesFor="*"
+	icon="icons/elcl16/resume_co.gif"
+	id="org.eclipse.bpel.ui.agora.start.action"
+	label="Start"
+	menubarPath="simTech/process/action"
+	style="push"
+	toolbarPath="simTech/process/action"
+	tooltip="Starts the process instance execution">
+</action>
+
+...
