@@ -4,7 +4,7 @@
 The state machine we use to implement the bootware execution flow is divided into two parts.
 We have a generic part that is shared by both the local and remote bootware.
 This part is defined in the AbstractStateMachine class that is part of the bootware core library.
-The second part, which is specific to either the local or remote bootware, is defined in the respective bootware implementation.
+The second part, which is specific to either the local or remote bootware, is defined in their respective implementations.
 
 The AbstractStateMachine class defines some utility functions for starting and stopping the state machine.
 It also contains the buildDefaultTransition method, which simplifies the definition of most of the transitions in \autoref{image:flow_local} and \autoref{image:flow_remote}.
@@ -19,7 +19,7 @@ We can see in line 198 that the connect method of a connection plugin is called 
 If this succeeds, a success event is fired in the state machine (line 203), which would trigger a transition to the next state, which in this case is the provision payload state.
 However, if for some reason no connection can be established by the connection plugin's connect method, a ConnectConnectionException is thrown.
 This would trigger a failure event in the state machine (line 201), which would lead to a transition to the disconnect state.
-We can see how the result of some code execution can influence the execution flow of the bootware.
+We can see how the result of some code execution can influence the transitions in the state machine.
 The functions for other shared states are implemented in a similar fashion.
 
 \vspace*{\baselineskip}
@@ -39,9 +39,8 @@ The functions for other shared states are implemented in a similar fashion.
 \end{listing}
 
 Both the local and the remote bootware extend the AbstractStateMachine and AbstractMachine classes in their implementations.
-If they define other states for which no functions are defined in the AbstractMachine class, they can add these new functions.
+If they define other states for which no functions are defined in the AbstractMachine class, they can just add these new functions.
 They can also override existing functions if they need to.
 For example, the local bootware adds the sendToRemote function to its implementation of the AbstractMachine class because the send remote state is unique to the local bootware.
-
 To complete the implementation of their particular state machines, the local and remote bootware also have to define their states and transitions.
 They can use the already mentioned buildDefaultTransition function defined in the AbstractStateMachine for the common success/failure transitions, or the original syntax for other transitions.

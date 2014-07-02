@@ -98,7 +98,7 @@ The modeler can now deploy and start the workflow on the workflow middleware, wh
 In the workflow execution phase, which is also depicted as a sequence diagram in \autoref{image:execution_sequence}, the workflow middleware might now call external services.
 If these services do not exist already, the workflow middleware has to provision them first (via the provisioning manager).
 To provision a service, a particular provisioning engine is needed, which also might not exist yet.
-In this case, a deploy request is send from the workflow middleware (i.e. the provisioning manager) to the remote bootware, which then deploys and starts the requested provisioning engine.
+In this case, a deploy request is sent from the workflow middleware (i.e. the provisioning manager) to the remote bootware, which then deploys and starts the requested provisioning engine.
 Once the particular provisioning engine exists, the workflow middleware calls it to deploy the service it wants to execute.
 This process might be repeated multiple times during the whole workflow execution.
 
@@ -114,5 +114,5 @@ As we can see in \autoref{image:shutdown_sequence}, the workflow engine might ne
 Once all services are removed, the workflow execution is truly finished and an event marking this state is emitted.
 The local bootware has been listening for this event through one of its event plugins and triggers the removal of the remaining components by first calling the shutdown operation of the remote bootware.
 The remote bootware calls a provisioning engine to deprovision the workflow middleware, before deprovisioning all remaining provisioning engines itself.
-Once this is done, a response is send to the local bootware, which can now deprovision the remote bootware, before shutting down itself.
+Once this is done, a response is sent to the local bootware, which can now deprovision the remote bootware, before shutting down itself.
 This concludes the shutdown phase and the whole bootware process.

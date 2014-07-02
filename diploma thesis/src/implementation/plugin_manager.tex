@@ -24,7 +24,7 @@ It encapsulates all the functionality required for loading and unloading OSGi pl
 		& PluginManager Instance
 		& Initializes, configures, and starts the OSGi framework \\
 
-			registerSharedObject
+			registerShared-Object
 		& Object
 		& -
 		& Register an object that should be shared with plugins \\
@@ -91,7 +91,7 @@ For example, once the state machine enters the unload event plugins state, shown
 As we can see in line 293, it just calls the plugin manager's unloadAllPlugins operation, which will unload all remaining plugins (which should be only event plugins at this point).
 We can also see that exceptions are used to control the state machine transitions.
 If all plugins are unloaded successfully and no exception is thrown, a success event is fired (line 298), which will cause a transition in the state machine, in this case to the cleanup state.
-However, if somehow the unloadAllPlugins operation fails, it throws a UnloadPluginsException, which is catched and triggers a failure event (line 296).
+However, if somehow the unloadAllPlugins operation fails, it throws a UnloadPluginsException, which is caught and triggers a failure event (line 296).
 In this way, the result of the plugin manager operations can influence the execution flow of the bootware.
 
 \vspace*{\baselineskip}

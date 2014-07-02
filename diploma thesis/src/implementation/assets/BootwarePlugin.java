@@ -1,7 +1,3 @@
-package org.simtech.bootware.eclipse;
-
-import org.eclipse.bpel.ui.IBootwarePlugin;
-
 public class BootwarePlugin implements IBootwarePlugin {
 
 	public final void execute() {

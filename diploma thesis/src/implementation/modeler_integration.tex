@@ -3,7 +3,7 @@
 
 In this section we describe the integration between the SimTech SWfMS and the bootware.
 Currently, what happens is that if a workflow is ready and should be executed, the user clicks on a button in the SimTech Modeler and the workflow is deployed and executed on the already running SimTech SWfMS.
-Now we have to find a way to integrate the bootware into this process.
+The bootware has to be integrated into this process.
 We described this as a generic bootware adapter in \autoref{design:modeler_integration}, but now we need an actual implementation of this adapter, which will be specific to the SimTech Modeler.
 The button is realized by an Eclipse plugin that adds SimTech specific functionality to the Modeler (which is based on Eclipse).
 We therefore also have to create some kind of Eclipse plugin to hook into this process.
@@ -110,7 +110,7 @@ The BootwarePlugin class, shown in \autoref{lst:bootwareplugin}, implements the 
 In this method we do everything we need to do to integrate the bootware into the start process.
 Due to limited space we can not present the actual code here, but the process is roughly as follows:
 First, the local bootware has to be started by calling the executable.
-Once it is running, a deploy request is send to it, containing a context object with all necessary configuration parameters.
+Once it is running, a deploy request is sent to it, containing a context object with all necessary configuration parameters.
 Now, the bootware plugin has to wait for the deploy request to be executed.
 Once the request is finished, the endpoint references to various workflow middleware components returned in the response message are used to set up the connection from the SimTech modeler to the middleware.
 The bootstrapping process is now finished and the original deploy code continues.
