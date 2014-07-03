@@ -56,7 +56,7 @@ namespace :build do
 	end
 
 	task :pdf => ['pdf:texliveonfly', 'pdf:biber', 'pdf:makeindex', 'pdf:pplatex'] do
-		FileUtils.cp 'thesis.pdf', '../Diplomarbeit - Lukas Reinfurt - Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments.pdf'
+		FileUtils.cp 'thesis.pdf', '../Diplomarbeit 3616 - Lukas Reinfurt - Bootstrapping Provisioning Engines for On-demand Provisioning in Cloud Environments.pdf'
 		puts generateSeparator('DONE', 0)
 	end
 
