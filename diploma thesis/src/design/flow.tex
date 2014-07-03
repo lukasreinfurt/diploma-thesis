@@ -23,6 +23,7 @@ Then, the local bootware will transition to the next state, where it tries to lo
 The event plugins are loaded once at the beginning of the local bootware execution because they will not change at a per request basis (like the other plugins).
 If loading one of these plugins fails, the local bootware will try to unload already loaded plugins before continuing to the cleanup state.
 If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
+Any events generated after the load event plugins state can now be handled by the events plugins.
 
 Once the local bootware is in the wait state it is ready to receive requests from the outside.
 If a shutdown event is received in this state, the local bootware will first tell the remote bootware to undeploy all active application.

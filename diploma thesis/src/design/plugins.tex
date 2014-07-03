@@ -265,6 +265,31 @@ We assume that such libraries will exist and that we can use them for implementi
 
 \subsection{Event Plugins}
 
-Unlike the other plugin types, the event plugins do not have any more operations to implement then the initialize and shutdown operations described in \autoref{table:all_plugins}.
-Instead, they implement their specific functionality by defining one or more event handlers which will react to specific events when these are published at the event bus.
-How exactly these event handlers work will be discussed later.
+Apart from the initialize and shutdown operations described in \autoref{table:all_plugins}, event plugins only implement the handle operation, as shown in \autoref{table:event_plugins}.
+It takes an event type as input.
+Every time an event of this type is triggered, all handle operation associated with this event type will be called and can execute some code, for example logging the event.
+Note that each event plugin can declare more than one handle function to be able to react to multiple events.
+
+\vspace*{\baselineskip}
+\begingroup
+	\centering
+	\captionsetup{type=table}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabu}[!htbp]{X[2,r]X[2,c]X[2,c]X[6,l]}
+
+			\multicolumn{1}{c}{\textbf{Operation}}
+		& \multicolumn{1}{c}{\textbf{Input}}
+		& \multicolumn{1}{c}{\textbf{Output}}
+		& \multicolumn{1}{c}{\textbf{Description}} \\
+
+		\tabucline[0.5pt]{1-4}
+
+			handle
+		& Event Type
+		& -
+		& Is called every time an event of the given type is triggered\\
+
+	\end{tabu}
+	\caption{Interface to be implemented by event plugins.}
+	\label{table:event_plugins}
+\endgroup
