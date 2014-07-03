@@ -15,9 +15,9 @@ However, the most important part of the AbstractStateMachine is the abstract cla
 This class defines all the functions that are called in states that are shared by the local and remote bootware, so that we avoid code duplication.
 For example, as we can see when looking at \autoref{image:flow_local} and \autoref{image:flow_remote}, both bootwares share the connect state at the bottom left.
 \autoref{lst:connect} shows how the function associated with this state is defined in the AbstractStateMachine class.
-We can see in line 198 that the connect method of a connection plugin is called and the resulting connection is stored in a variable for later use.
-If this succeeds, a success event is fired in the state machine (line 203), which would trigger a transition to the next state, which in this case is the provision payload state.
-However, if for some reason no connection can be established by the connection plugin's connect method, a ConnectConnectionException is thrown.
+We can see in line 198 that the connect method of a communication plugin is called and the resulting connection is stored in a variable for later use.
+If this succeeds, a success event is fired in the state machine (line 203), which would trigger a transition to the next state, which in this case is the provision application state.
+However, if for some reason no connection can be established by the communication plugin's connect method, a ConnectConnectionException is thrown.
 This would trigger a failure event in the state machine (line 201), which would lead to a transition to the disconnect state.
 We can see how the result of some code execution can influence the transitions in the state machine.
 The functions for other shared states are implemented in a similar fashion.

@@ -2,12 +2,12 @@
 	<S:Body>
 		<S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
 			<faultcode>S:Server</faultcode>
-			<faultstring>Error retrieving active payloads</faultstring>
+			<faultstring>Error retrieving active applications</faultstring>
 			<detail>
-				<ns2:GetActivePayloadsException
+				<ns2:GetActiveApplicationsException
 					xmlns:ns2="http://remote.bootware.simtech.org/">
-					<message>Error retrieving active payloads</message>
-				</ns2:GetActivePayloadsException>
+					<message>Error retrieving active applications</message>
+				</ns2:GetActiveApplicationsException>
 			</detail>
 		</S:Fault>
 	</S:Body>

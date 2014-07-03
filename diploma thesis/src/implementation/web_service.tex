@@ -5,7 +5,7 @@ In \autoref{design:communication} we decided to use web service calls and return
 Now, we need to the define the interface that will be made available by the web service to the outside.
 We obviously need the two main operations, deploy and undeploy, to be available from the outside.
 In \autoref{design:context} we also described the \textit{setConfiguration} operation that has to be supported.
-Additionally, the getActivePayloads and shutdown operations are needed.
+Additionally, the getActiveApplications and shutdown operations are needed.
 
 \subsection{Deploy}
 
@@ -31,7 +31,7 @@ In this particular example, only the required plugins are specified, which could
 \end{listing}
 
 The response that is returned once the request has been executed successfully is shown in \autoref{lst:webservice:deployresponse}.
-It contains a list of endpoint references in line 5-10, which contains a reference to the payload that was deployed during the request, in this case OpenTOSCA.
+It contains a list of endpoint references in line 5-10, which contains a reference to the application that was deployed during the request, in this case OpenTOSCA.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -70,7 +70,7 @@ It contains a fault string with an error description in line 5, as well as the o
 
 Like the \textit{deploy} operation, the \textit{undeploy} operation will be called by multiple components to reverse the actions that where previously made by deploy operations.
 \autoref{lst:webservice:undeployrequest} shows an exemplary undeploy request in a soap message.
-As argument it contains one or more endpoint references to already deployed payloads, as can be seen in line 7-12.
+As argument it contains one or more endpoint references to already deployed applications, as can be seen in line 7-12.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -87,7 +87,7 @@ As argument it contains one or more endpoint references to already deployed payl
 	\label{lst:webservice:undeployrequest}
 \end{listing}
 
-When all payloads have been undeployed successfully, a response will be send, as shown in \autoref{lst:webservice:undeployresponse}.
+When all applications have been undeployed successfully, a response will be send, as shown in \autoref{lst:webservice:undeployresponse}.
 The response is empty because there is nothing interesting to return.
 
 \vspace*{\baselineskip}
@@ -186,18 +186,18 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 	\label{lst:webservice:setconfigurationerror}
 \end{listing}
 
-\subsection{Get Active Payloads}
+\subsection{Get Active Applications}
 
-The getActivePayloads operation is called by the provisioning manager to retrieve already deployed provisioning engines.
+The getActiveApplications operation is called by the provisioning manager to retrieve already deployed provisioning engines.
 If a provisioning engine it needs is already active, it does not have to call the bootware to provision a new one.
 As already explained in \autoref{design:webservice} this is only needed in the remote bootware and therefor we only implement it there.
-\autoref{lst:webservice:getactivepayloadsrequest} shows a getActivePayloads request in a SOAP message.
+\autoref{lst:webservice:getactivepayloadsrequest} shows a getActiveApplications request in a SOAP message.
 No parameters are required.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=getActivePayloads-request.xml,
+		label=getActiveApplications-request.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
@@ -205,19 +205,19 @@ No parameters are required.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-request.xml}
-	\caption{Sample getActivePayloads request in a soap message.}
+	\caption{Sample getActiveApplications request in a soap message.}
 	\label{lst:webservice:getactivepayloadsrequest}
 \end{listing}
 
-The response that is returned contains a list of all payloads that where active when the request was made.
-As we can see in \autoref{lst:webservice:getactivepayloadsresponse} lines 6-11, it contains a payloads list with zero or more entries.
-Each entry consists of a key/value pair, where the key identifies the payload and the value contains a URL to the payload.
+The response that is returned contains a list of all applications that where active when the request was made.
+As we can see in \autoref{lst:webservice:getactivepayloadsresponse} lines 6-11, it contains an applications list with zero or more entries.
+Each entry consists of a key/value pair, where the key identifies the application and the value contains a URL to the application.
 In this example, the entry points to an OpenTOSCA container instance.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=getActivePayloads-response.xml,
+		label=getActiveApplications-response.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
@@ -225,17 +225,17 @@ In this example, the entry points to an OpenTOSCA container instance.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-response.xml}
-	\caption{Sample getActivePayloads response in a soap message.}
+	\caption{Sample getActiveApplications response in a soap message.}
 	\label{lst:webservice:getactivepayloadsresponse}
 \end{listing}
 
-If the getActivePayloads request failed for some reason, an error message is returned.
-As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a soap fault string in line 5 and the original GetActivePayloadsException thrown by the getActivePayloads operation in line 7-10.
+If the getActiveApplications request failed for some reason, an error message is returned.
+As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a soap fault string in line 5 and the original GetActiveApplicationsException thrown by the getActiveApplications operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
-		label=getActivePayloads-error.xml,
+		label=getActiveApplications-error.xml,
 		frame=topline,
 		linenos,
 		frame=lines,
@@ -243,14 +243,14 @@ As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-error.xml}
-	\caption{Sample getActivePayloads error in a soap message.}
+	\caption{Sample getActiveApplications error in a soap message.}
 	\label{lst:webservice:getactivepayloadserror}
 \end{listing}
 
 \subsection{Shutdown}
 
 The shutdown operation triggers the shutdown procedure.
-During this procedure, all active payloads will be undeployed.
+During this procedure, all active applications will be undeployed.
 The local bootware will also forward this request to the remote bootware and wait for a response so that it can deprovision the remote bootware before shutting down itself.
 \autoref{lst:webservice:shutdownrequest} shows a shutdown request in a SOAP message.
 No parameters are required.
@@ -270,7 +270,7 @@ No parameters are required.
 	\label{lst:webservice:shutdownrequest}
 \end{listing}
 
-If the additional processes executed during shutdown (i.e. undeploy payloads or middleware) were successful, the response in \autoref{lst:webservice:shutdownresponse} will be returned.
+If the additional processes executed during shutdown (i.e. undeploy applications or middleware) were successful, the response in \autoref{lst:webservice:shutdownresponse} will be returned.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]

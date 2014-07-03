@@ -4,7 +4,7 @@
 	                       final String to,
 	                       final String fsmEvent) {
 		try {
-			connection = connectionPlugin.connect(instance);
+			connection = communicationPlugin.connect(instance);
 		}
 		catch (ConnectConnectionException e) {
 			stateMachine.fire(StateMachineEvents.FAILURE);

@@ -3,6 +3,6 @@
 	xmlns:rem="http://remote.bootware.simtech.org/">
 	<soapenv:Header/>
 	<soapenv:Body>
-		<rem:getActivePayloads/>
+		<rem:getActiveApplications/>
 	</soapenv:Body>
 </soapenv:Envelope>

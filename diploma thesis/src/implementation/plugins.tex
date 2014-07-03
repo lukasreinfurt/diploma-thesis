@@ -3,8 +3,8 @@
 
 Now, we will describe the implementation of a few plugins.
 We implemented an infrastructure plugin that can create and remove EC2 instances in Amazon's cloud.
-We created a connection plugin that allows the bootware to connect to a remote system via SSH and then execute commands on, or upload files to this system.
-We also implemented two payload plugin, one for the remote bootware itself and one for OpenTOSCA.
+We created a communication plugin that allows the bootware to connect to a remote system via SSH and then execute commands on, or upload files to this system.
+We also implemented two application plugin, one for the remote bootware itself and one for OpenTOSCA.
 Additionally, we created event plugins, for example a file logger plugin that logs bootware events into a text file.
 
 \subsection{AWS EC2 Plugin}
@@ -42,9 +42,9 @@ There are no further actions necessary during the shutdown operation, but for sa
 
 \subsection{SSH Plugin}
 
-This connection plugin allows the bootware to connect to a remote system via SSH.
+This communication plugin allows the bootware to connect to a remote system via SSH.
 It uses the Ganymed SSH-2 library\footnote{\url{https://code.google.com/p/ganymed-ssh-2/}}, which implements the SSH-2 protocol in Java.
-\autoref{image:sshplugin} shows a simplified overview of the actions necessary to create a SSH connection and how they map onto the connection plugin operations.
+\autoref{image:sshplugin} shows a simplified overview of the actions necessary to create a SSH connection and how they map onto the communication plugin operations.
 
 \begin{figure}[!htbp]
 	\centering
@@ -66,8 +66,8 @@ The disconnect operation is also called by the shutdown operation at the end of 
 
 \subsection{Remote Bootware Plugin}
 
-This payload plugin allows the local bootware to install the remote bootware on a remote system.
-\autoref{image:remotebootwareplugin} shows a simplified overview of the steps involved in the installation of the remote bootware and how they map onto the payload plugin operations.
+This application plugin allows the local bootware to install the remote bootware on a remote system.
+\autoref{image:remotebootwareplugin} shows a simplified overview of the steps involved in the installation of the remote bootware and how they map onto the application plugin operations.
 The undeploy and stop operations where omitted because they are not really required in this case.
 
 \begin{figure}[!htbp]
@@ -88,9 +88,9 @@ Finally, the URL to the remote bootware is returned.
 
 \subsection{OpenTOSCA Plugin}
 
-This payload plugin allows the bootware to install an OpenTOSCA container on an EC2 instance.
-It executes the installation steps described in the OpenTOSCA manual over a connection provided by a connection plugin.
-\autoref{image:opentoscaplugin} shows a simplified overview of the steps involved in the installation of OpenTOSCA and how they map onto the payload plugin operations.
+This application plugin allows the bootware to install an OpenTOSCA container on an EC2 instance.
+It executes the installation steps described in the OpenTOSCA manual over a connection provided by a communication plugin.
+\autoref{image:opentoscaplugin} shows a simplified overview of the steps involved in the installation of OpenTOSCA and how they map onto the application plugin operations.
 The undeploy and stop operations where omitted because they are not really required in this case.
 
 \begin{figure}[!htbp]

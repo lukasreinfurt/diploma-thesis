@@ -8,7 +8,7 @@ This list is by no means exhaustive and other possibilities for improvements mig
 \section{More Plugins and a Plugin Repository}
 
 For this diploma thesis we only implemented a few plugins.
-The plugin selection will certainly have to be extended in the future to cover a wider range of cloud providers (or other infrastructure types), connection mechanisms, and payloads.
+The plugin selection will certainly have to be extended in the future to cover a wider range of cloud providers (or other infrastructure types), communication mechanisms, and applications.
 Along with a greater variety of plugins, a plugin repository, as described in \autoref{design:pluginrepository} would be beneficial.
 It would further decrease code duplication and facilitate plugin sharing.
 For this, a fitting repository format would have to be found and various other questions, such as security, need to be answered.
@@ -35,7 +35,7 @@ Additionally, a more intuitive way to configure the bootware could be implemente
 \section{Better Failure Management}
 
 Currently, the bootware will fail in many cases where it could continue, if the user could influence error recovery.
-For example, if for some reason a connection can not be established with a cloud provider, the bootware will abort and undeploy already provisioned payloads.
+For example, if for some reason a connection can not be established with a cloud provider, the bootware will abort and undeploy already provisioned applications.
 This could happen in the middle of a workflow execution, where multiple services are deployed in different clouds.
 In this scenario, the ability for the user to select an alternative cloud provider for this one service could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
 Failure management mechanisms such as this would improve the usability of the bootware.

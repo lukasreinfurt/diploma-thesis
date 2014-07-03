@@ -13,16 +13,16 @@ So a better name for these plugins would be \textit{infrastructure plugins}.
 
 The same line of thinking can be used on the provisioning engine plugins.
 All that we care about is that we can get some software running on a given infrastructure and that we get back an URL where we can find this software once it is up and running.
-A better name for these plugins would therefore be \textit{payload plugins}.
+A better name for these plugins would therefore be \textit{application plugins}.
 
-Now that we have infrastructure plugins and payload plugins, we should be able to provision the infrastructure we need and use payload plugins to install and run any software on it.
-But there is a step in between provisioning the infrastructure and installing the software that we are glancing over: We have to somehow connect to the infrastructure before we can install something.
-The connection functionality could be part of either the infrastructure plugins or the payload plugins, or it could be separated into independent connection plugins.
+Now that we have infrastructure plugins and application plugins, we should be able to provision the infrastructure we need and use application plugins to install and run any software on it.
+But there is a step in between provisioning the infrastructure and installing the software that we are glancing over: We have to somehow communicate with the infrastructure to be able to install something on it.
+The communication functionality could be part of either the infrastructure plugins or the application plugins, or it could be separated into independent communication plugins.
 
-For the sake of efficiency and extensibility it would be best to use independent connection plugins.
-For example, if a user wanted to add a new connection type that should be used to install x applications in y environments, they could do so by writing one new connection plugin, instead of adding the functionality x-times to all payload plugins, or y-times to all infrastructure plugins.
+For the sake of efficiency and extensibility it would be best to use independent communication plugins.
+For example, if a user wanted to add a new communication type that should be used to install x applications in y environments, they could do so by writing one new communication plugin, instead of adding the functionality x-times to all application plugins, or y-times to all infrastructure plugins.
 This would also reduce code duplication.
-Therefore, a third plugin type is necessary: The \textit{connection plugins}.
+Therefore, a third plugin type is necessary: The \textit{communication plugins}.
 
 The remote bootware also has to handle the initial provisioning of the workflow middleware, which involves calling a provisioning engine to tell it to start the provisioning process.
 Because this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
@@ -71,7 +71,7 @@ This operation can be used by plugin authors to initialize the plugin, for examp
 It takes a configuration object as parameter, which is taken from the request context.
 This allows the plugins to be configured from the outside if necessary.
 The shutdown operation is called by the plugin manager when it unloads a plugin.
-It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a connection.
+It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a communication channel.
 
 \subsection{Infrastructure Plugins}
 
@@ -80,7 +80,7 @@ This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
 To be able to do this, an infrastructure plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
-The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a connection plugin.
+The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a communication plugin.
 It takes no input parameters, but relies on the configuration passed to the initialize operation to get the configuration details it needs, like login credentials.
 If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
 
@@ -106,7 +106,7 @@ As input it takes an instance object created earlier by the deploy operation.
 			deploy
 		& -
 		& Instance
-		& Deploys a connection ready instance of some resource and returns an instance object \\
+		& Deploys a communication ready instance of some resource and returns an instance object \\
 
 			undeploy
 		& Instance
@@ -118,16 +118,16 @@ As input it takes an instance object created earlier by the deploy operation.
 	\label{table:infra_plugins}
 \endgroup
 
-\subsection{Connection Plugins}
+\subsection{Communication Plugins}
 
-Connection plugins are responsible for creating a communication channel to previously deployed resources that can later be used by payload plugins to execute their operations on the resource.
+Communication plugins are responsible for creating a communication channel to previously deployed resources that can later be used by application plugins to execute their operations on the resource.
 The connection could be made by using SSH, \nom{remote desktop connection}{RDC}, \nom{virtual private network}{VPN}, Telnet, or other communication mechanisms supported by the resource.
-The connection plugins should be implemented generically, so that they can be used for all kinds of resources.
+The communication plugins should be implemented generically, so that they can be used for all kinds of resources.
 
 \autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
 The connect operation establishes a connection to a specific resource.
 The resource is specified by the instance object that is passed as input to the connect operation.
-If the connection was established successfully, the operation returns a connection object that can be used later by payload plugins to execute operations through this connection.
+If the connection was established successfully, the operation returns a connection object that can be used later by application plugins to execute operations through this connection.
 The disconnect operation closes a connection that was previously established by the connect operation.
 As input, it takes a connection object that was previously created by the connect operation.
 
@@ -156,26 +156,26 @@ As input, it takes a connection object that was previously created by the connec
 		& Disconnects a given connection \\
 
 	\end{tabu}
-	\caption{Interface to be implemented by connection plugins.}
+	\caption{Interface to be implemented by communication plugins.}
 	\label{table:conn_plugins}
 \endgroup
 
-\subsection{Payload Plugins}
+\subsection{Application Plugins}
 
-Payload plugins are responsible for installing, uninstalling, starting, and stopping software on an infrastructure instance.
+Application plugins are responsible for installing, uninstalling, starting, and stopping software on an infrastructure instance.
 This process can include the uploading of files and the execution of remote commands on an instance.
 
 \autoref{table:payload_plugins} shows the operations that plugins of this type should implement.
-The deploy operation installs a payload on an instance.
+The deploy operation installs an application on an instance.
 This can include uploading files from the local machine or downloading files from other machines.
 To execute this operation, a connection to the instance is necessary, which is supplied as input with the connection object.
-The undeploy operation removes a payload from an instance.
-In most cases this will not be necessary, because the instance will be destroyed in the undeploy phase and with it all the payload data (assuming it was not installed in some other persistent storage).
+The undeploy operation removes an application from an instance.
+In most cases this will not be necessary, because the instance will be destroyed in the undeploy phase and with it all the application data (assuming it was not stored in some other persistent storage).
 This method is provided for completeness and for special cases.
-The start operation starts a payload which previously was installed with the deploy operation.
-If the payload was started successfully, it returns the URL to the running payload.
-The stop operation stops the execution of a previously started payload.
-In most cases this will not be necessary, because the payload will be removed together with the instance in the undeploy phase.
+The start operation starts an application which previously was installed with the deploy operation.
+If the application was started successfully, it returns the URL to the running application.
+The stop operation stops the execution of a previously started application.
+In most cases this will not be necessary, because the application will be removed together with the instance in the undeploy phase.
 This method is provided for completeness and for special cases.
 
 \vspace*{\baselineskip}
@@ -195,25 +195,25 @@ This method is provided for completeness and for special cases.
 			deploy
 		& Connection
 		& -
-		& Deploys the payload over the given connection\\
+		& Deploys the application over the given connection\\
 
 			undeploy
 		& Connection
 		& -
-		& Undeploys the payload over the given connection\\
+		& Undeploys the application over the given connection\\
 
 			start
 		& Connection
 		& URL
-		& Starts the payload over the given connection\\
+		& Starts the application over the given connection\\
 
 			stop
 		& Connection
 		& -
-		& Stops the payload over the given connection\\
+		& Stops the application over the given connection\\
 
 	\end{tabu}
-	\caption{Interface to be implemented by payload plugins.}
+	\caption{Interface to be implemented by application plugins.}
 	\label{table:payload_plugins}
 \endgroup
 

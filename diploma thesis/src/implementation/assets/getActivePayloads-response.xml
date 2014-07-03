@@ -1,15 +1,15 @@
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
 	<S:Body>
-		<ns2:getActivePayloadsResponse
+		<ns2:getActiveApplicationsResponse
 			xmlns:ns2="http://remote.bootware.simtech.org/">
 			<return>
-				<payloads>
+				<applications>
 					<entry>
 						<key>opentosca</key>
 						<value>http://aws.com:8080/</value>
 					</entry>
-				</payloads>
+				</applications>
 			</return>
-		</ns2:getActivePayloadsResponse>
+		</ns2:getActiveApplicationsResponse>
 	</S:Body>
 </S:Envelope>

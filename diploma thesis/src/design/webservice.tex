@@ -4,8 +4,8 @@
 By now, we know that we will use a web service interface for remote communication.
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The \textit{deploy} and the \textit{undeploy} operation.
 In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
-We add two additional operations that we also need, the \textit{getActivePayloads} operation and the \textit{shutdown} operation.
-Both the local and the remote bootware will have to implement all of these operations, except the \textit{getActivePayloads} operation, which is only needed in the remote bootware.
+We add two additional operations that we also need, the \textit{getActiveApplication} operation and the \textit{shutdown} operation.
+Both the local and the remote bootware will have to implement all of these operations, except the \textit{getActiveApplication} operation, which is only needed in the remote bootware.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -32,9 +32,9 @@ Both the local and the remote bootware will have to implement all of these opera
 		& Configuration List
 		& - \\
 
-			getActivePayloads\footnote{only in remote bootware}
+			getActiveApplication\footnote{only in remote bootware}
 		& -
-		& Payload List \\
+		& Application List \\
 
 			shutdown
 		& -
@@ -47,15 +47,15 @@ Both the local and the remote bootware will have to implement all of these opera
 
 \subsection{Deploy}
 
-The deploy operation is called whenever a new payload (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
+The deploy operation is called whenever a new application (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
 As input it takes a context object as described in \autoref{design:context}.
-If it was able to successfully deploy the requested payload, it responds with an endpoint reference to the payload.
+If it was able to successfully deploy the requested application, it responds with an endpoint reference to the application.
 If the deployment failed, it responds with an error message.
 
 \subsection{Undeploy}
 
 The undeploy operation is essentially the reversal of the deploy operation.
-As input it takes an endpoint reference to a payload that should be undeploy.
+As input it takes an endpoint reference to an application that should be undeploy.
 If the undeployment succeeds, it responds with a success message.
 If it fails, it responds with an error message.
 
@@ -73,10 +73,10 @@ The configuration can still be overwritten on a per request basis if the context
 If the configuration was updated successfully, it responds with a success message.
 If the configuration could not be updated, it responds with an error message.
 
-\subsection{Get Active Payloads}
+\subsection{Get Active Applications}
 
-The getActivePayloads operation is used by the provisioning manager to check if a provisioning engine it needs already exist.
-This operation just returns a list of all active payloads.
+The getActiveApplication operation is used by the provisioning manager to check if a provisioning engine it needs already exist.
+This operation just returns a list of all active application.
 There is no reason for this operation to be called on the local bootware, so this operation will be implemented in the remote bootware only.
 
 \subsection{Shutdown}
@@ -84,6 +84,6 @@ There is no reason for this operation to be called on the local bootware, so thi
 This operation triggers the shutdown of sequence of the bootware.
 It behaves a little differently in the local and remote bootware.
 In the local bootware it first calls the shutdown operation of the remote bootware.
-When the confirmation response from the remote bootware is received, it deprovisions all active payloads that the local bootware deployed (i.e. the remote bootware).
+When the confirmation response from the remote bootware is received, it deprovisions all active application that the local bootware deployed (i.e. the remote bootware).
 In the remote bootware, the shutdown operation first calls a provisioning engine to deprovision the workflow middleware.
-Once this is done, it deprovisions all active payloads that the remote deployed (i.e. the various provisioning engines), before returning a response.
+Once this is done, it deprovisions all active application that the remote deployed (i.e. the various provisioning engines), before returning a response.
