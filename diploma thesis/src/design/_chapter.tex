@@ -6,6 +6,33 @@ This design is held intentionally abstract.
 Some specific implementation details will be described in \autoref{implementation}.
 We will describe the component division, modeler integration, external and internal communication, extensibility, and other aspects of the bootware system.
 We will also present a step by step description of the internal process during a bootstrapping operation, before presenting the final bootware architecture.
+But before we explain these details, we present a rough overview of what we want to accomplish with the bootware and how we plan to do it.
+\autoref{image:bootwaresteps} shows an overview over the steps involved in the bootstrapping process.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/bootware_steps}
+	\caption{Overview over the steps invloved in the bootstrapping process.}
+	\label{image:bootwaresteps}
+\end{figure}
+
+In the first step, a user creates a workflow in a modeler application.
+Now, they want to execute the workflow, for which they need some workflow middleware (i.e. a WfMS), but at the moment, no workflow middleware is running.
+So first, the bootware is started to help with setting up this middleware, as shown in step two.
+The bootware can load various plugins that allow it to provision cloud resources and applications.
+In step three, it uses those plugins to create some cloud resources and to deploy a provisioning engine in this environment.
+In the fourth step, the bootware tells this provisioning engine to provision the workflow middleware that is needed to execute the workflow.
+Then, it sets up the connection between the modeler and this middleware.
+Now that the workflow middleware is running and connected, the workflow can be deployed and executed on this middleware, which is shown in step five.
+During this workflow execution, various services might be called.
+These services might also not be available at this time, so the workflow middleware has to call provisioning engines to provision those services.
+These provisioning engines might also not exist, so the workflow middleware also calls the bootware to deploy the provisioning engines it needs to provision the services.
+When the workflow execution is finished, all services, the workflow middleware, the provisioning engines, the underlying cloud resources, and the bootware are deprovisioned in the sixth and final step.
+
+To summarize, the bootware has to be able to provision cloud resources, provisioning engines, and the workflow middleware by using various plugins.
+It has to connect the local modeler to the workflow middleware and support the workflow middleware by deploying additional provisioning engines if needed.
+It also has to remove all resources once the workflow execution is finished.
+Now that we have a rough understanding of the bootware and the bootstrapping process, we can begin describing the various parts of its design in more detail.
 
 \input{design/division}
 \input{design/eclipse}
