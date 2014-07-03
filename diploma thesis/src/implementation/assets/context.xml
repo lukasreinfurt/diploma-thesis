@@ -3,7 +3,9 @@
 	<connectionPlugin>ssh.jar</connectionPlugin>
 	<payloadPlugin>opentosca.jar</payloadPlugin>
 	<!--Optional:-->
-	<provisionWorkflowMiddlewarePlugin>opentosca_middleware.jar</provisionWorkflowMiddlewarePlugin>
+	<provisionWorkflowMiddlewarePlugin>
+		opentosca_middleware.jar
+	</provisionWorkflowMiddlewarePlugin>
 	<!--Optional:-->
 	<packageReference>opentosca.csar</packageReference>
 	<!--Optional:-->

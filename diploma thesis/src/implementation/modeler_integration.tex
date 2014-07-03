@@ -62,7 +62,7 @@ This button and the class that implements its functionality are defined further 
 	\label{lst:pluginaction}
 \end{listing}
 
-As we can see in line 1188, the class that implements the button functionality is \textit{org.eclipse.bpel.ui.agora.actions.StartAction}.
+As we can see in line 1188, the class that implements the button functionality is the StartAction class.
 We modify the run method of the StartAction class to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
 As shown in \autoref{lst:startaction}, we have to get all extensions that implement the bootware extension point from the extension registry (line 50-52) and create an object of the \textit{IBootwarePlugin} type (line 55-56).
 Now, we are able to call any method defined by this object, in this case the execute method (line 57).

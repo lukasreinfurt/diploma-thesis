@@ -18,9 +18,9 @@
 
 \autoref{lst:context:sample} shows an exemplary context in XML form.
 As we can see in line 2-4, it is required to define the infrastructure, connection, and payload plugins that should be used during the bootstrapping process by supplying the name of the plugin \textit{.jar}.
-It is also possible to specify a provision workflow middleware plugin, as can be seen in line 6.
+It is also possible to specify a provision workflow middleware plugin, as can be seen in line 6-8.
 This is optional and will only be used on the first request, when the remote bootware will also call a provisioning engine to provision the workflow middleware.
-This is also where the package reference in line 8 will be used, which points to the workflow middleware package that should be provisioned by the provisioning engine called by the provision workflow middleware plugin.
-In line 10-26 we can also see the optional configuration list.
+This is also where the package reference in line 10 will be used, which points to the workflow middleware package that should be provisioned by the provisioning engine called by the provision workflow middleware plugin.
+In line 12-28 we can also see the optional configuration list.
 If it is supplied in the context, it will override configuration values with the same name in the default configuration list that can be set with the setConfiguration operation.
 If it is not supplied, the default configuration will be used.
