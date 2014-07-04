@@ -14,11 +14,11 @@ How exactly the context is implemented is shown in \autoref{implementation:conte
 \end{figure}
 
 \autoref{image:context} shows the context object and its content.
-As we can see in the upper half, it defines the plugin types to be used for the current request.
-The infrastructure plugin type defines, which infrastructure plugin should be used to provision the requested infrastructure.
-The connection plugin type selects how the bootware should connect to this infrastructure.
-The application plugin type defines the payload that should be provisioned on this infrastructure, which will be a provisioning engine in our case.
-Finally, the provision workflow middleware plugin type defines the plugin that should be used to call the provisioning engine.
+As we can see in the upper half, it defines the plugin instances to be used for the current request.
+The infrastructure plugin instance defines, which infrastructure plugin should be used to provision the requested infrastructure.
+The communication plugin instance selects, which communication plugin the bootware should use to connect to this infrastructure.
+The application plugin instance defines the application that should be provisioned on this infrastructure, which will be a provisioning engine in our case.
+Finally, the provision workflow middleware plugin instance defines the plugin that should be used to call this provisioning engine to provision the workflow middleware.
 It will use the service package reference of the workflow middleware, which is also defined in the context, as input to start the provisioning of the workflow middleware.
 
 In the bottom half of \autoref{image:context} we can see that the context can also contain configuration for different plugins.
@@ -28,18 +28,51 @@ As another example, when creating a EC2 instance in the Amazon cloud, the user a
 These and other configuration details can be supplied from the outside with the context.
 In the future, the context might be extended to hold additional information, but for this diploma thesis, this context will be sufficient.
 
+This context has to somehow be generated from the information the bootware receives with each request.
+However, components outside of the bootware should not know anything about the inner workings of the bootware, i.e. which plugins are used to fulfill a request.
+All information that is supplied with a request can be seen in \autoref{image:request_context}.
+The infrastructure parameter specifies, which infrastructure should be used (e.g. a specific cloud provider).
+The application parameter specifies the application that should be deployed on this infrastructure (e.g. a specific provisioning engine).
+The service package reference of the workflow middleware is used by the bootware to retrieve the service package to provision the workflow middleware.
+In the configuration list, configuration values that have to be supplied from the outside can be specified, such as login credentials for a cloud provider.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/request_context}
+	\caption{Information send with a request.}
+	\label{image:request_context}
+\end{figure}
+
+Based on this information the bootware has to decide which specific plugin instances should be used to process the request.
+In the future, this could be done by querying a registry with this information, which would then return a set of specific plugins and settings.
+\autoref{image:mapping} shows an exemplary mapping of the parameters supplied in a request to the specific plugins instances and configuration.
+In this example, the request wants OpenTOSCA in an Amazon cloud.
+The registry would then look up, if a registry entry exists for this set of parameters.
+In this case, the registry contains applications as primary keys and infrastructure as secondary keys.
+The entry returned for a specific parameter combination contains the specific plugin instances and additional configuration parameters that are necessary to provision the requested application on the requested infrastructure.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/mapping}
+	\caption{Mapping of the request paramaters to specific plugins.}
+	\label{image:mapping}
+\end{figure}
+
+\textcolor{red}{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}
+
 Now that we have defined what the context will look like, we need to find a way to actually get it to the bootware.
 There are a few things that we have to keep in mind when doing this.
-First, these values have to be changeable by the user, so it does not make sense to hard-code them into the bootware.
+First, some of these values have to be changeable by the user, for example login credentials in the configuration list, so it does not make sense to hard-code them into the bootware.
 Furthermore, the lifetime of the information carried in the context varies quite a bit.
-The plugin types are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
-Therefore, we must provide the plugin types on a per request basis.
-Because we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
+The plugin instances are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
+Therefore, we must provide the plugin instances on a per request basis.
 Note that this does not include the event plugins.
 Event plugins are not changed with each request.
 They are loaded once when the bootware starts and are unloaded before it stops.
 Therefore, they do not belong into the context.
 It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
+
+Because we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
 
 Unlike the request plugins, the configuration might not change between requests.
 Additionally, we have other components calling the bootware, which do not know (and maybe should not know) anything about some content of the configuration, like login credentials.
