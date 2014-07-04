@@ -26,7 +26,7 @@ First, the bootware adapter has to start the local bootware so that it will be i
 This is shown in \autoref{image:modeler_plugin} as deployment operation from the bootware adapter to the local bootware and involves starting an executable and maybe passing along some sort of configuration file.
 Once the local bootware is running, the bootware adapter has to set up the context for the following requests.
 This includes telling the bootware configuration details, like the credentials for all cloud providers that will be used.
-Once this is done, the modeler has to make one request to the local bootware, containing the cloud provider, the provisioning engine, and the package reference for the workflow middleware, which is shown in \autoref{image:modeler_plugin} as function call from the bootware adapter to the local bootware.
+Once this is done, the modeler has to make one request to the local bootware, containing the cloud provider, the provisioning engine, and the service package reference for the workflow middleware, which is shown in \autoref{image:modeler_plugin} as function call from the bootware adapter to the local bootware.
 The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine in the specified cloud environment
 This provisioning engine will then provision the workflow middleware.
 If successful, it returns the endpoint references of the workflow middleware to the remote bootware, which passes it back to the local bootware.

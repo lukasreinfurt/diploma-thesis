@@ -118,7 +118,7 @@ This provision workflow middleware plugin allows the bootware to provision a wor
 \end{figure}
 
 The initialization and shutdown operations are not used in this plugin.
-The provision operation first has to get the actual CSAR URL from the service package repository, for which it uses the package reference that was passed in as parameter.
+The provision operation first has to get the actual CSAR URL from the service package repository, for which it uses the service package reference that was passed in as parameter.
 The CSAR URL is then used to upload the CSAR to the OpenTOSCA container.
 Once the CSAR is uploaded, the build plan contained inside it can be executed.
 The information it returns after its completion is passed back as Map<String, String> (i.e. the implementation of the information list).
