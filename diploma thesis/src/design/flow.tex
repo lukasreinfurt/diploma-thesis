@@ -32,11 +32,11 @@ Then, it will shut itself down by first unloading the event plugins and then run
 This is the only normal way to shut down the bootware.
 We only hint at the setConfiguration request here because it is so simple that it could also be handled in the \textit{wait} state.
 Deploy and undeploy requests however are more complicated.
-If such a request is received in the \textit{wait} state, the local bootware transitions to the next state, where it reads the request context.
+If such a request is received in the \textit{wait} state, the local bootware transitions to the next state, where it evaluates the request context.
 
-The request context contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
-If the context can not be read, the local bootware returns a response containing an error message before returning into the \textit{wait} state.
-If the context is read successfully the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
+In the \textit{evaluate context} state, the information send with the request is used to generate the full context, which contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
+If this can not be done for some reason, the local bootware returns a response containing an error message before returning into the \textit{wait} state.
+If the context is created successfully, the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
 For this to work, the remote bootware has to exist in the requested remote environment, which will not be the case during the first execution.
 Therefore, the local bootware first has to provision the remote bootware in the requested remote environment and so it transitions to the \textit{load request plugins} state.
 
