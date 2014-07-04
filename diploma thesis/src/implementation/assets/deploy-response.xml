@@ -2,12 +2,12 @@
 	<S:Body>
 		<ns2:deployResponse xmlns:ns2="http://remote.bootware.simtech.org/">
 			<return>
-				<endpoints>
+				<informationList>
 					<entry>
 						<key>opentosca</key>
 						<value>http://aws.com:8080/</value>
 					</entry>
-				</endpoints>
+				</informationList>
 			</return>
 		</ns2:deployResponse>
 	</S:Body>

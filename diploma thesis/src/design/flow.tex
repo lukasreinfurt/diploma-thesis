@@ -14,54 +14,59 @@ What follows is a step by step description of the internal process during a boot
 \end{figure}
 
 \autoref{image:flow_local} shows a graph that represents the major steps during the bootware execution in the local bootware as flow diagram.
-The bootstrapping process is started when the bootware adapter starts the local bootware, which is represented by the start state in the top left corner of \autoref{image:flow_local}.
+The bootstrapping process is started when the bootware adapter starts the local bootware, which is represented by the \textit{start} state in the top left corner of \autoref{image:flow_local}.
 From there, the bootware first does some initializations.
 If those fail for some reason, the cleanup code will be executed before the local bootware execution is ended, as can be seen on the top right corner of \autoref{image:flow_local}.
 In most cases however, the initialization should succeed.
 Then, the local bootware will transition to the next state, where it tries to load the event plugins.
 
 The event plugins are loaded once at the beginning of the local bootware execution because they will not change at a per request basis (like the other plugins).
-If loading one of these plugins fails, the local bootware will try to unload already loaded plugins before continuing to the cleanup state.
-If the plugins are loaded successfully, the local bootware transitions into the wait state, shown in the top center of \autoref{image:flow_local}.
-Any events generated after the load event plugins state can now be handled by the events plugins.
+If loading one of these plugins fails, the local bootware will try to unload already loaded plugins before continuing to the \textit{cleanup} state.
+If the plugins are loaded successfully, the local bootware transitions into the \textit{wait} state, shown in the top center of \autoref{image:flow_local}.
+Any events generated after the \textit{load event plugins} state can now be handled by the events plugins.
 
-Once the local bootware is in the wait state it is ready to receive requests from the outside.
-If a shutdown event is received in this state, the local bootware will first tell the remote bootware to undeploy all active application.
+Once the local bootware is in the \textit{wait} state it is ready to receive requests from the outside.
+If a shutdown event is received in this state, the local bootware will first tell the remote bootware to undeploy all active applications.
 Next, the local bootware will undeploy the remote bootware by running through the undeploy process shown on the bottom left with the appropriate plugins.
 Then, it will shut itself down by first unloading the event plugins and then running the cleanup code.
 This is the only normal way to shut down the bootware.
-We only hint at the setConfiguration request here because it is so simple that it could also be handled in the wait state.
+We only hint at the setConfiguration request here because it is so simple that it could also be handled in the \textit{wait} state.
 Deploy and undeploy requests however are more complicated.
-If such a request is received in the wait state, the local bootware transitions to the next state, where it reads the request context.
+If such a request is received in the \textit{wait} state, the local bootware transitions to the next state, where it reads the request context.
 
 The request context contains all the information necessary to fulfill the request, as described in \autoref{design:context}.
-If the context can not be read, the local bootware returns a response containing an error message before returning into the wait state.
+If the context can not be read, the local bootware returns a response containing an error message before returning into the \textit{wait} state.
 If the context is read successfully the local bootware tries to send the request on to the remote bootware, as shown in the middle of \autoref{image:flow_local}.
 For this to work, the remote bootware has to exist in the requested remote environment, which will not be the case during the first execution.
-Therefore, the local bootware first has to provision the remote bootware in the requested remote environment and so it transitions to the load request plugins state.
+Therefore, the local bootware first has to provision the remote bootware in the requested remote environment and so it transitions to the \textit{load request plugins} state.
 
-In the load request plugins state the plugins specified in the context are loaded.
-If this fails, the local bootware tries to unload already loaded plugins before returning an error response and transitioning to the wait state.
-If the plugins are loaded successfully, the local bootware now starts either the deploy process or the undeploy process, shown at the bottom of \autoref{image:flow_local}, depending on the type of the request.
+In the \textit{load request plugins} state the plugins specified in the context are loaded.
+If this fails, the local bootware tries to unload already loaded plugins before returning an error response and transitioning to the \textit{wait} state.
+If the plugins are loaded successfully, the local bootware now starts either the deploy process at the bottom left, or the undeploy process, shown at the bottom right of \autoref{image:flow_local}, depending on the type of the request.
+In the local bootware, deploy request will be triggered when the bootware adapter calls the local bootware to provision the workflow middleware.
+The undeploy request will be triggered by the local bootware itself, when it is time to deprovision the workflow middleware and the remote bootware.
 
-If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another, which includes calling the deploy, connect, and start operations of the infrastructure, connection, and application plugins.
-If one of those operations fails, the local bootware transitions over to the corresponding undeploy operation and works its way backwards to undo all operations that where already executed.
-This process is the same as the undeploy process, shown on the bottom right of \autoref{image:flow_local}, which is triggered by an undeploy request.
+If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another.
+In the \textit{provision infrastructure} state, the deploy operation of the infrastructure plugin will be called.
+Then, in the \textit{connect} state, a connection with this infrastructure will be established by the communication plugin.
+Over this connection, the requested application is provisioned in the \textit{provision application} state, and started in the \textit{start application} state, using the application plugin.
+If one of these states fails, the local bootware transitions over to the corresponding undeploy states on the right and works its way backwards to undo all operations that where already executed.
+This process fragment is the same as the undeploy process, shown on the bottom right of \autoref{image:flow_local}, which is triggered by an undeploy request.
 
-If the stop application, deprovision application, or disconnect states fail, the local bootware just continues with the next undeploy state because these operations are not considered critical.
-However, if the deprovision infrastructure state fails, the local bootware transitions to a fatal error state, shown at the right of \autoref{image:flow_local}, because this step is considered critical.
+If the \textit{stop application}, \textit{deprovision application}, or \textit{disconnect} states fail, the local bootware just continues with the next undeploy state because these operations are not considered critical.
+However, if the \textit{deprovision infrastructure} state fails, the local bootware transitions to a \textit{fatal error} state, shown at the right of \autoref{image:flow_local}, because this step is considered critical.
 This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
-The fatal error state is responsible for taking special actions to remedy this situation.
+The \textit{fatal error} state is responsible for taking special actions to remedy this situation.
 
-The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the unload request plugin state, where the plugins that where needed for this particular request are unloaded.
-If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local} with the send to remote state.
+The successful, as well as the unsuccessful execution of either the deploy or the undeploy process all finish in the \textit{unload request plugins} state, where the plugins that where needed for this particular request are unloaded.
+If everything went as planned, a remote bootware should now be running in the desired cloud environment and the local bootware can now pass on the request to this remote bootware, as shown in the center of \autoref{image:flow_local} with the \textit{send to remote} state.
 The local bootware will wait in this state until it receives a response from the remote bootware.
 
 Now, we move our attention to the remote bootware, where the requests continues to be processed.
 \autoref{image:flow_remote} shows the execution flow of the remote bootware.
-As we can see, it is largely identical to the local bootware, at least at the moment.
-The send to remote state is gone because it is not needed in the remote bootware.
-Instead, as the bottom of \autoref{image:flow_remote} shows, the provision and deprovision middleware steps were added.
+As we can see, it is largely identical to the local bootware.
+The \textit{send to remote} state is gone because it is not needed in the remote bootware.
+Instead, as the bottom of \autoref{image:flow_remote} shows, the \textit{provision middleware} and \textit{deprovision middleware} states were added.
 The remote bootware also supports the getActiveApplications request.
 Other than that, the local and remote processes are the same.
 
@@ -73,14 +78,14 @@ Other than that, the local and remote processes are the same.
 \end{figure}
 
 Like the local bootware, the remote bootware went through the initialization steps shown at the top of \autoref{image:flow_remote} when it was started by the local bootware.
-It then waited in the wait state for a request.
+It then waited in the \textit{wait} state for a request.
 Now, it receives the request from the local bootware, reads the context, loads the request plugins and executes the deploy operation.
 This should result in a provisioning engine being started by the application plugin.
-After that, the remote bootware enters the new provision middleware state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware by executing the provision workflow middleware plugin.
-Once the middleware is running, the remote bootware is finished with this request and returns the endpoint references of the middleware in the response to the local bootware, before returning into the wait state.
+After that, the remote bootware enters the new \textit{provision middleware} state at the bottom left of \autoref{image:flow_remote}, which will use the just started provisioning engine to deploy the workflow middleware by executing the provision workflow middleware plugin.
+Once the middleware is running, the remote bootware is finished with this request and returns the information list containing the endpoint references of the middleware in the response to the local bootware, before returning into the \textit{wait} state.
 
-This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the send to remote state.
-Now, the local bootware can finish its request by sending back a response to the bootware adapter, before returning to the wait state.
+This brings us back to \autoref{image:flow_local}, where the local bootware has now received the answer from the remote bootware in the \textit{send to remote} state.
+Now, the local bootware can finish its request by sending back a response to the bootware adapter, before returning to the \textit{wait} state.
 The local bootware is now done until it is time to undeploy the remote bootware.
 Meanwhile, the bootware adapter starts the workflow execution on the middleware, during which multiple calls from the provisioning manager to the remote bootware will occur, which will each time trigger the deploy or undeploy process shown at the bottom, or the getActiveApplications operation only hinted at in \autoref{image:flow_remote}.
 

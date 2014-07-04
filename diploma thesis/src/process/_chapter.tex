@@ -31,8 +31,8 @@ If not, the local bootware provisions a remote bootware using the information pr
 Once the remote bootware is deployed, it is called by the local bootware with a deploy request for the provisioning engine that will be used to deploy the workflow middleware (step 4).
 The remote bootware deploys the requested provisioning engine using the information provided in the context (step 5).
 Once the provisioning engine is up and running, the remote bootware calls the provisioning engine (step 6) and tells it to deploy the workflow middleware (step 7).
-Once the workflow middleware is up and running, the provisioning engine returns the endpoint references of the workflow middleware to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
-The bootware adapter uses those end point references to link the modeler to the workflow middleware.
+Once the workflow middleware is up and running, the provisioning engine returns the information about the workflow middleware, such as endpoint referencens, to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
+The bootware adapter uses this information to link the modeler to the workflow middleware.
 This is the end of the bootstrapping phase.
 Now begins the workflow execution phase.
 
@@ -44,7 +44,7 @@ If not, the ESB tells the provisioning manager to provision the requested servic
 The provisioning manager checks if the provisioning engine needed to provision the requested service is already available.
 If it is not, the provisioning manager calls the remote bootware with a request to provision the required provisioning engine (step 11).
 The remote bootware provisions the provisioning engine using the information from the request and the user context (step 5).
-Once the provisioning engine is up and running, the remote bootware returns the endpoint reference of the provisioning engine to the provisioning manager.
+Once the provisioning engine is up and running, the remote bootware returns information about the provisioning engine, such as endpoint references, to the provisioning manager.
 The provisioning manager now calls the provisioning engine (step 12) and tells it to provision the required service (step 13).
 Once the service is available, the provisioning engine returns its endpoint reference to the provisioning manager, which in turn returns it to the ESB.
 The ESB can now call the service (step 14) and use the service response to continue with the workflow execution.
@@ -85,7 +85,7 @@ The bootware adapter then starts the local bootware and sends a deploy requests.
 The local bootware deploys and starts the remote bootware and forwards the deploy request.
 The remote bootware deploys and starts a provisioning engine, which it then calls to provision the workflow middleware.
 Once the workflow middleware is running, every component returns a response to the component which called it, which ends when the bootware adapter receives a response from the local bootware.
-This response contains the endpoint references to the workflow middleware, which the bootware adapter uses to configure the connection between the modeler and the workflow middleware.
+This response contains endpoint references and other information about the workflow middleware, which the bootware adapter uses to configure the connection between the modeler and the workflow middleware.
 The modeler can now deploy and start the workflow on the workflow middleware, which concludes the bootstrapping phase.
 
 \begin{figure}[!htbp]

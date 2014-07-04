@@ -224,7 +224,7 @@ Provision workflow middleware plugins provide the bootware with a unified way to
 The provision operation calls a provisioning engine and trigger the provisioning process.
 It takes two inputs: An endpoint reference, which points to the provisioning engine that should be used, and a service package reference, which points to the workflow middleware package that the provisioning engine should provision.
 When completed successfully, the provisioning operation returns a list of information about to the just provisioned workflow middleware.
-This list can contain arbitrary information, such as a URL pointing to the workflow middleware or any other information that might be necessary to connect the modeler to the workflow middleware.
+This list can contain arbitrary information, such as endpoint references pointing to the various components of the workflow middleware or any other information that might be necessary to connect the modeler to the workflow middleware.
 The deprovision operation calls a provisioning engine and triggers the deprovisioning process.
 It takes the same inputs as the provisioning operation, an endpoint reference to the provisioning engine and a package reference.
 

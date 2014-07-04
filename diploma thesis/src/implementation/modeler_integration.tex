@@ -112,7 +112,7 @@ Due to limited space we can not present the actual code here, but the process is
 First, the local bootware has to be started by calling the executable.
 Once it is running, a deploy request is sent to it, containing a context object with all necessary configuration parameters.
 Now, the bootware plugin has to wait for the deploy request to be executed.
-Once the request is finished, the endpoint references to various workflow middleware components returned in the response message are used to set up the connection from the SimTech modeler to the middleware.
+Once the request is finished, the endpoint references to various workflow middleware components and other information returned in the response message are used to set up the connection from the SimTech modeler to the middleware.
 The bootstrapping process is now finished and the original deploy code continues.
 
 \vspace*{\baselineskip}
