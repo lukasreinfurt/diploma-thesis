@@ -14,7 +14,7 @@ What follows is a step by step description of the internal process during a boot
 \end{figure}
 
 \autoref{image:flow_local} shows a graph that represents the major steps during the bootware execution in the local bootware as flow diagram.
-The bootstrapping process is started by executing the local bootware, which is represented by the start state in the top left corner of \autoref{image:flow_local}.
+The bootstrapping process is started when the bootware adapter starts the local bootware, which is represented by the start state in the top left corner of \autoref{image:flow_local}.
 From there, the bootware first does some initializations.
 If those fail for some reason, the cleanup code will be executed before the local bootware execution is ended, as can be seen on the top right corner of \autoref{image:flow_local}.
 In most cases however, the initialization should succeed.

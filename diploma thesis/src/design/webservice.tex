@@ -2,6 +2,7 @@
 \label{design:webservice}
 
 By now, we know that we will use a web service interface for remote communication.
+\autoref{table:webserviceoperations} shows the web service operations provided by the local and remote bootware.
 To trigger the basic functionality of the bootware, two operations have to be made public via the web service interface: The \textit{deploy} and the \textit{undeploy} operation.
 In \autoref{design:context} we also mentioned the \textit{setConfiguration} operation for setting or updating configuration values.
 We add two additional operations that we also need, the \textit{getActiveApplications} operation and the \textit{shutdown} operation.

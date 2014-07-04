@@ -12,7 +12,7 @@ We call this abstract concept the bootware adapter, as shown in \autoref{image:m
 
 In \autoref{requirements} we mentioned that the bootware should hook into the already existing deploy process in the modeler.
 How this deployment process works depends on the actual modeler that is used, so at the moment, we can not say how exactly we can integrate in this process.
-Specific integration details for our modeler, the SimTech Modeler, will be discussed in \autoref{implementation:modeler_integration}.
+Specific integration details for the modeler used in this diploma thesis, the SimTech Modeler, will be discussed in \autoref{implementation:modeler_integration}.
 We know however what needs to happen in the bootware adapter to get the bootstrapping process going.
 
 \begin{figure}[!htbp]
@@ -27,8 +27,10 @@ This is shown in \autoref{image:modeler_plugin} as deployment operation from the
 Once the local bootware is running, the bootware adapter has to set up the context for the following requests.
 This includes telling the bootware configuration details, like the credentials for all cloud providers that will be used.
 Once this is done, the modeler has to make one request to the local bootware, containing the cloud provider, the provisioning engine, and the package reference for the workflow middleware, which is shown in \autoref{image:modeler_plugin} as function call from the bootware adapter to the local bootware.
-The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine and the workflow middleware in the specified cloud environment.
-If successful, it returns the endpoint references of the workflow middleware to the bootware adapter, which then has to set up the modeler to use these references for the actual workflow deployment.
+The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine in the specified cloud environment
+This provisioning engine will then provision the workflow middleware.
+If successful, it returns the endpoint references of the workflow middleware to the remote bootware, which passes it back to the local bootware.
+The local bootware passes it to the bootware adapter, which then has to set up the modeler to use these references for the actual workflow deployment.
 
 This is the minimal work the bootware adapter has to do to kick off the bootstrapping process.
 Additional functionality can be implemented if desired, but is not necessary for the core bootstrapping process.
