@@ -37,7 +37,7 @@ Which one exactly will be determined later in \autoref{implementation:selecting:
 \subsection{Plugin Manager}
 \label{design:pluginmanager}
 
-The plugin manager is an component of the bootware core that encapsulates all functionality for managing plugins, such as loading and unloading specific plugins.
+The plugin manager is a component of the bootware core that encapsulates all functionality for managing plugins, such as loading and unloading specific plugins.
 At the least, it should support two operations: The loadPlugin operation and the unloadPlugin operation.
 The loadPlugin operation would be called by the bootware when it needs to load a specific plugin.
 It would supply the path to the plugin as input parameter to the loadPlugin operation, which will use this information to load and return an instance of this specific plugin.

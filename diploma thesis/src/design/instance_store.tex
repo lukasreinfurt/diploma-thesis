@@ -28,6 +28,6 @@ Changing that to a more sophisticated storage solution is a possible option for 
 
 Now that we know why it makes sense to store information about active applications, we need to discuss what exactly we need to store.
 We need to store enough information to be able to undeploy an active application without any further input.
-For this we need to know: The infrastructure plugin that was used to provision the infrastructure, the connection plugin that was used to connect to it, the application plugin that was used to deploy the active application, and login credentials for the remote environment if necessary.
+For this we need to know: The resource plugin that was used to provision the resource, the connection plugin that was used to connect to it, the application plugin that was used to deploy the active application, and login credentials for the remote environment if necessary.
 This is all contained in the context object that we used in the first place to deploy the application, so we will just store the whole context object.
 Because we also use this storage for the undeploy operation, where we get an endpoint reference as input, we have to store it in such a way that we can map a particular context object to the provided endpoint reference.

@@ -12,12 +12,12 @@ But before we explain these details, we present a rough overview of what we want
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[resolution=600]{design/assets/bootware_steps}
-	\caption{Overview over the steps invloved in the bootstrapping process.}
+	\caption{Overview over the steps involved in the bootstrapping process.}
 	\label{image:bootwaresteps}
 \end{figure}
 
 In the first step, a user creates a workflow in a modeler application.
-Now, they want to execute the workflow, for which they need some workflow middleware (i.e. a WfMS), but at the moment, no workflow middleware is running.
+Now, they want to execute the workflow, for which they need some workflow middleware (i.e. a SWfMS), but at the moment, no workflow middleware is running.
 So first, the bootware is started to help with setting up this middleware, as shown in step two.
 The bootware can load various plugins that allow it to provision cloud resources and applications.
 In step three, it uses those plugins to create some cloud resources and to deploy a provisioning engine in this environment.

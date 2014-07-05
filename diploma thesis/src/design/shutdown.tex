@@ -3,7 +3,7 @@
 
 One thing that we have not mentioned yet is how the bootware will be shut down.
 The bootware can not just stop.
-It has to make sure that all applications and all the infrastructure it has provisioned is removed before it shuts down itself.
+It has to make sure that all applications and all the resources it has provisioned are removed before it shuts down itself.
 But how does the bootware know when it is time to start this procedure?
 After all, this depends on the workflow middleware.
 The shutdown process should start when the workflow middleware is finished with the workflow execution, so the bootware has to be informed of this somehow.

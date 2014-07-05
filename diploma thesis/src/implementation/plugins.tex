@@ -2,17 +2,17 @@
 \label{implementation:plugins}
 
 Now, we will describe the implementation of a few plugins.
-We implemented an infrastructure plugin that can create and remove EC2 instances in Amazon's cloud.
+We implemented a resource plugin that can create and remove EC2 instances in Amazon's cloud.
 We created a communication plugin that allows the bootware to connect to a remote system via SSH and then execute commands on, or upload files to this system.
 We also implemented two application plugin, one for the remote bootware itself and one for OpenTOSCA.
 Additionally, we created event plugins, for example a file logger plugin that logs bootware events into a text file.
 
 \subsection{AWS EC2 Plugin}
 
-This infrastructure plugin allows the bootware to create and remove EC2 instances in Amazon's cloud.
+This resource plugin allows the bootware to create and remove EC2 instances in Amazon's cloud.
 It uses the AWS SDK for Java\footnote{\url{http://aws.amazon.com/sdkforjava/}} to implement this functionality.
-This SDK specifies a specific set of action that have to be taken to start an EC2 instance, which we map onto the operations defined by each infrastructure plugin (i.e.: initialize, shutdown, deploy, and undeploy, as described in \autoref{design:plugins}).
-\autoref{image:awsplugin} shows a simplified overview of these actions and how they map onto the infrastructure plugin operations.
+This SDK specifies a specific set of action that have to be taken to start an EC2 instance, which we map onto the operations defined by each resource plugin (i.e.: initialize, shutdown, deploy, and undeploy, as described in \autoref{design:plugins}).
+\autoref{image:awsplugin} shows a simplified overview of these actions and how they map onto the resource plugin operations.
 
 \begin{figure}[!htbp]
 	\centering

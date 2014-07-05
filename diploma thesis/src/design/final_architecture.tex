@@ -35,7 +35,7 @@ All event plugins and the web service interface work by implementing event handl
 As we can see in the center of both figures, the event bus and the state machine form the core of the bootware.
 The event bus is responsible for distributing events between the various plugins and the state machine.
 The state machine implements the entire bootstrapping process, as described earlier in \autoref{design:flow}.
-At certain points during the bootstrapping process, operations are delegated to the plugin manager to load plugins, and to the infrastructure, communication, application, and provision workflow middleware plugins, shown at the top of both figures.
+At certain points during the bootstrapping process, operations are delegated to the plugin manager to load plugins, and to the resource, communication, application, and provision workflow middleware plugins, shown at the top of both figures.
 
 \begin{figure}[!htbp]
 	\centering
@@ -44,9 +44,9 @@ At certain points during the bootstrapping process, operations are delegated to 
 	\label{image:finalarchremote}
 \end{figure}
 
-The infrastructure, communication, and application plugins implement the actual bootstrapping operations.
+The resource, communication, and application plugins implement the actual bootstrapping operations.
 At the top, both figures show an exemplary result of these bootstrapping operations.
-In this particular case, the infrastructure plugin started a VM, to which the communication plugin set up a communication channel.
+In this particular case, the resource plugin started a VM, to which the communication plugin set up a communication channel.
 The application plugin then used this communication channel to provision the application inside the VM.
 The provisioning engine plugin is only available in the remote bootware and allows it to call a provisioning engine with the details necessary to provision the workflow middleware.
 This is shown in \autoref{image:finalarchremote} as an additional function call from the provision workflow middleware plugin to the previously deployed application.

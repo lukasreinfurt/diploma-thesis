@@ -9,18 +9,18 @@ The cloud provider plugins will be responsible for creating and removing resourc
 This could be bare bone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
 We do not even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computing resource that we can use.
 For example, we could also provide a plugin that starts and stops VMs on our local machine, which could be useful for quick and inexpensive local testing.
-So a better name for these plugins would be \textit{infrastructure plugins}.
+So a better name for these plugins would be \textit{resource plugins}.
 
 The same line of thinking can be used on the provisioning engine plugins.
-All that we care about is that we can get some software running on a given infrastructure and that we get back an URL where we can find this software once it is up and running.
+All that we care about is that we can get some software running on a given resource and that we get back an URL where we can find this software once it is up and running.
 A better name for these plugins would therefore be \textit{application plugins}.
 
-Now that we have infrastructure plugins and application plugins, we should be able to provision the infrastructure we need and use application plugins to install and run any software on it.
-But there is a step in between provisioning the infrastructure and installing the software that we are glancing over: We have to somehow communicate with the infrastructure to be able to install something on it.
-The communication functionality could be part of either the infrastructure plugins or the application plugins, or it could be separated into independent communication plugins.
+Now that we have resource plugins and application plugins, we should be able to provision the resource we need and use application plugins to install and run any software on it.
+But there is a step in between provisioning the resource and installing the software that we are glancing over: We have to somehow communicate with the resource to be able to install something on it.
+The communication functionality could be part of either the resource plugins or the application plugins, or it could be separated into independent communication plugins.
 
 For the sake of efficiency and extensibility it would be best to use independent communication plugins.
-For example, if a user wanted to add a new communication type that should be used to install x applications in y environments, they could do so by writing one new communication plugin, instead of adding the functionality x-times to all application plugins, or y-times to all infrastructure plugins.
+For example, if a user wanted to add a new communication type that should be used to install x applications in y environments, they could do so by writing one new communication plugin, instead of adding the functionality x-times to all application plugins, or y-times to all resource plugins.
 This would also reduce code duplication.
 Therefore, a third plugin type is necessary: The \textit{communication plugins}.
 
@@ -42,11 +42,11 @@ Then, we will describe each plugin type in more detail, starting with the common
 
 \autoref{image:plugin_process} shows an overview over the basic process involving the plugins.
 The event plugins were omitted because they are not an essential part of this process.
-In step one, the bootware call an infrastructure plugin to create a new infrastructure instance, for example a VM.
+In step one, the bootware calls a resource plugin to create a new resource instance, for example a VM.
 Then, in step two, it creates a communication channel to this instance using a communication plugin.
 This communication channel is then used in step three by an application plugin to install an application on the instance.
 The fourth step is only executed when the remote bootware provisions the workflow middleware.
-Here,  provision workflow middleware plugin can call this application, in our case a provisioning engine, to provision a workflow middleware.
+Here, a provision workflow middleware plugin can call this application, in our case a provisioning engine, to provision a workflow middleware.
 How the bootware knows which plugin it should call is determined by the context which is explained in \autoref{design:context}.
 
 \begin{figure}[!htbp]
@@ -70,7 +70,7 @@ Finally, in step four, a call OpenTOSCA plugin call the just deployed OpenTOSCA 
 \end{figure}
 
 For another combination of plugins, the process might look like \autoref{image:plugin_process_3}.
-Here, a Chef server is installed on a Azure VM over a \nom{remote desktop connection}{RDC} connection.
+Here, a Chef server is installed on an Azure VM over a \nom{remote desktop connection}{RDC} connection.
 The Chef server is then used to provision the workflow middleware.
 
 \begin{figure}[!htbp]
@@ -119,11 +119,11 @@ This allows the plugins to be configured from the outside if necessary.
 The shutdown operation is called by the plugin manager when it unloads a plugin.
 It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a communication channel.
 
-\subsection{Infrastructure Plugins}
+\subsection{Resource Plugins}
 
-Infrastructure plugins are responsible for provisioning any computing resources that the user wants to use during the bootware process.
+Resource plugins are responsible for provisioning any computing resources that the user wants to use during the bootware process.
 This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
-To be able to do this, an infrastructure plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
+To be able to do this, a resource plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
 The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a communication plugin.
@@ -160,7 +160,7 @@ As input it takes an instance object created earlier by the deploy operation.
 		& Completely removes a given instance \\
 
 	\end{tabu}
-	\caption{Interface to be implemented by infrastructure plugins.}
+	\caption{Interface to be implemented by resource plugins.}
 	\label{table:infra_plugins}
 \endgroup
 
@@ -208,7 +208,7 @@ As input, it takes a connection object that was previously created by the connec
 
 \subsection{Application Plugins}
 
-Application plugins are responsible for installing, uninstalling, starting, and stopping software on an infrastructure instance.
+Application plugins are responsible for installing, uninstalling, starting, and stopping software on a resource instance.
 This process can include the uploading of files and the execution of remote commands on an instance.
 
 \autoref{table:payload_plugins} shows the operations that plugins of this type should implement.

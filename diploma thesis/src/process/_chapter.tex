@@ -7,7 +7,7 @@ During the bootstrapping phase, the local and remote bootware components are sta
 Once the workflow middleware is ready, the second phase starts, which is the workflow execution phase.
 During this phase, the remote bootware might be called multiple times to deploy or undeploy new provisioning engines.
 The third and final phase, the shutdown phase, begins when the workflow execution is finished.
-In this phase, all remaining services, provisioning engines, the workflow middleware, the remote and the local bootware, as well as all the underlying infrastructure are deprovisioned.
+In this phase, all remaining services, provisioning engines, the workflow middleware, the remote and the local bootware, as well as all the underlying resources are deprovisioned.
 In \autoref{image:process} we can see the whole process with numerated steps.
 We will go through \autoref{image:process} step by step in the following paragraphs to get a better understanding of the whole bootstrapping process.
 
@@ -31,7 +31,7 @@ If not, the local bootware provisions a remote bootware using the information pr
 Once the remote bootware is deployed, it is called by the local bootware with a deploy request for the provisioning engine that will be used to deploy the workflow middleware (step 4).
 The remote bootware deploys the requested provisioning engine using the information provided in the context (step 5).
 Once the provisioning engine is up and running, the remote bootware calls the provisioning engine (step 6) and tells it to deploy the workflow middleware (step 7).
-Once the workflow middleware is up and running, the provisioning engine returns the information about the workflow middleware, such as endpoint referencens, to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
+Once the workflow middleware is up and running, the provisioning engine returns the information about the workflow middleware, such as endpoint references, to the remote bootware, which in turn returns it to the local bootware, which returns it to the bootware adapter.
 The bootware adapter uses this information to link the modeler to the workflow middleware.
 This is the end of the bootstrapping phase.
 Now begins the workflow execution phase.

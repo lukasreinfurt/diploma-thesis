@@ -47,14 +47,14 @@ In the local bootware, deploy request will be triggered when the bootware adapte
 The undeploy request will be triggered by the local bootware itself, when it is time to deprovision the workflow middleware and the remote bootware.
 
 If the request was a deploy request, the local bootware will now execute the steps shown in the bottom left of \autoref{image:flow_local} one after another.
-In the \textit{provision infrastructure} state, the deploy operation of the infrastructure plugin will be called.
-Then, in the \textit{connect} state, a connection with this infrastructure will be established by the communication plugin.
+In the \textit{provision resource} state, the deploy operation of the resource plugin will be called.
+Then, in the \textit{connect} state, a connection with this resource will be established by the communication plugin.
 Over this connection, the requested application is provisioned in the \textit{provision application} state, and started in the \textit{start application} state, using the application plugin.
 If one of these states fails, the local bootware transitions over to the corresponding undeploy states on the right and works its way backwards to undo all operations that where already executed.
 This process fragment is the same as the undeploy process, shown on the bottom right of \autoref{image:flow_local}, which is triggered by an undeploy request.
 
 If the \textit{stop application}, \textit{deprovision application}, or \textit{disconnect} states fail, the local bootware just continues with the next undeploy state because these operations are not considered critical.
-However, if the \textit{deprovision infrastructure} state fails, the local bootware transitions to a \textit{fatal error} state, shown at the right of \autoref{image:flow_local}, because this step is considered critical.
+However, if the \textit{deprovision resource} state fails, the local bootware transitions to a \textit{fatal error} state, shown at the right of \autoref{image:flow_local}, because this step is considered critical.
 This state failing could mean that resources are still active in the cloud and human interaction is necessary to remove them to stop further costs from incurring.
 The \textit{fatal error} state is responsible for taking special actions to remedy this situation.
 
