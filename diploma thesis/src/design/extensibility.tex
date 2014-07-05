@@ -42,7 +42,7 @@ At the least, it should support two operations: The loadPlugin operation and the
 The loadPlugin operation would be called by the bootware when it needs to load a specific plugin.
 It would supply the path to the plugin as input parameter to the loadPlugin operation, which will use this information to load and return an instance of this specific plugin.
 This plugin instance can then be used by the bootware until it decides to unload this instance by calling the unloadPlugin operation of the plugin manager.
-The plugin manager might also support various other utility operations for convenience, such as an unloadAllPlugins, which would unload all loaded plugins at once.
+The plugin manager might also support various other utility operations for convenience, such as an unloadAllPlugins operation, which would unload all loaded plugins at once.
 The plugin manager implementation will be described in more detail in \autoref{implementation:pluginmanager}, after we have selected a plugin framework.
 
 \subsection{Plugin Repository}
