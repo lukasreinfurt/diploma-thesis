@@ -31,10 +31,55 @@ We therefore introduce a fourth plugin type: The \textit{provision workflow midd
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
 We can generalize this into a more versatile fifth plugin type: The \textit{event plugins}.
 These plugins are a bit less specific than the four other types.
-They allow users to add functionality that reacts to (or creates) events inside the bootware.
-How the actual event system will be implemented will be discussed in \autoref{design:internalcomm}.
+They are not a part of the core bootware process but allow us to add functionality that reacts to (or creates) events inside the bootware for other purposes like, for example, logging.
+How the actual event system used by these plugins will be implemented will be discussed in \autoref{design:internalcomm}.
+
 With this fifth plugin type we have now covered all plugin types we will need.
-We will describe each plugin type in more detail, but before we do this, we will describe the common operations that all plugin types have to implement.
+In the next section we present some examples of how the different plugin types will work together.
+Then, we will describe each plugin type in more detail, starting with the common operations that all plugin types have to implement.
+
+\subsection{Examples}
+
+\autoref{image:plugin_process} shows an overview over the basic process involving the plugins.
+The event plugins were omitted because they are not an essential part of this process.
+In step one, the bootware call an infrastructure plugin to create a new infrastructure instance, for example a VM.
+Then, in step two, it creates a communication channel to this instance using a communication plugin.
+This communication channel is then used in step three by an application plugin to install an application on the instance.
+The fourth step is only executed when the remote bootware provisions the workflow middleware.
+Here,  provision workflow middleware plugin can call this application, in our case a provisioning engine, to provision a workflow middleware.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/plugin_process}
+	\caption{Simplified overview of the plugin process.}
+	\label{image:plugin_process}
+\end{figure}
+
+\autoref{image:plugin_process_2} shows the same process but with an exemplary selection of specific plugin instances.
+In this case, an Amazon plugin is used in step one to create an EC2 instance.
+In step two, a SSH plugin creates a connection to this EC2 instance.
+Over this SSH connection, an OpenTOSCA plugin installs OpenTOSCA on the EC2 instance, as shown in step three.
+Finally, in step four, a call OpenTOSCA plugin call the just deployed OpenTOSCA container to provision the workflow middleware.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/plugin_process_2}
+	\caption{Exemplary plugin process for Amazon and OpenTOSCA.}
+	\label{image:plugin_process_2}
+\end{figure}
+
+For another combination of plugins, the process might look like \autoref{image:plugin_process_3}.
+Here, a Chef server is installed on a Azure VM over a \nom{remote desktop connection}{RDC} connection.
+The Chef server is then used to provision the workflow middleware.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/plugin_process_3}
+	\caption{Exemplary plugin process for Azure and Chef.}
+	\label{image:plugin_process_3}
+\end{figure}
+
+\subsection{Common Operations}
 
 \vspace*{\baselineskip}
 \begingroup
@@ -121,7 +166,7 @@ As input it takes an instance object created earlier by the deploy operation.
 \subsection{Communication Plugins}
 
 Communication plugins are responsible for creating a communication channel to previously deployed resources that can later be used by application plugins to execute their operations on the resource.
-The connection could be made by using SSH, \nom{remote desktop connection}{RDC}, \nom{virtual private network}{VPN}, Telnet, or other communication mechanisms supported by the resource.
+The connection could be made by using SSH, RDC, \nom{virtual private network}{VPN}, Telnet, or other communication mechanisms supported by the resource.
 The communication plugins should be implemented generically, so that they can be used for all kinds of resources.
 
 \autoref{table:conn_plugins} shows the operations that this type of plugin has to implement.
