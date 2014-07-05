@@ -33,7 +33,7 @@ In the future, the context might be extended to hold additional information, but
 This context has to somehow be generated from the information the bootware receives with each request.
 However, components outside of the bootware should not know anything about the inner workings of the bootware, i.e. which plugins are used to fulfill a request.
 All information that might be supplied with a request can be seen in \autoref{image:request_context}.
-The resource parameter specifies, which resource should be used (e.g. a specific cloud provider).
+The resource provider parameter specifies, which resource provider should be used (e.g. a specific cloud provider).
 The application parameter specifies the application that should be deployed on this resource (e.g. a specific provisioning engine).
 The service package reference of the workflow middleware is used by the bootware to retrieve the service package to provision the workflow middleware.
 In the configuration list, configuration values that have to be supplied from the outside can be specified, such as login credentials for a cloud provider.
@@ -47,7 +47,7 @@ In the configuration list, configuration values that have to be supplied from th
 
 Based on this information the bootware has to decide which specific plugin instances should be used to process the request.
 In the future, this could be done by querying a registry with this information, which would then return a set of specific plugins and settings.
-\autoref{image:mapping} shows an exemplary mapping of the parameters supplied in a request to the specific plugins instances and configuration.
+\autoref{image:mapping} shows an exemplary mapping of the parameters supplied in a request context to the specific plugins instances and configuration sets.
 In this example, the request wants OpenTOSCA in an Amazon cloud.
 The registry would then look up, if a registry entry exists for this set of parameters.
 In this case, the registry contains applications as primary keys and resources as secondary keys.
@@ -60,7 +60,7 @@ The entry returned for a specific parameter combination contains the specific pl
 	\label{image:mapping}
 \end{figure}
 
-The bootware has to combine the information received in a request with the information that it received from the registry by merging the two sets into the final context.
+The bootware has to combine the information received in a request context with the information that it received from the registry by merging the two sets into the final context.
 However, there is one caveat in this scenario.
 Right now, other components making a request to the bootware would have to supply configuration parameters like login credentials with each request.
 Unlike the other request parameters, the configuration might not change between requests.
@@ -85,11 +85,11 @@ This behavior could also be extended to other parts of the context in the future
 	\label{image:merge}
 \end{figure}
 
-\autoref{image:merge} shows the merging process which now merges the default configuration, the request parameters, and the response from the registry.
+\autoref{image:merge} shows the merging process which now merges the default configuration, the request context, and the response from the registry.
 In step one, at the beginning of the bootware execution, the default configuration is set using the \textit{setConfiguration} operation.
-A deploy request is received in step two, which contains the request parameters as shown in \autoref{image:request_context}.
-In step three, the request parameters are mapped to specific plugin instances and additional configuration using the registry.
-In step four, the default Configuration, the request parameters, and the registry response are merged into the final context object.
+A deploy request is received in step two, which contains the request context as shown in \autoref{image:request_context}.
+In step three, the parameters from the request context are mapped to specific plugin instances and additional configuration set using the registry, as shown in \autoref{image:mapping}.
+In step four, the default Configuration, the request context, and the registry response are merged into the final context object.
 This context object is then used to fulfill the request.
 
 While we have planned to use a registry for mapping request parameters to concrete values, due to time constrains we were not able to specify this registry in more detail or implement it in our prototype.

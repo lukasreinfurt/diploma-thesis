@@ -1,7 +1,7 @@
 \section{Web Service Interface}
 \label{implementation:webservice}
 
-In \autoref{design:communication} we decided to use web service calls and returns as external communication mechanism and in \autoref{design:context} we decided to pass along a context.
+In \autoref{design:communication} we decided to use web service calls and returns as external communication mechanism.
 Now, we need to the define the interface that will be made available by the web service to the outside.
 We obviously need the two main operations, deploy and undeploy, to be available from the outside.
 In \autoref{design:context} we also described the \textit{setConfiguration} operation that has to be supported.
@@ -12,8 +12,8 @@ Additionally, the getActiveApplications and shutdown operations are needed.
 The \textit{deploy} operation will be called by at least two different components.
 Once by the bootware modeler plugin to deploy the remote bootware and the workflow middleware, and then each time the provisioning manager needs to provision a new service during a workflow execution.
 \autoref{lst:webservice:deployrequest} shows an exemplary deploy request as soap message.
-In line 6 we can see that the deploy method is called with the context provided as argument in line 7-11.
-In this particular example, only the required plugins are specified, which could be a call from the provisioning manager.
+In line 6 we can see that the deploy method is called with a request context provided as argument in line 7-11, which will be used by the bootware to generate a full context like the one shown in \autoref{lst:context:sample}.
+In this particular example, only the resourceProvider and application parameters are specified, which could be a call from the provisioning manager.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]

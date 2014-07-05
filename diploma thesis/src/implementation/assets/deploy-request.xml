@@ -5,9 +5,8 @@
 	<soapenv:Body>
 		<rem:deploy>
 			<context>
-				<infrastructurePlugin>aws-ec2.jar</infrastructurePlugin>
-				<connectionPlugin>ssh.jar</connectionPlugin>
-				<payloadPlugin>opentosca.jar</payloadPlugin>
+				<resourceProvider>aws</resourceProvider>
+				<application>opentosca</application>
 			</context>
 		</rem:deploy>
 	</soapenv:Body>

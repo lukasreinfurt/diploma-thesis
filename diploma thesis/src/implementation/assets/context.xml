@@ -1,13 +1,15 @@
 <context>
-	<infrastructurePlugin>aws-ec2.jar</infrastructurePlugin>
-	<connectionPlugin>ssh.jar</connectionPlugin>
-	<payloadPlugin>opentosca.jar</payloadPlugin>
+	<resourcePlugin>aws-ec2.jar</resourcePlugin>
+	<communicationPlugin>ssh.jar</communicationPlugin>
+	<applicationPlugin>opentosca.jar</applicationPlugin>
 	<!--Optional:-->
 	<provisionWorkflowMiddlewarePlugin>
-		opentosca_middleware.jar
+		call_opentosca.jar
 	</provisionWorkflowMiddlewarePlugin>
 	<!--Optional:-->
-	<packageReference>opentosca.csar</packageReference>
+	<servicePackageReference>
+		../opentosca.csar
+	</servicePackageReference>
 	<!--Optional:-->
 	<configurationList>
 		<entry>
@@ -22,6 +24,11 @@
 						<key>accessKey</key>
 						<value>g9w276og9746gw5</value>
 					</entry>
+					<entry>
+						<key>instanceType</key>
+						<value>t2.medium</value>
+					</entry>
+					...
 				</configuration>
 			</value>
 		</entry>

@@ -49,7 +49,7 @@ Both the local and the remote bootware will have to implement all of these opera
 \subsection{Deploy}
 
 The deploy operation is called whenever a new application (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
-As input it takes a context object as described in \autoref{design:context}.
+As input it takes a request context object as described in \autoref{design:context}.
 If it was able to successfully deploy the requested application, it responds with a list of information concerning the application.
 This list can contain endpoint references, ports, or any other information that might be needed later.
 If the deployment failed, it responds with an error message.

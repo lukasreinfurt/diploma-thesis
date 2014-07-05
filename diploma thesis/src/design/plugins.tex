@@ -46,8 +46,8 @@ In step one, the bootware calls a resource plugin to create a new resource insta
 Then, in step two, it creates a communication channel to this instance using a communication plugin.
 This communication channel is then used in step three by an application plugin to install an application on the instance.
 The fourth step is only executed when the remote bootware provisions the workflow middleware.
-Here, a provision workflow middleware plugin can call this application, in our case a provisioning engine, to provision a workflow middleware.
-How the bootware knows which plugin it should call is determined by the context which is explained in \autoref{design:context}.
+Here, a provision workflow middleware plugin can call this application, in this case a provisioning engine, to provision a workflow middleware.
+How the bootware knows which plugins it should call is determined by the context which is explained in \autoref{design:context}.
 
 \begin{figure}[!htbp]
 	\centering
@@ -60,7 +60,7 @@ How the bootware knows which plugin it should call is determined by the context 
 In this case, an Amazon plugin is used in step one to create an EC2 instance.
 In step two, a SSH plugin creates a connection to this EC2 instance.
 Over this SSH connection, an OpenTOSCA plugin installs OpenTOSCA on the EC2 instance, as shown in step three.
-Finally, in step four, a call OpenTOSCA plugin call the just deployed OpenTOSCA container to provision the workflow middleware.
+Finally, in step four, a call OpenTOSCA plugin calls the just deployed OpenTOSCA container to provision the workflow middleware.
 
 \begin{figure}[!htbp]
 	\centering
@@ -70,7 +70,7 @@ Finally, in step four, a call OpenTOSCA plugin call the just deployed OpenTOSCA 
 \end{figure}
 
 For another combination of plugins, the process might look like \autoref{image:plugin_process_3}.
-Here, a Chef server is installed on an Azure VM over a \nom{remote desktop connection}{RDC} connection.
+Here, a Chef server is installed on an Azure VM over a \nom{remote desktop connection}{RDC}.
 The Chef server is then used to provision the workflow middleware.
 
 \begin{figure}[!htbp]
@@ -267,10 +267,10 @@ This method is provided for completeness and for special cases.
 
 Provision workflow middleware plugins provide the bootware with a unified way to call provisioning engines and trigger provisioning and deprovisioning operations.
 \autoref{table:provisioningengine_plugins} shows the operations that these plugins should implement.
-The provision operation calls a provisioning engine and trigger the provisioning process.
+The provision operation calls a provisioning engine and triggers the provisioning process.
 It takes two inputs: An endpoint reference, which points to the provisioning engine that should be used, and a service package reference, which points to the workflow middleware package that the provisioning engine should provision.
-When completed successfully, the provisioning operation returns a list of information about to the just provisioned workflow middleware.
-This list can contain arbitrary information, such as endpoint references pointing to the various components of the workflow middleware or any other information that might be necessary to connect the modeler to the workflow middleware.
+When completed successfully, the provisioning operation returns a list with information about the just provisioned workflow middleware.
+This list can contain arbitrary information, such as endpoint references pointing to the various components of the workflow middleware, or any other information that might be necessary to connect the modeler to the workflow middleware.
 The deprovision operation calls a provisioning engine and triggers the deprovisioning process.
 It takes the same inputs as the provisioning operation, an endpoint reference to the provisioning engine and a package reference.
 
