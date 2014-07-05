@@ -2,7 +2,9 @@
 \label{design:context}
 
 During the bootstrapping process, the bootware has to know certain things to be able do its job.
+For example, it has to know which plugins it should use to process a request or which login credentials it should use to authenticate itself with a cloud provider.
 This information can be combined in one central object, which defines the nature of the current request: The context.
+The bootware will read the information provided in the context at various stages of the bootstrapping process to load plugins or to supply them with a particular configuration set required for a request.
 In this section we will take a closer look at this context object and its content.
 How exactly the context is implemented is shown in \autoref{implementation:context}.
 
@@ -30,7 +32,7 @@ In the future, the context might be extended to hold additional information, but
 
 This context has to somehow be generated from the information the bootware receives with each request.
 However, components outside of the bootware should not know anything about the inner workings of the bootware, i.e. which plugins are used to fulfill a request.
-All information that is supplied with a request can be seen in \autoref{image:request_context}.
+All information that might be supplied with a request can be seen in \autoref{image:request_context}.
 The infrastructure parameter specifies, which infrastructure should be used (e.g. a specific cloud provider).
 The application parameter specifies the application that should be deployed on this infrastructure (e.g. a specific provisioning engine).
 The service package reference of the workflow middleware is used by the bootware to retrieve the service package to provision the workflow middleware.
@@ -58,24 +60,11 @@ The entry returned for a specific parameter combination contains the specific pl
 	\label{image:mapping}
 \end{figure}
 
-\textcolor{red}{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}
-
-Now that we have defined what the context will look like, we need to find a way to actually get it to the bootware.
-There are a few things that we have to keep in mind when doing this.
-First, some of these values have to be changeable by the user, for example login credentials in the configuration list, so it does not make sense to hard-code them into the bootware.
-Furthermore, the lifetime of the information carried in the context varies quite a bit.
-The plugin instances are only useful for one request execution and are likely to change from request to request, for example if the provisioning manager wants to provision multiple services with different provisioning engines.
-Therefore, we must provide the plugin instances on a per request basis.
-Note that this does not include the event plugins.
-Event plugins are not changed with each request.
-They are loaded once when the bootware starts and are unloaded before it stops.
-Therefore, they do not belong into the context.
-It makes more sense to specify the event plugins that should be loaded in a configuration file that the bootware reads on startup.
-
-Because we already decided that we'll be using web services as external communication method, we can send the context containing the plugin types with each request as part of the soap message body.
-
-Unlike the request plugins, the configuration might not change between requests.
-Additionally, we have other components calling the bootware, which do not know (and maybe should not know) anything about some content of the configuration, like login credentials.
+The bootware has to combine the information received in a request with the information that it received from the registry by merging the two sets into the final context.
+However, there is one caveat in this scenario.
+Right now, other components making a request to the bootware would have to supply configuration parameters like login credentials with each request.
+Unlike the other request parameters, the configuration might not change between requests.
+Additionally, the other components calling the bootware, may not know (and maybe should not know) anything about some content of the configuration, like login credentials.
 While this might change in the future, it would make sense to be able to set the configuration once when starting the bootware, so that it does not have to be delivered with each request and so that other components can still use the bootware without also sending a configuration.
 It should however still be possible to override or update the configuration at a later point.
 Overriding would allow any request to temporarily use other configuration values if necessary.
@@ -88,3 +77,21 @@ The configuration set by this method will be treated as the default configuratio
 It will be used during the process if no other configuration is provided.
 If however a request is sent with a configuration that also contains values already set in the default configuration, these values will override already existing default values temporarily for this request.
 This behavior could also be extended to other parts of the context in the future if necessary.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/merge}
+	\caption{Building the final context through merging.}
+	\label{image:merge}
+\end{figure}
+
+\autoref{image:merge} shows the merging process which now merges the default configuration, the request parameters, and the response from the registry.
+In step one, at the beginning of the bootware execution, the default configuration is set using the \textit{setConfiguration} operation.
+A deploy request is received in step two, which contains the request parameters as shown in \autoref{image:request_context}.
+In step three, the request parameters are mapped to specific plugin instances and additional configuration using the registry.
+In step four, the default Configuration, the request parameters, and the registry response are merged into the final context object.
+This context object is then used to fulfill the request.
+
+While we have planned to use a registry for mapping request parameters to concrete values, due to time constrains we were not able to specify this registry in more detail or implement it in our prototype.
+For our implementation we use a local mechanism for mapping the request parameters.
+The registry is left for future work and will not be covered further in this diploma thesis.
