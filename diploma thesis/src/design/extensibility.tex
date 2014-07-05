@@ -21,8 +21,10 @@ It would be far better if extensions could be implemented separately from the co
 A more flexible architecture is needed, for example a plugin architecture.
 Interfaces for the extension points still exist but the extensions are no longer part of the main bootware components.
 They are compiled separately into plugins that can be loaded into the main bootware components on the fly.
-There are several possibilities to realize such an architecture.
+Managing the plugins is the responsibility of a plugin manager, which encapsulates all functionality to load and unload plugins.
+It is described in more detail in the next section.
 
+There are several possibilities to realize a plugin an architecture.
 It is certainly possible to implement a plugin framework from scratch.
 An advantage of this approach would be that the design of the plugin architecture could be tailored to our use case and would be as simple or complex as needed.
 But there are also several disadvantages.
@@ -31,6 +33,17 @@ It would also shift resources away from the actual goal of this diploma thesis, 
 Furthermore, it would require a deep understanding of the language used for the implementation (in this case Java), which is not necessarily given.
 Therefore, it seems more reasonable to use one of the already existing plugin frameworks.
 Which one exactly will be determined later in \autoref{implementation:selecting:pluginframeworks}.
+
+\subsection{Plugin Manager}
+\label{design:pluginmanager}
+
+The plugin manager is an component of the bootware core that encapsulates all functionality for managing plugins, such as loading and unloading specific plugins.
+At the least, it should support two operations: The loadPlugin operation and the unloadPlugin operation.
+The loadPlugin operation would be called by the bootware when it needs to load a specific plugin.
+It would supply the path to the plugin as input parameter to the loadPlugin operation, which will use this information to load and return an instance of this specific plugin.
+This plugin instance can then be used by the bootware until it decides to unload this instance by calling the unloadPlugin operation of the plugin manager.
+The plugin manager might also support various other utility operations for convenience, such as an unloadAllPlugins, which would unload all loaded plugins at once.
+The plugin manager implementation will be described in more detail in \autoref{implementation:pluginmanager}, after we have selected a plugin framework.
 
 \subsection{Plugin Repository}
 \label{design:pluginrepository}

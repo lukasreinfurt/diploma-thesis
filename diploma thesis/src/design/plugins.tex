@@ -35,7 +35,7 @@ They are not a part of the core bootware process but allow us to add functionali
 How the actual event system used by these plugins will be implemented will be discussed in \autoref{design:internalcomm}.
 
 With this fifth plugin type we have now covered all plugin types we will need.
-In the next section we present some examples of how the different plugin types will work together.
+Next, we present some examples of how the different plugin types will work together.
 Then, we will describe each plugin type in more detail, starting with the common operations that all plugin types have to implement.
 
 \subsection{Examples}
@@ -47,6 +47,7 @@ Then, in step two, it creates a communication channel to this instance using a c
 This communication channel is then used in step three by an application plugin to install an application on the instance.
 The fourth step is only executed when the remote bootware provisions the workflow middleware.
 Here,  provision workflow middleware plugin can call this application, in our case a provisioning engine, to provision a workflow middleware.
+How the bootware knows which plugin it should call is determined by the context which is explained in \autoref{design:context}.
 
 \begin{figure}[!htbp]
 	\centering
