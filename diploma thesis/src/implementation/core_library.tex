@@ -16,9 +16,9 @@ Because we are using Java for the implementation, the core library will be a \te
 \autoref{image:corelibrary} shows a schematic view of the bootware core library and how its classes are used by various components.
 We can see that the library includes an abstract FSM class, which is used by both the local and the remote bootware implementation.
 The abstract FSM class defines common state machine functionality that is used by both bootware components.
-This includes function definitions for the shared states shown in \autoref{image:flow_local} and \autoref{image:flow_remote}.
-This way, the local and remote bootware can import shared states from the library and only have to define their custom states (e.g. the provision middleware states in the remote bootware or the send to remote state in the local bootware) and the state transitions.
-They can also overwrite the states imported from the library if this is necessary.
+This includes function definitions for the shared activities shown in \autoref{image:flow_local} and \autoref{image:flow_remote}.
+This way, the local and remote bootware can import shared activities from the library and only have to define their custom activities (e.g. the provision middleware activity in the remote bootware or the send to remote activity in the local bootware) and the transitions.
+They can also overwrite the activities imported from the library if this is necessary.
 
 The library also includes an abstract base plugin class, which implements some functionality that is common to all plugin.
 Actual plugin implementations can extend this base plugin class to inherit this common functionality.

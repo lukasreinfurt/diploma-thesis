@@ -8,13 +8,13 @@ The second part, which is specific to either the local or remote bootware, is de
 
 The AbstractStateMachine class defines some utility functions for starting and stopping the state machine.
 It also contains the buildDefaultTransition method, which simplifies the definition of most of the transitions in \autoref{image:flow_local} and \autoref{image:flow_remote}.
-As we can see when looking at these two figures, many of the states have a success and a failure transition.
-With the buildDefaultTransition method, these states and transitions can be defined with less code.
+As we can see when looking at these two figures, many of the activities have a success and a failure transition.
+With the buildDefaultTransition method, states and transitions associated with these activities can be defined with less code.
 
 However, the most important part of the AbstractStateMachine is the abstract class AbstractMachine.
 This class defines all the functions that are called in states that are shared by the local and remote bootware, so that we avoid code duplication.
-For example, as we can see when looking at \autoref{image:flow_local} and \autoref{image:flow_remote}, both bootwares share the connect state at the bottom left.
-\autoref{lst:connect} shows how the function associated with this state is defined in the AbstractStateMachine class.
+For example, as we can see when looking at \autoref{image:flow_local} and \autoref{image:flow_remote}, both bootwares share the connect activity at the bottom left.
+\autoref{lst:connect} shows how the function associated with this activity is defined in the AbstractStateMachine class.
 We can see in line 198 that the connect method of a communication plugin is called and the resulting connection is stored in a variable for later use.
 If this succeeds, a success event is fired in the state machine (line 203), which would trigger a transition to the next state, which in this case is the provision application state.
 However, if for some reason no connection can be established by the communication plugin's connect method, a ConnectConnectionException is thrown.

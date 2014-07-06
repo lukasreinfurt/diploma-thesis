@@ -87,7 +87,7 @@ The plugin manager also offers an unloadAllPlugins operation that unloads all lo
 This operation is also called during the plugin manager's stop operation, which stops the OSGi framework, which is necessary for an orderly shutdown.
 
 All these operations are called at specific points during the state machine execution to load and unload the needed plugins.
-For example, once the state machine enters the unload event plugins state, shown in the top right of \autoref{image:flow_local} and \autoref{image:flow_remote}, it executes the unloadEventPlugins method, shown in \autoref{lst:unloadeventplugins}.
+For example, once the state machine enters the unload event plugins state, associated with the activities shown in the top right of \autoref{image:flow_local} and \autoref{image:flow_remote}, it executes the unloadEventPlugins method, shown in \autoref{lst:unloadeventplugins}.
 As we can see in line 293, it just calls the plugin manager's unloadAllPlugins operation, which will unload all remaining plugins (which should be only event plugins at this point).
 We can also see that exceptions are used to control the state machine transitions.
 If all plugins are unloaded successfully and no exception is thrown, a success event is fired (line 298), which will cause a transition in the state machine, in this case to the cleanup state.
