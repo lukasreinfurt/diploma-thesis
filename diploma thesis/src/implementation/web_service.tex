@@ -3,9 +3,9 @@
 
 In \autoref{design:communication} we decided to use web service calls and returns as external communication mechanism.
 Now, we need to the define the interface that will be made available by the web service to the outside.
-We obviously need the two main operations, deploy and undeploy, to be available from the outside.
+We obviously need the two main operations, \textit{deploy} and \textit{undeploy}, to be available from the outside.
 In \autoref{design:context} we also described the \textit{setConfiguration} operation that has to be supported.
-Additionally, the getActiveApplications and shutdown operations are needed.
+Additionally, the \textit{getActiveApplications} and \textit{shutdown} operations are needed.
 
 \subsection{Deploy}
 
@@ -13,7 +13,7 @@ The \textit{deploy} operation will be called by at least two different component
 Once by the bootware modeler plugin to deploy the remote bootware and the workflow middleware, and then each time the provisioning manager needs to provision a new service during a workflow execution.
 \autoref{lst:webservice:deployrequest} shows an exemplary deploy request as SOAP message.
 In line 6 we can see that the deploy method is called with a request context provided as argument in line 7-11, which will be used by the bootware to generate a full context like the one shown in \autoref{lst:context:sample}.
-In this particular example, only the resourceProvider and application parameters are specified, which could be a call from the provisioning manager.
+In this particular example, only the \textit{resourceProvider} and \textit{application} parameters are specified, which could be a call from the provisioning manager.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -26,7 +26,7 @@ In this particular example, only the resourceProvider and application parameters
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/deploy-request.xml}
-	\caption{Sample deploy request in a SOAP message.}
+	\caption{Sample \textit{deploy} request in a SOAP message.}
 	\label{lst:webservice:deployrequest}
 \end{listing}
 
@@ -44,12 +44,12 @@ It contains an information list in line 5-10, which contains a reference to the 
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/deploy-response.xml}
-	\caption{Sample deploy response in a SOAP message.}
+	\caption{Sample \textit{deploy} response in a SOAP message.}
 	\label{lst:webservice:deployresponse}
 \end{listing}
 
 If the deploy request somehow failed, a SOAP message containing a SOAP fault will be returned, which is shown in \autoref{lst:webservice:deployerror}.
-It contains a fault string with an error description in line 5, as well as the original DeployException that was thrown by the deploy operation in line 7-10.
+It contains a fault string with an error description in line 5, as well as the original \textit{DeployException} that was thrown by the \textit{deploy} operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -62,13 +62,13 @@ It contains a fault string with an error description in line 5, as well as the o
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/deploy-error.xml}
-	\caption{Sample deploy error in a SOAP message.}
+	\caption{Sample \textit{deploy} error in a SOAP message.}
 	\label{lst:webservice:deployerror}
 \end{listing}
 
 \subsection{Undeploy}
 
-Like the \textit{deploy} operation, the \textit{undeploy} operation will be called by multiple components to reverse the actions that where previously made by deploy operations.
+The \textit{undeploy} operation will be called by multiple components to reverse the actions that where previously made by \textit{deploy} operations.
 \autoref{lst:webservice:undeployrequest} shows an exemplary undeploy request in a SOAP message.
 As argument it contains one or more endpoint references to already deployed applications, as can be seen in line 7-12.
 
@@ -83,7 +83,7 @@ As argument it contains one or more endpoint references to already deployed appl
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/undeploy-request.xml}
-	\caption{Sample undeploy request in a SOAP message.}
+	\caption{Sample \textit{undeploy} request in a SOAP message.}
 	\label{lst:webservice:undeployrequest}
 \end{listing}
 
@@ -101,13 +101,13 @@ The response is empty because there is nothing interesting to return.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/undeploy-response.xml}
-	\caption{Sample undeploy response in a SOAP message.}
+	\caption{Sample \textit{undeploy} response in a SOAP message.}
 	\label{lst:webservice:undeployresponse}
 \end{listing}
 
 In case of a failure, an error will be return.
-As can be seen in \autoref{lst:webservice:undeployerror}, it has the same layout as the error returned by the deploy operation.
-It contains a SOAP fault string in line 5 and the original UndeployException thrown by the undeploy operation in line 7-10.
+As can be seen in \autoref{lst:webservice:undeployerror}, it has the same layout as the error returned by the \textit{deploy} operation.
+It contains a SOAP fault string in line 5 and the original \textit{UndeployException} thrown by the \textit{undeploy} operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -120,19 +120,19 @@ It contains a SOAP fault string in line 5 and the original UndeployException thr
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/undeploy-error.xml}
-	\caption{Sample undeploy error in a SOAP message.}
+	\caption{Sample \textit{undeploy} error in a SOAP message.}
 	\label{lst:webservice:undeployerror}
 \end{listing}
 
 \subsection{Set Configuration}
 
-In addition to the main deploy and undeploy operations, the bootware web service also supports the \textit{setConfiguration} operation.
+In addition to the main \textit{deploy} and \textit{undeploy} operations, the bootware web service also supports the \textit{setConfiguration} operation.
 Using this operation, the configuration can be set independently from deploy requests if necessary.
-\autoref{lst:webservice:setconfigurationrequest} shows an exemplary setConfiguration request.
+\autoref{lst:webservice:setconfigurationrequest} shows an exemplary \textit{setConfiguration} request.
 In line 7-23, it contains a configuration list, which can contain one or more configuration sets.
 Each configuration set is made up of one or more configuration entries, which are key value pairs, where the key describes the configuration type and the value the actual configuration value.
 What content a particular key has to contain depends on what the plugins are looking for when they read the configuration.
-In the example code in line 9, we send one configuration set for AWS, which consists of two credentials, a secret key in line 12-15 and an accessKey in line 16-19.
+In the example code in line 9, we send one configuration set for AWS, which consists of two credentials, a \textit{secretKey} in line 12-15 and an \textit{accessKey} in line 16-19.
 Configuration content like this is the reason why the communication with the bootware should be encrypted.
 
 \vspace*{\baselineskip}
@@ -146,11 +146,11 @@ Configuration content like this is the reason why the communication with the boo
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/setConfiguration-request.xml}
-	\caption{Sample setConfiguration request in a SOAP message.}
+	\caption{Sample \textit{setConfiguration} request in a SOAP message.}
 	\label{lst:webservice:setconfigurationrequest}
 \end{listing}
 
-If the setConfiguration operation was successful, the response in \autoref{lst:webservice:setconfigurationresponse} will be returned.
+If the \textit{setConfiguration} operation was successful, the response in \autoref{lst:webservice:setconfigurationresponse} will be returned.
 Again, it is empty because there is nothing interesting to return.
 
 \vspace*{\baselineskip}
@@ -164,12 +164,12 @@ Again, it is empty because there is nothing interesting to return.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/setConfiguration-response.xml}
-	\caption{Sample setConfiguration response in a SOAP message.}
+	\caption{Sample \textit{setConfiguration} response in a SOAP message.}
 	\label{lst:webservice:setconfigurationresponse}
 \end{listing}
 
-Like the deploy and undeploy operations, the setConfiguration operation also returns an error message if the operation failed.
-As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contains a SOAP fault string in line 5 and the original SetConfigurationException thrown by the setConfiguration operation in line 7-10.
+Like the \textit{deploy} and \textit{undeploy} operations, the \textit{setConfiguration} operation also returns an error message if the operation failed.
+As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contains a SOAP fault string in line 5 and the original \textit{SetConfigurationException} thrown by the \textit{setConfiguration} operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -182,16 +182,16 @@ As can be seen in \autoref{lst:webservice:setconfigurationerror}, it also contai
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/setConfiguration-error.xml}
-	\caption{Sample setConfiguration error in a SOAP message.}
+	\caption{Sample \textit{setConfiguration} error in a SOAP message.}
 	\label{lst:webservice:setconfigurationerror}
 \end{listing}
 
 \subsection{Get Active Applications}
 
-The getActiveApplications operation is called by the provisioning manager to retrieve already deployed provisioning engines.
+The \textit{getActiveApplications} operation is called by the provisioning manager to retrieve already deployed provisioning engines.
 If a provisioning engine it needs is already active, it does not have to call the bootware to provision a new one.
 As already explained in \autoref{design:webservice} this is only needed in the remote bootware and therefore we only implement it there.
-\autoref{lst:webservice:getactivepayloadsrequest} shows a getActiveApplications request in a SOAP message.
+\autoref{lst:webservice:getactivepayloadsrequest} shows a \textit{getActiveApplications} request in a SOAP message.
 No parameters are required.
 
 \vspace*{\baselineskip}
@@ -205,13 +205,13 @@ No parameters are required.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-request.xml}
-	\caption{Sample getActiveApplications request in a SOAP message.}
+	\caption{Sample \textit{getActiveApplications} request in a SOAP message.}
 	\label{lst:webservice:getactivepayloadsrequest}
 \end{listing}
 
 The response that is returned contains a list of all applications that where active when the request was made.
 As we can see in \autoref{lst:webservice:getactivepayloadsresponse} lines 6-11, it contains an applications list with zero or more entries.
-Each entry consists of a key/value pair, where the key identifies the application and the value contains a URL to the application.
+Each entry consists of a key value pair, where the key identifies the application and the value contains a URL to the application.
 In this example, the entry points to an OpenTOSCA container instance.
 
 \vspace*{\baselineskip}
@@ -225,12 +225,12 @@ In this example, the entry points to an OpenTOSCA container instance.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-response.xml}
-	\caption{Sample getActiveApplications response in a SOAP message.}
+	\caption{Sample \textit{getActiveApplications} response in a SOAP message.}
 	\label{lst:webservice:getactivepayloadsresponse}
 \end{listing}
 
-If the getActiveApplications request failed for some reason, an error message is returned.
-As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a SOAP fault string in line 5 and the original GetActiveApplicationsException thrown by the getActiveApplications operation in line 7-10.
+If the \textit{getActiveApplications} request failed for some reason, an error message is returned.
+As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a SOAP fault string in line 5 and the original \textit{GetActiveApplicationsException} thrown by the \textit{getActiveApplications} operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -243,13 +243,13 @@ As can be seen in \autoref{lst:webservice:getactivepayloadserror}, it contains a
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/getActivePayloads-error.xml}
-	\caption{Sample getActiveApplications error in a SOAP message.}
+	\caption{Sample \textit{getActiveApplications} error in a SOAP message.}
 	\label{lst:webservice:getactivepayloadserror}
 \end{listing}
 
 \subsection{Shutdown}
 
-The shutdown operation triggers the shutdown procedure.
+The \textit{shutdown} operation triggers the shutdown procedure.
 During this procedure, all active applications will be undeployed.
 The local bootware will also forward this request to the remote bootware and wait for a response so that it can deprovision the remote bootware before shutting down itself.
 \autoref{lst:webservice:shutdownrequest} shows a shutdown request in a SOAP message.
@@ -266,7 +266,7 @@ No parameters are required.
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/shutdown-request.xml}
-	\caption{Sample shutdown request in a SOAP message.}
+	\caption{Sample \textit{shutdown} request in a SOAP message.}
 	\label{lst:webservice:shutdownrequest}
 \end{listing}
 
@@ -283,12 +283,12 @@ If the additional processes executed during shutdown (i.e. undeploy applications
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/shutdown-response.xml}
-	\caption{Sample shutdown response in a SOAP message.}
+	\caption{Sample \textit{shutdown} response in a SOAP message.}
 	\label{lst:webservice:shutdownresponse}
 \end{listing}
 
 If the additional processes failed for some reason, an error response like the one showed in \autoref{lst:webservice:shutdownerror} will be returned.
-It contains a SOAP fault string in line 5 and the original ShutdownException thrown by the shutdown operation in line 7-10.
+It contains a SOAP fault string in line 5 and the original \textit{ShutdownException} thrown by the \textit{shutdown} operation in line 7-10.
 
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
@@ -301,6 +301,6 @@ It contains a SOAP fault string in line 5 and the original ShutdownException thr
 		framesep=0.3cm,
 		fontsize=\small
 	]{xml}{implementation/assets/shutdown-error.xml}
-	\caption{Sample shutdown error in a SOAP message.}
+	\caption{Sample \textit{shutdown} error in a SOAP message.}
 	\label{lst:webservice:shutdownerror}
 \end{listing}

@@ -19,12 +19,12 @@ If the set of necessary extensions is unknown or changing from time to time, imp
 It would be far better if extensions could be implemented separately from the core bootware components and added and removed at will.
 
 A more flexible architecture is needed, for example a plugin architecture.
-Interfaces for the extension points still exist but the extensions are no longer part of the main bootware components.
+Interfaces for the extension points still exist, but the extensions are no longer part of the main bootware components.
 They are compiled separately into plugins that can be loaded into the main bootware components on the fly.
 Managing the plugins is the responsibility of a plugin manager, which encapsulates all functionality to load and unload plugins.
 It is described in more detail in the next section.
 
-There are several possibilities to realize a plugin an architecture.
+There are several possibilities to realize such a plugin architecture.
 It is certainly possible to implement a plugin framework from scratch.
 An advantage of this approach would be that the design of the plugin architecture could be tailored to our use case and would be as simple or complex as needed.
 But there are also several disadvantages.
@@ -52,7 +52,7 @@ Now that we have introduced plugins we face new problems.
 \autoref{image:plugins} shows the current architecture, where both bootware components use their own plugins.
 If a plugin is added or updated, the user has to manually copy this plugin to the right folder of one or both of the bootware components.
 Furthermore, if both components use the same plugins, which they will (for example plugins for different cloud providers), we will have duplicate plugins scattered around.
-This is inefficient, probably annoying for the user and can cause errors if plugins get out of sync.
+This is inefficient, probably annoying for the user and can cause errors if plugin versions get out of sync.
 
 \begin{figure}[!htbp]
 	\centering

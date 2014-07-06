@@ -7,7 +7,7 @@ The bootware has to be integrated into this process.
 We described this as a generic bootware adapter in \autoref{design:modeler_integration}, but now we need an actual implementation of this adapter, which will be specific to the SimTech Modeler.
 The button is realized by an Eclipse plugin that adds SimTech specific functionality to the Modeler (which is based on Eclipse).
 We therefore also have to create some kind of Eclipse plugin to hook into this process.
-We call it the bootware plugin.
+We call it the \textit{bootware plugin}.
 There are two scenarios how we could go about this.
 
 We could extend the existing plugin with the functionality that we need for the bootware.
@@ -62,10 +62,10 @@ This button and the class that implements its functionality are defined further 
 	\label{lst:pluginaction}
 \end{listing}
 
-As we can see in line 1188, the class that implements the button functionality is the StartAction class.
-We modify the run method of the StartAction class to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
+As we can see in line 1188, the class that implements the button functionality is the \textit{StartAction} class.
+We modify the run method of the \textit{StartAction} class to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
 As shown in \autoref{lst:startaction}, we have to get all extensions that implement the bootware extension point from the extension registry (line 50-52) and create an object of the \textit{IBootwarePlugin} type (line 55-56).
-Now, we are able to call any method defined by this object, in this case the execute method (line 57).
+Now, we are able to call any method defined by this object, in this case the \textit{execute} method (line 57).
 After this method has finished, the original code continues its execution (line 60).
 
 \vspace*{\baselineskip}
@@ -80,13 +80,13 @@ After this method has finished, the original code continues its execution (line 
 		framesep=0.3cm,
 		fontsize=\small
 	]{java}{implementation/assets/StartAction.java}
-	\caption{The modified run method in the StartAction class.\protect\footnotemark}
+	\caption{The modified run method in the \textit{StartAction} class.\protect\footnotemark}
 	\label{lst:startaction}
 \end{listing}
 
 \footnotetext{Note: The code shown here was shortened for presentation and is not complete. The main elements are however present.}
 
-Now that we have all code in place to execute the bootware extension, all we have to do is to create a bootware plugin that implements the bootware extension point and the execute method.
+Now that we have all code in place to execute the bootware extension, all we have to do is to create a bootware plugin that implements the bootware extension point and the \textit{execute} method.
 Like the Eclipse plugin we just modified, the bootware plugin has a \textit{plugin.xml}, shown in \autoref{lst:bootwarepluginxml}.
 Here, we just declare an extension in line 8-13 that implements the bootware extension point (line 9) with the \textit{org.simtech.bootware.eclipse.BootwarePlugin} class (line 11).
 This is also the place where other integration functionality could be implemented in the future, for example by adding new menus for configuring the context object, or new views that show the bootstrapping process.
@@ -101,12 +101,12 @@ This is also the place where other integration functionality could be implemente
 		tabsize=2,
 		framesep=0.3cm,
 		fontsize=\small
-	]{java}{implementation/assets/bootware_plugin.xml}
+	]{xml}{implementation/assets/bootware_plugin.xml}
 	\caption{The bootware plugin plugin.xml.}
 	\label{lst:bootwarepluginxml}
 \end{listing}
 
-The BootwarePlugin class, shown in \autoref{lst:bootwareplugin}, implements the execute method called by the extension point.
+The \textit{BootwarePlugin} class, shown in \autoref{lst:bootwareplugin}, implements the execute method called by the extension point.
 In this method we do everything we need to do to integrate the bootware into the start process.
 Due to limited space we cannot present the actual code here, but the process is roughly as follows:
 First, the local bootware has to be started by calling the executable.

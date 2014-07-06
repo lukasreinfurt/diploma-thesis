@@ -48,7 +48,7 @@ Both the local and the remote bootware will have to implement all of these opera
 
 \subsection{Deploy}
 
-The deploy operation is called whenever a new application (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
+The \textit{deploy} operation is called whenever a new application (e.g.: a provisioning engine, or initially, the remote bootware) should be deployed.
 As input it takes a request context object as described in \autoref{design:context}.
 If it was able to successfully deploy the requested application, it responds with a list of information concerning the application.
 This list can contain endpoint references, ports, or any other information that might be needed later.
@@ -56,18 +56,18 @@ If the deployment failed, it responds with an error message.
 
 \subsection{Undeploy}
 
-The undeploy operation is essentially the reversal of the deploy operation.
+The \textit{undeploy} operation is essentially the reversal of the \textit{deploy} operation.
 As input it takes an endpoint reference to an application that should be undeploy.
 If the undeployment succeeds, it responds with a success message.
 If it fails, it responds with an error message.
 
-Unlike the deploy operation it does not take a context object as input, but the context is still needed for the undeploy operation because it contains the information about which plugins have to be used.
-This means that we have to store the context object used during each deploy operation so that we can retrieve it later during the corresponding undeploy operation.
+Unlike the \textit{deploy} operation it does not take a context object as input, but the context is still needed for the \textit{undeploy} operation because it contains the information about which plugins have to be used.
+This means that we have to store the context object used during each \textit{deploy} operation so that we can retrieve it later during the corresponding \textit{undeploy} operation.
 This design is intentional and will be described in more detail in \autoref{design:instancestore}.
 
 \subsection{Set Configuration}
 
-The setConfiguration operation is used to transmit or update the default configuration used by plugins.
+The \textit{setConfiguration} operation is used to transmit or update the default configuration used by plugins.
 As input it takes a list of configurations that should be saved.
 If the list provided is empty, the default configuration list saved in the bootware will be emptied.
 If the list provided is not empty, the default configuration list saved in the bootware will be overwritten by this list.
@@ -77,7 +77,7 @@ If the configuration could not be updated, it responds with an error message.
 
 \subsection{Get Active Applications}
 
-The getActiveApplications operation is used by the provisioning manager to check if a provisioning engine it needs already exist.
+The \textit{getActiveApplications} operation is used by the provisioning manager to check if a provisioning engine it needs already exist.
 This operation just returns a list of all active application.
 There is no reason for this operation to be called on the local bootware, so this operation will be implemented in the remote bootware only.
 
@@ -85,7 +85,7 @@ There is no reason for this operation to be called on the local bootware, so thi
 
 This operation triggers the shutdown of sequence of the bootware.
 It behaves a little differently in the local and remote bootware.
-In the local bootware it first calls the shutdown operation of the remote bootware.
+In the local bootware it first calls the \textit{shutdown} operation of the remote bootware.
 When the confirmation response from the remote bootware is received, it deprovisions all active applications that the local bootware deployed (i.e. the remote bootware).
-In the remote bootware, the shutdown operation first calls a provisioning engine to deprovision the workflow middleware.
+In the remote bootware, the \textit{shutdown} operation first calls a provisioning engine to deprovision the workflow middleware.
 Once this is done, it deprovisions all active applications that the remote deployed (i.e. the various provisioning engines), before returning a response.

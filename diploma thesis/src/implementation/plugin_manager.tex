@@ -54,10 +54,10 @@ It encapsulates all the functionality required for loading and unloading OSGi pl
 	\label{table:pluginmanager}
 \endgroup
 
-The constructor (PluginManager) creates a new plugin manager instance.
+The constructor (\textit{PluginManager}) creates a new plugin manager instance.
 In the background, it initializes the OSGi framework.
 Part of this initialization is telling the framework which extra packages it should export.
-This is necessary so that plugins can resolve their dependencies on packages that are part of the bootware core library.
+This is necessary so that plugins can resolve their dependencies on packages that are part of the \textit{bootware core library}.
 \autoref{lst:pluginmanager} shows an excerpt of the plugin manager class where we can see the extra packages that are exported in line 42-48.
 Plugins have dependencies on various bootware core packages shown here, such as the exceptions and plugins package.
 They also depend on some packages from the PubSub library we use, MBassador.
@@ -79,19 +79,19 @@ All these dependencies are resolved by configuring the OSGi framework to export 
 	\label{lst:pluginmanager}
 \end{listing}
 
-The registerSharedObjects operation allows us to register any object that is part of the bootware core with the OSGi framework, so that plugins are also able to access it.
-We use this to share the EventBus object with all plugins, so that they are able to subscribe to, and also publish, events.
-The loadPlugin operation loads the plugin at the given path into the OSGi framework and returns an instance of this plugin.
-The unloadPlugin operation unloads an already loaded plugin.
-The plugin manager also offers an unloadAllPlugins operation that unloads all loaded plugins at once.
-This operation is also called during the plugin manager's stop operation, which stops the OSGi framework, which is necessary for an orderly shutdown.
+The \textit{registerSharedObjects} operation allows us to register any object that is part of the bootware core with the OSGi framework, so that plugins are also able to access it.
+We use this to share the EventBus instance with all plugins, so that they are able to subscribe to, and also publish, events.
+The \textit{loadPlugin} operation loads the plugin at the given path into the OSGi framework and returns an instance of this plugin.
+The \textit{unloadPlugin} operation unloads an already loaded plugin.
+The plugin manager also offers an \textit{unloadAllPlugins} operation that unloads all loaded plugins at once.
+This operation is also called during the plugin manager's \textit{stop} operation, which stops the OSGi framework, which is necessary for an orderly shutdown.
 
 All these operations are called at specific points during the state machine execution to load and unload the needed plugins.
-For example, once the state machine enters the unload event plugins state, associated with the activities shown in the top right of \autoref{image:flow_local} and \autoref{image:flow_remote}, it executes the unloadEventPlugins method, shown in \autoref{lst:unloadeventplugins}.
-As we can see in line 293, it just calls the plugin manager's unloadAllPlugins operation, which will unload all remaining plugins (which should be only event plugins at this point).
+For example, once the state machine enters the \textit{unload event plugins} state, associated with the activities shown in the top right of \autoref{image:flow_local} and \autoref{image:flow_remote}, it executes the \textit{unloadEventPlugins} method, shown in \autoref{lst:unloadeventplugins}.
+As we can see in line 293, it just calls the plugin manager's \textit{unloadAllPlugins} operation, which will unload all remaining plugins (which should be only event plugins at this point).
 We can also see that exceptions are used to control the state machine transitions.
-If all plugins are unloaded successfully and no exception is thrown, a success event is fired (line 298), which will cause a transition in the state machine, in this case to the cleanup state.
-However, if somehow the unloadAllPlugins operation fails, it throws a UnloadPluginsException, which is caught and triggers a failure event (line 296).
+If all plugins are unloaded successfully and no exception is thrown, a \textit{success} event is fired (line 298), which will cause a transition in the state machine, in this case to the \textit{cleanup} state.
+However, if somehow the \textit{unloadAllPlugins} operation fails, it throws a \textit{UnloadPluginsException}, which is caught and triggers a \textit{failure} event (line 296).
 In this way, the result of the plugin manager operations can influence the execution flow of the bootware.
 
 \vspace*{\baselineskip}
@@ -106,6 +106,6 @@ In this way, the result of the plugin manager operations can influence the execu
 		framesep=0.3cm,
 		fontsize=\small
 	]{java}{implementation/assets/unloadEventPlugins.java}
-	\caption{The unloadEventPlugins method defined in the AbstractStateMachine class.}
+	\caption{The \textit{unloadEventPlugins} method defined in the \textit{AbstractStateMachine} class.}
 	\label{lst:unloadeventplugins}
 \end{listing}

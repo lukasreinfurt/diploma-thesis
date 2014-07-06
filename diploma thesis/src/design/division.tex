@@ -21,8 +21,8 @@ We will now discuss the viability of four such alternatives.
 	\label{image:local}
 \end{figure}
 
-First, we consider the simplest case: A single local component as shown in \autoref{image:local}.
-In this scenario, all provisioning processes are initiated from a component installed locally on the users machine, alongside or as part of the workflow modeler.
+First, we consider the simplest case: A single local bootware component as shown in \autoref{image:local}.
+In this scenario, all provisioning processes are initiated from a bootware installed locally on the users machine, alongside or as part of the workflow modeler.
 
 The advantages of this architecture lie in its simplicity.
 Only one component has to be created and managed.
@@ -50,7 +50,7 @@ The next obvious choice, as displayed in \autoref{image:remote}, is to put the s
 However, this creates new problems.
 
 Because there are not any additional components in this scenario that could manage the life-cycle of the remote bootware, the user would have to manage it by hand, which leads to two possibilities.
-Either, the user provisions the bootware once in some cloud environment and then keeps this one instance running, or they provision it once they need it and deprovisions it when they are done.
+Either, the user provisions the bootware once in some cloud environment and then keeps this one instance running, or they provision the bootware once they need it and deprovisions it when they are done.
 
 In the first case, the user would only have to provision the bootware once, but this creates a new problem: The user does not know where exactly to put the bootware.
 Because one requirement is that multiple cloud environments should be supported, it is possible that the bootware is not located anywhere near the cloud environment where it should provision further components.
@@ -83,7 +83,7 @@ On the local side we have a small and simple component which has mainly one func
 This eliminates the problems of a single local or remote bootware component.
 The user no longer has to be involved in the management of the remote bootware, because the local bootware handles all that.
 Because we provision the remote bootware on demand, we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.
-We can now keep the local part as simple as possible and make the remote part as complicated as it has to be, and because we provision the remote bootware only for one user, we do not have to worry about multi-tenancy.
+We can now keep the local part as simple as possible and make the remote part as complicated as it has to be.
 
 But we also introduce new problems.
 For one, we now have duplicate functionality between the two components.

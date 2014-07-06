@@ -31,7 +31,7 @@ Besides the event plugins there is always the web service interface, shown at th
 	\label{image:finalarchlocal}
 \end{figure}
 
-All event plugins and the web service interface work by implementing event handlers for certain events published at the event bus, or by publishing events to the event bus themselves.
+All event plugins work by implementing event handlers for certain events published at the event bus, or by publishing events to the event bus themselves.
 As we can see in the center of both figures, the event bus and the state machine form the core of the bootware.
 The event bus is responsible for distributing events between the various plugins and the state machine.
 The state machine implements the entire bootstrapping process, as described earlier in \autoref{design:flow}.

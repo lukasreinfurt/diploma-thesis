@@ -3,7 +3,7 @@
 
 During the bootstrapping process, the bootware has to know certain things to be able do its job.
 For example, it has to know which plugins it should use to process a request or which login credentials it should use to authenticate itself with a cloud provider.
-This information can be combined in one central object, which defines the nature of the current request: The context.
+This information can be combined in one central object, which defines the nature of the current request: The \textit{context}.
 The bootware will read the information provided in the context at various stages of the bootstrapping process to load plugins or to supply them with a particular configuration set required for a request.
 In this section we will take a closer look at this context object and its content.
 How exactly the context is implemented is shown in \autoref{implementation:context}.

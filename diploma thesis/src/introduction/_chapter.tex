@@ -6,6 +6,8 @@ One of these assumptions is that services should run continuously.
 This made sense in large enterprises where those services are used every day.
 Science, on the other hand, often takes a more dynamic approach, where certain services, for example for simulation purposes, are only used at certain times.
 In those cases, it would make more sense to dynamically provision services only when they are needed.
+To provision those service, provisioning engines might be used, but these also have to be set up first.
+This creates the need for a bootstrapping mechanism that can deploy provisioning engines when needed.
 
 \input{introduction/task}
 \input{introduction/structure}

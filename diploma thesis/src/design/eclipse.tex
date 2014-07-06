@@ -28,7 +28,7 @@ Once the local bootware is running, the bootware adapter has to set up the conte
 This includes telling the bootware configuration details, like the credentials for all cloud providers that will be used.
 Once this is done, the modeler has to make one request to the local bootware, containing information about the cloud provider and the provisioning engine that should be used, as well as the service package reference for the workflow middleware.
 This request is shown in \autoref{image:modeler_plugin} as function call from the bootware adapter to the local bootware.
-The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine in the specified cloud environment
+The local bootware will take this information and provision the remote bootware, which in turn will deploy a provisioning engine in the specified cloud environment.
 This provisioning engine will then provision the workflow middleware.
 If successful, it returns a list with information concerning the workflow middleware, like endpoint references and other details, to the remote bootware, which passes it back to the local bootware.
 The local bootware passes it to the bootware adapter, which then has to set up the modeler with this information for the actual workflow deployment.
@@ -36,5 +36,5 @@ The local bootware passes it to the bootware adapter, which then has to set up t
 This is the minimal work the bootware adapter has to do to kick off the bootstrapping process.
 Additional functionality can be implemented if desired, but is not necessary for the core bootstrapping process.
 This additional functionality could include user interface integration, additional bootware management functionality, etc.
-The function call in \autoref{image:modeler_plugin} assumes that there exists some interface in the local bootware that is accessible from the outside.
+The function call from the bootware adapter to the local bootware in \autoref{image:modeler_plugin} assumes that there exists some interface in the local bootware that is accessible from the outside.
 In the next section we will discuss how this external communication mechanism will be implemented.

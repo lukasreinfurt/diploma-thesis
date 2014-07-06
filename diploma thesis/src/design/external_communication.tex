@@ -12,8 +12,8 @@ As the provisioning processes kicked off by the bootware can potentially take a 
 As alternative we could use asynchronous communication with callbacks.
 This would avoid timeouts but also creates a new problem.
 The callback message send as response is separated from the original message and therefore appears as unsolicited message to the client.
-If the client rejects unsolicited messages, for example because it is located behind a firewall, the callback message might also be blocked.
-This could be a problem because in the environment where the bootware will most likely be used, i.e. at universities, secure networks are very common and asynchronous callbacks could therefore be problematic.
+If the client rejects unsolicited messages, for example because it is located behind a firewall, the callback message might be blocked.
+This could be a problem because in the environment where the bootware will most likely be used, i.e. at universities, secure networks with firewalls are very common and asynchronous callbacks could therefore be problematic.
 Another solution is to use polling, i.e. after a request was sent to the bootware, the bootware is polled periodically for a response.
 This also avoids timeouts as well as the firewall problematic.
 Disadvantages of polling, for example when many clients poll a server at the same time and cause a bottleneck, will most likely not be a problem in our case, because we only have a very restricted number of clients for each bootware instance and no multi-tenancy.

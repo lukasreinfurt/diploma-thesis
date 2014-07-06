@@ -25,7 +25,7 @@ They do not rely on already existing provisioning solutions and their provisione
 \citeauthor*{provisioning:architecture} present an extensible architecture for automatic provisioning of cloud infrastructure and services at different cloud providers~\autocite{provisioning:architecture}.
 For this process they designed a so called service orchestrator which uses user defined service models, which describe the topology of a cloud service, to provision new cloud services and to trigger reconfiguration and topology changes of existing services.
 It has an abstraction layer that provides abstract methods to handle the management, installation, configuration, and starting of software via infrastructure, packages, applications, configuration, and VM connection managers.
-Similar to our work, their system is extensible to support different cloud providers, connection types, etc.
+Similar to our work, their system is extensible to support different cloud providers, connection types, and application.
 They do not rely on any existing provisioning solutions but rather present a new one.
 
 Regarding bootstrapping, \citeauthor*{libi} present the lightweight infrastructure-bootstrapping infrastructure (LIBI), an API specification and a reference implementation that can bootstrap processes in high-performance computing environments~\autocite{libi}.
@@ -33,7 +33,7 @@ Here, it is necessary to start processes on many nodes and supply them with the 
 LIBI delivers improved launch time over sequential or parent-creates-children approaches, which suffer from serialization bottlenecks.
 Their bootstrapping approach only has to work in an environment where all the infrastructure is already running, so they do not have to provision VMs or middleware.
 
-Another diploma thesis that is worked on in parallel to this diploma thesis is designing the provisioning manager that was described by \citeauthor*{provisioning:dynamic}~\autocite{nedim}.
+Another diploma thesis that is worked on in parallel to this diploma thesis is designing the provisioning manager that was described in \autoref{previous:dynamic}~\autocite{nedim}.
 It is the main user of the bootware system designed in this diploma thesis because it will deploy provisioning engines through the bootware on behalf of the workflow middleware.
 It also uses plugins to communicate with these provisioning engines.
 To avoid code duplication, libraries will be created that can be used by both the plugin manager plugins and the bootware plugins.

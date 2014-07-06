@@ -3,7 +3,7 @@
 We have seen in \autoref{design:flow} and \autoref{design:finalarch} that the local and remote bootware have some common functionality.
 It would make sense to implement these components in such a way that they can share this common functionality.
 This would avoid code duplication and make changes to common functionality easier.
-Therefore, we introduce the bootware core library, which will encapsulate the common functionality of both bootware components.
+Therefore, we introduce the \textit{bootware core library}, which will encapsulate the common functionality of both bootware components.
 
 \begin{figure}[!htbp]
 	\centering
@@ -13,11 +13,11 @@ Therefore, we introduce the bootware core library, which will encapsulate the co
 \end{figure}
 
 Because we are using Java for the implementation, the core library will be a \textit{.jar} file containing common classes that will be imported by the local and remote bootware implementations and also by plugin implementations.
-\autoref{image:corelibrary} shows a schematic view of the bootware core library and how its classes are used by various components.
+\autoref{image:corelibrary} shows a schematic view of the \textit{bootware core library} and how its classes are used by various components.
 We can see that the library includes an abstract FSM class, which is used by both the local and the remote bootware implementation.
 The abstract FSM class defines common state machine functionality that is used by both bootware components.
 This includes function definitions for the shared activities shown in \autoref{image:flow_local} and \autoref{image:flow_remote}.
-This way, the local and remote bootware can import shared activities from the library and only have to define their custom activities (e.g. the provision middleware activity in the remote bootware or the send to remote activity in the local bootware) and the transitions.
+This way, the local and remote bootware can import shared activities from the library and only have to define their custom activities (e.g. the \textit{provision middleware activity} in the remote bootware or the \textit{send to remote} activity in the local bootware) and the transitions.
 They can also overwrite the activities imported from the library if this is necessary.
 
 The library also includes an abstract base plugin class, which implements some functionality that is common to all plugin.

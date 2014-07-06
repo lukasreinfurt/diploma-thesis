@@ -1,13 +1,13 @@
 \section{Workflows and Workflow Management Systems}
 
-Workflows and workflow management systems are another tool to increase the flexibility of businesses in times of change, similar to SOA.
+Workflows and workflow management systems are another tool to increase the flexibility of businesses in times of change.
 \citeauthor*{workflow:referencemodel} defines a workflow as "the computerised facilitation or automation of a business process, in whole or part"~\autocite{workflow:referencemodel}.
 In other words, a workflow describes the tasks associated with a business process and the order in which these tasks are to be executed in such a way that they can be automated with the help of computers.
 Workflows are often visually represented as directed graphs, with vertices representing the tasks and edges defining the order of these tasks.
 \autoref{image:workflow} shows such a graph that represents a simple business workflow.
 Note that the tasks can be a mixture of human and automated tasks.
-In \autoref{image:workflow} for example, the identify payment method, accept cash, and prepare package tasks could be executed by humans, while the process credit card task would be handled by a computer program.
-Moreover, in combination with SOA, the process credit card task could be a call to an external service provided by an PCI\footnote{\nom{Payment Card Industry}{PCI}: The PCI Security Standards Council developed a data security standard (PCI DSS)\footnotemark to enhance the security of credit card information. Businesses handling credit card information are encouraged to comply with these requirements to prevent security breaches and improve trust. Because this can be a complicated process, outsourcing credit card handling can save resources.} compliant business specialized in payment processing.
+In \autoref{image:workflow} for example, the \textit{identify payment method}, \textit{accept cash}, and \textit{prepare package} tasks could be executed by humans, while the \textit{process credit card} task would be handled by a computer program.
+Moreover, in combination with SOA, the \textit{process credit card task} could be a call to an external service provided by an PCI\footnote{\nom{Payment Card Industry}{PCI}: The PCI Security Standards Council developed a data security standard (PCI DSS)\footnotemark to enhance the security of credit card information. Businesses handling credit card information are encouraged to comply with these requirements to prevent security breaches and improve trust. Because this can be a complicated process, outsourcing credit card handling can save resources.} compliant business specialized in payment processing.
 
 \footnotetext{{\url{https://www.pcisecuritystandards.org/documents/PCI_DSS_v3.pdf}}}
 
@@ -26,7 +26,7 @@ If the customer chooses to pay with a credit card, the workflow management syste
 In the final step, the workflow management system could assist the employee with preparing the package by automatically printing a label or displaying useful information.
 
 In the past, workflows have been mainly applied in a business context, in particular for modeling and re-engineering of business processes.
-This lead to the development of business-centered standards like BPEL or BPMN to describe workflows, and corresponding workflow management system that can execute these workflows.
+This lead to the development of business-centered standards like BPEL or BPMN to describe workflows, and corresponding workflow management systems that can execute these workflows.
 One particular characteristic of these business workflows is that they are fairly static, i.e. they will not change during a workflow execution and only rarely in between due to business process re-engineering.
 This also means that the existing business workflow infrastructure is geared towards these static workflows~\autocite{wasa}.
 
