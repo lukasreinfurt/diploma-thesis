@@ -74,6 +74,10 @@ namespace :check do
 		end
 	end
 
+	task :wordlist => ['build:txt:customdelatex'] do
+		system 'ruby wordlist.rb'
+	end
+
 end
 
 desc 'install missing packages with texliveonfly'

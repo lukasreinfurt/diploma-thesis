@@ -14,7 +14,7 @@ We could extend the existing plugin with the functionality that we need for the 
 In this case, we would always load the bootware extensions in the Modeler, even if we do not use the bootware at all.
 We could also use a feature called extension points.
 Eclipse plugins can declare extensions points, which allow other plugins to extend or customize parts of the plugin\footnote{\url{http://wiki.eclipse.org/FAQ_What_are_extensions_and_extension_points\%3F}}.
-We could define an extension point in the already existing eclipse plugin and create a second plugin which implements this extension point.
+We could define an extension point in the already existing Eclipse plugin and create a second plugin which implements this extension point.
 This way we can separate the bootware functionality from the other SimTech extensions and keep the changes to the existing plugin to a minimum.
 If a user does not need the bootware functionality, they do not have to load the bootware plugin and the SimTech plugin will continue to function as before.
 
@@ -88,7 +88,7 @@ After this method has finished, the original code continues its execution (line 
 
 Now that we have all code in place to execute the bootware extension, all we have to do is to create a bootware plugin that implements the bootware extension point and the execute method.
 Like the Eclipse plugin we just modified, the bootware plugin has a \textit{plugin.xml}, shown in \autoref{lst:bootwarepluginxml}.
-Here, we just declare an extension in line 8-13 that implements the bootware extension point (line 9) with the org.simtech.bootware.eclipse.BootwarePlugin class (line 11).
+Here, we just declare an extension in line 8-13 that implements the bootware extension point (line 9) with the \textit{org.simtech.bootware.eclipse.BootwarePlugin} class (line 11).
 This is also the place where other integration functionality could be implemented in the future, for example by adding new menus for configuring the context object, or new views that show the bootstrapping process.
 
 \vspace*{\baselineskip}
@@ -108,7 +108,7 @@ This is also the place where other integration functionality could be implemente
 
 The BootwarePlugin class, shown in \autoref{lst:bootwareplugin}, implements the execute method called by the extension point.
 In this method we do everything we need to do to integrate the bootware into the start process.
-Due to limited space we can not present the actual code here, but the process is roughly as follows:
+Due to limited space we cannot present the actual code here, but the process is roughly as follows:
 First, the local bootware has to be started by calling the executable.
 Once it is running, a deploy request is sent to it, containing a context object with all necessary configuration parameters.
 Now, the bootware plugin has to wait for the deploy request to be executed.

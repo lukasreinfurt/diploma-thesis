@@ -17,7 +17,7 @@ For example, when a resource plugin creates a cloud resource, it could generate 
 We could consume all these events with an event plugin and use them to inform the user of the bootstrapping progress, or log them to a text file.
 
 These events could be triggered by the bootware core or by any plugin, but plugins should be completely independent from each other.
-Because an event plugin does not know about other plugins, it can not listen for events at other plugins directly.
+Because an event plugin does not know about other plugins, it cannot listen for events at other plugins directly.
 The only known constant to an event plugin is the bootware core.
 Therefore, we need an event system which allows for loosely coupled communication between the bootware core and the plugins, where plugins can register their interest for certain events with the core and also publish their own events to the core for other plugins to consume.
 This essentially describes the publish-subscribe pattern~\autocite{pubsub}.

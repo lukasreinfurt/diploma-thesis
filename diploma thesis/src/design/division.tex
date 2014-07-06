@@ -94,7 +94,7 @@ Because it can be located in any cloud environment, it has to be able to do this
 Independent from this, it also has to be able to provision to any environment that the user or the service package chooses.
 But this problem can be solved by using a plugin architecture, which allows both components to use the same plugins.
 We discuss plugins in detail in \autoref{design:extensibility}.
-A second problem which we can not avoid but can solve is the communication which is now necessary between the different parts of the bootware.
+A second problem which we cannot avoid but can solve is the communication which is now necessary between the different parts of the bootware.
 More on this in \autoref{design:communication}
 
 \subsection{Cloning}
@@ -116,7 +116,7 @@ The disadvantage would be that the local bootware would be exactly as complex as
 However, because we want to keep the whole bootware, including the remote part, fairly lightweight, it is unlikely that the complexity of the remote bootware will reach such heights that it could not be run on an average local machine.
 In this case, the advantage of only having to design and implement one component seems to outweigh the disadvantage of a slightly more complex local component (compared to the 2-tier variant).
 Of course, this architecture makes only sense if the functionality of the two separate components in the 2-tier architecture turns out to be mostly identical.
-Therefore, we can not decide yet if this architecture should be used.
+Therefore, we cannot decide yet if this architecture should be used.
 
 \subsection{Decision}
 

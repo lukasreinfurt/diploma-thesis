@@ -5,7 +5,7 @@ The instance store stores information about applications that were deployed by t
 In \autoref{design:webservice} we already mentioned that we need to store some information about active applications, but we did not explain why.
 There are several reasons why this is useful.
 
-One big reason is that we can not guarantee that an undeploy operation will be called for every application deployed by the bootware, because we might not have control over all components that ultimately call the bootware.
+One big reason is that we cannot guarantee that an undeploy operation will be called for every application deployed by the bootware, because we might not have control over all components that ultimately call the bootware.
 We could require that for each deploy call there must eventually be an undeploy call so that everything will be cleaned up in the end, but errors can be made and it is better to have a failsafe in place.
 In the worst case scenario, failing to call the undeploy operation for some applications could lead to rogue applications remaining active after a bootware execution has stopped, without the user realizing it, which could get expensive.
 Storing enough information allows us to undeploy remaining applications before shutting down the bootware even if they were never explicitly undeployed.
