@@ -10,4 +10,6 @@ This also has to do with the already existing parts of the SimTech project, that
 Using another version of Java could lead to unforeseen incompatibilities.
 We also constrain the bootware usage to one bootware per user.
 We do not plan for multi-tenancy, i.e. multiple users using the same bootware.
+Additionally, we assume that a provisioning engine can be installed on a single computing resource, i.e. a VM.
+If a particular provisioning engine requires a more complicated infrastructure topology, it can not be provisioned by the bootware in its current form.
 In the next chapter we will also introduce additional constraints that became necessary during the design process and will therefore be explained at the appropriate times.

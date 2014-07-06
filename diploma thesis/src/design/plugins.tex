@@ -8,7 +8,7 @@ The latter are required because we might want to use different provisioning engi
 The cloud provider plugins will be responsible for creating and removing resources in cloud environments and making them available for the user to configure and use.
 This could be bare bone VMs (like AWS EC2 instances), or PaaS environments (like AWS Beanstalk).
 We do not even have to constrain these plugins to cloud resources and can make them more abstract, as long as we can run the plugin and get an IP address to a computing resource that we can use.
-For example, we could also provide a plugin that starts and stops VMs on our local machine, which could be useful for quick and inexpensive local testing.
+For example, we could also provide a plugin that starts and stops a VM on our local machine, which could be useful for quick and inexpensive local testing.
 So a better name for these plugins would be \textit{resource plugins}.
 
 The same line of thinking can be used on the provisioning engine plugins.
@@ -121,8 +121,8 @@ It can be useful to clean up plugin resources before the plugin is removed, for 
 
 \subsection{Resource Plugins}
 
-Resource plugins are responsible for provisioning any computing resources that the user wants to use during the bootware process.
-This could be VMs on a local machine, or IaaS or PaaS environments in the cloud.
+Resource plugins are responsible for provisioning a computing resources that the user wants to use during the bootware process.
+This could be a VM on a local machine, or an IaaS or PaaS environment in the cloud.
 To be able to do this, a resource plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
 
 \autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
@@ -166,7 +166,7 @@ As input it takes an instance object created earlier by the deploy operation.
 
 \subsection{Communication Plugins}
 
-Communication plugins are responsible for creating a communication channel to previously deployed resources that can later be used by application plugins to execute their operations on the resource.
+Communication plugins are responsible for creating a communication channel to a previously deployed resource that can later be used by application plugins to execute their operations on the resource.
 The connection could be made by using SSH, RDC, \nom{virtual private network}{VPN}, Telnet, or other communication mechanisms supported by the resource.
 The communication plugins should be implemented generically, so that they can be used for all kinds of resources.
 
