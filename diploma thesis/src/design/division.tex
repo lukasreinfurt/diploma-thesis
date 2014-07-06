@@ -80,6 +80,8 @@ Therefor, this scenario is not appropriate for our case.
 Next, we take a look at a 2-tier architecture, as shown in \autoref{image:2_tier}, where the bootware is divided into two components.
 On the local side we have a small and simple component which has mainly one function: To provision the larger second part of the bootware in a remote environment, near to the environment where other components will be provisioned later.
 
+\pagebreak
+
 This eliminates the problems of a single local or remote bootware component.
 The user no longer has to be involved in the management of the remote bootware, because the local bootware handles all that.
 Because we provision the remote bootware on demand, we now also can position the remote bootware close to other remote components to minimize local/remote communication and the problems resulting of it.

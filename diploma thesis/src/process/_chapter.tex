@@ -115,4 +115,4 @@ Once all services are removed, the workflow execution is truly finished and an e
 The local bootware has been listening for this event through one of its event plugins and triggers the removal of the remaining components by first calling the shutdown operation of the remote bootware.
 The remote bootware calls a provisioning engine to deprovision the workflow middleware, before deprovisioning all remaining provisioning engines itself.
 Once this is done, a response is sent to the local bootware, which can now deprovision the remote bootware, before shutting down itself.
-This concludes the shutdown phase and the whole bootware process.
+This concludes the shutdown phase.

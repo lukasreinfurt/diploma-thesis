@@ -63,6 +63,13 @@ Plugins have dependencies on various bootware core packages shown here, such as 
 They also depend on some packages from the PubSub library we use, MBassador.
 All these dependencies are resolved by configuring the OSGi framework to export these packages.
 
+The \textit{registerSharedObjects} operation allows us to register any object that is part of the bootware core with the OSGi framework, so that plugins are also able to access it.
+We use this to share the EventBus instance with all plugins, so that they are able to subscribe to, and also publish, events.
+The \textit{loadPlugin} operation loads the plugin at the given path into the OSGi framework and returns an instance of this plugin.
+The \textit{unloadPlugin} operation unloads an already loaded plugin.
+The plugin manager also offers an \textit{unloadAllPlugins} operation that unloads all loaded plugins at once.
+This operation is also called during the plugin manager's \textit{stop} operation, which stops the OSGi framework, which is necessary for an orderly shutdown.
+
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
@@ -78,13 +85,6 @@ All these dependencies are resolved by configuring the OSGi framework to export 
 	\caption{Extra packages exported by the plugin manager.}
 	\label{lst:pluginmanager}
 \end{listing}
-
-The \textit{registerSharedObjects} operation allows us to register any object that is part of the bootware core with the OSGi framework, so that plugins are also able to access it.
-We use this to share the EventBus instance with all plugins, so that they are able to subscribe to, and also publish, events.
-The \textit{loadPlugin} operation loads the plugin at the given path into the OSGi framework and returns an instance of this plugin.
-The \textit{unloadPlugin} operation unloads an already loaded plugin.
-The plugin manager also offers an \textit{unloadAllPlugins} operation that unloads all loaded plugins at once.
-This operation is also called during the plugin manager's \textit{stop} operation, which stops the OSGi framework, which is necessary for an orderly shutdown.
 
 All these operations are called at specific points during the state machine execution to load and unload the needed plugins.
 For example, once the state machine enters the \textit{unload event plugins} state, associated with the activities shown in the top right of \autoref{image:flow_local} and \autoref{image:flow_remote}, it executes the \textit{unloadEventPlugins} method, shown in \autoref{lst:unloadeventplugins}.

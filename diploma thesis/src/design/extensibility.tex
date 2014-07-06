@@ -1,8 +1,7 @@
 \section{Extensibility}
 \label{design:extensibility}
 
-In \autoref{design:communication} we mentioned a secondary communication mechanism that could be implemented in form of an extension to the bootware.
-The requirements for the bootware also state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
+The requirements for the bootware state that support for different cloud environments and provisioning engines should be achieved through means of software engineering.
 These requirements are intentionally vague to allow for the selection of a fitting extension mechanism during the design process.
 In this section we will take a look at different extension mechanisms for Java and pick the one that suits our needs best.
 
@@ -45,6 +44,13 @@ This plugin instance can then be used by the bootware until it decides to unload
 The plugin manager might also support various other utility operations for convenience, such as an unloadAllPlugins operation, which would unload all loaded plugins at once.
 The plugin manager implementation will be described in more detail in \autoref{implementation:pluginmanager}, after we have selected a plugin framework.
 
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/plugins}
+	\caption{Simplified overview of the 2-tier architecture with plugins.}
+	\label{image:plugins}
+\end{figure}
+
 \subsection{Plugin Repository}
 \label{design:pluginrepository}
 
@@ -56,9 +62,9 @@ This is inefficient, probably annoying for the user and can cause errors if plug
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[resolution=600]{design/assets/plugins}
-	\caption{Simplified overview of the 2-tier architecture with plugins.}
-	\label{image:plugins}
+	\includegraphics[resolution=600]{design/assets/plugin_repository}
+	\caption{Simplified overview of the 2-tier architecture with a plugin repository.}
+	\label{image:plugin_repository}
 \end{figure}
 
 To remedy this situation we introduce a central plugin repository, as shown in \autoref{image:plugin_repository}.
@@ -68,10 +74,3 @@ Plugin synchronization can happen automatically when the bootware components sta
 The repository also enables easy plugin sharing, which was cumbersome earlier.
 While a central plugin repository is a sensible addition to the proposed bootware architecture, its design and implementation are out of scope of this diploma thesis.
 This work is left for the future and the plugin repository will not be mentioned in any other figures apart from \autoref{image:plugin_repository}.
-
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[resolution=600]{design/assets/plugin_repository}
-	\caption{Simplified overview of the 2-tier architecture with a plugin repository.}
-	\label{image:plugin_repository}
-\end{figure}

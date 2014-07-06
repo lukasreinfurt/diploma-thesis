@@ -22,13 +22,13 @@ This allows us to model our events in a very fine grained modular fashion and or
 It also allows listeners to react to a whole group of specific events or only to a small subset of such a group.
 A filtering feature gives us even more control over what events a listener will react to.
 It allows us to filter out specific events, for example by their content, to handle them differently, or to ignore them.
-
 We also want event handlers to be invoked synchronously.
 If an event is published, all event handlers for this event should be executed one after another until they are finished.
 Only then should the program continue execution.
 But asynchronous invocation might still be useful in some cases, so we also add it here.
 
-\vspace*{\baselineskip}
+\pagebreak
+
 \begingroup
 	\centering
 	\captionsetup{type=table}
@@ -135,6 +135,5 @@ It is also relatively mature, has good enough documentation and is somewhat popu
 Finally, we have Mycila PubSub, a modern replacement for EventBus.
 It supports all the functional features we need, except filtering.
 Its documentation is good enough, but because it is relatively new, it is not very popular yet and may lack in maturity.
-
 From the alternatives presented here, MBassador seems to be the only one that offers all the functionality we need combined with relative maturity and good documentation.
 We will therefore use it for our implementation.

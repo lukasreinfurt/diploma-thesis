@@ -30,6 +30,13 @@ As another example, when creating a EC2 instance in the Amazon cloud, the user a
 These and other configuration details can be supplied from the outside with the context.
 In the future, the context might be extended to hold additional information, but for this diploma thesis, this context will be sufficient.
 
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[resolution=600]{design/assets/request_context}
+	\caption{Information send with a request.}
+	\label{image:request_context}
+\end{figure}
+
 This context has to somehow be generated from the information the bootware receives with each request.
 However, components outside of the bootware should not know anything about the inner workings of the bootware, i.e. which plugins are used to fulfill a request.
 All information that might be supplied with a request can be seen in \autoref{image:request_context}.
@@ -37,13 +44,6 @@ The resource provider parameter specifies, which resource provider should be use
 The application parameter specifies the application that should be deployed on this resource (e.g. a specific provisioning engine).
 The service package reference of the workflow middleware is used by the bootware to retrieve the service package to provision the workflow middleware.
 In the configuration list, configuration values that have to be supplied from the outside can be specified, such as login credentials for a cloud provider.
-
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[resolution=600]{design/assets/request_context}
-	\caption{Information send with a request.}
-	\label{image:request_context}
-\end{figure}
 
 Based on this information the bootware has to decide which specific plugin instances should be used to process the request.
 In the future, this could be done by querying a registry with this information, which would then return a set of specific plugins and settings.
@@ -91,7 +91,6 @@ A deploy request is received in step two, which contains the request context as 
 In step three, the parameters from the request context are mapped to specific plugin instances and additional configuration set using the registry, as shown in \autoref{image:mapping}.
 In step four, the default Configuration, the request context, and the registry response are merged into the final context object.
 This context object is then used to fulfill the request.
-
 While we have planned to use a registry for mapping request parameters to concrete values, due to time constrains we were not able to specify this registry in more detail or implement it in our prototype.
 For our implementation we use a local mechanism for mapping the request parameters.
 The registry is left for future work and will not be covered further in this diploma thesis.

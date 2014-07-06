@@ -18,7 +18,6 @@ A better name for these plugins would therefore be \textit{application plugins}.
 Now that we have resource plugins and application plugins, we should be able to provision the resource we need and use application plugins to install and run any software on it.
 But there is a step in between provisioning the resource and installing the software that we are glancing over: We have to somehow communicate with the resource to be able to install something on it.
 The communication functionality could be part of either the resource plugins or the application plugins, or it could be separated into independent communication plugins.
-
 For the sake of efficiency and extensibility it would be best to use independent communication plugins.
 For example, if a user wanted to add a new communication type that should be used to install x applications in y environments, they could do so by writing one new communication plugin, instead of adding the functionality x-times to all application plugins, or y-times to all resource plugins.
 This would also reduce code duplication.
@@ -27,7 +26,6 @@ Therefore, a third plugin type is necessary: The \textit{communication plugins}.
 The remote bootware also has to handle the initial provisioning of the workflow middleware, which involves calling a provisioning engine to tell it to start the provisioning process.
 Because this has to be done differently for all provisioning engines, it would make sense to also package this functionality into plugins that can be interchanged.
 We therefore introduce a fourth plugin type: The \textit{provision workflow middleware plugins}.
-
 In \autoref{design:communication} we also introduced the notion of secondary communication channels realized by plugins.
 We can generalize this into a more versatile fifth plugin type: The \textit{event plugins}.
 These plugins are a bit less specific than the four other types.
@@ -49,6 +47,15 @@ The fourth step is only executed when the remote bootware provisions the workflo
 Here, a provision workflow middleware plugin can call this application, in this case a provisioning engine, to provision a workflow middleware.
 How the bootware knows which plugins it should call is determined by the context which is explained in \autoref{design:context}.
 
+\autoref{image:plugin_process_2} shows the same process but with an exemplary selection of specific plugin instances.
+In this case, an Amazon plugin is used in step one to create an EC2 instance.
+In step two, a SSH plugin creates a connection to this EC2 instance.
+Over this SSH connection, an OpenTOSCA plugin installs OpenTOSCA on the EC2 instance, as shown in step three.
+Finally, in step four, a call OpenTOSCA plugin calls the just deployed OpenTOSCA container to provision the workflow middleware.
+For another combination of plugins, the process might look like \autoref{image:plugin_process_3}.
+Here, a Chef server is installed on an Azure VM over a \nom{remote desktop connection}{RDC}.
+The Chef server is then used to provision the workflow middleware.
+
 \begin{figure}[!htbp]
 	\centering
 	\includegraphics[resolution=600]{design/assets/plugin_process}
@@ -56,11 +63,7 @@ How the bootware knows which plugins it should call is determined by the context
 	\label{image:plugin_process}
 \end{figure}
 
-\autoref{image:plugin_process_2} shows the same process but with an exemplary selection of specific plugin instances.
-In this case, an Amazon plugin is used in step one to create an EC2 instance.
-In step two, a SSH plugin creates a connection to this EC2 instance.
-Over this SSH connection, an OpenTOSCA plugin installs OpenTOSCA on the EC2 instance, as shown in step three.
-Finally, in step four, a call OpenTOSCA plugin calls the just deployed OpenTOSCA container to provision the workflow middleware.
+\vspace{1.0cm}
 
 \begin{figure}[!htbp]
 	\centering
@@ -69,9 +72,7 @@ Finally, in step four, a call OpenTOSCA plugin calls the just deployed OpenTOSCA
 	\label{image:plugin_process_2}
 \end{figure}
 
-For another combination of plugins, the process might look like \autoref{image:plugin_process_3}.
-Here, a Chef server is installed on an Azure VM over a \nom{remote desktop connection}{RDC}.
-The Chef server is then used to provision the workflow middleware.
+\vspace{1.0cm}
 
 \begin{figure}[!htbp]
 	\centering
@@ -81,6 +82,14 @@ The Chef server is then used to provision the workflow middleware.
 \end{figure}
 
 \subsection{Common Operations}
+
+\autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
+The initialize operation is called by the plugin manager when it loads a plugin.
+This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
+It takes a configuration object as parameter, which is taken from the request context.
+This allows the plugins to be configured from the outside if necessary.
+The shutdown operation is called by the plugin manager when it unloads a plugin.
+It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a communication channel.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -111,29 +120,11 @@ The Chef server is then used to provision the workflow middleware.
 	\label{table:all_plugins}
 \endgroup
 
-\autoref{table:all_plugins} shows the two common operations that all plugin types must implement.
-The initialize operation is called by the plugin manager when it loads a plugin.
-This operation can be used by plugin authors to initialize the plugin, for example by creating internal objects that will be used by other plugin operations later on.
-It takes a configuration object as parameter, which is taken from the request context.
-This allows the plugins to be configured from the outside if necessary.
-The shutdown operation is called by the plugin manager when it unloads a plugin.
-It can be useful to clean up plugin resources before the plugin is removed, for example by deleting temporary files or closing a communication channel.
-
 \subsection{Resource Plugins}
 
 Resource plugins are responsible for provisioning a computing resources that the user wants to use during the bootware process.
 This could be a VM on a local machine, or an IaaS or PaaS environment in the cloud.
 To be able to do this, a resource plugin has to implement a range of functions using some API or SDK provided by the virtualization software or cloud provider.
-
-\autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
-The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a communication plugin.
-It takes no input parameters, but relies on the configuration passed to the initialize operation to get the configuration details it needs, like login credentials.
-If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
-
-The undeploy operation removes a resource that was previously deployed using the deploy operation.
-In case of a local VM this could mean that it stops the running VM.
-In case of a cloud resource this could mean that it completely removes the resource so that no further costs are incurred.
-As input it takes an instance object created earlier by the deploy operation.
 
 \vspace*{\baselineskip}
 \begingroup
@@ -163,6 +154,16 @@ As input it takes an instance object created earlier by the deploy operation.
 	\caption{Interface to be implemented by resource plugins.}
 	\label{table:infra_plugins}
 \endgroup
+
+\autoref{table:infra_plugins} shows the operations a plugins of this type should implement.
+The deploy operation is responsible for deploying a resource and getting it to a state, where a connection to the resource can be established using a communication plugin.
+It takes no input parameters, but relies on the configuration passed to the initialize operation to get the configuration details it needs, like login credentials.
+If the deployment was successful, it returns an instance object, which contains information about the created instance, such as its IP address and login information.
+
+The undeploy operation removes a resource that was previously deployed using the deploy operation.
+In case of a local VM this could mean that it stops the running VM.
+In case of a cloud resource this could mean that it completely removes the resource so that no further costs are incurred.
+As input it takes an instance object created earlier by the deploy operation.
 
 \subsection{Communication Plugins}
 

@@ -25,14 +25,22 @@ OSGi provides an optional security layer based on Java permissions\footnote{\url
 For example, it should be possible to only allow plugins to access specific files or folders with Java file permissions\footnote{\url{http://docs.oracle.com/javase/7/docs/api/java/io/FilePermission.html}}.
 As part of this work, it could also make sense to investigate other possible security enhancements to the bootware.
 
+\vspace{-0.4cm}
+
 \section{Better SimTech Modeler Integration}
+
+\vspace{-0.1cm}
 
 The integration of the bootware with the SimTech Modeler using the bootware plugin can also be extended in the future.
 The current integration is fairly minimal and only supports the most basic functionality.
 Improvements could be made to give the user more feedback on the provisioning progress.
 Additionally, a more intuitive way to configure the bootware could be implemented, for example with a graphical configuration interface that allows for the selection of plugins and configuration values.
 
+\vspace{-0.4cm}
+
 \section{Better Failure Management}
+
+\vspace{-0.1cm}
 
 Currently, the bootware will fail in many cases where it could continue, if the user could influence error recovery.
 For example, if for some reason a connection cannot be established with a cloud provider, the bootware will abort and undeploy already provisioned applications.
@@ -40,7 +48,11 @@ This could happen in the middle of a workflow execution, where multiple services
 In this scenario, the ability for the user to select an alternative cloud provider for this one service could enable the bootware to continue instead of aborting, which would in turn allow the workflow execution to finish, instead of failing.
 Failure management mechanisms such as this would improve the usability of the bootware.
 
+\vspace{-0.4cm}
+
 \section{Crash Recovery}
+
+\vspace{-0.1cm}
 
 In \autoref{design:instancestore} we mentioned that we store active instances in-memory.
 Right now, if the bootware crashes during the bootstrapping process with instances still active, there is no way to continue the process after a restart or at least undeploy remaining instances.

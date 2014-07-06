@@ -18,16 +18,6 @@ We could define an extension point in the already existing Eclipse plugin and cr
 This way we can separate the bootware functionality from the other SimTech extensions and keep the changes to the existing plugin to a minimum.
 If a user does not need the bootware functionality, they do not have to load the bootware plugin and the SimTech plugin will continue to function as before.
 
-The second scenario looks preferable to the first one, so this is what we are going to do.
-We modify the already existing Eclipse plugin with an extension point that is triggered at the beginning of the existing deployment process.
-If the bootware plugin is loaded into the Modeler, it will implement this extension point and set up the SimTech SWfMS before the already existing deployment code continues.
-If it is not loaded, nothing new will happen and the existing deployment code will be executed like before.
-The bootware plugin can also add additional extension to the modeler, for example a configuration dialog for setting up the context or a view that shows progress messages from the bootstrapping process.
-
-The existing Eclipse plugin that has to be modified is the \textit{org.eclipse.bpel.ui} plugin.
-In its \textit{plugin.xml}, it has already defined some extension points, as can be seen in \autoref{lst:pluginxml} in line 5-19.
-We add another extension point for the bootware, as shown in line 20-22.
-
 \vspace*{\baselineskip}
 \begin{listing}[!htbp]
 	\inputminted[
@@ -43,6 +33,15 @@ We add another extension point for the bootware, as shown in line 20-22.
 	\label{lst:pluginxml}
 \end{listing}
 
+The second scenario looks preferable to the first one, so this is what we are going to do.
+We modify the already existing Eclipse plugin with an extension point that is triggered at the beginning of the existing deployment process.
+If the bootware plugin is loaded into the Modeler, it will implement this extension point and set up the SimTech SWfMS before the already existing deployment code continues.
+If it is not loaded, nothing new will happen and the existing deployment code will be executed like before.
+The bootware plugin can also add additional extension to the modeler, for example a configuration dialog for setting up the context or a view that shows progress messages from the bootstrapping process.
+
+The existing Eclipse plugin that has to be modified is the \textit{org.eclipse.bpel.ui} plugin.
+In its \textit{plugin.xml}, it has already defined some extension points, as can be seen in \autoref{lst:pluginxml} in line 5-19.
+We add another extension point for the bootware, as shown in line 20-22.
 Now, we have to integrate this extension point into the already existing deploy process that is executed when the user click the start button in the SimTech Modeler.
 This button and the class that implements its functionality are defined further down in the \textit{plugin.xml}, as shown in \autoref{lst:pluginaction}.
 
@@ -63,7 +62,7 @@ This button and the class that implements its functionality are defined further 
 \end{listing}
 
 As we can see in line 1188, the class that implements the button functionality is the \textit{StartAction} class.
-We modify the run method of the \textit{StartAction} class to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
+We modify its run method to load and execute any plugin that implements the bootware extension point, before the original deploy code continues.
 As shown in \autoref{lst:startaction}, we have to get all extensions that implement the bootware extension point from the extension registry (line 50-52) and create an object of the \textit{IBootwarePlugin} type (line 55-56).
 Now, we are able to call any method defined by this object, in this case the \textit{execute} method (line 57).
 After this method has finished, the original code continues its execution (line 60).

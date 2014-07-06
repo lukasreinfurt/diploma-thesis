@@ -60,7 +60,6 @@ The \textit{undeploy} operation is essentially the reversal of the \textit{deplo
 As input it takes an endpoint reference to an application that should be undeploy.
 If the undeployment succeeds, it responds with a success message.
 If it fails, it responds with an error message.
-
 Unlike the \textit{deploy} operation it does not take a context object as input, but the context is still needed for the \textit{undeploy} operation because it contains the information about which plugins have to be used.
 This means that we have to store the context object used during each \textit{deploy} operation so that we can retrieve it later during the corresponding \textit{undeploy} operation.
 This design is intentional and will be described in more detail in \autoref{design:instancestore}.

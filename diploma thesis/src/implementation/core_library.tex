@@ -23,6 +23,5 @@ They can also overwrite the activities imported from the library if this is nece
 The library also includes an abstract base plugin class, which implements some functionality that is common to all plugin.
 Actual plugin implementations can extend this base plugin class to inherit this common functionality.
 They also have to implement one of the plugin interfaces defined in the bootware core library, so for example, a resource plugin has to implement the resource plugin interface.
-
 Aside from the code imported from the bootware core library, the components using the library are free to add various other code to their implementation.
 This way, the remote bootware could implement some extra functionality not needed in the local bootware, or a plugin could define its own event types.
