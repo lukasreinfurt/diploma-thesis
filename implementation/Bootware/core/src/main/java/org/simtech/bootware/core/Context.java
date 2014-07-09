@@ -11,7 +11,7 @@ public class Context {
 
 	private String resourcePlugin;
 	private String callPayloadPlugin;
-	private String connectionPlugin;
+	private String communicationPlugin;
 	private String servicePackageReference;
 	private String payloadPlugin;
 	private Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
@@ -35,13 +35,13 @@ public class Context {
 		return callPayloadPlugin;
 	}
 
-	public final void setConnectionPlugin(final String plugin) {
-		connectionPlugin = plugin;
+	public final void setCommunicationPlugin(final String plugin) {
+		communicationPlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getConnectionPlugin() {
-		return connectionPlugin;
+	public final String getCommunicationPlugin() {
+		return communicationPlugin;
 	}
 
 	public final void setServicePackageReference(final String reference) {

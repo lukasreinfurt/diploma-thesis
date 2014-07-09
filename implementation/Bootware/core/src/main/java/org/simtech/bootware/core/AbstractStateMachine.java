@@ -16,7 +16,7 @@ import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.exceptions.StartPayloadException;
 import org.simtech.bootware.core.exceptions.StopPayloadException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
-import org.simtech.bootware.core.plugins.ConnectionPlugin;
+import org.simtech.bootware.core.plugins.CommunicationPlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
 import org.simtech.bootware.core.plugins.PayloadPlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
@@ -39,7 +39,7 @@ public abstract class AbstractStateMachine {
 
 	protected static Context context;
 	protected static Connection connection;
-	protected static ConnectionPlugin connectionPlugin;
+	protected static CommunicationPlugin communicationPlugin;
 	protected static EventBus eventBus;
 	protected static ResourcePlugin resourcePlugin;
 	protected static Instance instance;
@@ -50,9 +50,9 @@ public abstract class AbstractStateMachine {
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
 
-	private static String resourcePluginPath   = "plugins/resource/";
-	private static String connectionPluginPath = "plugins/connection/";
-	private static String payloadPluginPath    = "plugins/payload/";
+	private static String resourcePluginPath      = "plugins/resource/";
+	private static String communicationPluginPath = "plugins/communication/";
+	private static String payloadPluginPath       = "plugins/payload/";
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -156,7 +156,7 @@ public abstract class AbstractStateMachine {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			System.out.println("ResourceType: " + context.getResourcePlugin());
-			System.out.println("ConnectionType: " + context.getConnectionPlugin());
+			System.out.println("ConnectionType: " + context.getCommunicationPlugin());
 			System.out.println("PayloadType: " + context.getPayloadPlugin());
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
@@ -164,9 +164,9 @@ public abstract class AbstractStateMachine {
 
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			try {
-				resourcePlugin   = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
-				connectionPlugin = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionPlugin());
-				payloadPlugin    = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
+				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
+				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
+				payloadPlugin       = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -192,7 +192,7 @@ public abstract class AbstractStateMachine {
 
 		protected void connect(final String from, final String to, final String fsmEvent) {
 			try {
-				connection = connectionPlugin.connect(instance);
+				connection = communicationPlugin.connect(instance);
 			}
 			catch (ConnectConnectionException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -242,7 +242,7 @@ public abstract class AbstractStateMachine {
 
 		protected void disconnect(final String from, final String to, final String fsmEvent) {
 			try {
-				connectionPlugin.disconnect(connection);
+				communicationPlugin.disconnect(connection);
 			}
 			catch (DisconnectConnectionException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -267,11 +267,11 @@ public abstract class AbstractStateMachine {
 
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			try {
-				resourcePlugin = null;
-				connectionPlugin     = null;
-				payloadPlugin        = null;
+				resourcePlugin      = null;
+				communicationPlugin = null;
+				payloadPlugin       = null;
 				pluginManager.unloadPlugin(resourcePluginPath + context.getResourcePlugin());
-				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionPlugin());
+				pluginManager.unloadPlugin(communicationPluginPath + context.getCommunicationPlugin());
 				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (UnloadPluginException e) {

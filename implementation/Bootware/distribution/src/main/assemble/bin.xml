@@ -98,10 +98,10 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>org.simtech.bootware.plugins.connection:*</include>
+				<include>org.simtech.bootware.plugins.communication:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>bin/plugins/connection</outputDirectory>
+				<outputDirectory>bin/plugins/communication</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>

@@ -1,13 +1,13 @@
-package org.simtech.bootware.plugins.connection.c2;
+package org.simtech.bootware.plugins.communication.c1;
 
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.Instance;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
-import org.simtech.bootware.core.plugins.ConnectionPlugin;
+import org.simtech.bootware.core.plugins.CommunicationPlugin;
 
-public class C2 extends AbstractBasePlugin implements ConnectionPlugin {
+public class C1 extends AbstractBasePlugin implements CommunicationPlugin {
 
-	public C2() {}
+	public C1() {}
 
 	public final void initialize() {
 		// no op
@@ -18,12 +18,12 @@ public class C2 extends AbstractBasePlugin implements ConnectionPlugin {
 	}
 
 	public final Connection connect(final Instance instance) {
-		System.out.println("C2: connect");
+		System.out.println("C1: connect");
 		return new Connection();
 	}
 
 	public final void disconnect(final Connection connection) {
-		System.out.println("C2: disconnect");
+		System.out.println("C1: disconnect");
 	}
 
 }

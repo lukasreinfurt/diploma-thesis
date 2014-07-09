@@ -5,16 +5,16 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>c2 Plugin</name>
+	<name>c1 Plugin</name>
 
 	<parent>
 		<groupId>org.simtech.bootware.plugins</groupId>
-		<artifactId>connection</artifactId>
+		<artifactId>communication</artifactId>
 		<version>1.0.0</version>
 	</parent>
 
-	<groupId>org.simtech.bootware.plugins.connection</groupId>
-	<artifactId>c2</artifactId>
+	<groupId>org.simtech.bootware.plugins.communication</groupId>
+	<artifactId>c1</artifactId>
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
@@ -28,8 +28,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>org.simtech.bootware.plugins.connection.c2.*</Private-Package>
-						<Bundle-Activator>org.simtech.bootware.plugins.connection.c2.Activator</Bundle-Activator>
+						<Private-Package>org.simtech.bootware.plugins.communication.c1.*</Private-Package>
+						<Bundle-Activator>org.simtech.bootware.plugins.communication.c1.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 			</plugin>
