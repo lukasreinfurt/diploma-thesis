@@ -7,18 +7,18 @@ import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
-import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
+import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
-import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
+import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
-import org.simtech.bootware.core.exceptions.StartPayloadException;
-import org.simtech.bootware.core.exceptions.StopPayloadException;
+import org.simtech.bootware.core.exceptions.StartApplicationException;
+import org.simtech.bootware.core.exceptions.StopApplicationException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
+import org.simtech.bootware.core.plugins.ApplicationPlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
-import org.simtech.bootware.core.plugins.PayloadPlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
 
 import org.squirrelframework.foundation.component.SquirrelProvider;
@@ -44,7 +44,7 @@ public abstract class AbstractStateMachine {
 	protected static ResourcePlugin resourcePlugin;
 	protected static Instance instance;
 	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
-	protected static PayloadPlugin payloadPlugin;
+	protected static ApplicationPlugin applicationPlugin;
 	protected static PluginManager pluginManager;
 	protected static Request request;
 	protected static UntypedStateMachine stateMachine;
@@ -52,7 +52,7 @@ public abstract class AbstractStateMachine {
 
 	private static String resourcePluginPath      = "plugins/resource/";
 	private static String communicationPluginPath = "plugins/communication/";
-	private static String payloadPluginPath       = "plugins/payload/";
+	private static String applicationPluginPath   = "plugins/application/";
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -157,7 +157,7 @@ public abstract class AbstractStateMachine {
 			}
 			System.out.println("ResourceType: " + context.getResourcePlugin());
 			System.out.println("ConnectionType: " + context.getCommunicationPlugin());
-			System.out.println("PayloadType: " + context.getPayloadPlugin());
+			System.out.println("ApplicationType: " + context.getApplicationPlugin());
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
@@ -166,7 +166,7 @@ public abstract class AbstractStateMachine {
 			try {
 				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
 				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
-				payloadPlugin       = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
+				applicationPlugin   = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
 			}
 			catch (LoadPluginException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -200,41 +200,41 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void provisionPayload(final String from, final String to, final String fsmEvent) {
+		protected void provisionApplication(final String from, final String to, final String fsmEvent) {
 			try {
-				payloadPlugin.provision(connection);
+				applicationPlugin.provision(connection);
 			}
-			catch (ProvisionPayloadException e) {
+			catch (ProvisionApplicationException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void startPayload(final String from, final String to, final String fsmEvent) {
+		protected void startApplication(final String from, final String to, final String fsmEvent) {
 			try {
-				url = payloadPlugin.start(connection);
+				url = applicationPlugin.start(connection);
 			}
-			catch (StartPayloadException e) {
+			catch (StartApplicationException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void stopPayload(final String from, final String to, final String fsmEvent) {
+		protected void stopApplication(final String from, final String to, final String fsmEvent) {
 			try {
-				payloadPlugin.stop(connection);
+				applicationPlugin.stop(connection);
 			}
-			catch (StopPayloadException e) {
+			catch (StopApplicationException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void deprovisionPayload(final String from, final String to, final String fsmEvent) {
+		protected void deprovisionApplication(final String from, final String to, final String fsmEvent) {
 			try {
-				payloadPlugin.deprovision(connection);
+				applicationPlugin.deprovision(connection);
 			}
-			catch (DeprovisionPayloadException e) {
+			catch (DeprovisionApplicationException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -269,10 +269,10 @@ public abstract class AbstractStateMachine {
 			try {
 				resourcePlugin      = null;
 				communicationPlugin = null;
-				payloadPlugin       = null;
+				applicationPlugin   = null;
 				pluginManager.unloadPlugin(resourcePluginPath + context.getResourcePlugin());
 				pluginManager.unloadPlugin(communicationPluginPath + context.getCommunicationPlugin());
-				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadPlugin());
+				pluginManager.unloadPlugin(applicationPluginPath + context.getApplicationPlugin());
 			}
 			catch (UnloadPluginException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);

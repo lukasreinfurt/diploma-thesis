@@ -57,18 +57,18 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
 		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(SMEvents.DEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Payload").on(SMEvents.UNDEPLOY);
+		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Application").on(SMEvents.UNDEPLOY);
 		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(SMEvents.FAILURE);
 
 		// deploy
 		buildDefaultTransition("Provision_Resource", "provisionResource", "Connect", "Deprovision_Resource");
-		buildDefaultTransition("Connect", "connect", "Provision_Payload", "Disconnect");
-		buildDefaultTransition("Provision_Payload", "provisionPayload", "Start_Payload", "Deprovision_Payload");
-		buildDefaultTransition("Start_Payload", "startPayload", "Unload_Request_Plugins", "Stop_Payload");
+		buildDefaultTransition("Connect", "connect", "Provision_Application", "Disconnect");
+		buildDefaultTransition("Provision_Application", "provisionApplication", "Start_Application", "Deprovision_Application");
+		buildDefaultTransition("Start_Application", "startApplication", "Unload_Request_Plugins", "Stop_Application");
 
 		// undeploy
-		buildDefaultTransition("Stop_Payload", "stopPayload", "Deprovision_Payload", "Deprovision_Payload");
-		buildDefaultTransition("Deprovision_Payload", "deprovisionPayload", "Disconnect", "Disconnect");
+		buildDefaultTransition("Stop_Application", "stopApplication", "Deprovision_Application", "Deprovision_Application");
+		buildDefaultTransition("Deprovision_Application", "deprovisionApplication", "Disconnect", "Disconnect");
 		buildDefaultTransition("Disconnect", "disconnect", "Deprovision_Resource", "Deprovision_Resource");
 		buildDefaultTransition("Deprovision_Resource", "deprovisionResource", "Unload_Request_Plugins", "Fatal_Error");
 		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");

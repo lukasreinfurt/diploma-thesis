@@ -10,10 +10,10 @@ import org.simtech.bootware.core.exceptions.ConfigurationException;
 public class Context {
 
 	private String resourcePlugin;
-	private String callPayloadPlugin;
+	private String callApplicationPlugin;
 	private String communicationPlugin;
 	private String servicePackageReference;
-	private String payloadPlugin;
+	private String applicationPlugin;
 	private Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
 
 	public Context() {}
@@ -27,12 +27,12 @@ public class Context {
 		return resourcePlugin;
 	}
 
-	public final void setCallPayloadPlugin(final String plugin) {
-		callPayloadPlugin = plugin;
+	public final void setCallApplicationPlugin(final String plugin) {
+		callApplicationPlugin = plugin;
 	}
 
-	public final String getCallPayloadPlugin() {
-		return callPayloadPlugin;
+	public final String getCallApplicationPlugin() {
+		return callApplicationPlugin;
 	}
 
 	public final void setCommunicationPlugin(final String plugin) {
@@ -52,13 +52,13 @@ public class Context {
 		return servicePackageReference;
 	}
 
-	public final void setPayloadPlugin(final String plugin) {
-		payloadPlugin = plugin;
+	public final void setApplicationPlugin(final String plugin) {
+		applicationPlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getPayloadPlugin() {
-		return payloadPlugin;
+	public final String getApplicationPlugin() {
+		return applicationPlugin;
 	}
 
 	public final void setConfigurationList(final Map<String, ConfigurationWrapper> map) {

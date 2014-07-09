@@ -21,7 +21,7 @@
 	<modules>
 		<module>resource</module>
 		<module>communication</module>
-		<module>payload</module>
+		<module>application</module>
 		<module>event</module>
 	</modules>
 

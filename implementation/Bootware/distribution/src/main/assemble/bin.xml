@@ -109,10 +109,10 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>org.simtech.bootware.plugins.payload:*</include>
+				<include>org.simtech.bootware.plugins.application:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>bin/plugins/payload</outputDirectory>
+				<outputDirectory>bin/plugins/application</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
