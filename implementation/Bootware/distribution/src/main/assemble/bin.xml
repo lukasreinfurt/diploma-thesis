@@ -87,10 +87,10 @@
 		<moduleSet>
 			<useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>org.simtech.bootware.plugins.infrastructure:*</include>
+				<include>org.simtech.bootware.plugins.resource:*</include>
 			</includes>
 			<binaries>
-				<outputDirectory>bin/plugins/infrastructure</outputDirectory>
+				<outputDirectory>bin/plugins/resource</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>

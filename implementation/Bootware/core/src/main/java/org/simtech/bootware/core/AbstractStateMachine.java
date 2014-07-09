@@ -7,19 +7,19 @@ import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
-import org.simtech.bootware.core.exceptions.DeprovisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.DeprovisionPayloadException;
+import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
-import org.simtech.bootware.core.exceptions.ProvisionInfrastructureException;
 import org.simtech.bootware.core.exceptions.ProvisionPayloadException;
+import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.exceptions.StartPayloadException;
 import org.simtech.bootware.core.exceptions.StopPayloadException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 import org.simtech.bootware.core.plugins.ConnectionPlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
-import org.simtech.bootware.core.plugins.InfrastructurePlugin;
 import org.simtech.bootware.core.plugins.PayloadPlugin;
+import org.simtech.bootware.core.plugins.ResourcePlugin;
 
 import org.squirrelframework.foundation.component.SquirrelProvider;
 import org.squirrelframework.foundation.fsm.DotVisitor;
@@ -41,7 +41,7 @@ public abstract class AbstractStateMachine {
 	protected static Connection connection;
 	protected static ConnectionPlugin connectionPlugin;
 	protected static EventBus eventBus;
-	protected static InfrastructurePlugin infrastructurePlugin;
+	protected static ResourcePlugin resourcePlugin;
 	protected static Instance instance;
 	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
 	protected static PayloadPlugin payloadPlugin;
@@ -50,9 +50,9 @@ public abstract class AbstractStateMachine {
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
 
-	private static String infrastructurePluginPath = "plugins/infrastructure/";
-	private static String connectionPluginPath     = "plugins/connection/";
-	private static String payloadPluginPath        = "plugins/payload/";
+	private static String resourcePluginPath   = "plugins/resource/";
+	private static String connectionPluginPath = "plugins/connection/";
+	private static String payloadPluginPath    = "plugins/payload/";
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -151,11 +151,11 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void readContext(final String from, final String to, final String fsmEvent) {
-			if ("".equals(context.getInfrastructurePlugin())) {
-				request.fail("infrastructureType cannot be empty");
+			if ("".equals(context.getResourcePlugin())) {
+				request.fail("resourceType cannot be empty");
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			System.out.println("InfrastructureType: " + context.getInfrastructurePlugin());
+			System.out.println("ResourceType: " + context.getResourcePlugin());
 			System.out.println("ConnectionType: " + context.getConnectionPlugin());
 			System.out.println("PayloadType: " + context.getPayloadPlugin());
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -164,28 +164,27 @@ public abstract class AbstractStateMachine {
 
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			try {
-				infrastructurePlugin = pluginManager.loadPlugin(InfrastructurePlugin.class, infrastructurePluginPath + context.getInfrastructurePlugin());
-				connectionPlugin     = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionPlugin());
-				payloadPlugin        = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
+				resourcePlugin   = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
+				connectionPlugin = pluginManager.loadPlugin(ConnectionPlugin.class, connectionPluginPath + context.getConnectionPlugin());
+				payloadPlugin    = pluginManager.loadPlugin(PayloadPlugin.class, payloadPluginPath + context.getPayloadPlugin());
 			}
 			catch (LoadPluginException e) {
-				e.printStackTrace();
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.DEPLOY);
 			//stateMachine.fire(StateMachineEvents.UNDEPLOY);
 		}
 
-		protected void provisionInfrastructure(final String from, final String to, final String fsmEvent) {
+		protected void provisionResource(final String from, final String to, final String fsmEvent) {
 			try {
-				final ConfigurationWrapper configuration = context.getConfigurationFor(context.getInfrastructurePlugin());
-				instance = infrastructurePlugin.provision(configuration);
+				final ConfigurationWrapper configuration = context.getConfigurationFor(context.getResourcePlugin());
+				instance = resourcePlugin.provision(configuration);
 			}
 			catch (ConfigurationException e) {
 				System.out.println(e.toString());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			catch (ProvisionInfrastructureException e) {
+			catch (ProvisionResourceException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -251,11 +250,11 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void deprovisionInfrastructure(final String from, final String to, final String fsmEvent) {
+		protected void deprovisionResource(final String from, final String to, final String fsmEvent) {
 			try {
-				infrastructurePlugin.deprovision(instance);
+				resourcePlugin.deprovision(instance);
 			}
-			catch (DeprovisionInfrastructureException e) {
+			catch (DeprovisionResourceException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -268,10 +267,10 @@ public abstract class AbstractStateMachine {
 
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			try {
-				infrastructurePlugin = null;
+				resourcePlugin = null;
 				connectionPlugin     = null;
 				payloadPlugin        = null;
-				pluginManager.unloadPlugin(infrastructurePluginPath + context.getInfrastructurePlugin());
+				pluginManager.unloadPlugin(resourcePluginPath + context.getResourcePlugin());
 				pluginManager.unloadPlugin(connectionPluginPath + context.getConnectionPlugin());
 				pluginManager.unloadPlugin(payloadPluginPath + context.getPayloadPlugin());
 			}

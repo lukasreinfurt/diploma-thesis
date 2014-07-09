@@ -9,7 +9,7 @@ import org.simtech.bootware.core.exceptions.ConfigurationException;
 
 public class Context {
 
-	private String infrastructurePlugin;
+	private String resourcePlugin;
 	private String callPayloadPlugin;
 	private String connectionPlugin;
 	private String servicePackageReference;
@@ -18,13 +18,13 @@ public class Context {
 
 	public Context() {}
 
-	public final void setInfrastructurePlugin(final String plugin) {
-		infrastructurePlugin = plugin;
+	public final void setResourcePlugin(final String plugin) {
+		resourcePlugin = plugin;
 	}
 
 	@XmlElement(required = true)
-	public final String getInfrastructurePlugin() {
-		return infrastructurePlugin;
+	public final String getResourcePlugin() {
+		return resourcePlugin;
 	}
 
 	public final void setCallPayloadPlugin(final String plugin) {
