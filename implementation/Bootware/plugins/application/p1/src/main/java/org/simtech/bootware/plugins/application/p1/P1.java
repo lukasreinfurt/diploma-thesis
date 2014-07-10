@@ -3,6 +3,7 @@ package org.simtech.bootware.plugins.application.p1;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
@@ -12,7 +13,7 @@ public class P1 extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public P1() {}
 
-	public final void initialize() {
+	public final void initialize(final ConfigurationWrapper configuration) {
 		// no op
 	}
 

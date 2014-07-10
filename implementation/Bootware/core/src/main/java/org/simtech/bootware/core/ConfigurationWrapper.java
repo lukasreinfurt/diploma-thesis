@@ -20,10 +20,10 @@ public class ConfigurationWrapper {
 	}
 
 	public final String get(final String entry) throws ConfigurationException {
-		final String credential = configuration.get(entry);
-		if (credential == null) {
+		final String value = configuration.get(entry);
+		if (value == null) {
 			throw new ConfigurationException("Entry " + entry + " could not be found in configuration.");
 		}
-		return credential;
+		return value;
 	}
 }

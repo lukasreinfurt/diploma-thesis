@@ -88,7 +88,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		LocalBootwareImpl.context = context;
-		request = new Request();
+		request = new Request("deploy");
 		stateMachine.fire(SMEvents.REQUEST);
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
@@ -99,12 +99,14 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 	@Override
 	public final void undeploy(final Map<String, URL> endpoints) throws UndeployException {
-		request = new Request();
+		request = new Request("undeploy");
 		final Iterator it = endpoints.entrySet().iterator();
 
 		if (!it.hasNext()) {
 			request.fail("Endpoints cannot be empty");
 		}
+
+		stateMachine.fire(SMEvents.REQUEST);
 
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());

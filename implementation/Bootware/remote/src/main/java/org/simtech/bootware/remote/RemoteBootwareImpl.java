@@ -87,7 +87,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	@Override
 	public final EndpointsWrapper deploy(final Context context) throws DeployException {
 		RemoteBootwareImpl.context = context;
-		request = new Request();
+		request = new Request("deploy");
 		stateMachine.fire(StateMachineEvents.REQUEST);
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
@@ -105,12 +105,14 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 	@Override
 	public final void undeploy(final Map<String, URL> endpoints) throws UndeployException {
-		request = new Request();
+		request = new Request("undeploy");
 		final Iterator it = endpoints.entrySet().iterator();
 
 		if (!it.hasNext()) {
 			request.fail("Endpoints cannot be empty");
 		}
+
+		stateMachine.fire(StateMachineEvents.REQUEST);
 
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());

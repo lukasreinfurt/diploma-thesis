@@ -1,0 +1,95 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>AWS EC2 Plugin</name>
+
+	<parent>
+		<groupId>org.simtech.bootware.plugins</groupId>
+		<artifactId>resource</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<groupId>org.simtech.bootware.plugins.resource</groupId>
+	<artifactId>aws-ec2</artifactId>
+	<version>1.0.0</version>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>
+							org.simtech.bootware.plugins.resource.awsec2.*
+						</Private-Package>
+						<Bundle-Activator>
+							org.simtech.bootware.plugins.resource.awsec2.Activator
+						</Bundle-Activator>
+						<!-- run mvn dependency:tree -->
+						<!-- list all artifacts that should be embedded here -->
+						<!-- (the jars will be embedded in the lib folder) -->
+						<Embed-Dependency>
+							aws-java-sdk,
+							commons-logging,
+							httpclient,
+							httpcore,
+							commons-codec,
+							jackson-core,
+							jackson-databind,
+							jackson-annotations,
+							joda-time,
+							mail,
+							javax.servlet-api
+						</Embed-Dependency>
+						<!-- list all packages that are not embedded here -->
+						<!-- (these have to be exported by the bootware core) -->
+						<Import-Package>
+							javax.*,
+							org.xml.sax.*,
+							org.w3c.dom.*,
+							net.engio.mbassy.*,
+							org.simtech.bootware.core.*,
+							!*
+						</Import-Package>
+						<Embed-Directory>lib</Embed-Directory>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+					</instructions>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

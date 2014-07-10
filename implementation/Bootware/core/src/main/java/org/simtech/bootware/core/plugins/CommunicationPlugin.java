@@ -1,11 +1,12 @@
 package org.simtech.bootware.core.plugins;
 
+import java.util.Map;
+
 import org.simtech.bootware.core.Connection;
-import org.simtech.bootware.core.Instance;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 
 public interface CommunicationPlugin extends Plugin {
-	Connection connect(Instance instance) throws ConnectConnectionException;
+	Connection connect(Map<String, String> instanceInformation) throws ConnectConnectionException;
 	void disconnect(Connection connect) throws DisconnectConnectionException;
 }

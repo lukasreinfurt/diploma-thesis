@@ -37,12 +37,13 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  */
 public abstract class AbstractStateMachine {
 
+	protected static ConfigurationWrapper configuration = new ConfigurationWrapper();
 	protected static Context context;
 	protected static Connection connection;
 	protected static CommunicationPlugin communicationPlugin;
 	protected static EventBus eventBus;
 	protected static ResourcePlugin resourcePlugin;
-	protected static Instance instance;
+	protected static Map<String, String> instanceInformation;
 	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
 	protected static ApplicationPlugin applicationPlugin;
 	protected static PluginManager pluginManager;
@@ -129,6 +130,7 @@ public abstract class AbstractStateMachine {
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
+			pluginManager.registerSharedObject(configuration);
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
@@ -158,6 +160,15 @@ public abstract class AbstractStateMachine {
 			System.out.println("ResourceType: " + context.getResourcePlugin());
 			System.out.println("ConnectionType: " + context.getCommunicationPlugin());
 			System.out.println("ApplicationType: " + context.getApplicationPlugin());
+
+			try {
+				configuration.setConfiguration(context.getConfigurationFor(context.getResourcePlugin()).getConfiguration());
+			}
+			catch (ConfigurationException e) {
+				System.out.println(e.toString());
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
@@ -169,22 +180,27 @@ public abstract class AbstractStateMachine {
 				applicationPlugin   = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
 			}
 			catch (LoadPluginException e) {
+				e.printStackTrace();
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			stateMachine.fire(StateMachineEvents.DEPLOY);
-			//stateMachine.fire(StateMachineEvents.UNDEPLOY);
+
+			if ("deploy".equals(request.getType())) {
+				stateMachine.fire(StateMachineEvents.DEPLOY);
+			}
+			else {
+				stateMachine.fire(StateMachineEvents.UNDEPLOY);
+			}
 		}
 
 		protected void provisionResource(final String from, final String to, final String fsmEvent) {
 			try {
-				final ConfigurationWrapper configuration = context.getConfigurationFor(context.getResourcePlugin());
-				instance = resourcePlugin.provision(configuration);
-			}
-			catch (ConfigurationException e) {
-				System.out.println(e.toString());
-				stateMachine.fire(StateMachineEvents.FAILURE);
+				instanceInformation = resourcePlugin.provision();
+				for (Map.Entry<String, String> entry : instanceInformation.entrySet()) {
+					System.out.println(entry.getKey() + ": " + entry.getValue());
+				}
 			}
 			catch (ProvisionResourceException e) {
+				System.out.println(e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -192,7 +208,7 @@ public abstract class AbstractStateMachine {
 
 		protected void connect(final String from, final String to, final String fsmEvent) {
 			try {
-				connection = communicationPlugin.connect(instance);
+				connection = communicationPlugin.connect(instanceInformation);
 			}
 			catch (ConnectConnectionException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -252,7 +268,10 @@ public abstract class AbstractStateMachine {
 
 		protected void deprovisionResource(final String from, final String to, final String fsmEvent) {
 			try {
-				resourcePlugin.deprovision(instance);
+				if (instanceInformation != null) {
+					resourcePlugin.deprovision(instanceInformation);
+				}
+				// how to handle failure?
 			}
 			catch (DeprovisionResourceException e) {
 				stateMachine.fire(StateMachineEvents.FAILURE);

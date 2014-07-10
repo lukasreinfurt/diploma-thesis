@@ -4,12 +4,14 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.EventBus;
 
 /**
  * Abstract base plugin that should be used as baseline for all Bootware plugins.
  */
 public abstract class AbstractBasePlugin implements Plugin {
+	protected ConfigurationWrapper config;
 	protected BundleContext context;
 	protected EventBus eventBus;
 
@@ -21,15 +23,18 @@ public abstract class AbstractBasePlugin implements Plugin {
 	 */
 	public AbstractBasePlugin() {
 		context  = FrameworkUtil.getBundle(this.getClass()).getBundleContext();
+
 		eventBus = getSharedObject(EventBus.class);
 		eventBus.subscribe(this);
-		initialize();
+
+		config = getSharedObject(ConfigurationWrapper.class);
+		initialize(config);
 	}
 
 	/**
 	 * Is executed when the OSGi bundle is started.
 	 */
-	public abstract void initialize();
+	public abstract void initialize(ConfigurationWrapper configuration);
 
 	/**
 	 * Is executed when the OSGi bundle is stopped.

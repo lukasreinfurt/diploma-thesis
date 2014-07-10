@@ -1,5 +1,6 @@
 package org.simtech.bootware.plugins.event.consoleLogger;
 
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.ErrorEvent;
 import org.simtech.bootware.core.events.InfoEvent;
 import org.simtech.bootware.core.events.StateTransitionEvent;
@@ -16,7 +17,7 @@ public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 
 	public ConsoleLogger() {}
 
-	public final void initialize() {
+	public final void initialize(final ConfigurationWrapper configuration) {
 		// no op
 	}
 
