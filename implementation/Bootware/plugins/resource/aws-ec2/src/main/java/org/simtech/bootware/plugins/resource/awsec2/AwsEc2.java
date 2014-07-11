@@ -46,6 +46,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 	private String secretKey;
 	private String accessKey;
+	private String username;
 	private String securityGroupName;
 	private String keyName;
 
@@ -57,6 +58,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		try {
 			secretKey = configuration.get("secretKey");
 			accessKey = configuration.get("accessKey");
+			username  = configuration.get("username");
 		}
 		catch (ConfigurationException e) {
 			System.out.println(e.toString());
@@ -77,6 +79,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		final String instanceID = createEC2Instance();
 		final Map<String, String> instanceInformation = getInstanceInformation(instanceID);
 
+		instanceInformation.put("username", username);
 		instanceInformation.put("securityGroupName", securityGroupName);
 		instanceInformation.put("keyName", keyName);
 		instanceInformation.put("privateKey", privateKey);

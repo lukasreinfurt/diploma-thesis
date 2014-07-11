@@ -68,7 +68,7 @@
 		<module name="EqualsHashCode"/>
 		<module name="FinalLocalVariable"/>
 		<module name="HiddenField"/>
-		<module name="IllegalToken"/>
+		<!--<module name="IllegalToken"/>-->
 		<module name="InnerAssignment"/>
 		<module name="MagicNumber"/>
 		<module name="MissingSwitchDefault"/>
