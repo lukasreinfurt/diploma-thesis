@@ -3,8 +3,8 @@ package org.simtech.bootware.core;
 import java.net.URL;
 import java.util.Map;
 
-import org.simtech.bootware.core.events.InfoEvent;
-import org.simtech.bootware.core.events.StateTransitionEvent;
+import org.simtech.bootware.core.events.FSMEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
@@ -120,9 +120,7 @@ public abstract class AbstractStateMachine {
 
 		protected void transition(final String from, final String to, final String fsmEvent) {
 			if (eventBus != null) {
-				final StateTransitionEvent event = new StateTransitionEvent();
-				event.setMessage("From '" + from + "' to '" + to + "' on '" + fsmEvent + "'.");
-				eventBus.publish(event);
+				eventBus.publish(new FSMEvent(Severity.INFO, "From '" + from + "' to '" + to + "' on '" + fsmEvent + "'."));
 			}
 		}
 
@@ -326,9 +324,6 @@ public abstract class AbstractStateMachine {
 
 		protected void end(final String from, final String to, final String fsmEvent) {
 			stateMachine.terminate();
-			final InfoEvent event = new InfoEvent();
-			event.setMessage("State machine terminated.");
-			eventBus.publish(event);
 		}
 
 	}

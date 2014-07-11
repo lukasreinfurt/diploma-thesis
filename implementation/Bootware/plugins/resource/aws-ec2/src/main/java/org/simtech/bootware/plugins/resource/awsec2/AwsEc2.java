@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.events.ResourcePluginEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
@@ -80,6 +82,8 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		instanceInformation.put("privateKey", privateKey);
 		instanceInformation.put("instanceID", instanceID);
 
+		eventBus.publish(new ResourcePluginEvent(Severity.SUCCESS, "Provisioning complete."));
+
 		return instanceInformation;
 	}
 
@@ -98,8 +102,6 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 		// set region
 		ec2Client.setEndpoint("ec2.eu-west-1.amazonaws.com");
-
-		System.out.println("Client instance created.");
 	}
 
 	private void createSecurityGroup() throws ProvisionResourceException {
@@ -116,7 +118,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			throw new ProvisionResourceException(e);
 		}
 
-		System.out.println("Security group '" + securityGroupName + "' created.");
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Security group '" + securityGroupName + "' created."));
 	}
 
 	private void deleteSecurityGroup(final String name) throws DeprovisionResourceException {
@@ -132,7 +134,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			throw new DeprovisionResourceException(e);
 		}
 
-		System.out.println("Security group '" + name + "' deleted.");
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Security group '" + securityGroupName + "' deleted."));
 	}
 
 	private void openPorts() throws ProvisionResourceException {
@@ -157,7 +159,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			throw new ProvisionResourceException(e);
 		}
 
-		System.out.println("Ports opened.");
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Ports opened."));
 	}
 
 	private String createKeyPair() throws ProvisionResourceException {
@@ -169,15 +171,15 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 		try {
 			final CreateKeyPairResult result = ec2Client.createKeyPair(request);
-			KeyPair keyPair   = new KeyPair();
-			keyPair           = result.getKeyPair();
-			privateKey        = keyPair.getKeyMaterial();
-			System.out.println("Key pair '" + keyName + "' created.");
+			KeyPair keyPair = new KeyPair();
+			keyPair         = result.getKeyPair();
+			privateKey      = keyPair.getKeyMaterial();
 		}
 		catch (AmazonServiceException e) {
 			throw new ProvisionResourceException(e);
 		}
 
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Key pair '" + keyName + "' created."));
 		return privateKey;
 	}
 
@@ -194,7 +196,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			throw new DeprovisionResourceException(e);
 		}
 
-		System.out.println("Key pair '" + name + "' deleted.");
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Key pair '" + name + "' deleted."));
 	}
 
 	private String createEC2Instance() throws ProvisionResourceException {
@@ -213,13 +215,14 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			final RunInstancesResult result = ec2Client.runInstances(request);
 			final Reservation reservation = result.getReservation();
 			instanceID = reservation.getInstances().get(0).getInstanceId();
-			System.out.println("EC2 instance '" + instanceID + "' created.");
 		}
 		catch (AmazonServiceException e) {
 			throw new ProvisionResourceException(e);
 		}
 
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "EC2 instance '" + instanceID + "' created."));
 		waitForState(instanceID, "running");
+
 		return instanceID;
 	}
 
@@ -257,16 +260,13 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		}
 
 		waitForState(instanceID, "terminated");
-
-		System.out.println("EC2 instance '" + instanceID + "' terminated.");
 	}
 
 	private void waitForState(final String instanceID, final String state) {
-		System.out.print("Waiting for '" + instanceID + "' to reach state '" + state + "'");
+		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Waiting for '" + instanceID + "' to reach state '" + state + "'."));
 
 	label:
 		while (true) {
-			System.out.print(".");
 
 			DescribeInstancesResult result;
 			final DescribeInstancesRequest request = new DescribeInstancesRequest().withInstanceIds(instanceID);
@@ -279,7 +279,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 				final List<Instance> instances = reservation.getInstances();
 				for (Instance instance : instances) {
 					if (instance.getState().getName().equals(state)) {
-						System.out.println("done.");
+						eventBus.publish(new ResourcePluginEvent(Severity.INFO, "'" + instanceID + "' has reached state '" + state + "'."));
 						break label;
 					}
 				}
