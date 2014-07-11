@@ -56,7 +56,7 @@ public class SshConnection implements Connection {
 		try {
 			final boolean isAuthenticated = connection.authenticateWithPublicKey(username, key.toCharArray(), null);
 			if (!isAuthenticated) {
-				throw new ConnectConnectionException("Authentication failed.")
+				throw new ConnectConnectionException("Authentication failed.");
 			}
 		}
 		catch (IOException e) {

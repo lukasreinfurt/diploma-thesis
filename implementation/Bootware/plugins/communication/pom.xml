@@ -20,8 +20,6 @@
 
 	<modules>
 		<module>ssh</module>
-		<module>c1</module>
-		<module>c2</module>
 	</modules>
 
 	<build>
