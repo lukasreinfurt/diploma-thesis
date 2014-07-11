@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.resource.i2;
+package org.simtech.bootware.plugins.resource.test;
 
 import org.simtech.bootware.core.plugins.AbstractActivator;
 
@@ -6,7 +6,7 @@ public class Activator extends AbstractActivator {
 
 	public Activator() {}
 
-	protected final I2 getPluginInstance() { return new I2(); };
+	protected final Test getPluginInstance() { return new Test(); };
 
 }
 

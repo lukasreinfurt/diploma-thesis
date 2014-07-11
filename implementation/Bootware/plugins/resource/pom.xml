@@ -20,8 +20,7 @@
 
 	<modules>
 		<module>aws-ec2</module>
-		<module>i1</module>
-		<module>i2</module>
+		<module>test</module>
 	</modules>
 
 	<build>

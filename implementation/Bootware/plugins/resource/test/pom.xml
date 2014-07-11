@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>i1 Plugin</name>
+	<name>Test Plugin</name>
 
 	<parent>
 		<groupId>org.simtech.bootware.plugins</groupId>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<groupId>org.simtech.bootware.plugins.resource</groupId>
-	<artifactId>i1</artifactId>
+	<artifactId>test</artifactId>
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
@@ -28,8 +28,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>org.simtech.bootware.plugins.resource.i1.*</Private-Package>
-						<Bundle-Activator>org.simtech.bootware.plugins.resource.i1.Activator</Bundle-Activator>
+						<Private-Package>org.simtech.bootware.plugins.resource.test.*</Private-Package>
+						<Bundle-Activator>org.simtech.bootware.plugins.resource.test.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 			</plugin>
