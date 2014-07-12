@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.application.p1;
+package org.simtech.bootware.plugins.application.test;
 
 import org.simtech.bootware.core.plugins.AbstractActivator;
 
@@ -6,7 +6,7 @@ public class Activator extends AbstractActivator {
 
 	public Activator() {}
 
-	protected final P1 getPluginInstance() { return new P1(); };
+	protected final Test getPluginInstance() { return new Test(); };
 
 }
 

@@ -132,7 +132,9 @@
 		<!-- metrics -->
 		<!-- see: http://checkstyle.sourceforge.net/config_metrics.html -->
 		<module name="BooleanExpressionComplexity"/>
-		<module name="ClassDataAbstractionCoupling"/>
+		<module name="ClassDataAbstractionCoupling">
+			<property name="max" value="10"/>
+		</module>
 		<module name="ClassFanOutComplexity"/>
 		<module name="CyclomaticComplexity"/>
 		<module name="NPathComplexity"/>

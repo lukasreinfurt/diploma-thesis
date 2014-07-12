@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>p1 Plugin</name>
+	<name>Test Plugin</name>
 
 	<parent>
 		<groupId>org.simtech.bootware.plugins</groupId>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<groupId>org.simtech.bootware.plugins.application</groupId>
-	<artifactId>p1</artifactId>
+	<artifactId>test</artifactId>
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
@@ -28,8 +28,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>org.simtech.bootware.plugins.application.p1.*</Private-Package>
-						<Bundle-Activator>org.simtech.bootware.plugins.application.p1.Activator</Bundle-Activator>
+						<Private-Package>org.simtech.bootware.plugins.application.test.*</Private-Package>
+						<Bundle-Activator>org.simtech.bootware.plugins.application.test.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 			</plugin>

@@ -274,7 +274,12 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			DescribeInstancesResult result;
 			final DescribeInstancesRequest request = new DescribeInstancesRequest().withInstanceIds(instanceID);
 
-			result = ec2Client.describeInstances(request);
+			try {
+				result = ec2Client.describeInstances(request);
+			}
+			catch (AmazonServiceException e) {
+				continue label;
+			}
 
 			final List<Reservation> reservations   = result.getReservations();
 

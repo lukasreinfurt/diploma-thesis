@@ -19,8 +19,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>p1</module>
-		<module>p2</module>
+		<module>test</module>
 	</modules>
 
 	<build>

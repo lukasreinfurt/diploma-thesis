@@ -2,6 +2,7 @@ package org.simtech.bootware.plugins.communication.ssh;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +23,7 @@ public class SshConnection implements Connection {
 	private Session session;
 	private final Integer maxRetries = 20;
 	private final Integer waitBetweenRetries = 5000;
+	private final Integer bufferSize = 4096;
 
 	public SshConnection() {}
 
@@ -104,13 +106,20 @@ public class SshConnection implements Connection {
 
 	public final void upload(final String localFile, final String remotePath) {
 		try {
+			final FileInputStream inputStream = new FileInputStream(localFile);
 			final File file = new File(localFile);
 			final long length = file.length();
 			final SCPClient scp = new SCPClient(connection);
-			System.out.println("Uploading file '" + localFile + "' (" + length + ") to '" + remotePath + "'.");
-			final SCPOutputStream outputStream = scp.put(localFile, length, remotePath, "0755");
-			//outputStream.close();
-			System.out.println("Upload complete.");
+			final SCPOutputStream outputStream = scp.put("aaaaaaaaaaaaa", length, remotePath, "0755");
+
+			final byte[] buffer = new byte[bufferSize];
+			int n;
+			while ((n = inputStream.read(buffer)) > 0) {
+				outputStream.write(buffer, 0, n);
+			}
+
+			outputStream.close();
+			inputStream.close();
 		}
 		catch (IOException e) {
 			e.printStackTrace(System.out);

@@ -1,17 +1,19 @@
-package org.simtech.bootware.plugins.application.p1;
+package org.simtech.bootware.plugins.application.test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
+import org.simtech.bootware.core.events.ApplicationPluginEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
-public class P1 extends AbstractBasePlugin implements ApplicationPlugin {
+public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 
-	public P1() {}
+	public Test() {}
 
 	public final void initialize(final ConfigurationWrapper configuration) {
 		// no op
@@ -22,15 +24,20 @@ public class P1 extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void provision(final Connection connection) {
-		System.out.println("P1: provision");
+		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Provision has been called."));
+		if (connection != null) {
+			connection.execute("ls /tmp");
+			connection.upload("bootware-remote-1.0.0.jar", "/tmp");
+			connection.execute("ls -al /tmp");
+		}
 	}
 
 	public final void deprovision(final Connection connection) {
-		System.out.println("P1: deprovision");
+		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Deprovision has been called."));
 	}
 
 	public final URL start(final Connection connection) throws StartApplicationException {
-		System.out.println("P1: start");
+		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Start has been called."));
 		try {
 			final URL url = new URL("http://www.example.com");
 			return url;
@@ -41,7 +48,7 @@ public class P1 extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void stop(final Connection connection) {
-		System.out.println("P1: stop");
+		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Stop has been called."));
 	}
 
 }
