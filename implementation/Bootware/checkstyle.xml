@@ -100,7 +100,7 @@
 		<module name="MissingCtor"/>
 		<module name="FallThrough"/>
 		<module name="MultipleStringLiterals">
-			<property name="ignoreStringsRegexp" value='^(("")|(", ")|(" = "))$'/>
+			<property name="ignoreStringsRegexp" value='^(("")|(", ")|(" = ")|("&apos;\."))$'/>
 		</module>
 		<module name="MultipleVariableDeclarations"/>
 		<!-- <module name="RequireThis"/> -->
@@ -133,7 +133,7 @@
 		<!-- see: http://checkstyle.sourceforge.net/config_metrics.html -->
 		<module name="BooleanExpressionComplexity"/>
 		<module name="ClassDataAbstractionCoupling">
-			<property name="max" value="10"/>
+			<property name="max" value="15"/>
 		</module>
 		<module name="ClassFanOutComplexity"/>
 		<module name="CyclomaticComplexity"/>

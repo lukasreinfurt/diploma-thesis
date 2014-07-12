@@ -4,9 +4,8 @@ import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
-import org.simtech.bootware.core.events.CommunicationPluginEvent;
-import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
+import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 
@@ -23,19 +22,18 @@ public class SSH extends AbstractBasePlugin implements CommunicationPlugin {
 	}
 
 	public final Connection connect(final Map<String, String> instanceInformation) throws ConnectConnectionException {
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connect has been called."));
-		final Connection connection = new SshConnection();
-
+		final Connection connection = new SshConnection(eventBus);
 		connection.connect(instanceInformation);
-
 		return connection;
 	}
 
-	public final void disconnect(final Connection connection) {
+	public final void disconnect(final Connection connection) throws DisconnectConnectionException {
 		if (connection != null) {
 			connection.disconnect();
 		}
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Disconnect has been called."));
+		else {
+			throw new DisconnectConnectionException("Connection was null.");
+		}
 	}
 
 }

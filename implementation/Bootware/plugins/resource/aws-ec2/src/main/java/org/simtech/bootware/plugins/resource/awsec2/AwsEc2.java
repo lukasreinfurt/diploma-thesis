@@ -85,8 +85,6 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		instanceInformation.put("privateKey", privateKey);
 		instanceInformation.put("instanceID", instanceID);
 
-		eventBus.publish(new ResourcePluginEvent(Severity.SUCCESS, "Provisioning complete."));
-
 		return instanceInformation;
 	}
 

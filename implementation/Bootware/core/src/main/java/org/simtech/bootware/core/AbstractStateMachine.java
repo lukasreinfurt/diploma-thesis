@@ -3,6 +3,7 @@ package org.simtech.bootware.core;
 import java.net.URL;
 import java.util.Map;
 
+import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.FSMEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
@@ -120,11 +121,12 @@ public abstract class AbstractStateMachine {
 
 		protected void transition(final String from, final String to, final String fsmEvent) {
 			if (eventBus != null) {
-				eventBus.publish(new FSMEvent(Severity.INFO, "From '" + from + "' to '" + to + "' on '" + fsmEvent + "'."));
+				eventBus.publish(new FSMEvent(Severity.DEBUG, "Transition from '" + from + "' to '" + to + "' on '" + fsmEvent + "'."));
 			}
 		}
 
 		protected void initialize(final String from, final String to, final String fsmEvent) {
+			// log to local file?
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
@@ -134,13 +136,17 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void loadEventPlugins(final String from, final String to, final String fsmEvent) {
+			// log to local file?
 			try {
 				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
 				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Loading event plugins succeeded."));
 			}
 			catch (LoadPluginException e) {
+				// log to local file?
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
@@ -151,34 +157,36 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void readContext(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
+
 			if ("".equals(context.getResourcePlugin())) {
 				request.fail("resourceType cannot be empty");
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
-			System.out.println("ResourceType: " + context.getResourcePlugin());
-			System.out.println("ConnectionType: " + context.getCommunicationPlugin());
-			System.out.println("ApplicationType: " + context.getApplicationPlugin());
 
 			try {
 				configuration.setConfiguration(context.getConfigurationFor(context.getResourcePlugin()).getConfiguration());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Context generated."));
 			}
 			catch (ConfigurationException e) {
-				System.out.println(e.toString());
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not generate context: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Loading request plugins."));
+
 			try {
 				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
 				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
 				applicationPlugin   = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins loaded."));
 			}
 			catch (LoadPluginException e) {
-				e.printStackTrace();
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 
@@ -191,89 +199,125 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void provisionResource(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning resource."));
+
 			try {
 				instanceInformation = resourcePlugin.provision();
-				for (Map.Entry<String, String> entry : instanceInformation.entrySet()) {
-					System.out.println(entry.getKey() + ": " + entry.getValue());
-				}
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource provisioned."));
 			}
 			catch (ProvisionResourceException e) {
-				System.out.println(e.getMessage());
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void connect(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to resource."));
+
 			try {
 				connection = communicationPlugin.connect(instanceInformation);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Connected to resource."));
 			}
 			catch (ConnectConnectionException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not connect to resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void provisionApplication(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning application."));
+
 			try {
 				applicationPlugin.provision(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application provisioned."));
 			}
 			catch (ProvisionApplicationException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void startApplication(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Starting application."));
+
 			try {
 				url = applicationPlugin.start(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application started."));
 			}
 			catch (StartApplicationException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not start application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void stopApplication(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Stopping application."));
+
 			try {
 				applicationPlugin.stop(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application stopped."));
 			}
 			catch (StopApplicationException e) {
+				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not stop application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void deprovisionApplication(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning application."));
+
 			try {
 				applicationPlugin.deprovision(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application deprovisioned."));
 			}
 			catch (DeprovisionApplicationException e) {
+				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not deprovision application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void disconnect(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Disconnecting from resource."));
+
 			try {
 				communicationPlugin.disconnect(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Disconnected from resource."));
 			}
 			catch (DisconnectConnectionException e) {
+				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not disconnect from resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void deprovisionResource(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning resource."));
+
 			try {
 				if (instanceInformation != null) {
 					resourcePlugin.deprovision(instanceInformation);
 				}
 				// how to handle failure?
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource deprovisioned."));
 			}
 			catch (DeprovisionResourceException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not deprovision resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
@@ -283,6 +327,8 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading request plugins."));
+
 			try {
 				resourcePlugin      = null;
 				communicationPlugin = null;
@@ -290,10 +336,13 @@ public abstract class AbstractStateMachine {
 				pluginManager.unloadPlugin(resourcePluginPath + context.getResourcePlugin());
 				pluginManager.unloadPlugin(communicationPluginPath + context.getCommunicationPlugin());
 				pluginManager.unloadPlugin(applicationPluginPath + context.getApplicationPlugin());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins unloaded."));
 			}
 			catch (UnloadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
@@ -303,16 +352,21 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void unloadEventPlugins(final String from, final String to, final String fsmEvent) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading event plugins."));
+
 			try {
 				pluginManager.unloadAllPlugins();
 			}
 			catch (UnloadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload event plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+			// log to local file?
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void cleanup(final String from, final String to, final String fsmEvent) {
+			// log to local file?
 			try {
 				pluginManager.stop();
 			}
@@ -323,6 +377,7 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void end(final String from, final String to, final String fsmEvent) {
+			// log to local file?
 			stateMachine.terminate();
 		}
 

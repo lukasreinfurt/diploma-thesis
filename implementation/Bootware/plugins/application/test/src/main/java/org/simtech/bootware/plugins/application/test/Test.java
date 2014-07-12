@@ -5,9 +5,12 @@ import java.net.URL;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
-import org.simtech.bootware.core.events.ApplicationPluginEvent;
-import org.simtech.bootware.core.events.Severity;
+// import org.simtech.bootware.core.events.ApplicationPluginEvent;
+// import org.simtech.bootware.core.events.Severity;
+import org.simtech.bootware.core.exceptions.ExecuteCommandException;
+import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
+import org.simtech.bootware.core.exceptions.UploadFileException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
@@ -23,21 +26,30 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 		// no op
 	}
 
-	public final void provision(final Connection connection) {
-		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Provision has been called."));
+	public final void provision(final Connection connection) throws ProvisionApplicationException {
 		if (connection != null) {
-			connection.execute("ls /tmp");
-			connection.upload("bootware-remote-1.0.0.jar", "/tmp");
-			connection.execute("ls -al /tmp");
+			try {
+				connection.execute("ls /tmp");
+				connection.upload("bootware-remote-1.0.0.jar", "/tmp");
+				connection.execute("ls -al /tmp");
+			}
+			catch (ExecuteCommandException e) {
+				throw new ProvisionApplicationException(e);
+			}
+			catch (UploadFileException e) {
+				throw new ProvisionApplicationException(e);
+			}
+		}
+		else {
+			throw new ProvisionApplicationException("Connection is null.");
 		}
 	}
 
 	public final void deprovision(final Connection connection) {
-		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Deprovision has been called."));
+		// no op
 	}
 
 	public final URL start(final Connection connection) throws StartApplicationException {
-		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Start has been called."));
 		try {
 			final URL url = new URL("http://www.example.com");
 			return url;
@@ -48,7 +60,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void stop(final Connection connection) {
-		eventBus.publish(new ApplicationPluginEvent(Severity.SUCCESS, "Stop has been called."));
+		// no op
 	}
 
 }
