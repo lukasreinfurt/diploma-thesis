@@ -1,6 +1,5 @@
 package org.simtech.bootware.remote;
 
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -96,7 +95,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final void undeploy(final Map<String, URL> endpoints) throws UndeployException {
+	public final void undeploy(final Map<String, String> endpoints) throws UndeployException {
 		request = new Request("undeploy");
 		final Iterator it = endpoints.entrySet().iterator();
 

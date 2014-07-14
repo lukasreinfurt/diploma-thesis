@@ -1,20 +1,19 @@
 package org.simtech.bootware.core;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EndpointsWrapper {
 
-	private Map<String, URL> endpoints = new HashMap<String, URL>();
+	private Map<String, String> endpoints = new HashMap<String, String>();
 
 	public EndpointsWrapper() {}
 
-	public final void setEndpoints(final Map<String, URL> map) {
+	public final void setEndpoints(final Map<String, String> map) {
 		endpoints = map;
 	}
 
-	public final Map<String, URL> getEndpoints() {
+	public final Map<String, String> getEndpoints() {
 		return endpoints;
 	}
 
