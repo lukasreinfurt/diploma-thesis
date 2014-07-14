@@ -8,7 +8,7 @@ import javax.jws.WebService;
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Context;
-import org.simtech.bootware.core.EndpointsWrapper;
+import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.StateMachineEvents;
 import org.simtech.bootware.core.exceptions.DeployException;
@@ -83,14 +83,14 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final EndpointsWrapper deploy(final Context context) throws DeployException {
+	public final InformationListWrapper deploy(final Context context) throws DeployException {
 		RemoteBootwareImpl.context = context;
 		request = new Request("deploy");
 		stateMachine.fire(StateMachineEvents.REQUEST);
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
-		final EndpointsWrapper endpoints = new EndpointsWrapper();
+		final InformationListWrapper endpoints = new InformationListWrapper();
 		return endpoints;
 	}
 

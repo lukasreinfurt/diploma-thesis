@@ -16,8 +16,8 @@ import org.simtech.bootware.core.exceptions.UndeployException;
  */
 @WebService
 public interface Bootware {
-	@WebMethod EndpointsWrapper deploy(@WebParam(name = "context") Context context) throws DeployException;
-	@WebMethod void undeploy(@WebParam(name = "endpoints") Map<String, String> endpoints) throws UndeployException;
+	@WebMethod InformationListWrapper deploy(@WebParam(name = "context") Context context) throws DeployException;
+	@WebMethod void undeploy(@WebParam(name = "informationList") Map<String, String> endpoints) throws UndeployException;
 	@WebMethod void setConfiguration(@WebParam(name = "configurationList") Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException;
 	@WebMethod void shutdown() throws ShutdownException;
 }
