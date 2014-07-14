@@ -1,6 +1,5 @@
 package org.simtech.bootware.remote;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -93,13 +92,6 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			throw new DeployException((String) request.getResponse());
 		}
 		final EndpointsWrapper endpoints = new EndpointsWrapper();
-		try {
-			endpoints.add("example", new URL("http://www.example.com"));
-			endpoints.add("google", new URL("http://www.google.com"));
-		}
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
 		return endpoints;
 	}
 

@@ -18,11 +18,4 @@ public class EndpointsWrapper {
 		return endpoints;
 	}
 
-	public final URL add(final String entry, final URL endpoint) {
-		return endpoints.put(entry, endpoint);
-	}
-
-	public final URL get(final String entry) {
-		return endpoints.get(entry);
-	}
 }
