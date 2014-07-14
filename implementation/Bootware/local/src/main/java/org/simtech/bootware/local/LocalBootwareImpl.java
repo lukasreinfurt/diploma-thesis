@@ -11,6 +11,8 @@ import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.EndpointsWrapper;
 import org.simtech.bootware.core.Request;
+import org.simtech.bootware.core.events.CoreEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
@@ -26,6 +28,9 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
  */
 @WebService(endpointInterface = "org.simtech.bootware.local.LocalBootware")
 public class LocalBootwareImpl extends AbstractStateMachine implements LocalBootware {
+
+	private static Boolean triedProvisioningRemote = false;
+	private static URL remoteBootware;
 
 	/**
 	 * Creates the bootware process as state machine.
@@ -136,9 +141,19 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		public Machine() {}
 
 		protected void sendToRemote(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire(SMEvents.NOREMOTE);
-			// stateMachine.fire(SMEvents.SUCCESS);
-			//stateMachine.fire(SMEvents.FAILURE);
+			if (remoteBootware == null && !triedProvisioningRemote) {
+				eventBus.publish(new CoreEvent(Severity.INFO, "No remote bootware deployed yet. Deploying remote bootware."));
+				triedProvisioningRemote = true;
+				stateMachine.fire(SMEvents.NOREMOTE);
+				return;
+			}
+			else if (remoteBootware == null && triedProvisioningRemote) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Remote bootware could not be deployed."));
+				stateMachine.fire(SMEvents.FAILURE);
+				return;
+			}
+			eventBus.publish(new CoreEvent(Severity.SUCCESS, "Remote bootware found. Passing on request."));
+			stateMachine.fire(SMEvents.SUCCESS);
 		}
 
 	}

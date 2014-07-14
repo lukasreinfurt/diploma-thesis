@@ -162,6 +162,7 @@ public abstract class AbstractStateMachine {
 			if ("".equals(context.getResourcePlugin())) {
 				request.fail("resourceType cannot be empty");
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			try {
@@ -192,9 +193,11 @@ public abstract class AbstractStateMachine {
 
 			if ("deploy".equals(request.getType())) {
 				stateMachine.fire(StateMachineEvents.DEPLOY);
+				return;
 			}
 			else {
 				stateMachine.fire(StateMachineEvents.UNDEPLOY);
+				return;
 			}
 		}
 
