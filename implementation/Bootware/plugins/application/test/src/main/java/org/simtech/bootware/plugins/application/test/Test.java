@@ -1,7 +1,11 @@
 package org.simtech.bootware.plugins.application.test;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+
+import org.apache.commons.io.FileUtils;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
@@ -30,7 +34,13 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 		if (connection != null) {
 			try {
 				connection.execute("ls /tmp");
-				connection.upload("bootware-remote-1.0.0.jar", "/tmp");
+				connection.execute("mkdir -p /tmp/remote/lib");
+
+				final Collection<File> files =  FileUtils.listFiles(new File("remote/"), null, true);
+				for (File file : files) {
+					connection.upload(file.toString(), new File("/tmp/", file.toString()).toString());
+				}
+
 				connection.execute("ls -al /tmp");
 			}
 			catch (ExecuteCommandException e) {

@@ -20,6 +20,7 @@
 
 	<modules>
 		<module>ssh</module>
+		<module>test</module>
 	</modules>
 
 	<build>

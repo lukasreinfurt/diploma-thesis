@@ -18,6 +18,16 @@
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
+	<dependencies>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+	</dependencies>
+
 	<build>
 		<plugins>
 
@@ -28,8 +38,28 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>org.simtech.bootware.plugins.application.test.*</Private-Package>
-						<Bundle-Activator>org.simtech.bootware.plugins.application.test.Activator</Bundle-Activator>
+						<Private-Package>
+							org.simtech.bootware.plugins.application.test.*
+						</Private-Package>
+						<Bundle-Activator>
+							org.simtech.bootware.plugins.application.test.Activator
+						</Bundle-Activator>
+						<!-- run mvn dependency:tree -->
+						<!-- list all artifacts that should be embedded here -->
+						<!-- (the jars will be embedded in the lib folder) -->
+						<Embed-Dependency>
+							commons-io
+						</Embed-Dependency>
+						<!-- list all packages that are not embedded here -->
+						<!-- (these have to be exported by the bootware core) -->
+						<Import-Package>
+							net.engio.mbassy.*,
+							org.simtech.bootware.core.*,
+							!*
+						</Import-Package>
+						<Embed-Directory>lib</Embed-Directory>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
 					</instructions>
 				</configuration>
 			</plugin>

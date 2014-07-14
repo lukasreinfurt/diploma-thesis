@@ -32,7 +32,7 @@
 
 		<fileSet>
 			<directory>../remote/target/lib</directory>
-			<outputDirectory>bin/lib</outputDirectory>
+			<outputDirectory>bin/remote/lib</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
 			</includes>
@@ -79,7 +79,7 @@
 				<include>org.simtech.bootware:bootware-remote</include>
 			</includes>
 			<binaries>
-				<outputDirectory>bin</outputDirectory>
+				<outputDirectory>bin/remote</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>

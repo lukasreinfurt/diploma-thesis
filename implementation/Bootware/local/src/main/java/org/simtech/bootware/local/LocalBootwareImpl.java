@@ -136,7 +136,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		public Machine() {}
 
 		protected void sendToRemote(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire(SMEvents.SUCCESS);
+			stateMachine.fire(SMEvents.NOREMOTE);
+			// stateMachine.fire(SMEvents.SUCCESS);
 			//stateMachine.fire(SMEvents.FAILURE);
 		}
 
