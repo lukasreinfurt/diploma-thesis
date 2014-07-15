@@ -3,8 +3,13 @@ package org.simtech.bootware.local;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.jws.WebService;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Response;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceException;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ConfigurationWrapper;
@@ -17,8 +22,11 @@ import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.core.exceptions.UndeployException;
+import org.simtech.bootware.remote.DeployResponse;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
+
+import async.client.RemoteBootware;
 
 /**
  * The main bootware program.
@@ -140,7 +148,12 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		public Machine() {}
 
+		@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 		protected void sendToRemote(final String from, final String to, final String fsmEvent) {
+			if (url != null) {
+				remoteBootware = url;
+			}
+
 			if (remoteBootware == null && !triedProvisioningRemote) {
 				eventBus.publish(new CoreEvent(Severity.INFO, "No remote bootware deployed yet. Deploying remote bootware."));
 				triedProvisioningRemote = true;
@@ -153,6 +166,33 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				return;
 			}
 			eventBus.publish(new CoreEvent(Severity.SUCCESS, "Remote bootware found. Passing on request."));
+
+			try {
+				final QName qname = new QName("http://remote.bootware.simtech.org/", "RemoteBootwareImplService");
+				final Service service = Service.create(remoteBootware, qname);
+				final RemoteBootware rb = service.getPort(RemoteBootware.class);
+				final Response<DeployResponse> response = rb.deployAsync(LocalBootwareImpl.context);
+
+				while (!response.isDone()) {
+					final Integer time = 1000;
+					Thread.sleep(time);
+				}
+
+				final InformationListWrapper infos = response.get().getReturn();
+			}
+			catch (WebServiceException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Connecting to remote bootware failed: " + e.getMessage()));
+				stateMachine.fire(SMEvents.FAILURE);
+			}
+			catch (InterruptedException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Remote bootware failed: " + e.getMessage()));
+				stateMachine.fire(SMEvents.FAILURE);
+			}
+			catch (ExecutionException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Executing deploy on remote bootware failed: " + e.getMessage()));
+				stateMachine.fire(SMEvents.FAILURE);
+			}
+
 			stateMachine.fire(SMEvents.SUCCESS);
 		}
 

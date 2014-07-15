@@ -159,6 +159,12 @@ public abstract class AbstractStateMachine {
 		protected void readContext(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
+			if (context == null) {
+				request.fail("Context was null.");
+				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
+			}
+
 			if ("".equals(context.getResourcePlugin())) {
 				request.fail("resourceType cannot be empty");
 				stateMachine.fire(StateMachineEvents.FAILURE);

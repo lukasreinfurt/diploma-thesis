@@ -61,7 +61,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public final URL start(final Connection connection) throws StartApplicationException {
 		try {
-			final URL url = new URL("http://www.example.com");
+			final URL url = new URL("http://localhost:8080/axis2/services/Bootware?wsdl");
 			return url;
 		}
 		catch (MalformedURLException e) {

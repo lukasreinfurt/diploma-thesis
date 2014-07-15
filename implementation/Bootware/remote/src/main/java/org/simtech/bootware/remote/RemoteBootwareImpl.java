@@ -133,6 +133,13 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		public Machine() {}
 
 		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
+			try {
+				final Integer time = 10000;
+				Thread.sleep(time);
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
+	<bindings scd="x-schema::tns" xmlns:tns="http://remote.bootware.simtech.org/">
+		<bindings scd="~tns:configurationWrapper">
+			<class ref="org.simtech.bootware.core.ConfigurationWrapper"/>
+		</bindings>
+		<bindings scd="~tns:context">
+			<class ref="org.simtech.bootware.core.Context"/>
+		</bindings>
+		<bindings scd="~tns:informationListWrapper">
+			<class ref="org.simtech.bootware.core.InformationListWrapper"/>
+		</bindings>
+		<bindings scd="~tns:ShutdownException">
+			<class ref="org.simtech.bootware.core.exceptions.ShutdownException"/>
+		</bindings>
+		<bindings scd="~tns:SetConfigurationException">
+			<class ref="org.simtech.bootware.core.exceptions.SetConfigurationException"/>
+		</bindings>
+		<bindings scd="~tns:UndeployException">
+			<class ref="org.simtech.bootware.core.exceptions.UndeployException"/>
+		</bindings>
+		<bindings scd="~tns:DeployException">
+			<class ref="org.simtech.bootware.core.exceptions.DeployException"/>
+		</bindings>
+	</bindings>
+</bindings>
+

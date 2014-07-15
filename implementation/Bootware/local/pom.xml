@@ -36,6 +36,44 @@
 	<build>
 		<plugins>
 
+			<!-- generate remote bootware stubs from wsdl -->
+			<!-- execute manually with: org.jvnet.jax-ws-commons:jaxws-maven-plugin:wsimport -->
+			<!-- <plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>wsimport</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<wsdlUrls>
+						<wsdlUrl>http://localhost:8080/axis2/services/Bootware?wsdl</wsdlUrl>
+					</wsdlUrls>
+					<packageName>com</packageName>
+				</configuration>
+			 </plugin> -->
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals><goal>add-source</goal></goals>
+						<configuration>
+							<sources>
+								<source>src/main/generated</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- disable default jar generation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
