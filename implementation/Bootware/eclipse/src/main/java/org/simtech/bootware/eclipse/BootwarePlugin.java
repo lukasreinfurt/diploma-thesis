@@ -2,12 +2,12 @@ package org.simtech.bootware.eclipse;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 
-public class Test implements IBootwarePlugin {
+public class BootwarePlugin implements IBootwarePlugin {
 
-	public Test() {}
+	public BootwarePlugin() {}
 
 	public final String execute() {
-		return "Plugin executed!";
+		return "Bootware Plugin executed!";
 	}
 
 }

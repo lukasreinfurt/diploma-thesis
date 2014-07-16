@@ -8,7 +8,7 @@
 	<extension
 		point="org.eclipse.bpel.ui.bootware">
 		<execute
-				class="org.simtech.bootware.eclipse.Test">
+				class="org.simtech.bootware.eclipse.BootwarePlugin">
 		</execute>
 	</extension>
 
