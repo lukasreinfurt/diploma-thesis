@@ -49,13 +49,11 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 		//@reinfuls
 		try {
-			PrintWriter writer = new PrintWriter("omg123.txt", "UTF-8");
-
-			String response = "";
-			StringBuffer buffer = new StringBuffer();
+			// get all extension thst implement the bootware extension point
 			IExtensionRegistry reg = Platform.getExtensionRegistry();
 			IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
 
+			// call the execute method of each extension
 			for (int i = 0; i < extensions.length; i++) {
 				IConfigurationElement element = extensions[i];
 				if (element.getAttribute("class") == null) {
@@ -63,18 +61,12 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				} else {
 					try {
 						IBootwarePlugin plugin = (IBootwarePlugin) element.createExecutableExtension("class");
-						response = plugin.execute();
+						plugin.execute();
 					} catch (CoreException e) {
-						response = e.toString();
+						e.printStackTrace();
 					}
 				}
-				buffer.append(response);
-				buffer.append('\n');
 			}
-
-			writer.println("Output");
-			writer.println(buffer.toString());
-			writer.close();
 		}
 		catch (Exception e) {
 			e.printStackTrace();

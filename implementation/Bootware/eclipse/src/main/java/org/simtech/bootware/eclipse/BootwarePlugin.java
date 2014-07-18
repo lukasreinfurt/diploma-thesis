@@ -3,8 +3,6 @@ package org.simtech.bootware.eclipse;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Response;
@@ -80,52 +77,35 @@ public class BootwarePlugin implements IBootwarePlugin {
 		return newConsole;
 	}
 
-	public final String execute() {
+	private void executeLocalBootware() {
+		log("Starting local bootware.");
 
-		Thread t = new Thread(new Runnable() {
-
-			public void run() {
-				log("Starting local bootware.");
-
-				final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
-				processBuilder.directory(new File("plugins/Bootware-bin/bin"));
-				processBuilder.redirectErrorStream(true);
-
-				try {
-					final Process process = processBuilder.start();
-					final OutputStream processOutput = process.getOutputStream();
-					final InputStream processInput = process.getInputStream();
-					final BufferedReader processReader = new BufferedReader(new InputStreamReader(processInput));
-					final BufferedWriter processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
-					String line;
-					while ((line = processReader.readLine()) != null) {
-						log(line);
-					}
-					processReader.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				log("Local bootware stopped.");
-			}
-
-		});
-		t.start();
-
-		context = new Context();
-		context.setResourcePlugin("test-1.0.0.jar");
-		context.setCommunicationPlugin("2");
-		context.setApplicationPlugin("3");
+		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
+		processBuilder.directory(new File("plugins/Bootware-bin/bin"));
+		processBuilder.redirectErrorStream(true);
 
 		try {
+			final Process process = processBuilder.start();
+			final OutputStream processOutput = process.getOutputStream();
+			final InputStream processInput = process.getInputStream();
+			final BufferedReader processReader = new BufferedReader(new InputStreamReader(processInput));
+			final BufferedWriter processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
+			String line;
+			while ((line = processReader.readLine()) != null) {
+				log(line);
+			}
+			processReader.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		log("Local bootware stopped.");
+	}
+
+	private void loadContext() {
+		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(Context.class);
-
-			final Marshaller marshaller = jaxbContext.createMarshaller();
-			final OutputStream os = new FileOutputStream("plugins/Bootware-bin/sample.xml");
-			marshaller.marshal(context, os);
-			os.close();
-
 			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			final File file = new File("plugins/Bootware-bin/context.xml");
 			context = (Context) unmarshaller.unmarshal(file);
@@ -134,16 +114,24 @@ public class BootwarePlugin implements IBootwarePlugin {
 			log(context.getCommunicationPlugin());
 			log(context.getApplicationPlugin());
 		}
-		catch (FileNotFoundException e) {
-			log("File not found: " + e.getMessage());
-		}
-		catch (IOException e) {
-			log(e.getMessage());
-		}
 		catch (JAXBException e) {
 			log("Loading context failed: " + e.getMessage());
 			log(e.toString());
 		}
+	}
+
+	public final void execute() {
+
+		final Thread t = new Thread(new Runnable() {
+
+			public void run() {
+				executeLocalBootware();
+			}
+
+		});
+		t.start();
+
+		loadContext();
 
 		Thread t2 = new Thread(new Runnable() {
 
@@ -205,8 +193,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		});
 		t2.start();
-
-		return "this is ...";
 	}
 
 }
