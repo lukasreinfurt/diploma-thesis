@@ -47,6 +47,9 @@ public class PluginManager {
 		                           + "net.engio.mbassy.common;version=1.1.2";
 		config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, extraPackages);
 
+		// flush plugin cache on each framework start
+		config.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
+
 		frameworkFactory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		framework        = frameworkFactory.newFramework(config);
 
