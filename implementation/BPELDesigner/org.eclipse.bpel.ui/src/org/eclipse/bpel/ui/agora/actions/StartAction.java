@@ -56,9 +56,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 			// call the execute method of each extension
 			for (int i = 0; i < extensions.length; i++) {
 				IConfigurationElement element = extensions[i];
-				if (element.getAttribute("class") == null) {
-					// handle
-				} else {
+				if (element.getAttribute("class") != null) {
 					try {
 						IBootwarePlugin plugin = (IBootwarePlugin) element.createExecutableExtension("class");
 						plugin.execute();
