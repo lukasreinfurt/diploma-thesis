@@ -4,9 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 
+@XmlRootElement
+@XmlType(propOrder = {
+		"resourcePlugin",
+		"communicationPlugin",
+		"applicationPlugin",
+		"callApplicationPlugin",
+		"servicePackageReference",
+		"configurationList"
+		})
 public class Context {
 
 	private String resourcePlugin;

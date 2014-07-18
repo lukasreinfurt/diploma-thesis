@@ -32,6 +32,16 @@
 
 	</repositories>
 
+	<dependencies>
+
+		<dependency>
+			<groupId>org.simtech.bootware</groupId>
+			<artifactId>bootware-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+	</dependencies>
+
 	<build>
 		<plugins>
 
@@ -75,6 +85,23 @@
 						</environment>
 					</environments>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals><goal>add-source</goal></goals>
+						<configuration>
+							<sources>
+								<source>src/main/generated</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
