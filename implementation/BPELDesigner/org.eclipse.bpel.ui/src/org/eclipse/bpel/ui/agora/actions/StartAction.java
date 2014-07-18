@@ -49,7 +49,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 		//@reinfuls
 		try {
-			// get all extension thst implement the bootware extension point
+			// get all extension that implement the bootware extension point
 			IExtensionRegistry reg = Platform.getExtensionRegistry();
 			IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
 
