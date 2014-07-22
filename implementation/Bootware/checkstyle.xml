@@ -116,7 +116,9 @@
 		<module name="AvoidStaticImport"/>
 		<module name="IllegalImport"/>
 		<module name="RedundantImport"/>
-		<module name="UnusedImports"/>
+		<module name="UnusedImports">
+			<!--<property name="severity" value="warning"/>-->
+		</module>
 		<module name="ImportOrder">
 			<property name="groups" value="/^javax?\./,org,net"/>
 			<property name="separated" value="true"/>

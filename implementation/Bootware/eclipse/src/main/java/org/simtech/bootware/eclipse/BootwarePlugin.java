@@ -21,11 +21,14 @@ import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
@@ -120,6 +123,23 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	private void setPreferences() {
+		// SimTech settings
+		final IPreferenceStore simTechStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.bpel.ui");
+
+		simTechStore.setValue("ACTIVE_MQ_URL", "http://set.by.bootware.org/activemq");
+		simTechStore.setValue("SEND_REQUESTS", true);
+		simTechStore.setValue("USE_EXT_ITERATION", false);
+		simTechStore.setValue("INSTANCE_WAITING_TIME", "200");
+
+		// ODE settings
+		final IPreferenceStore odeStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.apache.ode.processManagement");
+
+		odeStore.setValue("pref_ode_url", "http://set.by.bootware.org/ode");
+		odeStore.setValue("pref_ode_version", "ODE_Version_134");
+
+	}
+
 	public final void execute() {
 
 		final Thread t = new Thread(new Runnable() {
@@ -193,6 +213,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		});
 		t2.start();
+
+		setPreferences();
+
 	}
 
 }
