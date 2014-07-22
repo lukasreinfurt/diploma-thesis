@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
@@ -31,14 +32,23 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
+		final String remotePathPrefix = "/tmp/";
+
 		if (connection != null) {
 			try {
+				connection.execute("java -version");
 				connection.execute("ls /tmp");
-				connection.execute("mkdir -p /tmp/remote/lib");
 
-				final Collection<File> files =  FileUtils.listFiles(new File("remote/"), null, true);
+				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 				for (File file : files) {
-					connection.upload(file.toString(), new File("/tmp/", file.toString()).toString());
+					if (file.isFile()) {
+						final File remotePath = new File(remotePathPrefix, file.getParent());
+						connection.upload(file.toString(), remotePath.toString());
+					}
+					else if (file.isDirectory()) {
+						final File remotePath = new File(remotePathPrefix, file.toString());
+						connection.execute("mkdir -p " + remotePath.toString());
+					}
 				}
 
 				connection.execute("ls -al /tmp");

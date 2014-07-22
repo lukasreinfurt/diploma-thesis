@@ -67,7 +67,7 @@
 		<module name="EqualsAvoidNull"/>
 		<module name="EqualsHashCode"/>
 		<module name="FinalLocalVariable"/>
-		<module name="HiddenField"/>
+		<!--<module name="HiddenField"/>-->
 		<!--<module name="IllegalToken"/>-->
 		<module name="InnerAssignment"/>
 		<module name="MagicNumber"/>
@@ -92,7 +92,9 @@
 		<module name="IllegalThrows"/>
 		<module name="PackageDeclaration"/>
 		<module name="ReturnCount"/>
-		<module name="IllegalType"/>
+		<module name="IllegalType">
+			<property name="ignoredMethodNames" value="undeploy, setConfiguration"/>
+		</module>
 		<module name="DeclarationOrder"/>
 		<module name="ParameterAssignment"/>
 		<module name="ExplicitInitialization"/>

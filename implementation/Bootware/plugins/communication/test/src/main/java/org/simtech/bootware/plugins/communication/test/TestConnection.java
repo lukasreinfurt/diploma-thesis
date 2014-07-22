@@ -32,7 +32,7 @@ public class TestConnection implements Connection {
 	}
 
 	public final void upload(final String localFile, final String remotePath) throws UploadFileException {
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + localFile + "'."));
+		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + localFile + "' to '" + remotePath + "'."));
 	}
 
 }

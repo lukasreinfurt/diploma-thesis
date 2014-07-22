@@ -3,6 +3,7 @@ package org.simtech.bootware.local;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.simtech.bootware.core.Context;
 
@@ -17,7 +18,7 @@ import org.simtech.bootware.core.Context;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="context" type="{http://local.bootware.simtech.org/}context" minOccurs="0"/>
+ *         &lt;element ref="{http://local.bootware.simtech.org/}context" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -32,6 +33,7 @@ import org.simtech.bootware.core.Context;
 })
 public class Deploy {
 
+    @XmlElement(namespace = "http://local.bootware.simtech.org/")
     protected Context context;
 
     /**

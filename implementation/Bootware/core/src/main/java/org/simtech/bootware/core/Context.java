@@ -10,7 +10,8 @@ import javax.xml.bind.annotation.XmlType;
 import org.simtech.bootware.core.exceptions.ConfigurationException;
 
 @XmlRootElement
-@XmlType(propOrder = {
+@XmlType(
+		propOrder = {
 		"resourcePlugin",
 		"communicationPlugin",
 		"applicationPlugin",

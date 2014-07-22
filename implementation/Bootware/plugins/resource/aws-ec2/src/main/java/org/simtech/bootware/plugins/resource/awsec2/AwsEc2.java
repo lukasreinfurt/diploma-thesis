@@ -7,7 +7,6 @@ import java.util.Map;
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.ResourcePluginEvent;
 import org.simtech.bootware.core.events.Severity;
-import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
@@ -44,6 +43,8 @@ import com.amazonaws.services.ec2.model.TerminateInstancesResult;
                  })
 public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
+	private Map<String, String> configuration;
+
 	private String secretKey;
 	private String accessKey;
 	private String username;
@@ -54,15 +55,14 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 	public AwsEc2() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
-		try {
-			secretKey = configuration.get("secretKey");
-			accessKey = configuration.get("accessKey");
-			username  = configuration.get("username");
-		}
-		catch (ConfigurationException e) {
-			System.out.println(e.toString());
-		}
+	public final void initialize(final ConfigurationWrapper config) {
+
+		configuration = config.getConfiguration();
+
+		secretKey = configuration.get("secretKey");
+		accessKey = configuration.get("accessKey");
+		username  = configuration.get("username");
+
 		securityGroupName = "GeneratedSecurityGroup";
 		keyName           = "BootwareKey";
 		createClientInstance();
@@ -140,6 +140,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 	private void openPorts() throws ProvisionResourceException {
 		final IpPermission ipPermission = new IpPermission();
+		final IpPermission ipPermission2 = new IpPermission();
 
 		ipPermission
 			.withIpRanges("0.0.0.0/0")
@@ -147,11 +148,17 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			.withFromPort(22)
 			.withToPort(22);
 
+		ipPermission2
+			.withIpRanges("0.0.0.0/0")
+			.withIpProtocol("tcp")
+			.withFromPort(8080)
+			.withToPort(8080);
+
 		final AuthorizeSecurityGroupIngressRequest request = new AuthorizeSecurityGroupIngressRequest();
 
 		request
 			.withGroupName(securityGroupName)
-			.withIpPermissions(ipPermission);
+			.withIpPermissions(ipPermission, ipPermission2);
 
 		try {
 			ec2Client.authorizeSecurityGroupIngress(request);

@@ -1,6 +1,7 @@
 package org.simtech.bootware.local;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -111,7 +112,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void undeploy(final Map<String, String> endpoints) throws UndeployException {
+	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
 		request = new Request("undeploy");
 		final Iterator it = endpoints.entrySet().iterator();
 
@@ -132,7 +133,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void setConfiguration(final Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
+	public final void setConfiguration(final HashMap<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
 		defaultConfigurationList = configurationList;
 	}
 

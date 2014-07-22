@@ -5,6 +5,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
+import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
@@ -28,17 +29,18 @@ import org.simtech.bootware.core.exceptions.UndeployException;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _DeployException_QNAME = new QName("http://local.bootware.simtech.org/", "DeployException");
     private final static QName _Shutdown_QNAME = new QName("http://local.bootware.simtech.org/", "shutdown");
-    private final static QName _Deploy_QNAME = new QName("http://local.bootware.simtech.org/", "deploy");
     private final static QName _UndeployException_QNAME = new QName("http://local.bootware.simtech.org/", "UndeployException");
+    private final static QName _Context_QNAME = new QName("http://local.bootware.simtech.org/", "context");
     private final static QName _SetConfigurationResponse_QNAME = new QName("http://local.bootware.simtech.org/", "setConfigurationResponse");
     private final static QName _ShutdownResponse_QNAME = new QName("http://local.bootware.simtech.org/", "shutdownResponse");
     private final static QName _Undeploy_QNAME = new QName("http://local.bootware.simtech.org/", "undeploy");
-    private final static QName _UndeployResponse_QNAME = new QName("http://local.bootware.simtech.org/", "undeployResponse");
     private final static QName _SetConfigurationException_QNAME = new QName("http://local.bootware.simtech.org/", "SetConfigurationException");
     private final static QName _DeployResponse_QNAME = new QName("http://local.bootware.simtech.org/", "deployResponse");
     private final static QName _SetConfiguration_QNAME = new QName("http://local.bootware.simtech.org/", "setConfiguration");
+    private final static QName _DeployException_QNAME = new QName("http://local.bootware.simtech.org/", "DeployException");
+    private final static QName _Deploy_QNAME = new QName("http://local.bootware.simtech.org/", "deploy");
+    private final static QName _UndeployResponse_QNAME = new QName("http://local.bootware.simtech.org/", "undeployResponse");
     private final static QName _ShutdownException_QNAME = new QName("http://local.bootware.simtech.org/", "ShutdownException");
 
     /**
@@ -81,14 +83,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DeployResponse }
-     * 
-     */
-    public DeployResponse createDeployResponse() {
-        return new DeployResponse();
-    }
-
-    /**
      * Create an instance of {@link UndeployResponse }
      * 
      */
@@ -97,11 +91,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ShutdownResponse }
+     * Create an instance of {@link Deploy }
      * 
      */
-    public ShutdownResponse createShutdownResponse() {
-        return new ShutdownResponse();
+    public Deploy createDeploy() {
+        return new Deploy();
+    }
+
+    /**
+     * Create an instance of {@link DeployResponse }
+     * 
+     */
+    public DeployResponse createDeployResponse() {
+        return new DeployResponse();
     }
 
     /**
@@ -113,11 +115,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Deploy }
+     * Create an instance of {@link ShutdownResponse }
      * 
      */
-    public Deploy createDeploy() {
-        return new Deploy();
+    public ShutdownResponse createShutdownResponse() {
+        return new ShutdownResponse();
     }
 
     /**
@@ -145,15 +147,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link DeployException }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "DeployException")
-    public JAXBElement<DeployException> createDeployException(DeployException value) {
-        return new JAXBElement<DeployException>(_DeployException_QNAME, DeployException.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Shutdown }{@code >}}
      * 
      */
@@ -163,21 +156,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Deploy }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "deploy")
-    public JAXBElement<Deploy> createDeploy(Deploy value) {
-        return new JAXBElement<Deploy>(_Deploy_QNAME, Deploy.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link UndeployException }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "UndeployException")
     public JAXBElement<UndeployException> createUndeployException(UndeployException value) {
         return new JAXBElement<UndeployException>(_UndeployException_QNAME, UndeployException.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Context }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "context")
+    public JAXBElement<Context> createContext(Context value) {
+        return new JAXBElement<Context>(_Context_QNAME, Context.class, null, value);
     }
 
     /**
@@ -208,15 +201,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link UndeployResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "undeployResponse")
-    public JAXBElement<UndeployResponse> createUndeployResponse(UndeployResponse value) {
-        return new JAXBElement<UndeployResponse>(_UndeployResponse_QNAME, UndeployResponse.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link SetConfigurationException }{@code >}}
      * 
      */
@@ -241,6 +225,33 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "setConfiguration")
     public JAXBElement<SetConfiguration> createSetConfiguration(SetConfiguration value) {
         return new JAXBElement<SetConfiguration>(_SetConfiguration_QNAME, SetConfiguration.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DeployException }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "DeployException")
+    public JAXBElement<DeployException> createDeployException(DeployException value) {
+        return new JAXBElement<DeployException>(_DeployException_QNAME, DeployException.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Deploy }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "deploy")
+    public JAXBElement<Deploy> createDeploy(Deploy value) {
+        return new JAXBElement<Deploy>(_Deploy_QNAME, Deploy.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link UndeployResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://local.bootware.simtech.org/", name = "undeployResponse")
+    public JAXBElement<UndeployResponse> createUndeployResponse(UndeployResponse value) {
+        return new JAXBElement<UndeployResponse>(_UndeployResponse_QNAME, UndeployResponse.class, null, value);
     }
 
     /**

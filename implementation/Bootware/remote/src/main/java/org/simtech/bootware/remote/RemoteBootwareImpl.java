@@ -1,5 +1,6 @@
 package org.simtech.bootware.remote;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final void undeploy(final Map<String, String> endpoints) throws UndeployException {
+	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
 		request = new Request("undeploy");
 		final Iterator it = endpoints.entrySet().iterator();
 
@@ -116,7 +117,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final void setConfiguration(final Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
+	public final void setConfiguration(final HashMap<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
 		defaultConfigurationList = configurationList;
 	}
 

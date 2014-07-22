@@ -97,25 +97,44 @@ public class SshConnection implements Connection {
 		if (session != null) {
 			try {
 				session.execCommand(command);
-				final InputStream is     = new StreamGobbler(session.getStdout());
-				final BufferedReader br  = new BufferedReader(new InputStreamReader(is));
-				final StringBuilder sb   = new StringBuilder();
+
+				final InputStream stdout = new StreamGobbler(session.getStdout());
+				final InputStream stderr = new StreamGobbler(session.getStderr());
+				final BufferedReader stdoutReader = new BufferedReader(new InputStreamReader(stdout));
+				final BufferedReader stderrReader = new BufferedReader(new InputStreamReader(stderr));
+				final StringBuilder stringBuilder = new StringBuilder();
+
 				while (true) {
-					final String line = br.readLine();
+					final String line = stdoutReader.readLine();
 					if (line == null) {
-						br.close();
+						stdoutReader.close();
 						break;
 					}
 					else {
-						sb.append(line);
+						stringBuilder.append(line);
 					}
 				}
-				eventBus.publish(new CommunicationPluginEvent(Severity.DEBUG, "Command '" + command + "' output: " + sb.toString()));
+
+				while (true) {
+					final String line = stderrReader.readLine();
+					if (line == null) {
+						stderrReader.close();
+						break;
+					}
+					else {
+						stringBuilder.append(line);
+					}
+				}
+
+				eventBus.publish(new CommunicationPluginEvent(Severity.DEBUG, "Command '" + command + "' output: " + stringBuilder.toString()));
 			}
 			catch (IOException e) {
 				throw new ExecuteCommandException(e);
 			}
 			session.close();
+		}
+		else {
+			throw new ExecuteCommandException("Session was null.");
 		}
 	}
 
@@ -124,11 +143,10 @@ public class SshConnection implements Connection {
 
 		try {
 			final SCPClient scp = new SCPClient(connection);
-
 			final File file = new File(localFile);
 			final SCPOutputStream outputStream = scp.put(file.getName(), file.length(), remotePath, "0755");
-
 			final FileInputStream inputStream = new FileInputStream(localFile);
+
 			final byte[] buffer = new byte[bufferSize];
 			int n;
 			while ((n = inputStream.read(buffer)) > 0) {

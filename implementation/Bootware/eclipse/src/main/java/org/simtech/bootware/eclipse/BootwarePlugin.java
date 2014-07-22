@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +42,8 @@ import async.client.LocalBootware;
 	"checkstyle:anoninnerlength",
 	"checkstyle:classfanoutcomplexity",
 	"checkstyle:javancss",
-	"checkstyle:cyclomaticcomplexity"
+	"checkstyle:cyclomaticcomplexity",
+	"checkstyle:classdataabstractioncoupling"
 })
 public class BootwarePlugin implements IBootwarePlugin {
 
@@ -201,6 +204,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 					}
 					catch (WebServiceException e) {
 						log("Retrieving service port failed: " + e.getMessage());
+						final StringWriter sw = new StringWriter();
+						e.printStackTrace(new PrintWriter(sw));
+						log(sw.toString());
 					}
 					catch (InterruptedException e) {
 						log("Local bootware failed: " + e.getMessage());

@@ -1,6 +1,6 @@
 package org.simtech.bootware.core;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -17,7 +17,7 @@ import org.simtech.bootware.core.exceptions.UndeployException;
 @WebService
 public interface Bootware {
 	@WebMethod InformationListWrapper deploy(@WebParam(name = "context") Context context) throws DeployException;
-	@WebMethod void undeploy(@WebParam(name = "informationList") Map<String, String> endpoints) throws UndeployException;
-	@WebMethod void setConfiguration(@WebParam(name = "configurationList") Map<String, ConfigurationWrapper> configurationList) throws SetConfigurationException;
+	@WebMethod void undeploy(@WebParam(name = "informationList") HashMap<String, String> endpoints) throws UndeployException;
+	@WebMethod void setConfiguration(@WebParam(name = "configurationList") HashMap<String, ConfigurationWrapper> configurationList) throws SetConfigurationException;
 	@WebMethod void shutdown() throws ShutdownException;
 }

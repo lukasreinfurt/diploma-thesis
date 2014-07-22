@@ -30,86 +30,6 @@ public interface LocalBootware {
 
     /**
      * 
-     * @return
-     *     returns javax.xml.ws.Response<org.simtech.bootware.local.ShutdownResponse>
-     */
-    @WebMethod(operationName = "shutdown")
-    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
-    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
-    public Response<ShutdownResponse> shutdownAsync();
-
-    /**
-     * 
-     * @param asyncHandler
-     * @return
-     *     returns java.util.concurrent.Future<? extends java.lang.Object>
-     */
-    @WebMethod(operationName = "shutdown")
-    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
-    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
-    public Future<?> shutdownAsync(
-        @WebParam(name = "asyncHandler", targetNamespace = "")
-        AsyncHandler<ShutdownResponse> asyncHandler);
-
-    /**
-     * 
-     * @throws ShutdownException
-     */
-    @WebMethod
-    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
-    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
-    public void shutdown()
-        throws ShutdownException
-    ;
-
-    /**
-     * 
-     * @param context
-     * @return
-     *     returns javax.xml.ws.Response<org.simtech.bootware.local.DeployResponse>
-     */
-    @WebMethod(operationName = "deploy")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
-    public Response<DeployResponse> deployAsync(
-        @WebParam(name = "context", targetNamespace = "")
-        Context context);
-
-    /**
-     * 
-     * @param context
-     * @param asyncHandler
-     * @return
-     *     returns java.util.concurrent.Future<? extends java.lang.Object>
-     */
-    @WebMethod(operationName = "deploy")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
-    public Future<?> deployAsync(
-        @WebParam(name = "context", targetNamespace = "")
-        Context context,
-        @WebParam(name = "asyncHandler", targetNamespace = "")
-        AsyncHandler<DeployResponse> asyncHandler);
-
-    /**
-     * 
-     * @param context
-     * @return
-     *     returns org.simtech.bootware.core.InformationListWrapper
-     * @throws DeployException
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
-    public InformationListWrapper deploy(
-        @WebParam(name = "context", targetNamespace = "")
-        Context context)
-        throws DeployException
-    ;
-
-    /**
-     * 
      * @param informationList
      * @return
      *     returns javax.xml.ws.Response<org.simtech.bootware.local.UndeployResponse>
@@ -153,6 +73,52 @@ public interface LocalBootware {
 
     /**
      * 
+     * @param context
+     * @return
+     *     returns javax.xml.ws.Response<org.simtech.bootware.local.DeployResponse>
+     */
+    @WebMethod(operationName = "deploy")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
+    public Response<DeployResponse> deployAsync(
+        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        Context context);
+
+    /**
+     * 
+     * @param context
+     * @param asyncHandler
+     * @return
+     *     returns java.util.concurrent.Future<? extends java.lang.Object>
+     */
+    @WebMethod(operationName = "deploy")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
+    public Future<?> deployAsync(
+        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        Context context,
+        @WebParam(name = "asyncHandler", targetNamespace = "")
+        AsyncHandler<DeployResponse> asyncHandler);
+
+    /**
+     * 
+     * @param context
+     * @return
+     *     returns org.simtech.bootware.core.InformationListWrapper
+     * @throws DeployException
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
+    public InformationListWrapper deploy(
+        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        Context context)
+        throws DeployException
+    ;
+
+    /**
+     * 
      * @param configurationList
      * @return
      *     returns javax.xml.ws.Response<org.simtech.bootware.local.SetConfigurationResponse>
@@ -192,6 +158,40 @@ public interface LocalBootware {
         @WebParam(name = "configurationList", targetNamespace = "")
         org.simtech.bootware.local.SetConfiguration.ConfigurationList configurationList)
         throws SetConfigurationException
+    ;
+
+    /**
+     * 
+     * @return
+     *     returns javax.xml.ws.Response<org.simtech.bootware.local.ShutdownResponse>
+     */
+    @WebMethod(operationName = "shutdown")
+    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
+    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
+    public Response<ShutdownResponse> shutdownAsync();
+
+    /**
+     * 
+     * @param asyncHandler
+     * @return
+     *     returns java.util.concurrent.Future<? extends java.lang.Object>
+     */
+    @WebMethod(operationName = "shutdown")
+    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
+    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
+    public Future<?> shutdownAsync(
+        @WebParam(name = "asyncHandler", targetNamespace = "")
+        AsyncHandler<ShutdownResponse> asyncHandler);
+
+    /**
+     * 
+     * @throws ShutdownException
+     */
+    @WebMethod
+    @RequestWrapper(localName = "shutdown", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Shutdown")
+    @ResponseWrapper(localName = "shutdownResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.ShutdownResponse")
+    public void shutdown()
+        throws ShutdownException
     ;
 
 }
