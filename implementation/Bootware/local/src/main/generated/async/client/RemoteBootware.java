@@ -30,52 +30,6 @@ public interface RemoteBootware {
 
     /**
      * 
-     * @param context
-     * @return
-     *     returns javax.xml.ws.Response<org.simtech.bootware.remote.DeployResponse>
-     */
-    @WebMethod(operationName = "deploy")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
-    public Response<DeployResponse> deployAsync(
-        @WebParam(name = "context", targetNamespace = "http://remote.bootware.simtech.org/")
-        Context context);
-
-    /**
-     * 
-     * @param context
-     * @param asyncHandler
-     * @return
-     *     returns java.util.concurrent.Future<? extends java.lang.Object>
-     */
-    @WebMethod(operationName = "deploy")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
-    public Future<?> deployAsync(
-        @WebParam(name = "context", targetNamespace = "http://remote.bootware.simtech.org/")
-        Context context,
-        @WebParam(name = "asyncHandler", targetNamespace = "")
-        AsyncHandler<DeployResponse> asyncHandler);
-
-    /**
-     * 
-     * @param context
-     * @return
-     *     returns org.simtech.bootware.core.InformationListWrapper
-     * @throws DeployException
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
-    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
-    public InformationListWrapper deploy(
-        @WebParam(name = "context", targetNamespace = "http://remote.bootware.simtech.org/")
-        Context context)
-        throws DeployException
-    ;
-
-    /**
-     * 
      * @param informationList
      * @return
      *     returns javax.xml.ws.Response<org.simtech.bootware.remote.UndeployResponse>
@@ -115,6 +69,52 @@ public interface RemoteBootware {
         @WebParam(name = "informationList", targetNamespace = "")
         org.simtech.bootware.remote.Undeploy.InformationList informationList)
         throws UndeployException
+    ;
+
+    /**
+     * 
+     * @param context
+     * @return
+     *     returns javax.xml.ws.Response<org.simtech.bootware.remote.DeployResponse>
+     */
+    @WebMethod(operationName = "deploy")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
+    public Response<DeployResponse> deployAsync(
+        @WebParam(name = "context", targetNamespace = "")
+        Context context);
+
+    /**
+     * 
+     * @param context
+     * @param asyncHandler
+     * @return
+     *     returns java.util.concurrent.Future<? extends java.lang.Object>
+     */
+    @WebMethod(operationName = "deploy")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
+    public Future<?> deployAsync(
+        @WebParam(name = "context", targetNamespace = "")
+        Context context,
+        @WebParam(name = "asyncHandler", targetNamespace = "")
+        AsyncHandler<DeployResponse> asyncHandler);
+
+    /**
+     * 
+     * @param context
+     * @return
+     *     returns org.simtech.bootware.core.InformationListWrapper
+     * @throws DeployException
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "deploy", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.Deploy")
+    @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://remote.bootware.simtech.org/", className = "org.simtech.bootware.remote.DeployResponse")
+    public InformationListWrapper deploy(
+        @WebParam(name = "context", targetNamespace = "")
+        Context context)
+        throws DeployException
     ;
 
     /**

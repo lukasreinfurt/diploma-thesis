@@ -81,7 +81,7 @@ public interface LocalBootware {
     @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
     @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
     public Response<DeployResponse> deployAsync(
-        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        @WebParam(name = "context", targetNamespace = "")
         Context context);
 
     /**
@@ -95,7 +95,7 @@ public interface LocalBootware {
     @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
     @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
     public Future<?> deployAsync(
-        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        @WebParam(name = "context", targetNamespace = "")
         Context context,
         @WebParam(name = "asyncHandler", targetNamespace = "")
         AsyncHandler<DeployResponse> asyncHandler);
@@ -112,7 +112,7 @@ public interface LocalBootware {
     @RequestWrapper(localName = "deploy", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.Deploy")
     @ResponseWrapper(localName = "deployResponse", targetNamespace = "http://local.bootware.simtech.org/", className = "org.simtech.bootware.local.DeployResponse")
     public InformationListWrapper deploy(
-        @WebParam(name = "context", targetNamespace = "http://local.bootware.simtech.org/")
+        @WebParam(name = "context", targetNamespace = "")
         Context context)
         throws DeployException
     ;

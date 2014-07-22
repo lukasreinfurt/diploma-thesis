@@ -15,12 +15,15 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
+
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -114,7 +117,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(Context.class);
 			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			final File file = new File("plugins/Bootware-bin/context.xml");
-			context = (Context) unmarshaller.unmarshal(file);
+			final JAXBElement<Context> root = unmarshaller.unmarshal(new StreamSource(file), Context.class);
+
+			context = root.getValue();
 
 			log(context.getResourcePlugin());
 			log(context.getCommunicationPlugin());

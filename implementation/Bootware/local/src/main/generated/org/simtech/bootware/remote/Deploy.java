@@ -3,7 +3,6 @@ package org.simtech.bootware.remote;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.simtech.bootware.core.Context;
 
@@ -18,7 +17,7 @@ import org.simtech.bootware.core.Context;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{http://remote.bootware.simtech.org/}context" minOccurs="0"/>
+ *         &lt;element name="context" type="{http://remote.bootware.simtech.org/}context" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,7 +32,6 @@ import org.simtech.bootware.core.Context;
 })
 public class Deploy {
 
-    @XmlElement(namespace = "http://remote.bootware.simtech.org/")
     protected Context context;
 
     /**
