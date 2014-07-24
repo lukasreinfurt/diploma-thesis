@@ -26,6 +26,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.simtech.bootware</groupId>
+			<artifactId>bootware-remote</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.squirrelframework</groupId>
 			<artifactId>squirrel-foundation</artifactId>
 			<version>0.3.2</version>
@@ -37,8 +43,8 @@
 		<plugins>
 
 			<!-- generate remote bootware stubs from wsdl -->
-			<!-- execute manually with: org.jvnet.jax-ws-commons:jaxws-maven-plugin:wsimport -->
-			<!-- <plugin>
+			<!-- execute manually with: mvn org.jvnet.jax-ws-commons:jaxws-maven-plugin:wsimport -->
+			<plugin>
 				<groupId>org.jvnet.jax-ws-commons</groupId>
 				<artifactId>jaxws-maven-plugin</artifactId>
 				<version>2.3</version>
@@ -47,15 +53,26 @@
 						<goals>
 							<goal>wsimport</goal>
 						</goals>
+						<configuration>
+							<wsdlDirectory>../remote/target/generated-sources/wsdl</wsdlDirectory>
+							<target>2.0</target>
+							<xnocompile>true</xnocompile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-wsdl</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>wsgen</goal>
+						</goals>
+						<configuration>
+							<sei>org.simtech.bootware.local.LocalBootwareImpl</sei>
+							<genWsdl>true</genWsdl>
+							<xnocompile>true</xnocompile>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<wsdlUrls>
-						<wsdlUrl>http://localhost:8080/axis2/services/Bootware?wsdl</wsdlUrl>
-					</wsdlUrls>
-					<packageName>com</packageName>
-				</configuration>
-			 </plugin> -->
+			</plugin>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -67,7 +84,7 @@
 						<goals><goal>add-source</goal></goals>
 						<configuration>
 							<sources>
-								<source>src/main/generated</source>
+								<source>target/generated-sources/wsimport</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -119,6 +136,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
+							<excludeArtifactIds>bootware-remote</excludeArtifactIds>
 							<outputDirectory>target/lib</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
