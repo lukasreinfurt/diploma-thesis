@@ -21,6 +21,8 @@
 	<modules>
 		<module>consoleLogger</module>
 		<module>fileLogger</module>
+		<module>zeromq-publisher</module>
+		<module>zeromq-subscriber</module>
 	</modules>
 
 	<build>
