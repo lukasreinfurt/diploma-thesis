@@ -1,7 +1,11 @@
 package org.simtech.bootware.core;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import java.util.Properties;
 
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.FSMEvent;
@@ -48,6 +52,7 @@ public abstract class AbstractStateMachine {
 	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
 	protected static ApplicationPlugin applicationPlugin;
 	protected static PluginManager pluginManager;
+	protected static Properties properties = new Properties();
 	protected static Request request;
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
@@ -55,6 +60,7 @@ public abstract class AbstractStateMachine {
 	private static String resourcePluginPath      = "plugins/resource/";
 	private static String communicationPluginPath = "plugins/communication/";
 	private static String applicationPluginPath   = "plugins/application/";
+	private static String eventPluginsPath        = "plugins/event/";
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -127,19 +133,32 @@ public abstract class AbstractStateMachine {
 
 		protected void initialize(final String from, final String to, final String fsmEvent) {
 			// log to local file?
+			try {
+				final InputStream propFile = new FileInputStream("config.properties");
+				properties.load(propFile);
+			}
+			catch (IOException e) {
+				System.out.println("Properties file could not be loaded: " + e.getMessage());
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
 			pluginManager.registerSharedObject(configuration);
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void loadEventPlugins(final String from, final String to, final String fsmEvent) {
 			// log to local file?
 			try {
-				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/fileLogger-1.0.0.jar");
-				pluginManager.loadPlugin(EventPlugin.class, "plugins/event/consoleLogger-1.0.0.jar");
+				final String[] eventPlugins = properties.getProperty("eventPlugins").split(";");
+
+				for (String eventPlugin : eventPlugins) {
+					pluginManager.loadPlugin(EventPlugin.class, eventPluginsPath + eventPlugin);
+				}
+
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Loading event plugins succeeded."));
 			}
 			catch (LoadPluginException e) {
