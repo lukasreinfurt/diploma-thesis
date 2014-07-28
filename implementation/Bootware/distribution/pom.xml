@@ -33,18 +33,9 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
-							<finalName>bootware</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
+							<finalName>Bootware</finalName>
 							<descriptors>
-								<descriptor>
-									src/main/assemble/eclipse_plugin.xml
-								</descriptor>
-								<descriptor>
-									src/main/assemble/local_bootware.xml
-								</descriptor>
-								<descriptor>
-									src/main/assemble/remote_bootware.xml
-								</descriptor>
+								<descriptor>src/main/assemble/bin.xml</descriptor>
 							</descriptors>
 						</configuration>
 					</execution>
