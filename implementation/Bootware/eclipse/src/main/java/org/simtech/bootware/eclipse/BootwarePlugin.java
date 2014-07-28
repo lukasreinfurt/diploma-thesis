@@ -90,7 +90,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		log("Starting local bootware.");
 
 		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
-		processBuilder.directory(new File("plugins/Bootware-bin/bin"));
+		processBuilder.directory(new File("plugins/bootware/bin"));
 		processBuilder.redirectErrorStream(true);
 
 		try {
@@ -116,7 +116,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(Context.class);
 			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			final File file = new File("plugins/Bootware-bin/context.xml");
+			final File file = new File("plugins/bootware/context.xml");
 			final JAXBElement<Context> root = unmarshaller.unmarshal(new StreamSource(file), Context.class);
 
 			context = root.getValue();
