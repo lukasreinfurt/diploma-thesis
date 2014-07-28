@@ -21,6 +21,14 @@
 			</includes>
 		</fileSet>
 
+		<fileSet>
+			<directory>../local/target</directory>
+			<outputDirectory>bin</outputDirectory>
+			<includes>
+				<include>*.properties</include>
+			</includes>
+		</fileSet>
+
 	</fileSets>
 
 	<moduleSets>

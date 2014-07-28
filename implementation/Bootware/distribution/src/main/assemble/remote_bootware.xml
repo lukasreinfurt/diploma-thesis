@@ -21,6 +21,14 @@
 			</includes>
 		</fileSet>
 
+		<fileSet>
+			<directory>../remote/target</directory>
+			<outputDirectory>bin/remote</outputDirectory>
+			<includes>
+				<include>*.properties</include>
+			</includes>
+		</fileSet>
+
 	</fileSets>
 
 	<moduleSets>
