@@ -22,7 +22,7 @@ public final class Main {
 
 		// Publish the bootware as a web service.
 		final RemoteBootwareImpl implementor = new RemoteBootwareImpl();
-		final String address = "http://localhost:8080/axis2/services/Bootware";
+		final String address = "http://0.0.0.0:8080/axis2/services/Bootware";
 		final Endpoint endpoint = Endpoint.publish(address, implementor);
 		System.out.println("WebService now running at " + address + " ...");
 		implementor.run();

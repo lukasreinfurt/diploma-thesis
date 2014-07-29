@@ -1,6 +1,8 @@
 package org.simtech.bootware.plugins.application.test;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -35,23 +37,22 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 		final String remotePathPrefix = "/tmp/";
 
 		if (connection != null) {
-			try {
-				connection.execute("java -version");
-				connection.execute("ls /tmp");
 
+			try {
 				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 				for (File file : files) {
+					final String remotePath = new File(remotePathPrefix, file.toString()).toString().replace("\\", "/");
 					if (file.isFile()) {
-						final File remotePath = new File(remotePathPrefix, file.getParent());
-						connection.upload(file.toString(), remotePath.toString());
+						final FileInputStream is = new FileInputStream(file);
+						connection.upload(is, file.length(), remotePath);
 					}
 					else if (file.isDirectory()) {
-						final File remotePath = new File(remotePathPrefix, file.toString());
-						connection.execute("mkdir -p " + remotePath.toString());
+						connection.execute("mkdir -p " + remotePath);
 					}
 				}
-
-				connection.execute("ls -al /tmp");
+			}
+			catch (FileNotFoundException e) {
+				throw new ProvisionApplicationException(e);
 			}
 			catch (ExecuteCommandException e) {
 				throw new ProvisionApplicationException(e);
@@ -70,12 +71,23 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final URL start(final Connection connection) throws StartApplicationException {
-		try {
-			final URL url = new URL("http://localhost:8080/axis2/services/Bootware?wsdl");
-			return url;
+
+		if (connection != null) {
+			try {
+				connection.execute("cd /tmp/remote && nohup java -jar bootware-remote-1.0.0.jar &> /dev/null &");
+
+				final URL url = new URL("http://" + connection.getURL() + ":8080/axis2/services/Bootware");
+				return url;
+			}
+			catch (ExecuteCommandException e) {
+				throw new StartApplicationException(e);
+			}
+			catch (MalformedURLException e) {
+				throw new StartApplicationException(e);
+			}
 		}
-		catch (MalformedURLException e) {
-			throw new StartApplicationException(e);
+		else {
+			throw new StartApplicationException("Connection null.");
 		}
 	}
 

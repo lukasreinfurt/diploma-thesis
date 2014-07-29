@@ -2,7 +2,6 @@ package org.simtech.bootware.plugins.communication.ssh;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +27,11 @@ public class SshConnection implements Connection {
 	private EventBus eventBus;
 	private ch.ethz.ssh2.Connection connection;
 	private Session session;
+
+	private String url;
+	private String username;
+	private String key;
+
 	private final Integer maxRetries = 20;
 	private final Integer waitBetweenRetries = 5000;
 	private final Integer bufferSize = 4096;
@@ -38,12 +42,12 @@ public class SshConnection implements Connection {
 
 	@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 	public final void connect(final Map<String, String> settings) throws ConnectConnectionException {
-		final String publicDNS = settings.get("publicDNS");
-		final String username  = settings.get("username");
-		final String key       = settings.get("privateKey");
+		url      = settings.get("publicDNS");
+		username = settings.get("username");
+		key      = settings.get("privateKey");
 
-		connection = new ch.ethz.ssh2.Connection(publicDNS);
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connecting to '" + publicDNS + "'."));
+		connection = new ch.ethz.ssh2.Connection(url);
+		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connecting to '" + url + "'."));
 
 		for (int retries = 0; retries < maxRetries; retries++) {
 			try {
@@ -126,7 +130,9 @@ public class SshConnection implements Connection {
 					}
 				}
 
-				eventBus.publish(new CommunicationPluginEvent(Severity.DEBUG, "Command '" + command + "' output: " + stringBuilder.toString()));
+				if (stringBuilder.length() > 0) {
+					eventBus.publish(new CommunicationPluginEvent(Severity.DEBUG, "Command '" + command + "' output: " + stringBuilder.toString()));
+				}
 			}
 			catch (IOException e) {
 				throw new ExecuteCommandException(e);
@@ -138,14 +144,13 @@ public class SshConnection implements Connection {
 		}
 	}
 
-	public final void upload(final String localFile, final String remotePath) throws UploadFileException {
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + localFile + "'."));
+	public final void upload(final InputStream inputStream, final long length, final String remotePath) throws UploadFileException {
+		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
 
 		try {
 			final SCPClient scp = new SCPClient(connection);
-			final File file = new File(localFile);
-			final SCPOutputStream outputStream = scp.put(file.getName(), file.length(), remotePath, "0755");
-			final FileInputStream inputStream = new FileInputStream(localFile);
+			final File file = new File(remotePath);
+			final SCPOutputStream outputStream = scp.put(file.getName(), length, file.getParent().replace("\\", "/"), "0755");
 
 			final byte[] buffer = new byte[bufferSize];
 			int n;
@@ -159,6 +164,10 @@ public class SshConnection implements Connection {
 		catch (IOException e) {
 			throw new UploadFileException(e);
 		}
+	}
+
+	public final String getURL() {
+		return url;
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.simtech.bootware.plugins.resource.awsec2;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,6 +190,17 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		}
 
 		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Key pair '" + keyName + "' created."));
+
+		// for debugging
+		try {
+			final PrintWriter out = new PrintWriter("BootwareKey.pem");
+			out.println(privateKey);
+			out.close();
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		return privateKey;
 	}
 

@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
@@ -12,6 +13,7 @@ public interface Connection {
 	void connect(Map<String, String> settings) throws ConnectConnectionException;
 	void disconnect() throws DisconnectConnectionException;
 	void execute(String command) throws ExecuteCommandException;
-	void upload(String localFile, String remotePath) throws UploadFileException;
+	void upload(InputStream inputStream, long lenght, String remotePath) throws UploadFileException;
+	String getURL();
 
 }

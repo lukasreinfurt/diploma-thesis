@@ -102,7 +102,7 @@
 		<module name="MissingCtor"/>
 		<module name="FallThrough"/>
 		<module name="MultipleStringLiterals">
-			<property name="ignoreStringsRegexp" value='^(("")|(", ")|(" = ")|("&apos;\."))$'/>
+			<property name="ignoreStringsRegexp" value='^(("")|(", ")|(" = ")|("&apos;\.")|("\\\\")|("/"))$'/>
 		</module>
 		<module name="MultipleVariableDeclarations"/>
 		<!-- <module name="RequireThis"/> -->
