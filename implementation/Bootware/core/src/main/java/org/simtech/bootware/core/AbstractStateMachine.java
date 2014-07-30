@@ -42,20 +42,26 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  */
 public abstract class AbstractStateMachine {
 
-	protected static ConfigurationWrapper configuration = new ConfigurationWrapper();
-	protected static Context context;
-	protected static Connection connection;
-	protected static CommunicationPlugin communicationPlugin;
-	protected static EventBus eventBus;
-	protected static ResourcePlugin resourcePlugin;
-	protected static Map<String, String> instanceInformation;
-	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
-	protected static ApplicationPlugin applicationPlugin;
-	protected static PluginManager pluginManager;
 	protected static Properties properties = new Properties();
+
+	protected static EventBus eventBus;
+	protected static PluginManager pluginManager;
+	protected static InstanceStore instanceStore;
+
+	protected static ResourcePlugin resourcePlugin;
+	protected static CommunicationPlugin communicationPlugin;
+	protected static ApplicationPlugin applicationPlugin;
+
+	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
+	protected static ConfigurationWrapper configuration = new ConfigurationWrapper();
+
 	protected static Request request;
+
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
+
+
+	protected static ApplicationInstance instance;
 
 	private static String resourcePluginPath      = "plugins/resource/";
 	private static String communicationPluginPath = "plugins/communication/";
@@ -120,7 +126,10 @@ public abstract class AbstractStateMachine {
 	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
-	@SuppressWarnings("checkstyle:designforextension")
+	@SuppressWarnings({
+			"checkstyle:designforextension",
+			"checkstyle:classfanoutcomplexity"
+			})
 	@ContextInsensitive
 	@StateMachineParameters(stateType = String.class, eventType = String.class, contextType = Void.class)
 	protected abstract static class AbstractMachine extends AbstractUntypedStateMachine {
@@ -142,6 +151,7 @@ public abstract class AbstractStateMachine {
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 
+			instanceStore = new InstanceStore();
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
@@ -178,6 +188,8 @@ public abstract class AbstractStateMachine {
 		protected void readContext(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
+			final Context context = instance.getContext();
+
 			if (context == null) {
 				request.fail("Context was null.");
 				stateMachine.fire(StateMachineEvents.FAILURE);
@@ -205,6 +217,8 @@ public abstract class AbstractStateMachine {
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Loading request plugins."));
 
+			final Context context = instance.getContext();
+
 			try {
 				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
 				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
@@ -230,7 +244,8 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning resource."));
 
 			try {
-				instanceInformation = resourcePlugin.provision();
+				final Map<String, String> instanceInformation = resourcePlugin.provision();
+				instance.setInstanceInformation(instanceInformation);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource provisioned."));
 			}
 			catch (ProvisionResourceException e) {
@@ -245,7 +260,8 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to resource."));
 
 			try {
-				connection = communicationPlugin.connect(instanceInformation);
+				final Connection connection = communicationPlugin.connect(instance.getInstanceInformation());
+				instance.setConnection(connection);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Connected to resource."));
 			}
 			catch (ConnectConnectionException e) {
@@ -260,7 +276,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning application."));
 
 			try {
-				applicationPlugin.provision(connection);
+				applicationPlugin.provision(instance.getConnection());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application provisioned."));
 			}
 			catch (ProvisionApplicationException e) {
@@ -275,7 +291,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Starting application."));
 
 			try {
-				url = applicationPlugin.start(connection);
+				url = applicationPlugin.start(instance.getConnection());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application started."));
 			}
 			catch (StartApplicationException e) {
@@ -290,7 +306,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Stopping application."));
 
 			try {
-				applicationPlugin.stop(connection);
+				applicationPlugin.stop(instance.getConnection());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application stopped."));
 			}
 			catch (StopApplicationException e) {
@@ -305,7 +321,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning application."));
 
 			try {
-				applicationPlugin.deprovision(connection);
+				applicationPlugin.deprovision(instance.getConnection());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application deprovisioned."));
 			}
 			catch (DeprovisionApplicationException e) {
@@ -320,7 +336,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Disconnecting from resource."));
 
 			try {
-				communicationPlugin.disconnect(connection);
+				communicationPlugin.disconnect(instance.getConnection());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Disconnected from resource."));
 			}
 			catch (DisconnectConnectionException e) {
@@ -335,8 +351,8 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning resource."));
 
 			try {
-				if (instanceInformation != null) {
-					resourcePlugin.deprovision(instanceInformation);
+				if (instance.getInstanceInformation() != null) {
+					resourcePlugin.deprovision(instance.getInstanceInformation());
 				}
 				// how to handle failure?
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource deprovisioned."));
@@ -356,6 +372,8 @@ public abstract class AbstractStateMachine {
 
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading request plugins."));
+
+			final Context context = instance.getContext();
 
 			try {
 				resourcePlugin      = null;

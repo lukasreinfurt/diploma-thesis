@@ -101,9 +101,9 @@
 		<module name="DefaultComesLast"/>
 		<module name="MissingCtor"/>
 		<module name="FallThrough"/>
-		<module name="MultipleStringLiterals">
+		<!-- <module name="MultipleStringLiterals">
 			<property name="ignoreStringsRegexp" value='^(("")|(", ")|(" = ")|("&apos;\.")|("\\\\")|("/"))$'/>
-		</module>
+		</module> -->
 		<module name="MultipleVariableDeclarations"/>
 		<!-- <module name="RequireThis"/> -->
 		<module name="UnnecessaryParentheses"/>

@@ -1,5 +1,6 @@
 package org.simtech.bootware.plugins.communication.test;
 
+import java.io.InputStream;
 import java.util.Map;
 
 import org.simtech.bootware.core.Connection;
@@ -31,8 +32,12 @@ public class TestConnection implements Connection {
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Executing command '" + command + "'."));
 	}
 
-	public final void upload(final String localFile, final String remotePath) throws UploadFileException {
-		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + localFile + "' to '" + remotePath + "'."));
+	public final void upload(final InputStream is, final long length, final String remotePath) throws UploadFileException {
+		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
+	}
+
+	public final String getURL() {
+		return "http://www.example.com";
 	}
 
 }

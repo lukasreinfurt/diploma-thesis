@@ -51,6 +51,9 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 					}
 				}
 			}
+			catch (IllegalArgumentException e) {
+				throw new ProvisionApplicationException(e);
+			}
 			catch (FileNotFoundException e) {
 				throw new ProvisionApplicationException(e);
 			}

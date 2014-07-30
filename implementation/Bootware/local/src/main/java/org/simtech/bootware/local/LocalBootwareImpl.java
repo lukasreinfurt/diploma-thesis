@@ -1,5 +1,6 @@
 package org.simtech.bootware.local;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
 import org.simtech.bootware.core.AbstractStateMachine;
+import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
@@ -101,12 +103,20 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 	@Override
 	public final InformationListWrapper deploy(final Context context) throws DeployException {
-		LocalBootwareImpl.context = context;
 		request = new Request("deploy");
+		instance = new ApplicationInstance("test");
+		instance.setContext(context);
+
 		stateMachine.fire(SMEvents.REQUEST);
+
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
+		else {
+			instanceStore.put(instance.getID(), instance);
+			System.out.println(instance.getID());
+		}
+
 		final InformationListWrapper endpoints = new InformationListWrapper();
 		return endpoints;
 	}
@@ -114,6 +124,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
 		request = new Request("undeploy");
+		instance = instanceStore.get("test");
+
 		final Iterator it = endpoints.entrySet().iterator();
 
 		if (!it.hasNext()) {
@@ -151,9 +163,18 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 		protected void sendToRemote(final String from, final String to, final String fsmEvent) {
+
 			if (url != null) {
 				remoteBootware = url;
 			}
+
+			try {
+				remoteBootware = new URL("http://0.0.0.0:8080/axis2/services/Bootware");
+			}
+			catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+
 
 			if (remoteBootware == null && !triedProvisioningRemote) {
 				eventBus.publish(new CoreEvent(Severity.INFO, "No remote bootware deployed yet. Deploying remote bootware."));
@@ -169,10 +190,11 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			eventBus.publish(new CoreEvent(Severity.SUCCESS, "Remote bootware found. Passing on request."));
 
 			try {
+				eventBus.publish(new CoreEvent(Severity.INFO, "Trying to connect to remote bootware at: " + remoteBootware));
 				final QName qname = new QName("http://remote.bootware.simtech.org/", "RemoteBootwareImplService");
 				final Service service = Service.create(remoteBootware, qname);
 				final RemoteBootware rb = service.getPort(RemoteBootware.class);
-				final Response<DeployResponse> response = rb.deployAsync(LocalBootwareImpl.context);
+				final Response<DeployResponse> response = rb.deployAsync(instance.getContext());
 
 				while (!response.isDone()) {
 					final Integer time = 1000;
