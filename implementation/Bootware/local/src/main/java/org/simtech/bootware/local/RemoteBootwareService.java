@@ -10,7 +10,9 @@ import javax.xml.ws.Service;
 import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.remote.DeployResponse;
+import org.simtech.bootware.remote.ShutdownResponse;
 
 import async.client.RemoteBootware;
 
@@ -48,6 +50,20 @@ public class RemoteBootwareService {
 		}
 		catch (ExecutionException e) {
 			throw new DeployException(e);
+		}
+	}
+
+	public final void shutdown() throws ShutdownException {
+		try {
+			final Response<ShutdownResponse> response = remoteBootware.shutdownAsync();
+
+			while (!response.isDone()) {
+				final Integer time = 1000;
+				Thread.sleep(time);
+			}
+		}
+		catch (InterruptedException e) {
+			throw new ShutdownException(e);
 		}
 	}
 

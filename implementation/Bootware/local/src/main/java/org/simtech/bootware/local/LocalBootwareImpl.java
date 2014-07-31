@@ -157,6 +157,23 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 	@Override
 	public final void shutdown() throws ShutdownException {
+		// pass on shutdown request to remote bootware
+		if (remoteBootware != null && remoteBootware.isAvailable()) {
+			remoteBootware.shutdown();
+		}
+
+		// undeploy remote bootware
+		final ApplicationInstance remoteBootwareInstance = instanceStore.get("remote-bootware");
+		if (remoteBootwareInstance != null) {
+			try {
+				undeploy((HashMap) remoteBootwareInstance.getInstanceInformation());
+			}
+			catch (UndeployException e) {
+				throw new ShutdownException(e);
+			}
+		}
+
+		// shut down
 		stateMachine.fire(SMEvents.SHUTDOWN);
 	}
 
