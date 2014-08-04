@@ -3,6 +3,7 @@ package org.simtech.bootware.plugins.resource.awsec2;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,11 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 	private String secretKey;
 	private String accessKey;
 	private String username;
+	private String region;
+	private String ports;
+	private String imageId;
+	private String instanceType;
+
 	private String securityGroupName;
 	private String keyName;
 
@@ -63,9 +69,13 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 		configuration = config.getConfiguration();
 
-		secretKey = configuration.get("secretKey");
-		accessKey = configuration.get("accessKey");
-		username  = configuration.get("username");
+		secretKey    = configuration.get("secretKey");
+		accessKey    = configuration.get("accessKey");
+		username     = configuration.get("username");
+		region       = configuration.get("region");
+		ports        = configuration.get("ports");
+		imageId      = configuration.get("imageId");
+		instanceType = configuration.get("instanceType");
 
 		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 		final String timestamp = dateFormat.format(new Date());
@@ -108,7 +118,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		ec2Client = new AmazonEC2Client(credentials);
 
 		// set region
-		ec2Client.setEndpoint("ec2.eu-west-1.amazonaws.com");
+		ec2Client.setEndpoint(region);
 	}
 
 	private void createSecurityGroup() throws ProvisionResourceException {
@@ -159,26 +169,23 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 	}
 
 	private void openPorts() throws ProvisionResourceException {
-		final IpPermission ipPermission = new IpPermission();
-		final IpPermission ipPermission2 = new IpPermission();
+		final List<IpPermission> ipPermissions = new ArrayList<IpPermission>();
 
-		ipPermission
-			.withIpRanges("0.0.0.0/0")
-			.withIpProtocol("tcp")
-			.withFromPort(22)
-			.withToPort(22);
-
-		ipPermission2
-			.withIpRanges("0.0.0.0/0")
-			.withIpProtocol("tcp")
-			.withFromPort(8080)
-			.withToPort(8080);
+		for (String port : ports.split(",")) {
+			final IpPermission ipPermission = new IpPermission();
+			ipPermission
+				.withIpRanges("0.0.0.0/0")
+				.withIpProtocol("tcp")
+				.withFromPort(Integer.parseInt(port))
+				.withToPort(Integer.parseInt(port));
+			ipPermissions.add(ipPermission);
+		}
 
 		final AuthorizeSecurityGroupIngressRequest request = new AuthorizeSecurityGroupIngressRequest();
 
 		request
 			.withGroupName(securityGroupName)
-			.withIpPermissions(ipPermission, ipPermission2);
+			.withIpPermissions(ipPermissions);
 
 		try {
 			ec2Client.authorizeSecurityGroupIngress(request);
@@ -243,8 +250,8 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		final RunInstancesRequest request = new RunInstancesRequest();
 
 		request
-			.withImageId("ami-2918e35e")
-			.withInstanceType("t1.micro")
+			.withImageId(imageId)
+			.withInstanceType(instanceType)
 			.withMinCount(1)
 			.withMaxCount(1)
 			.withSecurityGroups(securityGroupName)
@@ -317,7 +324,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 				continue label;
 			}
 
-			final List<Reservation> reservations   = result.getReservations();
+			final List<Reservation> reservations = result.getReservations();
 
 			for (Reservation reservation : reservations) {
 				final List<Instance> instances = reservation.getInstances();
