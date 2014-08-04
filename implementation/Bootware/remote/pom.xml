@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>org.squirrelframework</groupId>
 			<artifactId>squirrel-foundation</artifactId>
-			<version>0.3.2</version>
+			<version>0.3.4</version>
 		</dependency>
 
 	</dependencies>
