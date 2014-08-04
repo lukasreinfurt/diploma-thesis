@@ -192,7 +192,9 @@
 			<property name="max" value="200"/>
 		</module>
 		<module name="MethodLength"/>
-		<module name="AnonInnerLength"/>
+		<module name="AnonInnerLength">
+				<property name="max" value="30"/>
+		</module>
 		<module name="ParameterNumber">
 				<property name="max" value="5"/>
 		</module>

@@ -158,11 +158,13 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void shutdown() throws ShutdownException {
 		// pass on shutdown request to remote bootware
+		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on shutdown request to remote bootware."));
 		if (remoteBootware != null && remoteBootware.isAvailable()) {
 			remoteBootware.shutdown();
 		}
 
 		// undeploy remote bootware
+		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy remote bootware."));
 		final ApplicationInstance remoteBootwareInstance = instanceStore.get("remote-bootware");
 		if (remoteBootwareInstance != null) {
 			try {
@@ -173,8 +175,22 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			}
 		}
 
-		// shut down
-		stateMachine.fire(SMEvents.SHUTDOWN);
+		// trigger shutdown in thread after delay so that this method can return before it
+		final Thread delayedShutdown = new Thread() {
+			public void run() {
+				try {
+					final Integer time = 2000;
+					Thread.sleep(time);
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stateMachine.fire(SMEvents.SHUTDOWN);
+			}
+		};
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Shutting down."));
+		delayedShutdown.start();
 	}
 
 	/**

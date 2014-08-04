@@ -13,6 +13,8 @@ import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.StateMachineEvents;
+import org.simtech.bootware.core.events.CoreEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
@@ -128,7 +130,28 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 	@Override
 	public final void shutdown() throws ShutdownException {
-		stateMachine.fire(StateMachineEvents.SHUTDOWN);
+		// undeploy workflow middleware
+		eventBus.publish(new CoreEvent(Severity.INFO, "Deprovision Workflow Middleware"));
+
+		// undeploy all provisioning engines
+		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy applications."));
+
+		// trigger shutdown in thread after delay so that this method can return before it
+		final Thread delayedShutdown = new Thread() {
+			public void run() {
+				try {
+					final Integer time = 2000;
+					Thread.sleep(time);
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				stateMachine.fire(StateMachineEvents.SHUTDOWN);
+			}
+		};
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Shutting down."));
+		delayedShutdown.start();
 	}
 
 	/**

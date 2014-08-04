@@ -42,6 +42,7 @@ import org.squirrelframework.foundation.fsm.impl.AbstractUntypedStateMachine;
  */
 public abstract class AbstractStateMachine {
 
+	protected static Boolean stopped = false;
 	protected static Properties properties = new Properties();
 
 	protected static EventBus eventBus;
@@ -100,11 +101,8 @@ public abstract class AbstractStateMachine {
 		stateMachine.fire("Start");
 	}
 
-	/**
-	 * Stops the state machine.
-	 */
-	public final void stop() {
-		stateMachine.fire(StateMachineEvents.SHUTDOWN);
+	public final Boolean hasStopped() {
+		return stopped;
 	}
 
 	/**
@@ -425,6 +423,7 @@ public abstract class AbstractStateMachine {
 		protected void end(final String from, final String to, final String fsmEvent) {
 			// log to local file?
 			stateMachine.terminate();
+			stopped = true;
 		}
 
 	}
