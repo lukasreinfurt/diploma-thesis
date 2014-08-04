@@ -2,6 +2,8 @@ package org.simtech.bootware.plugins.resource.awsec2;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +67,10 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		accessKey = configuration.get("accessKey");
 		username  = configuration.get("username");
 
-		securityGroupName = "GeneratedSecurityGroup";
-		keyName           = "BootwareKey";
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		final String timestamp = dateFormat.format(new Date());
+		securityGroupName = "BootwareSecurityGroup_" + timestamp;
+		keyName           = "BootwareKey_" + timestamp;
 		createClientInstance();
 	}
 
@@ -130,11 +134,25 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		request
 			.withGroupName(name);
 
-		try {
-			ec2Client.deleteSecurityGroup(request);
-		}
-		catch (AmazonServiceException e) {
-			throw new DeprovisionResourceException(e);
+		// Retry a couple times because it sometimes takes some time for AWS to
+		// deregister dependencies between already removed EC2 instances and
+		// security groups. Otherwise we might get a dependency violation error.
+		final Integer max = 10;
+		for (Integer i = 1; i <= max; i++) {
+			try {
+				final Integer time = 5000;
+				Thread.sleep(time);
+				ec2Client.deleteSecurityGroup(request);
+				break;
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			catch (AmazonServiceException e) {
+				if (i == max) {
+					throw new DeprovisionResourceException(e);
+				}
+			}
 		}
 
 		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Security group '" + securityGroupName + "' deleted."));
@@ -193,7 +211,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 		// for debugging
 		try {
-			final PrintWriter out = new PrintWriter("BootwareKey.pem");
+			final PrintWriter out = new PrintWriter(keyName + ".pem");
 			out.println(privateKey);
 			out.close();
 		}
