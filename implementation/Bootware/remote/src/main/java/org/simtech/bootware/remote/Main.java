@@ -15,7 +15,6 @@ import org.simtech.bootware.core.exceptions.ShutdownException;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
-@SuppressWarnings("checkstyle:emptyblock")
 public final class Main {
 
 	private Main() {
@@ -65,8 +64,7 @@ public final class Main {
 							Thread.sleep(time);
 						}
 						catch (InterruptedException e) {
-							// Do nothing
-							// This exception is expected on Ctrl+C
+							Thread.currentThread().interrupt();
 						}
 					}
 
@@ -95,7 +93,7 @@ public final class Main {
 					e.printStackTrace();
 				}
 				catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 			}
 		});

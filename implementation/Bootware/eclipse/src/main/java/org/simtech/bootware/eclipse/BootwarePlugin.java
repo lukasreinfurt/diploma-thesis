@@ -188,7 +188,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 						break;
 					}
 					catch (InterruptedException e) {
-						log(e.toString());
+						Thread.currentThread().interrupt();
 						break;
 					}
 				}
@@ -214,7 +214,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 						log(sw.toString());
 					}
 					catch (InterruptedException e) {
-						log("Local bootware failed: " + e.getMessage());
+						Thread.currentThread().interrupt();
 					}
 					catch (ExecutionException e) {
 						log("Executing deploy on local bootware failed: " + e.getMessage());

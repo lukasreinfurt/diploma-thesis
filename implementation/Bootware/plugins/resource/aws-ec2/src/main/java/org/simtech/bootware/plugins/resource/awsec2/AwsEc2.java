@@ -156,7 +156,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 				break;
 			}
 			catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 			catch (AmazonServiceException e) {
 				if (i == max) {

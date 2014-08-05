@@ -35,7 +35,7 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 				t.join();
 			}
 			catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 		subscriber.close();
