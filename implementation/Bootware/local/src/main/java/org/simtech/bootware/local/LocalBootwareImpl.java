@@ -11,9 +11,9 @@ import javax.xml.ws.WebServiceException;
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
-import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
+import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
@@ -90,17 +90,17 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final InformationListWrapper deploy(final Context context) throws DeployException {
+	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		// Deploy remote bootware if not yet deployed
 		if (remoteBootware == null || !remoteBootware.isAvailable()) {
 
-			request = new Request("deploy");
+			request  = new Request("deploy");
 			instance = new ApplicationInstance("remote-bootware");
 
 			// create temporary context for remote bootware request
-			final Context remoteContext = context;
-			remoteContext.setApplicationPlugin("remotebootware");
-			instance.setContext(remoteContext);
+			final UserContext remoteContext = context;
+			remoteContext.setApplication("remotebootware");
+			instance.setUserContext(remoteContext);
 
 			// execute deploy request
 			stateMachine.fire(SMEvents.REQUEST);

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <context>
-	<resourcePlugin>test-1.0.0.jar</resourcePlugin>
-	<communicationPlugin>test-1.0.0.jar</communicationPlugin>
-	<applicationPlugin>test-1.0.0.jar</applicationPlugin>
-	<callApplicationPlugin>?</callApplicationPlugin>
+	<resource>aws-ec2</resource>
+	<application>test</application>
 	<servicePackageReference>?</servicePackageReference>
 	<configurationList>
 		<entry>
-			<key>tes-1.0.0.jar</key>
+			<key>aws-ec2</key>
 			<value>
 				<configuration>
 					<entry>
@@ -19,24 +17,8 @@
 						<value>AKIAJYIAG2HYG23MDSZQ</value>
 					</entry>
 					<entry>
-						<key>username</key>
-						<value>ec2-user</value>
-					</entry>
-					<entry>
 						<key>region</key>
 						<value>ec2.eu-west-1.amazonaws.com</value>
-					</entry>
-					<entry>
-						<key>ports</key>
-						<value>22,8080</value>
-					</entry>
-					<entry>
-						<key>imageId</key>
-						<value>ami-2918e35e</value>
-					</entry>
-					<entry>
-						<key>instanceType</key>
-						<value>t1.micro</value>
 					</entry>
 				</configuration>
 			</value>

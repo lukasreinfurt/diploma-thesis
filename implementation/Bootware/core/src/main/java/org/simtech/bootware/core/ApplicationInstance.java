@@ -6,7 +6,7 @@ public class ApplicationInstance {
 	private String id;
 	private Map<String, String> instanceInformation;
 	private Connection connection;
-	private Context context;
+	private UserContext userContext;
 
 	public ApplicationInstance(final String id) {
 		this.id = id;
@@ -32,11 +32,11 @@ public class ApplicationInstance {
 		return connection;
 	}
 
-	public final void setContext(final Context context) {
-		this.context = context;
+	public final void setUserContext(final UserContext context) {
+		this.userContext = context;
 	}
 
-	public final Context getContext() {
-		return context;
+	public final UserContext getUserContext() {
+		return userContext;
 	}
 }

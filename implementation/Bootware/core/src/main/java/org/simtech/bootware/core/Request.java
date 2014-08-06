@@ -5,6 +5,7 @@ public class Request {
 	private String type = "";
 	private Boolean failing = false;
 	private Object response;
+	private RequestContext context;
 
 	public Request(final String t) {
 		type = t;
@@ -25,6 +26,14 @@ public class Request {
 
 	public final Object getResponse() {
 		return response;
+	}
+
+	public final void setRequestContext(final RequestContext context) {
+		this.context = context;
+	}
+
+	public final RequestContext getRequestContext() {
+		return context;
 	}
 
 }

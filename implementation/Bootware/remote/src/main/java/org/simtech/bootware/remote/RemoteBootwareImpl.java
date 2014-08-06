@@ -9,10 +9,10 @@ import javax.jws.WebService;
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
-import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.StateMachineEvents;
+import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
@@ -87,10 +87,10 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final InformationListWrapper deploy(final Context context) throws DeployException {
+	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		request = new Request("deploy");
 		instance = new ApplicationInstance("test");
-		instance.setContext(context);
+		instance.setUserContext(context);
 
 		stateMachine.fire(StateMachineEvents.REQUEST);
 

@@ -35,8 +35,8 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
+import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.local.DeployResponse;
 
 import async.client.LocalBootware;
@@ -52,7 +52,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 	private MessageConsole myConsole;
 	private MessageConsoleStream out;
-	private Context context;
+	private UserContext context;
 
 	public BootwarePlugin() {
 		myConsole = findConsole("Bootware");
@@ -114,16 +114,12 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 	private void loadContext() {
 		try {
-			final JAXBContext jaxbContext = JAXBContext.newInstance(Context.class);
+			final JAXBContext jaxbContext = JAXBContext.newInstance(UserContext.class);
 			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			final File file = new File("plugins/bootware/context.xml");
-			final JAXBElement<Context> root = unmarshaller.unmarshal(new StreamSource(file), Context.class);
+			final JAXBElement<UserContext> root = unmarshaller.unmarshal(new StreamSource(file), UserContext.class);
 
 			context = root.getValue();
-
-			log(context.getResourcePlugin());
-			log(context.getCommunicationPlugin());
-			log(context.getApplicationPlugin());
 		}
 		catch (JAXBException e) {
 			log("Loading context failed: " + e.getMessage());

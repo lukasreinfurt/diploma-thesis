@@ -17,7 +17,7 @@ import org.simtech.bootware.core.exceptions.ConfigurationException;
 		"servicePackageReference",
 		"configurationList"
 		})
-public class Context {
+public class RequestContext {
 
 	private String resourcePlugin;
 	private String callApplicationPlugin;
@@ -26,7 +26,7 @@ public class Context {
 	private String applicationPlugin;
 	private Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
 
-	public Context() {}
+	public RequestContext() {}
 
 	public final void setResourcePlugin(final String plugin) {
 		resourcePlugin = plugin;

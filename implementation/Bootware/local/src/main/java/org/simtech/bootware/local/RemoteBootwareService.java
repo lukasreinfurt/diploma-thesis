@@ -7,8 +7,8 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
-import org.simtech.bootware.core.Context;
 import org.simtech.bootware.core.InformationListWrapper;
+import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.remote.DeployResponse;
@@ -34,7 +34,7 @@ public class RemoteBootwareService {
 		return available;
 	}
 
-	public final InformationListWrapper deploy(final Context context) throws DeployException {
+	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		try {
 			final Response<DeployResponse> response = remoteBootware.deployAsync(context);
 

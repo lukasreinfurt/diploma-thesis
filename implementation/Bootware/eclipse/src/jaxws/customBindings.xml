@@ -4,8 +4,8 @@
 		<bindings scd="~tns:configurationWrapper">
 			<class ref="org.simtech.bootware.core.ConfigurationWrapper"/>
 		</bindings>
-		<bindings scd="~tns:context">
-			<class ref="org.simtech.bootware.core.Context"/>
+		<bindings scd="~tns:userContext">
+			<class ref="org.simtech.bootware.core.UserContext"/>
 		</bindings>
 		<bindings scd="~tns:informationListWrapper">
 			<class ref="org.simtech.bootware.core.InformationListWrapper"/>

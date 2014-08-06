@@ -22,6 +22,14 @@
 		</fileSet>
 
 		<fileSet>
+			<directory>../mapping</directory>
+			<outputDirectory>bin/mapping</outputDirectory>
+			<includes>
+				<include>**/*.*</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
 			<directory>../local/target</directory>
 			<outputDirectory>bin</outputDirectory>
 			<includes>

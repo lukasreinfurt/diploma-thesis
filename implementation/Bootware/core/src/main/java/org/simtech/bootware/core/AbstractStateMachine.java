@@ -10,8 +10,9 @@ import java.util.Properties;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.FSMEvent;
 import org.simtech.bootware.core.events.Severity;
-import org.simtech.bootware.core.exceptions.ConfigurationException;
+//import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
+import org.simtech.bootware.core.exceptions.ContextMappingException;
 import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
@@ -178,36 +179,29 @@ public abstract class AbstractStateMachine {
 		}
 
 		protected void wait(final String from, final String to, final String fsmEvent) {
-			//stateMachine.fire(StateMachineEvents.REQUEST);
-			//stateMachine.fire(StateMachineEvents.SHUTDOWN);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
+			// No op. State machine events are handled by web service operations in
+			// local and remote bootware implementation.
 		}
 
 		protected void readContext(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
-			final Context context = instance.getContext();
-
-			if (context == null) {
-				request.fail("Context was null.");
-				stateMachine.fire(StateMachineEvents.FAILURE);
-				return;
-			}
-
-			if ("".equals(context.getResourcePlugin())) {
-				request.fail("resourceType cannot be empty");
-				stateMachine.fire(StateMachineEvents.FAILURE);
-				return;
-			}
-
 			try {
-				configuration.setConfiguration(context.getConfigurationFor(context.getResourcePlugin()).getConfiguration());
-				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Context generated."));
+				final UserContext userContext = instance.getUserContext();
+				final ContextMapper mapper = new ContextMapper();
+				final RequestContext requestContext = mapper.map(userContext);
+
+				request.setRequestContext(requestContext);
 			}
-			catch (ConfigurationException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not generate context: " + e.getMessage()));
+			catch (ContextMappingException e) {
+				final String failureMessage = "Could not map userContext to requestContext: " + e.getMessage();
+				request.fail(failureMessage);
+				eventBus.publish(new CoreEvent(Severity.ERROR, failureMessage));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
+
+			// handle failure
+			// set configuration
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
@@ -215,7 +209,7 @@ public abstract class AbstractStateMachine {
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Loading request plugins."));
 
-			final Context context = instance.getContext();
+			final RequestContext context = request.getRequestContext();
 
 			try {
 				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
@@ -371,7 +365,7 @@ public abstract class AbstractStateMachine {
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading request plugins."));
 
-			final Context context = instance.getContext();
+			final RequestContext context = request.getRequestContext();
 
 			try {
 				resourcePlugin      = null;
