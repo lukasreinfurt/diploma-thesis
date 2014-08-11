@@ -26,7 +26,7 @@ public class ZeroMQPublisher extends AbstractBasePlugin implements EventPlugin {
 	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		context   = ZMQ.context(1);
 		publisher = context.socket(ZMQ.PUB);
-		publisher.bind("tcp://localhost:5563");
+		publisher.bind("tcp://0.0.0.0:5563");
 	}
 
 	public final void shutdown() {

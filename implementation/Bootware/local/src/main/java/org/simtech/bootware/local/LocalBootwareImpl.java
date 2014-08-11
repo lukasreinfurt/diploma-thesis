@@ -15,6 +15,7 @@ import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
+import org.simtech.bootware.core.events.RemoteBootwareStartedEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
@@ -93,6 +94,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		// Deploy remote bootware if not yet deployed
 		if (remoteBootware == null || !remoteBootware.isAvailable()) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Deploying remote bootware."));
 
 			request  = new Request("deploy");
 			instance = new ApplicationInstance("remote-bootware");
@@ -115,7 +117,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 			// create remote bootware service
 			try {
+				eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to remote bootware."));
 				remoteBootware = new RemoteBootwareService(url);
+				eventBus.publish(new RemoteBootwareStartedEvent(Severity.INFO, "Remote bootware started at " + url.toString() + ".", url.toString()));
 			}
 			catch (WebServiceException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Connecting to remote bootware failed: " + e.getMessage()));
@@ -124,6 +128,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		}
 
 		// pass on original request to remote bootware
+		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on deploy request to remote bootware."));
 		return remoteBootware.deploy(context);
 	}
 
