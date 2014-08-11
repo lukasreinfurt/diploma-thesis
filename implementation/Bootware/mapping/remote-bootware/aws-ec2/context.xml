@@ -7,7 +7,7 @@
 	<servicePackageReference>?</servicePackageReference>
 	<configurationList>
 		<entry>
-			<key>aws-ec2-1.0.0.jar</key>
+			<key>aws-ec2</key>
 			<value>
 				<configuration>
 					<entry>

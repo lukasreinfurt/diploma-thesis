@@ -67,6 +67,7 @@
 						<!-- (the jars will be embedded in the lib folder) -->
 						<Embed-Dependency>
 							commons-configuration,
+							commons-lang,
 							aws-java-sdk,
 							commons-logging,
 							httpclient,

@@ -56,7 +56,7 @@ public abstract class AbstractStateMachine {
 	protected static CommunicationPlugin communicationPlugin;
 	protected static ApplicationPlugin applicationPlugin;
 
-	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
+	protected static Map<String, ConfigurationWrapper> defaultConfigurationList = new HashMap<String, ConfigurationWrapper>();
 	protected static Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
 
 	protected static Request request;
@@ -190,6 +190,48 @@ public abstract class AbstractStateMachine {
 			// local and remote bootware implementation.
 		}
 
+		private Map<String, ConfigurationWrapper> mergeConfigurationLists(final Map<String, ConfigurationWrapper>... configurationLists) {
+			final Map<String, ConfigurationWrapper> mergedMap = new HashMap<String, ConfigurationWrapper>();
+
+			// System.out.println(">>>> Input maps:");
+			// for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
+			// 	for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
+			// 		System.out.println(entry.getKey());
+			// 		final Map<String, String> configuration = entry.getValue().getConfiguration();
+			// 		for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
+			// 			System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
+			// 		}
+			// 	}
+			// }
+
+			for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
+				for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
+					if (mergedMap.containsKey(entry.getKey())) {
+						final Map<String, String> configuration = mergedMap.get(entry.getKey()).getConfiguration();
+						final Map<String, String> newConfiguration = entry.getValue().getConfiguration();
+						configuration.putAll(newConfiguration);
+						final ConfigurationWrapper configurationWrapper = new ConfigurationWrapper();
+						configurationWrapper.setConfiguration(configuration);
+						mergedMap.put(entry.getKey(), configurationWrapper);
+					}
+					else {
+						mergedMap.put(entry.getKey(), entry.getValue());
+					}
+				}
+			}
+
+			// System.out.println(">>>> Output map:");
+			// for (Map.Entry<String, ConfigurationWrapper> entry : mergedMap.entrySet()) {
+			// 	System.out.println(entry.getKey());
+			// 	final Map<String, String> configuration = entry.getValue().getConfiguration();
+			// 	for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
+			// 		System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
+			// 	}
+			// }
+
+			return mergedMap;
+		}
+
 		protected void readContext(final String from, final String to, final String fsmEvent) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
@@ -201,7 +243,10 @@ public abstract class AbstractStateMachine {
 				// merge userContext, requestContext, and defaultConfiguration;
 
 				request.setRequestContext(requestContext);
-				configurationList = requestContext.getConfigurationList();
+
+				final Map<String, ConfigurationWrapper> userConfigurationList = userContext.getConfigurationList();
+				final Map<String, ConfigurationWrapper> requestConfigurationList = requestContext.getConfigurationList();
+				configurationList = mergeConfigurationLists(defaultConfigurationList, userConfigurationList, requestConfigurationList);
 			}
 			catch (ContextMappingException e) {
 				final String failureMessage = "Could not map userContext to requestContext: " + e.getMessage();
