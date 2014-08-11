@@ -19,7 +19,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>test</module>
+		<module>remote-bootware</module>
 	</modules>
 
 	<build>

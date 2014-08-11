@@ -13,7 +13,7 @@ public class Test extends AbstractBasePlugin implements CommunicationPlugin {
 
 	public Test() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 

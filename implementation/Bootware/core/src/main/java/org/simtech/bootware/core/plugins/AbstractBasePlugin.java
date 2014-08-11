@@ -1,17 +1,21 @@
 package org.simtech.bootware.core.plugins;
 
+//import java.util.HashMap;
+import java.util.Map;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.EventBus;
+import org.simtech.bootware.core.exceptions.InitializeException;
 
 /**
  * Abstract base plugin that should be used as baseline for all Bootware plugins.
  */
 public abstract class AbstractBasePlugin implements Plugin {
-	protected ConfigurationWrapper config;
+	//protected Map<String, ConfigurationWrapper> configurationList;
 	protected BundleContext context;
 	protected EventBus eventBus;
 
@@ -27,14 +31,14 @@ public abstract class AbstractBasePlugin implements Plugin {
 		eventBus = getSharedObject(EventBus.class);
 		eventBus.subscribe(this);
 
-		config = getSharedObject(ConfigurationWrapper.class);
-		initialize(config);
+		// configurationList = getSharedObject(new HashMap<String, ConfigurationWrapper>().getClass());
+		// initialize(configurationList);
 	}
 
 	/**
 	 * Is executed when the OSGi bundle is started.
 	 */
-	public abstract void initialize(ConfigurationWrapper configuration);
+	public abstract void initialize(Map<String, ConfigurationWrapper> configurationList) throws InitializeException;
 
 	/**
 	 * Is executed when the OSGi bundle is stopped.

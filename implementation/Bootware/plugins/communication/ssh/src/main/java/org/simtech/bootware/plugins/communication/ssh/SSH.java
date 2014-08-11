@@ -13,7 +13,7 @@ public class SSH extends AbstractBasePlugin implements CommunicationPlugin {
 
 	public SSH() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 

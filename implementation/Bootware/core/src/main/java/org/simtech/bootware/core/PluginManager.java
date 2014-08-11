@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.Constants;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
@@ -87,8 +89,22 @@ public class PluginManager {
 			throw new LoadPluginException(e);
 		}
 		final BundleContext bundleContext = installedBundles.get(path).getBundleContext();
-		final ServiceReference<?> serviceReference = bundleContext.getServiceReference(type.getName());
-		return type.cast(bundleContext.getService(serviceReference));
+		final String pluginName = new File(path).getName();
+		final String filter = "(name=" + pluginName + ")";
+		final ServiceReference[] serviceReferences;
+
+		try {
+			serviceReferences = bundleContext.getServiceReferences(type.getName(), filter);
+		}
+		catch (InvalidSyntaxException e) {
+			throw new LoadPluginException("Invalid filter syntax.");
+		}
+
+		if (serviceReferences.length == 0) {
+			throw new LoadPluginException("Could not retrieve service reference for plugin '" + pluginName + "'.");
+		}
+
+		return type.cast(bundleContext.getService(serviceReferences[0]));
 	}
 
 	/**

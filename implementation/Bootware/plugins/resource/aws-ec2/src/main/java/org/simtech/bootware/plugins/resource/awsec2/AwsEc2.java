@@ -8,11 +8,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+
+import org.apache.commons.configuration.MapConfiguration;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.ResourcePluginEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
@@ -48,13 +52,11 @@ import com.amazonaws.services.ec2.model.TerminateInstancesResult;
                  })
 public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
-	private Map<String, String> configuration;
-
 	private String secretKey;
 	private String accessKey;
 	private String username;
 	private String region;
-	private String ports;
+	private List<Object> ports;
 	private String imageId;
 	private String instanceType;
 
@@ -65,17 +67,30 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 	public AwsEc2() {}
 
-	public final void initialize(final ConfigurationWrapper config) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 
-		configuration = config.getConfiguration();
+		final ConfigurationWrapper configurationWrapper = configurationList.get("aws-ec2");
 
-		secretKey    = configuration.get("secretKey");
-		accessKey    = configuration.get("accessKey");
-		username     = configuration.get("username");
-		region       = configuration.get("region");
-		ports        = configuration.get("ports");
-		imageId      = configuration.get("imageId");
-		instanceType = configuration.get("instanceType");
+		if (configurationWrapper == null) {
+			throw new InitializeException("Could not find configuration for 'aws-ec2'.");
+		}
+
+		final Map<String, String> configurationMap = configurationWrapper.getConfiguration();
+		final MapConfiguration configuration = new MapConfiguration(configurationMap);
+		configuration.setThrowExceptionOnMissing(true);
+
+		try {
+			secretKey    = configuration.getString("secretKey");
+			accessKey    = configuration.getString("accessKey");
+			username     = configuration.getString("username");
+			region       = configuration.getString("region");
+			ports        = configuration.getList("ports");
+			imageId      = configuration.getString("imageId");
+			instanceType = configuration.getString("instanceType");
+		}
+		catch (NoSuchElementException e) {
+			throw new InitializeException(e);
+		}
 
 		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 		final String timestamp = dateFormat.format(new Date());
@@ -171,13 +186,13 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 	private void openPorts() throws ProvisionResourceException {
 		final List<IpPermission> ipPermissions = new ArrayList<IpPermission>();
 
-		for (String port : ports.split(",")) {
+		for (Object port : ports) {
 			final IpPermission ipPermission = new IpPermission();
 			ipPermission
 				.withIpRanges("0.0.0.0/0")
 				.withIpProtocol("tcp")
-				.withFromPort(Integer.parseInt(port))
-				.withToPort(Integer.parseInt(port));
+				.withFromPort(Integer.parseInt((String) port))
+				.withToPort(Integer.parseInt((String) port));
 			ipPermissions.add(ipPermission);
 		}
 

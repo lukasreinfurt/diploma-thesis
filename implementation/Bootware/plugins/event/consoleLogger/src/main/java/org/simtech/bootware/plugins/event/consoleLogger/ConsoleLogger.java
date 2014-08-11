@@ -1,5 +1,7 @@
 package org.simtech.bootware.plugins.event.consoleLogger;
 
+import java.util.Map;
+
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.BaseEvent;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
@@ -13,7 +15,7 @@ public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 
 	public ConsoleLogger() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 

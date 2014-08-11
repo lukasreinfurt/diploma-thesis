@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +17,7 @@ import org.simtech.bootware.core.exceptions.ContextMappingException;
 import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
@@ -55,13 +57,12 @@ public abstract class AbstractStateMachine {
 	protected static ApplicationPlugin applicationPlugin;
 
 	protected static Map<String, ConfigurationWrapper> defaultConfigurationList;
-	protected static ConfigurationWrapper configuration = new ConfigurationWrapper();
+	protected static Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();
 
 	protected static Request request;
 
 	protected static UntypedStateMachine stateMachine;
 	protected static URL url;
-
 
 	protected static ApplicationInstance instance;
 
@@ -154,7 +155,7 @@ public abstract class AbstractStateMachine {
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
 			pluginManager.registerSharedObject(eventBus);
-			pluginManager.registerSharedObject(configuration);
+			pluginManager.registerSharedObject(configurationList);
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
@@ -165,13 +166,19 @@ public abstract class AbstractStateMachine {
 				final String[] eventPlugins = properties.getProperty("eventPlugins").split(";");
 
 				for (String eventPlugin : eventPlugins) {
-					pluginManager.loadPlugin(EventPlugin.class, eventPluginsPath + eventPlugin);
+					final EventPlugin plugin = pluginManager.loadPlugin(EventPlugin.class, eventPluginsPath + eventPlugin);
+					plugin.initialize(configurationList);
 				}
 
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Loading event plugins succeeded."));
 			}
 			catch (LoadPluginException e) {
 				// log to local file?
+				e.printStackTrace();
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (InitializeException e) {
+				e.printStackTrace();
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 
@@ -191,7 +198,10 @@ public abstract class AbstractStateMachine {
 				final ContextMapper mapper = new ContextMapper();
 				final RequestContext requestContext = mapper.map(userContext);
 
+				// merge userContext, requestContext, and defaultConfiguration;
+
 				request.setRequestContext(requestContext);
+				configurationList = requestContext.getConfigurationList();
 			}
 			catch (ContextMappingException e) {
 				final String failureMessage = "Could not map userContext to requestContext: " + e.getMessage();
@@ -213,12 +223,19 @@ public abstract class AbstractStateMachine {
 
 			try {
 				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
+				resourcePlugin.initialize(configurationList);
 				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
+				communicationPlugin.initialize(configurationList);
 				applicationPlugin   = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
+				applicationPlugin.initialize(configurationList);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins loaded."));
 			}
 			catch (LoadPluginException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load request plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (InitializeException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 

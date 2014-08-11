@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <context>
-	<resourcePlugin>test-1.0.0.jar</resourcePlugin>
-	<communicationPlugin>test-1.0.0.jar</communicationPlugin>
-	<applicationPlugin>remotebootware-1.0.0.jar</applicationPlugin>
+	<resourcePlugin>aws-ec2-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>ssh-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>remote-bootware-1.0.0.jar</applicationPlugin>
 	<callApplicationPlugin>?</callApplicationPlugin>
 	<servicePackageReference>?</servicePackageReference>
 	<configurationList>
 		<entry>
-			<key>test-1.0.0.jar</key>
+			<key>aws-ec2-1.0.0.jar</key>
 			<value>
 				<configuration>
 					<entry>

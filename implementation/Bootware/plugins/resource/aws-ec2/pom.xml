@@ -21,6 +21,12 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.10</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.7.5</version>
@@ -60,6 +66,7 @@
 						<!-- list all artifacts that should be embedded here -->
 						<!-- (the jars will be embedded in the lib folder) -->
 						<Embed-Dependency>
+							commons-configuration,
 							aws-java-sdk,
 							commons-logging,
 							httpclient,

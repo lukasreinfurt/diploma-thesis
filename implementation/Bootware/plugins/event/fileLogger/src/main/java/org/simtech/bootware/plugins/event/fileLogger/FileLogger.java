@@ -3,6 +3,7 @@ package org.simtech.bootware.plugins.event.fileLogger;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.BaseEvent;
@@ -19,7 +20,7 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 
 	public FileLogger() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		try {
 			writer = new PrintWriter("filelogger.log", "UTF-8");
 		}

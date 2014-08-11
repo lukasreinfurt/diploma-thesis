@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-import org.simtech.bootware.core.exceptions.ConfigurationException;
-
 @XmlType(
 		propOrder = {
 		"resourcePlugin",
@@ -79,11 +77,4 @@ public class RequestContext {
 		return configurationList;
 	}
 
-	public final ConfigurationWrapper getConfigurationFor(final String entry) throws ConfigurationException {
-		final ConfigurationWrapper configuration = configurationList.get(entry);
-		if (configuration == null) {
-			throw new ConfigurationException("Configuration for " + entry + " could not be found.");
-		}
-		return configuration;
-	}
 }

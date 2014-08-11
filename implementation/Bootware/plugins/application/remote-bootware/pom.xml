@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Test Plugin</name>
+	<name>Remote Bootware Plugin</name>
 
 	<parent>
 		<groupId>org.simtech.bootware.plugins</groupId>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<groupId>org.simtech.bootware.plugins.application</groupId>
-	<artifactId>test</artifactId>
+	<artifactId>remote-bootware</artifactId>
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
@@ -39,10 +39,10 @@
 				<configuration>
 					<instructions>
 						<Private-Package>
-							org.simtech.bootware.plugins.application.test.*
+							org.simtech.bootware.plugins.application.remotebootware.*
 						</Private-Package>
 						<Bundle-Activator>
-							org.simtech.bootware.plugins.application.test.Activator
+							org.simtech.bootware.plugins.application.remotebootware.Activator
 						</Bundle-Activator>
 						<!-- run mvn dependency:tree -->
 						<!-- list all artifacts that should be embedded here -->

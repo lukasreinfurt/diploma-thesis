@@ -1,5 +1,7 @@
 package org.simtech.bootware.plugins.event.zeromqsubscriber;
 
+import java.util.Map;
+
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
@@ -17,7 +19,7 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 
 	public ZeroMQSubscriber() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		context    = ZMQ.context(1);
 		subscriber = context.socket(ZMQ.SUB);
 		subscriber.connect("tcp://localhost:5563");

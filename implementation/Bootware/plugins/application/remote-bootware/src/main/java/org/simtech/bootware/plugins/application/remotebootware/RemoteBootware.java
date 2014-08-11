@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.application.test;
+package org.simtech.bootware.plugins.application.remotebootware;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -21,11 +22,11 @@ import org.simtech.bootware.core.exceptions.UploadFileException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
-public class Test extends AbstractBasePlugin implements ApplicationPlugin {
+public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlugin {
 
-	public Test() {}
+	public RemoteBootware() {}
 
-	public final void initialize(final ConfigurationWrapper configuration) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 
