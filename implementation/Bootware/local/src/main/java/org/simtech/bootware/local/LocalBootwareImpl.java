@@ -100,8 +100,10 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			instance = new ApplicationInstance("remote-bootware");
 
 			// create temporary context for remote bootware request
-			final UserContext remoteContext = context;
+			final UserContext remoteContext = new UserContext();
+			remoteContext.setResource(context.getResource());
 			remoteContext.setApplication("remote-bootware");
+			remoteContext.setConfigurationList(context.getConfigurationList());
 			instance.setUserContext(remoteContext);
 
 			// execute deploy request
