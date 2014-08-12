@@ -36,19 +36,16 @@ public class ZeroMQPublisher extends AbstractBasePlugin implements EventPlugin {
 
 	@Handler
 	public final void handle(final BaseEvent event) {
-		publisher.sendMore(topic);
 		publisher.send("[" + event.getSeverity() + "] " + event.getMessage(), ZMQ.NOBLOCK);
 	}
 
 	@Handler
 	public final void handle(final DeadMessage message) {
-		publisher.sendMore(topic);
 		publisher.send("DeadMessage: " + message.getMessage(), ZMQ.NOBLOCK);
 	}
 
 	@Handler
 	public final void handle(final FilteredMessage message) {
-		publisher.sendMore(topic);
 		publisher.send("FilteredMessage: " + message.getMessage(), ZMQ.NOBLOCK);
 	}
 

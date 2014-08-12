@@ -60,7 +60,7 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 			context    = ZMQ.context(1);
 			subscriber = context.socket(ZMQ.SUB);
 			subscriber.connect(zeromqUrl);
-			subscriber.subscribe("remote".getBytes());
+			subscriber.subscribe("".getBytes());
 
 			listener = new Listener();
 			t = new Thread(listener);
@@ -83,9 +83,8 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 
 		public final void run() {
 			while (running) {
-				final String address = subscriber.recvStr(ZMQ.NOBLOCK);
 				final String contents = subscriber.recvStr(ZMQ.NOBLOCK);
-				if (address != null && contents != null) {
+				if (contents != null) {
 					System.out.println("Remote Bootware => " + contents);
 				}
 			}
