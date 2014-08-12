@@ -233,7 +233,7 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 
 		// for debugging
 		try {
-			final PrintWriter out = new PrintWriter(keyName + ".pem");
+			final PrintWriter out = new PrintWriter("aws-ec2-key.pem");
 			out.println(privateKey);
 			out.close();
 		}
