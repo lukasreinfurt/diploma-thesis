@@ -2,8 +2,6 @@ package org.simtech.bootware.local;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceException;
@@ -136,14 +134,12 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
+	public final void undeploy(final UserContext context) throws UndeployException {
 		request = new Request("undeploy");
-		instance = instanceStore.get(remoteContext);
+		instance = instanceStore.get(context);
 
-		final Iterator it = endpoints.entrySet().iterator();
-
-		if (!it.hasNext()) {
-			request.fail("Endpoints cannot be empty");
+		if (instance == null) {
+			throw new UndeployException("There was no active application that matched this request");
 		}
 
 		stateMachine.fire(SMEvents.REQUEST);
@@ -151,10 +147,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());
 		}
-
-		while (it.hasNext()) {
-			final Map.Entry pairs = (Map.Entry) it.next();
-			System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		else {
+			instanceStore.remove(context);
 		}
 	}
 
@@ -176,7 +170,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		final ApplicationInstance remoteBootwareInstance = instanceStore.get(remoteContext);
 		if (remoteBootwareInstance != null) {
 			try {
-				undeploy((HashMap) remoteBootwareInstance.getInstanceInformation());
+				undeploy(remoteContext);
 			}
 			catch (UndeployException e) {
 				throw new ShutdownException(e);

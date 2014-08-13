@@ -1,8 +1,6 @@
 package org.simtech.bootware.remote;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.jws.WebService;
 
@@ -107,12 +105,12 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
+	public final void undeploy(final UserContext context) throws UndeployException {
 		request = new Request("undeploy");
-		final Iterator it = endpoints.entrySet().iterator();
+		instance = instanceStore.get(context);
 
-		if (!it.hasNext()) {
-			request.fail("Endpoints cannot be empty");
+		if (instance == null) {
+			throw new UndeployException("There was no active application that matched this request");
 		}
 
 		stateMachine.fire(StateMachineEvents.REQUEST);
@@ -120,10 +118,8 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());
 		}
-
-		while (it.hasNext()) {
-			final Map.Entry pairs = (Map.Entry) it.next();
-			System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		else {
+			instanceStore.remove(context);
 		}
 	}
 
