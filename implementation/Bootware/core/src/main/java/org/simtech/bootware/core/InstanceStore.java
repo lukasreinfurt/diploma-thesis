@@ -11,15 +11,18 @@ public class InstanceStore {
 		store = new HashMap<String, ApplicationInstance>();
 	}
 
-	public final void put(final String id, final ApplicationInstance instance) {
+	public final void put(final UserContext context, final ApplicationInstance instance) {
+		final String id = context.getApplication() + ":" + context.getResource();
 		store.put(id, instance);
 	}
 
-	public final ApplicationInstance get(final String id) {
+	public final ApplicationInstance get(final UserContext context) {
+		final String id = context.getApplication() + ":" + context.getResource();
 		return store.get(id);
 	}
 
-	public final void remove(final String id) {
+	public final void remove(final UserContext context) {
+		final String id = context.getApplication() + ":" + context.getResource();
 		store.remove(id);
 	}
 }

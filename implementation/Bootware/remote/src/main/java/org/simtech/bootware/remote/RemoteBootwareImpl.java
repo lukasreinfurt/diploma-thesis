@@ -89,7 +89,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		request = new Request("deploy");
-		instance = new ApplicationInstance("test");
+		instance = new ApplicationInstance("temp");
 		instance.setUserContext(context);
 
 		stateMachine.fire(StateMachineEvents.REQUEST);
@@ -97,9 +97,13 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
+		else {
+			instanceStore.put(context, instance);
+		}
 
-		final InformationListWrapper endpoints = new InformationListWrapper();
-		return endpoints;
+		final InformationListWrapper informationList = new InformationListWrapper();
+		informationList.setInformationList(instance.getInstanceInformation());
+		return informationList;
 	}
 
 	@Override
@@ -121,6 +125,15 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			final Map.Entry pairs = (Map.Entry) it.next();
 			System.out.println(pairs.getKey() + " = " + pairs.getValue());
 		}
+	}
+
+	@Override
+	public final InformationListWrapper getActive(final UserContext context) {
+		final InformationListWrapper informationList = new InformationListWrapper();
+		if (instanceStore.get(context) != null) {
+			informationList.setInformationList(instanceStore.get(context).getInstanceInformation());
+		}
+		return informationList;
 	}
 
 	@Override

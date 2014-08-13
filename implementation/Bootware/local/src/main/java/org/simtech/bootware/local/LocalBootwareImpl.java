@@ -34,6 +34,7 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 public class LocalBootwareImpl extends AbstractStateMachine implements LocalBootware {
 
 	private static Boolean triedProvisioningRemote = false;
+	private static UserContext remoteContext;
 	private static RemoteBootwareService remoteBootware;
 	private static URL remoteBootwareURL;
 
@@ -100,7 +101,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			instance = new ApplicationInstance("remote-bootware");
 
 			// create temporary context for remote bootware request
-			final UserContext remoteContext = new UserContext();
+			remoteContext = new UserContext();
 			remoteContext.setResource(context.getResource());
 			remoteContext.setApplication("remote-bootware");
 			remoteContext.setConfigurationList(context.getConfigurationList());
@@ -114,7 +115,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				throw new DeployException((String) request.getResponse());
 			}
 			else {
-				instanceStore.put(instance.getID(), instance);
+				instanceStore.put(context, instance);
 			}
 
 			// create remote bootware service
@@ -137,7 +138,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void undeploy(final HashMap<String, String> endpoints) throws UndeployException {
 		request = new Request("undeploy");
-		instance = instanceStore.get("test");
+		instance = instanceStore.get(remoteContext);
 
 		final Iterator it = endpoints.entrySet().iterator();
 
@@ -172,7 +173,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		// undeploy remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy remote bootware."));
-		final ApplicationInstance remoteBootwareInstance = instanceStore.get("remote-bootware");
+		final ApplicationInstance remoteBootwareInstance = instanceStore.get(remoteContext);
 		if (remoteBootwareInstance != null) {
 			try {
 				undeploy((HashMap) remoteBootwareInstance.getInstanceInformation());
