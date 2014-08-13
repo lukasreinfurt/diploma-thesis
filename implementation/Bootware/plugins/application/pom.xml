@@ -21,6 +21,7 @@
 	<modules>
 		<module>opentosca</module>
 		<module>remote-bootware</module>
+		<module>test</module>
 	</modules>
 
 	<build>
