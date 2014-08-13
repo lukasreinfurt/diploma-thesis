@@ -23,7 +23,9 @@ public class Test extends AbstractBasePlugin implements ResourcePlugin {
 
 	public final Map<String, String> provision() {
 		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Provision has been called."));
-		return new HashMap<String, String>();
+		final Map<String, String> instanceInformation = new HashMap<String, String>();
+		instanceInformation.put("Test", "123");
+		return instanceInformation;
 	}
 
 	public final void deprovision(final Map<String, String> instanceInformation) {
