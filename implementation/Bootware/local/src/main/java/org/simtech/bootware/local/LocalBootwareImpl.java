@@ -113,7 +113,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				throw new DeployException((String) request.getResponse());
 			}
 			else {
-				instanceStore.put(context, instance);
+				instanceStore.put(remoteContext, instance);
 			}
 
 			// create remote bootware service
