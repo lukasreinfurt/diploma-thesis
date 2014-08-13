@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,11 @@ public class InstanceStore {
 	public final ApplicationInstance get(final UserContext context) {
 		final String id = context.getApplication() + ":" + context.getResource();
 		return store.get(id);
+	}
+
+	public final ApplicationInstance[] getAll() {
+		final Object[] array = store.values().toArray();
+		return Arrays.copyOf(array, array.length, ApplicationInstance[].class);
 	}
 
 	public final void remove(final UserContext context) {

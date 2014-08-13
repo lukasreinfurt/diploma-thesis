@@ -143,7 +143,16 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		eventBus.publish(new CoreEvent(Severity.INFO, "Deprovision Workflow Middleware"));
 
 		// undeploy all provisioning engines
-		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy applications."));
+		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy active applications."));
+		final ApplicationInstance[] activeApplications = instanceStore.getAll();
+		for (ApplicationInstance activeApplication : activeApplications) {
+			try {
+				undeploy(activeApplication.getUserContext());
+			}
+			catch (UndeployException e) {
+				throw new ShutdownException(e);
+			}
+		}
 
 		// trigger shutdown in thread after delay so that this method can return before it
 		final Thread delayedShutdown = new Thread() {
