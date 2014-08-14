@@ -12,11 +12,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+//import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+//import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
@@ -35,6 +38,8 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
+import org.simtech.bootware.core.ConfigurationListWrapper;
+import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.local.DeployResponse;
@@ -53,6 +58,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private MessageConsole myConsole;
 	private MessageConsoleStream out;
 	private UserContext context;
+	private Map<String, ConfigurationWrapper> defaultConfiguration;
 
 	public BootwarePlugin() {
 		myConsole = findConsole("Bootware");
@@ -127,6 +133,39 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	private void loadDefaultConfiguration() {
+		try {
+			// final ConfigurationListWrapper test0 = new ConfigurationListWrapper();
+			// final Map<String, ConfigurationWrapper> test = new HashMap<String, ConfigurationWrapper>();
+			// final ConfigurationWrapper test2 = new ConfigurationWrapper();
+			// final Map<String, String> test3 = new HashMap<String, String>();
+
+			// test3.put("Test", "123");
+			// test2.setConfiguration(test3);
+			// test.put("abc", test2);
+			// test0.setConfigurationList(test);
+
+			//final QName qName = new QName("", "configurationList");
+			//final JAXBElement root = new JAXBElement(qName, test.getClass(), test);
+
+			// final JAXBContext jaxbContext = JAXBContext.newInstance(test0.getClass());
+			// final Marshaller marshaller = jaxbContext.createMarshaller();
+			// final File file = new File("plugins/bootware/defaultConfiguration.xml");
+			// marshaller.marshal(test0, file);
+
+			final JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationListWrapper.class);
+			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+			final File file = new File("plugins/bootware/defaultConfiguration.xml");
+			final JAXBElement<ConfigurationListWrapper> root = unmarshaller.unmarshal(new StreamSource(file), ConfigurationListWrapper.class);
+			final ConfigurationListWrapper wrapper = root.getValue();
+			defaultConfiguration = wrapper.getConfigurationList();
+		}
+		catch (JAXBException e) {
+			log("Loading context failed: " + e.getMessage());
+			log(e.toString());
+		}
+	}
+
 	private void setPreferences() {
 		// SimTech settings
 		final IPreferenceStore simTechStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.bpel.ui");
@@ -156,6 +195,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		t.start();
 
 		loadContext();
+		loadDefaultConfiguration();
 
 		Thread t2 = new Thread(new Runnable() {
 
@@ -188,7 +228,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 						break;
 					}
 				}
-
 
 				if (service != null) {
 					try {

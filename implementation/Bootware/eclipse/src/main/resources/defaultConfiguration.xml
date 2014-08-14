@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configurationListWrapper>
+	<configurationList>
+		<entry>
+			<key>aws-ec2</key>
+			<value>
+				<configuration>
+					<entry>
+						<key>secretKey</key>
+						<value>aU7cD26+grgtluyqk0/YeMaRag5tmOZIUcvN+2Us</value>
+					</entry>
+					<entry>
+						<key>accessKey</key>
+						<value>AKIAJYIAG2HYG23MDSZQ</value>
+					</entry>
+				</configuration>
+			</value>
+		</entry>
+	</configurationList>
+</configurationListWrapper>
