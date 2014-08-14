@@ -3,9 +3,6 @@ package org.simtech.bootware.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 public class ConfigurationListWrapper {
 
 	private Map<String, ConfigurationWrapper> configurationList = new HashMap<String, ConfigurationWrapper>();

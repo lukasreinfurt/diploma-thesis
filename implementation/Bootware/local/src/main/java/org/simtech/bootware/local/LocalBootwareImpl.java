@@ -1,14 +1,13 @@
 package org.simtech.bootware.local;
 
 import java.net.URL;
-import java.util.HashMap;
 
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceException;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ApplicationInstance;
-import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.UserContext;
@@ -153,8 +152,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	@Override
-	public final void setConfiguration(final HashMap<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
-		defaultConfigurationList = configurationList;
+	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration"));
+		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 	}
 
 	@Override

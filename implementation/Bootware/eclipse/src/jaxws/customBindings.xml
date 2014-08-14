@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
 	<bindings scd="x-schema::tns" xmlns:tns="http://local.bootware.simtech.org/">
+		<bindings scd="~tns:configurationListWrapper">
+			<class ref="org.simtech.bootware.core.ConfigurationListWrapper"/>
+		</bindings>
 		<bindings scd="~tns:configurationWrapper">
 			<class ref="org.simtech.bootware.core.ConfigurationWrapper"/>
 		</bindings>

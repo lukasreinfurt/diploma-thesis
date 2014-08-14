@@ -1,12 +1,10 @@
 package org.simtech.bootware.remote;
 
-import java.util.HashMap;
-
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
 import org.simtech.bootware.core.ApplicationInstance;
-import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.StateMachineEvents;
@@ -133,8 +131,8 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	@Override
-	public final void setConfiguration(final HashMap<String, ConfigurationWrapper> configurationList) throws SetConfigurationException {
-		defaultConfigurationList = configurationList;
+	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 	}
 
 	@Override
