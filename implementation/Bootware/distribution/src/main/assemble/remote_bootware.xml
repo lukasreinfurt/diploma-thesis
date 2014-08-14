@@ -96,6 +96,17 @@
 			</binaries>
 		</moduleSet>
 
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.simtech.bootware.plugins.provision:*</include>
+			</includes>
+			<binaries>
+				<outputDirectory>bin/remote/plugins/provision</outputDirectory>
+				<unpack>false</unpack>
+			</binaries>
+		</moduleSet>
+
 	</moduleSets>
 
 </assembly>

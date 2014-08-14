@@ -7,14 +7,19 @@ import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
+import org.simtech.bootware.core.RequestContext;
 import org.simtech.bootware.core.StateMachineEvents;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.InitializeException;
+import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.core.exceptions.UndeployException;
+import org.simtech.bootware.core.exceptions.UnloadPluginException;
+import org.simtech.bootware.core.plugins.ProvisionPlugin;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
@@ -26,6 +31,8 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
  */
 @WebService(endpointInterface = "org.simtech.bootware.remote.RemoteBootware")
 public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBootware {
+
+	private static String provisionPluginPath = "plugins/provision/";
 
 	/**
 	 * Creates the bootware process as state machine.
@@ -52,7 +59,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
 		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(StateMachineEvents.DEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Application").on(StateMachineEvents.UNDEPLOY);
+		builder.externalTransition().from("Load_Request_Plugins").to("Deprovision_Middleware").on(StateMachineEvents.UNDEPLOY);
 		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(StateMachineEvents.FAILURE);
 
 		// deploy
@@ -178,20 +185,57 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		public Machine() {}
 
 		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
+
+			final RequestContext context = request.getRequestContext();
+
 			try {
-				final Integer time = 10000;
-				Thread.sleep(time);
+				ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+				provisionPlugin.initialize(configurationList);
+				provisionPlugin.provision("PEEndpoint", "ServicePackageReference");
+				provisionPlugin = null;
+				pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
 			}
-			catch (InterruptedException e) {
-				e.printStackTrace();
+			catch (LoadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (UnloadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (InitializeException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provisision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
 			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 		protected void deprovisionMiddleware(final String from, final String to, final String fsmEvent) {
+
+			final RequestContext context = request.getRequestContext();
+
+			try {
+				ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+				provisionPlugin.initialize(configurationList);
+				provisionPlugin.deprovision("PEEndpoint", "ServicePackageReference");
+				provisionPlugin = null;
+				pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
+			}
+			catch (LoadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (UnloadPluginException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
+			catch (InitializeException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provision plugins: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+			}
 			stateMachine.fire(StateMachineEvents.SUCCESS);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
 	}

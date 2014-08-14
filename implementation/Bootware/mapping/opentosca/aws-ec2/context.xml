@@ -3,7 +3,7 @@
 	<resourcePlugin>aws-ec2-1.0.0.jar</resourcePlugin>
 	<communicationPlugin>ssh-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>opentosca-1.0.0.jar</applicationPlugin>
-	<callApplicationPlugin>?</callApplicationPlugin>
+	<callApplicationPlugin>test-1.0.0.jar</callApplicationPlugin>
 	<servicePackageReference>?</servicePackageReference>
 	<configurationList>
 		<entry>

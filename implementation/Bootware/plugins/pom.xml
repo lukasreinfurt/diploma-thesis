@@ -23,6 +23,7 @@
 		<module>communication</module>
 		<module>application</module>
 		<module>event</module>
+		<module>provision</module>
 	</modules>
 
 	<dependencies>

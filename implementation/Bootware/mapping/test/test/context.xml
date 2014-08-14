@@ -3,7 +3,7 @@
 	<resourcePlugin>test-1.0.0.jar</resourcePlugin>
 	<communicationPlugin>test-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>test-1.0.0.jar</applicationPlugin>
-	<callApplicationPlugin>?</callApplicationPlugin>
+	<callApplicationPlugin>test-1.0.0.jar</callApplicationPlugin>
 	<servicePackageReference>?</servicePackageReference>
 	<configurationList>
 		<entry>
