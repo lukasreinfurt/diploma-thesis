@@ -193,16 +193,16 @@ public abstract class AbstractStateMachine {
 		private Map<String, ConfigurationWrapper> mergeConfigurationLists(final Map<String, ConfigurationWrapper>... configurationLists) {
 			final Map<String, ConfigurationWrapper> mergedMap = new HashMap<String, ConfigurationWrapper>();
 
-			// System.out.println(">>>> Input maps:");
-			// for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
-			// 	for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
-			// 		System.out.println(entry.getKey());
-			// 		final Map<String, String> configuration = entry.getValue().getConfiguration();
-			// 		for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
-			// 			System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
-			// 		}
-			// 	}
-			// }
+			System.out.println(">>>> Input maps:");
+			for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
+				for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
+					System.out.println(entry.getKey());
+					final Map<String, String> configuration = entry.getValue().getConfiguration();
+					for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
+						System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
+					}
+				}
+			}
 
 			for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
 				for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
@@ -220,14 +220,14 @@ public abstract class AbstractStateMachine {
 				}
 			}
 
-			// System.out.println(">>>> Output map:");
-			// for (Map.Entry<String, ConfigurationWrapper> entry : mergedMap.entrySet()) {
-			// 	System.out.println(entry.getKey());
-			// 	final Map<String, String> configuration = entry.getValue().getConfiguration();
-			// 	for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
-			// 		System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
-			// 	}
-			// }
+			System.out.println(">>>> Output map:");
+			for (Map.Entry<String, ConfigurationWrapper> entry : mergedMap.entrySet()) {
+				System.out.println(entry.getKey());
+				final Map<String, String> configuration = entry.getValue().getConfiguration();
+				for (Map.Entry<String, String> entry2 : configuration.entrySet()) {
+					System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
+				}
+			}
 
 			return mergedMap;
 		}

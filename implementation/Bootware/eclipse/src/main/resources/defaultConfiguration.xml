@@ -13,6 +13,10 @@
 						<key>accessKey</key>
 						<value>AKIAJYIAG2HYG23MDSZQ</value>
 					</entry>
+					<entry>
+						<key>region</key>
+						<value>ec2.eu-west-1.amazonaws.com</value>
+					</entry>
 				</configuration>
 			</value>
 		</entry>
