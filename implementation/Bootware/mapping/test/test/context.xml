@@ -4,7 +4,7 @@
 	<communicationPlugin>test-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>test-1.0.0.jar</applicationPlugin>
 	<callApplicationPlugin>test-1.0.0.jar</callApplicationPlugin>
-	<servicePackageReference>?</servicePackageReference>
+	<servicePackageReference></servicePackageReference>
 	<configurationList>
 		<entry>
 			<key>test-1.0.0.jar</key>

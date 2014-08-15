@@ -187,54 +187,74 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
 
 			final RequestContext context = request.getRequestContext();
+			final String servicePackageReference = context.getServicePackageReference();
 
-			try {
-				ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
-				provisionPlugin.initialize(configurationList);
-				provisionPlugin.provision("PEEndpoint", "ServicePackageReference");
-				provisionPlugin = null;
-				pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
-				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
+			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
+				try {
+					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+					provisionPlugin.initialize(configurationList);
+					provisionPlugin.provision("PEEndpoint", "ServicePackageReference");
+					provisionPlugin = null;
+					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
+				}
+				catch (LoadPluginException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
+				catch (UnloadPluginException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
+				catch (InitializeException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provisision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
 			}
-			catch (LoadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
+			else {
+				eventBus.publish(new CoreEvent(Severity.INFO, "No service package reference provided. Skipping provision middleware step."));
 			}
-			catch (UnloadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
-			}
-			catch (InitializeException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provisision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
-			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
 		protected void deprovisionMiddleware(final String from, final String to, final String fsmEvent) {
 
 			final RequestContext context = request.getRequestContext();
+			final String servicePackageReference = context.getServicePackageReference();
 
-			try {
-				ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
-				provisionPlugin.initialize(configurationList);
-				provisionPlugin.deprovision("PEEndpoint", "ServicePackageReference");
-				provisionPlugin = null;
-				pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
-				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
+			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
+				try {
+					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+					provisionPlugin.initialize(configurationList);
+					provisionPlugin.deprovision("PEEndpoint", "ServicePackageReference");
+					provisionPlugin = null;
+					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
+				}
+				catch (LoadPluginException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
+				catch (UnloadPluginException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
+				catch (InitializeException e) {
+					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provision plugins: " + e.getMessage()));
+					stateMachine.fire(StateMachineEvents.FAILURE);
+					return;
+				}
 			}
-			catch (LoadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
+			else {
+				eventBus.publish(new CoreEvent(Severity.INFO, "No service package reference provided. Skipping deprovision middleware step."));
 			}
-			catch (UnloadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
-			}
-			catch (InitializeException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provision plugins: " + e.getMessage()));
-				stateMachine.fire(StateMachineEvents.FAILURE);
-			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 

@@ -4,7 +4,7 @@
 	<communicationPlugin>ssh-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>opentosca-1.0.0.jar</applicationPlugin>
 	<callApplicationPlugin>test-1.0.0.jar</callApplicationPlugin>
-	<servicePackageReference>?</servicePackageReference>
+	<servicePackageReference></servicePackageReference>
 	<configurationList>
 		<entry>
 			<key>aws-ec2</key>
