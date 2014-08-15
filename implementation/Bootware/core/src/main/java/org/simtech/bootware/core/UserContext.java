@@ -35,7 +35,6 @@ public class UserContext {
 		servicePackageReference = reference;
 	}
 
-	@XmlElement(required = true)
 	public final String getServicePackageReference() {
 		return servicePackageReference;
 	}

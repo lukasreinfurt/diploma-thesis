@@ -191,6 +191,7 @@ public abstract class AbstractStateMachine {
 		}
 
 		private Map<String, ConfigurationWrapper> mergeConfigurationLists(final Map<String, ConfigurationWrapper>... configurationLists) {
+
 			final Map<String, ConfigurationWrapper> mergedMap = new HashMap<String, ConfigurationWrapper>();
 
 			System.out.println(">>>> Input maps:");
@@ -236,14 +237,20 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
 			try {
+				// map user context to request context
 				final UserContext userContext = instance.getUserContext();
 				final ContextMapper mapper = new ContextMapper();
 				final RequestContext requestContext = mapper.map(userContext);
 
-				// merge userContext, requestContext, and defaultConfiguration;
+				// use service package reference from user context if given
+				final String servicePackageReference = userContext.getServicePackageReference();
+				if (servicePackageReference != null && !"".equals(servicePackageReference)) {
+					requestContext.setServicePackageReference(servicePackageReference);
+				}
 
 				request.setRequestContext(requestContext);
 
+				// merge configurations
 				final Map<String, ConfigurationWrapper> userConfigurationList = userContext.getConfigurationList();
 				final Map<String, ConfigurationWrapper> requestConfigurationList = requestContext.getConfigurationList();
 				configurationList = mergeConfigurationLists(defaultConfigurationList, userConfigurationList, requestConfigurationList);

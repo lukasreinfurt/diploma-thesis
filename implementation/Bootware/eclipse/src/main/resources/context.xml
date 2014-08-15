@@ -2,5 +2,5 @@
 <context>
 	<resource>aws-ec2</resource>
 	<application>test</application>
-	<servicePackageReference>?</servicePackageReference>
+	<servicePackageReference>SPRfromUserContext</servicePackageReference>
 </context>

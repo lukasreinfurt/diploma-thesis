@@ -193,7 +193,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				try {
 					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
-					provisionPlugin.provision("PEEndpoint", "ServicePackageReference");
+					provisionPlugin.provision(url.toString(), servicePackageReference);
 					provisionPlugin = null;
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
@@ -230,7 +230,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				try {
 					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
-					provisionPlugin.deprovision("PEEndpoint", "ServicePackageReference");
+					provisionPlugin.deprovision(url.toString(), servicePackageReference);
 					provisionPlugin = null;
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
