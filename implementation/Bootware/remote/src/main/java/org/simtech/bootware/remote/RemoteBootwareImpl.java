@@ -1,5 +1,7 @@
 package org.simtech.bootware.remote;
 
+import java.util.Map;
+
 import javax.jws.WebService;
 
 import org.simtech.bootware.core.AbstractStateMachine;
@@ -193,7 +195,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				try {
 					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
-					provisionPlugin.provision(url.toString(), servicePackageReference);
+					final Map<String, String> informationList = provisionPlugin.provision(url.toString(), servicePackageReference);
+					final Map<String, String> instanceInformation = instance.getInstanceInformation();
+					instanceInformation.putAll(informationList);
 					provisionPlugin = null;
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));

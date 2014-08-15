@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -23,7 +24,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
-
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -227,7 +227,11 @@ public class BootwarePlugin implements IBootwarePlugin {
 							Thread.sleep(time);
 						}
 
-						final InformationListWrapper infos = response.get().getReturn();
+						final InformationListWrapper infosWrapper = response.get().getReturn();
+						final Map<String, String> infos = infosWrapper.getInformationList();
+						for (Map.Entry<String, String> entry : infos.entrySet()) {
+							log(entry.getKey() + ": " + entry.getValue());
+						}
 					}
 					catch (WebServiceException e) {
 						log("Retrieving service port failed: " + e.getMessage());
