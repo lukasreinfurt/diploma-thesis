@@ -19,18 +19,18 @@ public class Test extends AbstractBasePlugin implements ProvisionPlugin {
 		// no op
 	}
 
-	public final Map<String, String> provision(final String provisioningEgnineEndpoint, final String servicePackageReference) {
+	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) {
 		System.out.println("Provision middleware");
-		System.out.println("Provision engine endpoint: " + provisioningEgnineEndpoint);
+		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
 		System.out.println("Service package reference: " + servicePackageReference);
 		final Map<String, String> result = new HashMap<String, String>();
 		result.put("blub", "from provision plugin");
 		return result;
 	}
 
-	public final void deprovision(final String provisioningEgnineEndpoint, final String servicePackageReference) {
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) {
 		System.out.println("Deprovision middleware");
-		System.out.println("Provision engine endpoint: " + provisioningEgnineEndpoint);
+		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
 		System.out.println("Service package reference: " + servicePackageReference);
 	}
 
