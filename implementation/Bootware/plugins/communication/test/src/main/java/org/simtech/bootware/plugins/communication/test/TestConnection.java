@@ -37,7 +37,7 @@ public class TestConnection implements Connection {
 	}
 
 	public final String getURL() {
-		return "http://www.example.com";
+		return "192.168.80.80";
 	}
 
 }

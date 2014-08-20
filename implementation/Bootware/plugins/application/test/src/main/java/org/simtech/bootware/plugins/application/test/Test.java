@@ -50,7 +50,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 
 		if (connection != null) {
 			try {
-				final URL url = new URL("http://example.com");
+				final URL url = new URL("192.168.80.80");
 				return url;
 			}
 			catch (MalformedURLException e) {
