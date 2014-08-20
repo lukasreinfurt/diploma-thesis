@@ -1,0 +1,117 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>OpenTOSCA Plugin</name>
+
+	<parent>
+		<groupId>org.simtech.bootware.plugins</groupId>
+		<artifactId>provision</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<groupId>org.simtech.bootware.plugins.provision</groupId>
+	<artifactId>opentosca</artifactId>
+	<version>1.0.0</version>
+	<packaging>bundle</packaging>
+
+	<repositories>
+		<!-- for javax.jms -->
+		<repository>
+			<id>JBoss repository</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jms_1.1_spec</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>
+							org.simtech.bootware.plugins.provision.opentosca.*
+						</Private-Package>
+						<Bundle-Activator>
+							org.simtech.bootware.plugins.provision.opentosca.Activator
+						</Bundle-Activator>
+						<!-- run mvn dependency:tree -->
+						<!-- list all artifacts that should be embedded here -->
+						<!-- (the jars will be embedded in the lib folder) -->
+						<Embed-Dependency>
+							log4j,
+							commons-httpclient,
+							commons-codec,
+							commons-logging,
+							commons-lang3,
+							jms,
+							mail
+						</Embed-Dependency>
+						<!-- list all packages that are not embedded here -->
+						<!-- (these have to be exported by the bootware core) -->
+						<Import-Package>
+							javax.*,
+							org.xml.sax.*,
+							org.w3c.dom.*,
+							net.engio.mbassy.*,
+							org.simtech.bootware.core.*,
+							!*
+						</Import-Package>
+						<Embed-Directory>lib</Embed-Directory>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+					</instructions>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
