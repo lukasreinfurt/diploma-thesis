@@ -60,6 +60,10 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				connection.execute("sudo apt-get update &> /tmp/install.log");
 				connection.execute("curl install.opentosca.de/installEC2|sh &> /tmp/install.log");
 
+				System.out.println("Waiting...");
+				final Integer wait = 120000;
+				Thread.sleep(wait);
+
 				// bug fix start
 
 				// create properties file with the actual ip address
@@ -75,7 +79,6 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 
 				// upload properties
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
-				//connection.execute("sudo mkdir -p /etc/tomcat7");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
 
 				// upload replacement jar
@@ -83,14 +86,21 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				final InputStream is1 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
 				final InputStream is2 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
 				connection.upload(is1, getSize(is2), "/tmp/" + jarName);
-				//connection.execute("sudo mkdir -p ~/OpenTosca/lib");
+				connection.execute("sudo rm ~/OpenTOSCA/lib/org.opentosca.siengine.service.impl_1.0.0.201311221533.jar");
 				connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
 
 				// restart opentosca
 				connection.execute("sudo service tomcat7 stop");
 				connection.execute("pkill -f \"java\"");
 				connection.execute("sudo service tomcat7 start");
+
+				System.out.println("Waiting...");
+				Thread.sleep(wait);
+
 				connection.execute("sudo wget -qO- http://install.opentosca.de/start | sh");
+
+				System.out.println("Waiting...");
+				Thread.sleep(wait);
 
 				// bug fix end
 			}
@@ -104,6 +114,9 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				throw new ProvisionApplicationException(e);
 			}
 			catch (UploadFileException e) {
+				throw new ProvisionApplicationException(e);
+			}
+			catch (InterruptedException e) {
 				throw new ProvisionApplicationException(e);
 			}
 		}
