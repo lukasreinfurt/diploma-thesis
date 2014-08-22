@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
@@ -24,6 +25,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
+
+import org.apache.commons.configuration.MapConfiguration;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -42,6 +45,9 @@ import org.simtech.bootware.local.DeployResponse;
 
 import async.client.LocalBootware;
 import async.client.SetConfigurationException;
+
+//import fragmentorcp.FragmentoPlugIn;
+//import fragmentorcppresenter.presenter.Presenter;
 
 @SuppressWarnings({
 	"checkstyle:anoninnerlength",
@@ -144,21 +150,36 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
-	private void setPreferences() {
-		// SimTech settings
-		final IPreferenceStore simTechStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.bpel.ui");
+	private void setSimTechPreferences(final Map<String, String> preferences) {
 
-		simTechStore.setValue("ACTIVE_MQ_URL", "http://set.by.bootware.org/activemq");
-		simTechStore.setValue("SEND_REQUESTS", true);
-		simTechStore.setValue("USE_EXT_ITERATION", false);
-		simTechStore.setValue("INSTANCE_WAITING_TIME", "200");
+		log("Setting SimTech preferences.");
+		final MapConfiguration configuration = new MapConfiguration(preferences);
+		configuration.setThrowExceptionOnMissing(true);
 
-		// ODE settings
-		final IPreferenceStore odeStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.apache.ode.processManagement");
+		try {
+			// SimTech settings
+			final IPreferenceStore simTechStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.bpel.ui");
 
-		odeStore.setValue("pref_ode_url", "http://set.by.bootware.org/ode");
-		odeStore.setValue("pref_ode_version", "ODE_Version_134");
+			simTechStore.setValue("ACTIVE_MQ_URL", configuration.getString("activeMQUrl"));
+			//simTechStore.setValue("SEND_REQUESTS", true);
+			//simTechStore.setValue("USE_EXT_ITERATION", false);
+			//simTechStore.setValue("INSTANCE_WAITING_TIME", "200");
 
+			// ODE settings
+			final IPreferenceStore odeStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.apache.ode.processManagement");
+
+			odeStore.setValue("pref_ode_url", configuration.getString("odeServerUrl"));
+			//odeStore.setValue("pref_ode_version", "ODE_Version_134");
+
+			// Fragmento settings
+			log(configuration.getString("fragmentoUrl"));
+			//final Presenter presenter = FragmentoPlugIn.getDefault().getPresenter();
+			//presenter.getOperator().getFragmento().setServiceURI("Blub");
+
+		}
+		catch (NoSuchElementException e) {
+			log("There was an error while setting the SimTech preferences: " + e.getMessage());
+		}
 	}
 
 	public final void execute() {
@@ -232,6 +253,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 						for (Map.Entry<String, String> entry : infos.entrySet()) {
 							log(entry.getKey() + ": " + entry.getValue());
 						}
+						setSimTechPreferences(infos);
 					}
 					catch (WebServiceException e) {
 						log("Retrieving service port failed: " + e.getMessage());
@@ -253,8 +275,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		});
 		t2.start();
-
-		setPreferences();
 
 	}
 
