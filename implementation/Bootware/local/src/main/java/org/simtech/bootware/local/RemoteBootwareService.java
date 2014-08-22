@@ -7,11 +7,14 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
 
+import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.remote.DeployResponse;
+import org.simtech.bootware.remote.SetConfigurationResponse;
 import org.simtech.bootware.remote.ShutdownResponse;
 
 import async.client.RemoteBootware;
@@ -50,6 +53,20 @@ public class RemoteBootwareService {
 		}
 		catch (ExecutionException e) {
 			throw new DeployException(e);
+		}
+	}
+
+	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+		try {
+			final Response<SetConfigurationResponse> response = remoteBootware.setConfigurationAsync(configurationListWrapper);
+
+			while (!response.isDone()) {
+				final Integer time = 1000;
+				Thread.sleep(time);
+			}
+		}
+		catch (InterruptedException e) {
+			throw new SetConfigurationException(e);
 		}
 	}
 

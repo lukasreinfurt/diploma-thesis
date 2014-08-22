@@ -141,6 +141,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 	}
 

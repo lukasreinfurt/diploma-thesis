@@ -127,6 +127,18 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			}
 		}
 
+		// set default configuration at remote bootware
+		try {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
+			final ConfigurationListWrapper wrapper = new ConfigurationListWrapper();
+			wrapper.setConfigurationList(defaultConfigurationList);
+			remoteBootware.setConfiguration(wrapper);
+		}
+		catch (SetConfigurationException e) {
+			eventBus.publish(new CoreEvent(Severity.ERROR, "Setting default configuration at remote bootware failed: " + e.getMessage()));
+			throw new DeployException(e);
+		}
+
 		// pass on original request to remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on deploy request to remote bootware."));
 		return remoteBootware.deploy(context);
@@ -153,8 +165,13 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
-		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration"));
+		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
+
+		if (remoteBootware != null && remoteBootware.isAvailable()) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
+			remoteBootware.setConfiguration(configurationListWrapper);
+		}
 	}
 
 	@Override
