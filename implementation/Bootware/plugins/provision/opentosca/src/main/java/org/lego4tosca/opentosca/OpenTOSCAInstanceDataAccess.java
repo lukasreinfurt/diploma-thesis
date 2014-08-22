@@ -20,20 +20,21 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class OpenTOSCAInstanceDataAccess {
-	
-	static Logger logger = Logger.getLogger(OpenTOSCAInstanceDataAccess.class.getName());
+
+	//static Logger logger = Logger.getLogger(OpenTOSCAInstanceDataAccess.class.getName());
+	private Logger logger = new Logger();
 
 	// the endpoint (address) of the instance data REST API
 	private String APIRootCSARs = null;
 	private String APIRootVinothek = null;
-	
+
 	private String APIRootNodeInstances = null;
 	private static final String QUERY_PARAM_NODEINSTACEID = "nodeInstanceID";
 	private static final String NS_XLINK = "http://www.w3.org/1999/xlink";
@@ -43,7 +44,7 @@ public class OpenTOSCAInstanceDataAccess {
 	private static final String PATH_SEG_PROPERTIES = "properties";
 
 	/**
-	 * 
+	 *
 	 * @param host The host OpenTOSCA is running on, i.e. an IP address or host name. When null or empty, a default value of "localhost" will be used.
 	 */
 	public OpenTOSCAInstanceDataAccess(String host){
@@ -54,28 +55,28 @@ public class OpenTOSCAInstanceDataAccess {
 		APIRootVinothek = "http://"+host+":8080/vinothek";
 		logger.debug("APIRootCSARs    = "+APIRootCSARs);
 		logger.debug("APIRootVinothek = "+APIRootVinothek);
-		
+
 		APIRootNodeInstances = "http://"+host+":1337/containerapi/instancedata/nodeInstances";
 	}
-	
+
 	/**
 	 * To run the build plan of the specified CSAR
 	 * @param csarName the name of the CSAR file whose build plan has to run
 	 * @return
 	 */
 	public String instanitateCSAR(String csarName){
-		
+
 		String url = getVinothekRequestURL(csarName);
-		
+
 		if(StringUtils.isEmpty(url)){
 			logger.error("Cannot run the plan of "+ csarName+", error with CSAR name");
 			return null;
 		}
-		
+
 		String callbackURI = doGet(url);
 		logger.info("callback link: "+ callbackURI);
 		String response = "";
-		
+
 		if(!StringUtils.isEmpty(callbackURI)){
 			logger.info("Start Polling...");
 			while((response=doGet(callbackURI)).equals("NO-CALLBACK-RECEIVED-YET")){
@@ -91,7 +92,7 @@ public class OpenTOSCAInstanceDataAccess {
 		logger.info("Build plan Response of CSAR file '"+csarName+"' is: "+ response);
 	    return response;
 	}
-	
+
 	private String getVinothekRequestURL(String csarName){
 		if(StringUtils.isEmpty(csarName)){
 			logger.error("CSAR name should not be empty");
@@ -113,7 +114,7 @@ public class OpenTOSCAInstanceDataAccess {
 				+ "Content/SELFSERVICE-Metadata/&optionId=1";
 		return url;
 	}
-	
+
 	private String doGet(String url){
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(url);
@@ -160,7 +161,7 @@ public class OpenTOSCAInstanceDataAccess {
 
 	/**
 	 * Uploads and deploys a CSAR file to OpenTSOCA.
-	 * 
+	 *
 	 * @param urlToUpload
 	 *            The URL of the CSAR file. If the file is located on the local
 	 *            drive, the URL has to look like e.g.
@@ -170,17 +171,17 @@ public class OpenTOSCAInstanceDataAccess {
 	 */
 	// TODO change response to something meaningful...
 	public String uploadCSARDueURL(String urlToUpload) {
-		
+
 		logger.info("Try to upload and deploy CSAR from " + encodeURL(urlToUpload));
-		
+
 		String requestURL = APIRootCSARs.trim()
 				+ (APIRootCSARs.endsWith("/") == true ? "" : "/")
 				+ "?url=" + urlToUpload;
 		logger.debug("Request URL is "+requestURL);
-		
+
 		String response = doPost(requestURL);
 		logger.debug("Response body is "+response);
-		
+
 		return response;
 	}
 
@@ -195,7 +196,7 @@ public class OpenTOSCAInstanceDataAccess {
 	public Document getProperties(URI nodeInstanceID) {
 		Document doc;
 		URI nodeInstanceURI = getNodeInstanceURI(nodeInstanceID);
-		
+
 		HttpClient httpClient = new HttpClient();
 		// not set = default = 0 = no timeout
 		httpClient.getHttpConnectionManager().getParams()
@@ -206,7 +207,7 @@ public class OpenTOSCAInstanceDataAccess {
 			/**
 			 * Notice: Assumption is that a node instance id is an accessible
 			 * URL!
-			 * 
+			 *
 			 * TODO remove assumption, i.e. get list of node instances, search
 			 * for link to instance with given ID, follow this link
 			 */
@@ -240,7 +241,7 @@ public class OpenTOSCAInstanceDataAccess {
 			/**
 			 * Notice: Assumption is that a node instance id is an accessible
 			 * URL!
-			 * 
+			 *
 			 * TODO remove assumption, i.e. get list of node instances, search
 			 * for link to instance with given ID, follow this link
 			 */
@@ -280,7 +281,7 @@ public class OpenTOSCAInstanceDataAccess {
 	private static String addPathSegment(String root, String segment) {
 		return removeOuterSlashes(root) + "/" + removeOuterSlashes(segment);
 	}
-	
+
 	private static String removeOuterSlashes(String s) {
 		if (s != null) {
 			// remove slash at beginning if present
@@ -319,6 +320,25 @@ public class OpenTOSCAInstanceDataAccess {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	private class Logger {
+
+		public void info(String string) {
+			System.out.println(string);
+		}
+
+		public void error(String string) {
+			System.out.println(string);
+		}
+
+		public void debug(String string) {
+			System.out.println(string);
+		}
+
+		public void trace(String string) {
+			System.out.println(string);
+		}
 	}
 
 }
