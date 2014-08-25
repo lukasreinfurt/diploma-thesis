@@ -14,6 +14,9 @@ public class BaseEvent implements Event {
 
 	/**
 	 * Creates a base event and sets its timestamp to the current time.
+	 *
+	 * @param s Severity of the event (e.g. INFO, ERROR, etc.)
+	 * @param m The event message.
 	 */
 	protected BaseEvent(final Severity s, final String m) {
 		final Date date = new Date();
@@ -24,16 +27,28 @@ public class BaseEvent implements Event {
 	}
 
 	/**
+	 * Returns the event timestamp.
+	 *
 	 * @return The event timestamp in the format "yyyy/MM/dd hh:mm:ss:SSS".
 	 */
 	public final String getTimestamp() {
 		return timestamp;
 	}
 
+	/**
+	 * Sets the event severity.
+	 *
+	 * @param s Severity of the event (e.g. INFO, ERROR, etc.)
+	 */
 	public final void setSeverity(final Severity s) {
 		severity = s;
 	}
 
+	/**
+	 * Returns the event severity.
+	 *
+	 * @return The event severity.
+	 */
 	public final Severity getSeverity() {
 		return severity;
 	}

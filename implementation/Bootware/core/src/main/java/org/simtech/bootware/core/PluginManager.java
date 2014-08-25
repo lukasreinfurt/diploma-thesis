@@ -19,7 +19,9 @@ import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
 /**
- * A wrapper layer around the OSGi framwork.
+ * A wrapper layer around the OSGi framework.
+ * <p>
+ * The plugin manager handles the loading and unloading of plugins.
  */
 public class PluginManager {
 
@@ -49,12 +51,13 @@ public class PluginManager {
 		                           + "net.engio.mbassy.common;version=1.1.2";
 		config.put(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA, extraPackages);
 
-		// flush plugin cache on each framework start
+		// flush plugin cache on each framework start (doesn't seem to work)
 		config.put(Constants.FRAMEWORK_STORAGE_CLEAN, Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT);
 
 		frameworkFactory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
 		framework        = frameworkFactory.newFramework(config);
 
+		// start the framework
 		try {
 			framework.start();
 		}
@@ -79,8 +82,14 @@ public class PluginManager {
 	 * Load and start a plugin.
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
+	 *
+	 * @return The plugin object.
+	 *
+	 * @throws LoadPluginException If there was an error while loading the plugin.
 	 */
 	public final <T> T loadPlugin(final Class<T> type, final String path) throws LoadPluginException {
+
+		// Load the plugin and store a reference in installedBundles. Then start it.
 		try {
 			installedBundles.put(path, context.installBundle("file:" + path));
 			installedBundles.get(path).start();
@@ -88,6 +97,8 @@ public class PluginManager {
 		catch (BundleException e) {
 			throw new LoadPluginException(e);
 		}
+
+		// Get the plugin object that will be returned.
 		final BundleContext bundleContext = installedBundles.get(path).getBundleContext();
 		final String pluginName = new File(path).getName();
 		final String filter = "(name=" + pluginName + ")";
@@ -111,6 +122,8 @@ public class PluginManager {
 	 * Unload a loaded plugin.
 	 *
 	 * @param path Path to the .jar file that implements the plugin.
+	 *
+	 * @throws UnloadPluginException If there was an error while unloading the plugin.
 	 */
 	public final void unloadPlugin(final String path) throws UnloadPluginException {
 		final Bundle bundle = installedBundles.get(path);
@@ -127,6 +140,8 @@ public class PluginManager {
 
 	/**
 	 * Unloads all loaded plugins.
+	 *
+	 * @throws UnloadPluginException If there was an error while unloading the plugins.
 	 */
 	public final void unloadAllPlugins() throws UnloadPluginException {
 		final Iterator<Map.Entry<String, Bundle>> iterator = installedBundles.entrySet().iterator();
@@ -145,7 +160,10 @@ public class PluginManager {
 
 	/**
 	 * Stop the OSGi framework.
+	 * <p>
 	 * If there are still plugins loaded, they will be unloaded before the framework is stopped.
+	 *
+	 * @throws UnloadPluginException If there was an error while unloading the plugins.
 	 */
 	public final void stop() throws UnloadPluginException {
 		unloadAllPlugins();

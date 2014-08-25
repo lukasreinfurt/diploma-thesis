@@ -6,6 +6,20 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * Describes an application and a resource that should be deployed or undeployed.
+ * <p>
+ * The user context is supplied as input to the deploy and undeploy operations.
+ * It specifies an application that should be deployed or undeployed and also a
+ * resource on which this application should live.
+ * These two values are used to map an user context to a request context, that
+ * contains more details necessary to fulfill such a request.
+ * <p>
+ * The user context can also contain a service package reference that will be
+ * used by a provision plugin to provision the give service.
+ * The user context can also contain additional configuration values for various
+ * plugins.
+ */
 @XmlType(
 		propOrder = {
 		"resource",

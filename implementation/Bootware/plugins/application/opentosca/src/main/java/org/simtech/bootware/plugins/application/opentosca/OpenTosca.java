@@ -20,18 +20,31 @@ import org.simtech.bootware.core.exceptions.UploadFileException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
+/**
+ * An application plugin that provisions OpenTOSCA on AWS EC2
+ */
 public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public OpenTosca() {}
 
+	/**
+	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 
+	/**
+	 * Implements the shutdown operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void shutdown() {
 		// no op
 	}
 
+	/**
+	 * Get the size in bytes of an input stream by reading the stream once.
+	 * Does NOT reset the input stream!
+	 */
 	private long getSize(final InputStream is) {
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		final int bufferSize = 4096;
@@ -52,12 +65,19 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 		return buffer.length;
 	}
 
+	/**
+	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
 
 		if (connection != null) {
 			try {
-				// regular installation
+				// Bugfix: The apt-get update in the install script seems to fail for
+				// some reason. Executing apt-get update before the install script
+				// is a fix for that.
 				connection.execute("sudo apt-get update &> /tmp/install.log");
+
+				// regular installation
 				connection.execute("curl install.opentosca.de/installEC2|sh &> /tmp/install.log");
 
 				System.out.println("Waiting...");
@@ -81,7 +101,7 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
 
-				// upload replacement jar
+				// delete old jar and upload replacement jar
 				final String jarName = "org.opentosca.siengine.service.impl_1.0.0.201407231442.jar";
 				final InputStream is1 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
 				final InputStream is2 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
@@ -89,14 +109,17 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				connection.execute("sudo rm ~/OpenTOSCA/lib/org.opentosca.siengine.service.impl_1.0.0.201311221533.jar");
 				connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
 
-				// restart opentosca
+				// stop tomcat and opentosca
 				connection.execute("sudo service tomcat7 stop");
 				connection.execute("pkill -f \"java\"");
+
+				// start tomcat again
 				connection.execute("sudo service tomcat7 start");
 
 				System.out.println("Waiting...");
 				Thread.sleep(wait);
 
+				// start opentosca again
 				connection.execute("sudo wget -qO- http://install.opentosca.de/start | sh");
 
 				System.out.println("Waiting...");
@@ -125,10 +148,16 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 		}
 	}
 
+	/**
+	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void deprovision(final Connection connection) {
 		// no op
 	}
 
+	/**
+	 * Implements the start operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final URL start(final Connection connection) throws StartApplicationException {
 
 		if (connection != null) {
@@ -145,6 +174,9 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 		}
 	}
 
+	/**
+	 * Implements the stop operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void stop(final Connection connection) {
 		// no op
 	}

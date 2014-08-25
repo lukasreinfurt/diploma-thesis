@@ -6,6 +6,16 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * Describes which plugins and configuration should be used to fulfill a request.
+ * <p>
+ * Contains the specific resource, communication, application, and provision
+ * plugins that should be used to fulfill a request.
+ * Might also contain a service package reference to be used by the provision
+ * plugin.
+ * Also contains a configuration list that can contain configuration parameters
+ * for various plugins.
+ */
 @XmlType(
 		propOrder = {
 		"resourcePlugin",

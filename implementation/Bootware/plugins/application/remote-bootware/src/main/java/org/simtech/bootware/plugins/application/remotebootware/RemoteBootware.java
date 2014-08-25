@@ -22,31 +22,45 @@ import org.simtech.bootware.core.exceptions.UploadFileException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
+/**
+ * An application plugin that provisions the remote bootware
+ */
 public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public RemoteBootware() {}
 
+	/**
+	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
 		// no op
 	}
 
+	/**
+	 * Implements the shutdown operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void shutdown() {
 		// no op
 	}
 
+	/**
+	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
 		final String remotePathPrefix = "/tmp/";
 
 		if (connection != null) {
-
+			// Upload the content of the remote folder to /tmp/remote on the resource.
 			try {
 				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 				for (File file : files) {
 					final String remotePath = new File(remotePathPrefix, file.toString()).toString().replace("\\", "/");
+					// If file, upload file
 					if (file.isFile()) {
 						final FileInputStream is = new FileInputStream(file);
 						connection.upload(is, file.length(), remotePath);
 					}
+					// If directory, create directory
 					else if (file.isDirectory()) {
 						connection.execute("mkdir -p " + remotePath);
 					}
@@ -70,14 +84,21 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 		}
 	}
 
+	/**
+	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void deprovision(final Connection connection) {
 		// no op
 	}
 
+	/**
+	 * Implements the start operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final URL start(final Connection connection) throws StartApplicationException {
 
 		if (connection != null) {
 			try {
+				// Execute the remote bootware jar in the background and pipe output to /dev/null
 				connection.execute("cd /tmp/remote; nohup java -jar bootware-remote-1.0.0.jar &> /dev/null &");
 
 				final URL url = new URL("http://" + connection.getURL() + ":8080/axis2/services/Bootware");
@@ -95,6 +116,9 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 		}
 	}
 
+	/**
+	 * Implements the stop operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
+	 */
 	public final void stop(final Connection connection) {
 		// no op
 	}

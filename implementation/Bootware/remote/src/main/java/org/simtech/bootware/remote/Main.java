@@ -1,10 +1,5 @@
 package org.simtech.bootware.remote;
 
-/**
- * @author  Lukas Reinfurt
- * @version 1.0.0
-*/
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -22,9 +17,9 @@ public final class Main {
 	}
 
 	/**
-	 * Runs the bootware program.
+	 * Runs the remote bootware web service.
 	 *
-	 * @param args Commandline arguments.
+	 * @param args Commandline arguments (not used).
 	 */
 	public static void main(final String[] args) throws IOException {
 

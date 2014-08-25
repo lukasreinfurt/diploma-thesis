@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Binds some classes from the generated web service stub to their original classes in the bootware core library -->
 <bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
 	<bindings scd="x-schema::tns" xmlns:tns="http://remote.bootware.simtech.org/">
 		<bindings scd="~tns:configurationListWrapper">

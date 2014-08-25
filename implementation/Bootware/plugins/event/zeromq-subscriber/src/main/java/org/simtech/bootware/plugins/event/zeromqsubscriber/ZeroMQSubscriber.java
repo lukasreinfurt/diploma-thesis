@@ -17,6 +17,10 @@ import org.zeromq.ZMQ.Socket;
 
 import net.engio.mbassy.listener.Handler;
 
+/**
+ * An event plugin that listens to messages published on a socket and writes
+ * those messages to the console.
+ */
 public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin {
 
 	private Context context;
@@ -26,11 +30,19 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 
 	public ZeroMQSubscriber() {}
 
+	/**
+	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
-		// no op
+		// The socket connection is initialized later because we don't know the
+		// URL we want to listen to at this moment.
 	}
 
+	/**
+	 * Implements the shutdown operation defined in @see org.simtech.bootware.core.plugins.Plugin
+	 */
 	public final void shutdown() {
+		// Wait for listener thread to finish
 		if (t != null) {
 			try {
 				listener.terminate();
@@ -50,6 +62,12 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 		}
 	}
 
+	/**
+	 * Implements an event handler that reacts to events of the type @see org.simtech.bootware.core.events.RemoteBootwareStartedEvent
+	 *
+	 * @see org.simtech.bootware.core.events.RemoteBootwareStartedEvent contain
+	 * the URL of the remote bootware to which we want to connect to.
+	 */
 	@Handler
 	public final void handle(final RemoteBootwareStartedEvent event) {
 		try {
@@ -57,11 +75,13 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 			final String zeromqUrl = "tcp://" +  remoteBootwareUrl.getHost() + ":5563";
 			eventBus.publish(new PluginEvent(Severity.INFO, "Connecting ZeroMQ subscriber to " + zeromqUrl + "."));
 
+			// Connect to socket on remote bootware and subscribe to all messages.
 			context    = ZMQ.context(1);
 			subscriber = context.socket(ZMQ.SUB);
 			subscriber.connect(zeromqUrl);
 			subscriber.subscribe("".getBytes());
 
+			// Start a new threaded listener so we wont block further execution.
 			listener = new Listener();
 			t = new Thread(listener);
 			t.start();
@@ -71,16 +91,27 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 		}
 	}
 
+	/**
+	 * A threaded listener that does not block.
+	 * <p>
+	 * It writes all messages it receives to the console.
+	 */
 	private class Listener implements Runnable {
 
 		private volatile Boolean running = true;
 
 		public Listener() {}
 
+		/**
+		 * Stops the listener.
+		 */
 		public final void terminate() {
 			running = false;
 		}
 
+		/**
+		 * Starts the listener.
+		 */
 		public final void run() {
 			while (running) {
 				final String contents = subscriber.recvStr(ZMQ.NOBLOCK);

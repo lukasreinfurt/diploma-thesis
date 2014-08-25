@@ -22,7 +22,7 @@ import org.simtech.bootware.core.exceptions.UndeployException;
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
 /**
- * The main bootware program.
+ * The main local bootware program.
  * <p>
  * Implements a finite state machine using squirrelframework.
  * The whole bootware process is executed by this state machine.
@@ -37,11 +37,14 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 	/**
 	 * Creates the bootware process as state machine.
+	 * <p>
+	 * Creates the specific state graph of the local bootware and starts the state machine.
 	 */
 	@SuppressWarnings("checkstyle:multiplestringliterals")
 	public LocalBootwareImpl() {
 		builder = StateMachineBuilderFactory.create(Machine.class);
 
+		// Call transition() on any transition.
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
@@ -88,6 +91,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		stateMachine = builder.newStateMachine(SMEvents.START);
 	}
 
+	/**
+	 * Implements the deploy operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		// Deploy remote bootware if not yet deployed
@@ -144,6 +150,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		return remoteBootware.deploy(context);
 	}
 
+	/**
+	 * Implements the undeploy operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void undeploy(final UserContext context) throws UndeployException {
 		request = new Request("undeploy");
@@ -163,17 +172,25 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		}
 	}
 
+	/**
+	 * Implements the setConfiguration operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+		// Replace default configuration with the new configuration.
 		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 
+		// Pass on new configuration to remote bootware if it exists.
 		if (remoteBootware != null && remoteBootware.isAvailable()) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
 			remoteBootware.setConfiguration(configurationListWrapper);
 		}
 	}
 
+	/**
+	 * Implements the shutdown operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void shutdown() throws ShutdownException {
 		// pass on shutdown request to remote bootware
@@ -194,7 +211,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			}
 		}
 
-		// trigger shutdown in thread after delay so that this method can return before it
+		// trigger shutdown in thread after delay so that this method can return
+		// the local bootware is shut down.
 		final Thread delayedShutdown = new Thread() {
 			public void run() {
 				try {
@@ -213,7 +231,10 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	/**
-	 * Describes the entryMethods for the bootware process.
+	 * Describes the operations that are executed on state entry as defined by
+	 * the transition above. The local bootware does not add any new operations
+	 * to the default operation defined in @see org.simtech.bootware.core.AbstractStateMachine
+	 * so this is empty on purpose.
 	 */
 	static class Machine extends AbstractMachine {
 

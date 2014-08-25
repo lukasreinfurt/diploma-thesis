@@ -19,12 +19,20 @@ import org.simtech.bootware.remote.ShutdownResponse;
 
 import async.client.RemoteBootware;
 
+/**
+ * A wrapper class around the web service calls to the remote bootware.
+ */
 public class RemoteBootwareService {
 
 	private URL url;
 	private Boolean available = false;
 	private RemoteBootware remoteBootware;
 
+	/**
+	 * Connect to the remote bootware at the given URL.
+	 *
+	 * @param url The URL of the remote bootware.
+	 */
 	public RemoteBootwareService(final URL url) {
 		this.url = url;
 		final QName qname = new QName("http://remote.bootware.simtech.org/", "RemoteBootwareImplService");
@@ -33,10 +41,26 @@ public class RemoteBootwareService {
 		available = true;
 	}
 
+	/**
+	 * Return the availability of the remote bootware service.
+	 *
+	 * @return True if the remote bootware is available, false otherwise.
+	 */
 	public final Boolean isAvailable() {
 		return available;
 	}
 
+	/**
+	 * Calls the deploy operation of the remote bootware.
+	 * <p>
+	 * This implementation uses asynchronous polling for the call.
+	 *
+	 * @param context The user context that describes the application and resource that should be deployed.
+	 *
+	 * @return A wrapper object that contains a map of strings of information about the deployed application.
+	 *
+	 * @throws DeployException If there was an error during the deploy process.
+	 */
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		try {
 			final Response<DeployResponse> response = remoteBootware.deployAsync(context);
@@ -56,6 +80,15 @@ public class RemoteBootwareService {
 		}
 	}
 
+	/**
+	 * Calls the setConfiguration operation of the remote bootware.
+	 * <p>
+	 * This implementation uses asynchronous polling for the call.
+	 *
+	 * @param configurationListWrapper A wrapper object containing the configuration list that should be set as new default Configuration.
+	 *
+	 * @throws SetConfigurationException If there was an error while setting the configuration.
+	 */
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
 		try {
 			final Response<SetConfigurationResponse> response = remoteBootware.setConfigurationAsync(configurationListWrapper);
@@ -70,6 +103,13 @@ public class RemoteBootwareService {
 		}
 	}
 
+	/**
+	 * Calls the shutdown operation of the remote bootware.
+	 * <p>
+	 * This implementation uses asynchronous polling for the call.
+	 *
+	 * @throws ShutdownException If there was an error during the shutdown process.
+	 */
 	public final void shutdown() throws ShutdownException {
 		try {
 			final Response<ShutdownResponse> response = remoteBootware.shutdownAsync();

@@ -3,6 +3,10 @@ package org.simtech.bootware.core;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A wrapper class that wraps an information list map.
+ * This simplifies jaxb marshalling and unmarshalling.
+ */
 public class InformationListWrapper {
 
 	private Map<String, String> informationList = new HashMap<String, String>();

@@ -22,6 +22,11 @@ import ch.ethz.ssh2.SCPOutputStream;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
 
+/**
+ * Implements a connection object that is used by a communication plugin.
+ * <p>
+ * Uses the Ganymed SSH-2 library.
+ */
 public class SshConnection implements Connection {
 
 	private EventBus eventBus;
@@ -40,6 +45,11 @@ public class SshConnection implements Connection {
 		eventBus = eb;
 	}
 
+	/**
+	 * Implements the connect operation defined in @see org.simtech.bootware.core.Connection
+	 * <p>
+	 * Currently supports public key authentication.
+	 */
 	@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 	public final void connect(final Map<String, String> settings) throws ConnectConnectionException {
 		url      = settings.get("publicDNS");
@@ -49,6 +59,7 @@ public class SshConnection implements Connection {
 		connection = new ch.ethz.ssh2.Connection(url);
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connecting to '" + url + "'."));
 
+		// Retry a few times
 		for (int retries = 0; retries < maxRetries; retries++) {
 			try {
 				Thread.sleep(waitBetweenRetries);
@@ -68,6 +79,7 @@ public class SshConnection implements Connection {
 
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Authenticating connection."));
 
+		// Try authentication with public key
 		try {
 			final boolean isAuthenticated = connection.authenticateWithPublicKey(username, key.toCharArray(), null);
 			if (!isAuthenticated) {
@@ -79,6 +91,9 @@ public class SshConnection implements Connection {
 		}
 	}
 
+	/**
+	 * Implements the disconnect operation defined in @see org.simtech.bootware.core.Connection
+	 */
 	public final void disconnect() throws DisconnectConnectionException {
 		if (connection != null) {
 			connection.close();
@@ -88,9 +103,13 @@ public class SshConnection implements Connection {
 		}
 	}
 
+	/**
+	 * Implements the execute operation defined in @see org.simtech.bootware.core.plugins.Connection
+	 */
 	public final void execute(final String command) throws ExecuteCommandException {
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Executing command '" + command + "'."));
 
+		// Open a session.
 		try {
 			session = connection.openSession();
 		}
@@ -100,6 +119,7 @@ public class SshConnection implements Connection {
 
 		if (session != null) {
 			try {
+				// Execute command.
 				session.execCommand(command);
 
 				final InputStream stdout = new StreamGobbler(session.getStdout());
@@ -108,6 +128,7 @@ public class SshConnection implements Connection {
 				final BufferedReader stderrReader = new BufferedReader(new InputStreamReader(stderr));
 				final StringBuilder stringBuilder = new StringBuilder();
 
+				// Read stdout output of command to string.
 				while (true) {
 					final String line = stdoutReader.readLine();
 					if (line == null) {
@@ -119,6 +140,7 @@ public class SshConnection implements Connection {
 					}
 				}
 
+				// Read stderr output of command to string
 				while (true) {
 					final String line = stderrReader.readLine();
 					if (line == null) {
@@ -130,6 +152,7 @@ public class SshConnection implements Connection {
 					}
 				}
 
+				// If the output string is not empty, publish the output
 				if (stringBuilder.length() > 0) {
 					eventBus.publish(new CommunicationPluginEvent(Severity.DEBUG, "Command '" + command + "' output: " + stringBuilder.toString()));
 				}
@@ -137,6 +160,8 @@ public class SshConnection implements Connection {
 			catch (IOException e) {
 				throw new ExecuteCommandException(e);
 			}
+
+			// Close the session.
 			session.close();
 		}
 		else {
@@ -144,7 +169,11 @@ public class SshConnection implements Connection {
 		}
 	}
 
+	/**
+	 * Implements the upload operation defined in @see org.simtech.bootware.core.plugins.Connection
+	 */
 	public final void upload(final InputStream inputStream, final long length, final String remotePath) throws UploadFileException {
+
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
 
 		try {
@@ -166,6 +195,9 @@ public class SshConnection implements Connection {
 		}
 	}
 
+	/**
+	 * Implements the getURL operation defined in @see org.simtech.bootware.core.plugins.Connection
+	 */
 	public final String getURL() {
 		return url;
 	}

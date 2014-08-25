@@ -1,10 +1,5 @@
 package org.simtech.bootware.local;
 
-/**
- * @author  Lukas Reinfurt
- * @version 1.0.0
-*/
-
 import javax.xml.ws.Endpoint;
 
 import org.simtech.bootware.core.exceptions.ShutdownException;
@@ -16,9 +11,9 @@ public final class Main {
 	}
 
 	/**
-	 * Runs the bootware program.
+	 * Runs the local bootware web service.
 	 *
-	 * @param args Commandline arguments.
+	 * @param args Commandline arguments (not used).
 	 */
 	public static void main(final String[] args) {
 

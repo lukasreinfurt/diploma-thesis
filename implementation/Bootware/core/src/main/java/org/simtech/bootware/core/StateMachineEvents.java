@@ -1,7 +1,7 @@
 package org.simtech.bootware.core;
 
 /**
- * A utility class that defines state machine events.
+ * A utility class that defines the default state machine events.
  */
 @SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class StateMachineEvents {

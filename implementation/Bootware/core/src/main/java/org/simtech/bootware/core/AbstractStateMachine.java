@@ -11,7 +11,6 @@ import java.util.Properties;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.FSMEvent;
 import org.simtech.bootware.core.events.Severity;
-//import org.simtech.bootware.core.exceptions.ConfigurationException;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.ContextMappingException;
 import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
@@ -29,8 +28,6 @@ import org.simtech.bootware.core.plugins.CommunicationPlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
 
-import org.squirrelframework.foundation.component.SquirrelProvider;
-import org.squirrelframework.foundation.fsm.DotVisitor;
 import org.squirrelframework.foundation.fsm.UntypedStateMachine;
 import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
 import org.squirrelframework.foundation.fsm.annotation.ContextInsensitive;
@@ -103,25 +100,15 @@ public abstract class AbstractStateMachine {
 		stateMachine.fire("Start");
 	}
 
+	/**
+	 * Returns the stopped state of the state machine.
+	 *
+	 * @return Returns true if the state machine has been stopped, otherwise false.
+	 */
 	public final Boolean hasStopped() {
 		return stopped;
 	}
 
-	/**
-	 * Exports the state machine as XML.
-	 */
-	public final void exportXML() {
-		System.out.println(stateMachine.exportXMLDefinition(true));
-	}
-
-	/**
-	 * Exports the state machine as .dot file for GraphViz.
-	 */
-	public final void exportDot() {
-		final DotVisitor visitor = SquirrelProvider.getInstance().newInstance(DotVisitor.class);
-		stateMachine.accept(visitor);
-		visitor.convertDotFile("bootware");
-	}
 
 	/**
 	 * Describes the entryMethods for the bootware process.
@@ -134,34 +121,49 @@ public abstract class AbstractStateMachine {
 	@StateMachineParameters(stateType = String.class, eventType = String.class, contextType = Void.class)
 	protected abstract static class AbstractMachine extends AbstractUntypedStateMachine {
 
+		/**
+		 * Debug output on each state transition.
+		 */
 		protected void transition(final String from, final String to, final String fsmEvent) {
 			if (eventBus != null) {
 				eventBus.publish(new FSMEvent(Severity.DEBUG, "Transition from '" + from + "' to '" + to + "' on '" + fsmEvent + "'."));
 			}
 		}
 
+		/**
+		 * Initializes all objects that are needed for the bootstrapping process.
+		 */
 		protected void initialize(final String from, final String to, final String fsmEvent) {
-			// log to local file?
+
+			// Load properties file.
 			try {
+				System.out.println("Loading properties file.");
 				final InputStream propFile = new FileInputStream("config.properties");
 				properties.load(propFile);
 			}
 			catch (IOException e) {
 				System.out.println("Properties file could not be loaded: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			instanceStore = new InstanceStore();
 			eventBus      = new EventBus();
 			pluginManager = new PluginManager();
+
+			// Register objects that are shared with plugins.
 			pluginManager.registerSharedObject(eventBus);
 			pluginManager.registerSharedObject(configurationList);
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Load all event plugins.
+		 */
 		protected void loadEventPlugins(final String from, final String to, final String fsmEvent) {
-			// log to local file?
+
+			// Get all event plugins that should be loaded from properties and load them.
 			try {
 				final String[] eventPlugins = properties.getProperty("eventPlugins").split(";");
 
@@ -173,13 +175,14 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Loading event plugins succeeded."));
 			}
 			catch (LoadPluginException e) {
-				// log to local file?
 				e.printStackTrace();
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 			catch (InitializeException e) {
 				e.printStackTrace();
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -190,10 +193,16 @@ public abstract class AbstractStateMachine {
 			// local and remote bootware implementation.
 		}
 
+		/**
+		 * Merge two or more configuration lists.
+		 * Values in later lists override values in earlier lists.
+		 */
 		private Map<String, ConfigurationWrapper> mergeConfigurationLists(final Map<String, ConfigurationWrapper>... configurationLists) {
 
 			final Map<String, ConfigurationWrapper> mergedMap = new HashMap<String, ConfigurationWrapper>();
 
+			// Debug output of the input maps.
+			/*
 			System.out.println(">>>> Input maps:");
 			for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
 				for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
@@ -204,9 +213,12 @@ public abstract class AbstractStateMachine {
 					}
 				}
 			}
+			*/
 
 			for (Map<String, ConfigurationWrapper> configurationList : configurationLists) {
 				for (Map.Entry<String, ConfigurationWrapper> entry : configurationList.entrySet()) {
+					// If there is already a key in the merged map with the same name as
+					// the currently looked at entry, merge them both.
 					if (mergedMap.containsKey(entry.getKey())) {
 						final Map<String, String> configuration = mergedMap.get(entry.getKey()).getConfiguration();
 						final Map<String, String> newConfiguration = entry.getValue().getConfiguration();
@@ -215,12 +227,15 @@ public abstract class AbstractStateMachine {
 						configurationWrapper.setConfiguration(configuration);
 						mergedMap.put(entry.getKey(), configurationWrapper);
 					}
+					// Else just put the entry in the merged map.
 					else {
 						mergedMap.put(entry.getKey(), entry.getValue());
 					}
 				}
 			}
 
+			// Debug output of the resulting merged map.
+			/*
 			System.out.println(">>>> Output map:");
 			for (Map.Entry<String, ConfigurationWrapper> entry : mergedMap.entrySet()) {
 				System.out.println(entry.getKey());
@@ -229,11 +244,16 @@ public abstract class AbstractStateMachine {
 					System.out.println("    " + entry2.getKey() + ": " + entry2.getValue());
 				}
 			}
+			*/
 
 			return mergedMap;
 		}
 
+		/**
+		 * Map the user context from the request to the actual context.
+		 */
 		protected void readContext(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Generating context."));
 
 			try {
@@ -260,37 +280,45 @@ public abstract class AbstractStateMachine {
 				request.fail(failureMessage);
 				eventBus.publish(new CoreEvent(Severity.ERROR, failureMessage));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
-
-			// handle failure
-			// set configuration
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Load the request plugins specified in the context.
+		 */
 		protected void loadRequestPlugins(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Loading request plugins."));
 
 			final RequestContext context = request.getRequestContext();
 
 			try {
-				resourcePlugin      = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
+				resourcePlugin = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
 				resourcePlugin.initialize(configurationList);
+
 				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
 				communicationPlugin.initialize(configurationList);
-				applicationPlugin   = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
+
+				applicationPlugin = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
 				applicationPlugin.initialize(configurationList);
+
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins loaded."));
 			}
 			catch (LoadPluginException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 			catch (InitializeException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
+			// Transition to deploy or undeploy state, depending on the request type.
 			if ("deploy".equals(request.getType())) {
 				stateMachine.fire(StateMachineEvents.DEPLOY);
 				return;
@@ -301,7 +329,11 @@ public abstract class AbstractStateMachine {
 			}
 		}
 
+		/**
+		 * Provision the resource described by the resource plugin (e.g. AWS EC2).
+		 */
 		protected void provisionResource(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning resource."));
 
 			try {
@@ -312,12 +344,17 @@ public abstract class AbstractStateMachine {
 			catch (ProvisionResourceException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Create a connection to the resource using the communication plugin.
+		 */
 		protected void connect(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to resource."));
 
 			try {
@@ -328,12 +365,18 @@ public abstract class AbstractStateMachine {
 			catch (ConnectConnectionException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not connect to resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Provision the application described by the application plugin using the
+		 * connection to the resource.
+		 */
 		protected void provisionApplication(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning application."));
 
 			try {
@@ -343,12 +386,17 @@ public abstract class AbstractStateMachine {
 			catch (ProvisionApplicationException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Start the just provisioned application using the application plugin.
+		 */
 		protected void startApplication(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Starting application."));
 
 			try {
@@ -358,12 +406,17 @@ public abstract class AbstractStateMachine {
 			catch (StartApplicationException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not start application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Stop the running application using the application plugin
+		 */
 		protected void stopApplication(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Stopping application."));
 
 			try {
@@ -373,12 +426,17 @@ public abstract class AbstractStateMachine {
 			catch (StopApplicationException e) {
 				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not stop application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Deprovision the application using the application plugin
+		 */
 		protected void deprovisionApplication(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning application."));
 
 			try {
@@ -388,12 +446,17 @@ public abstract class AbstractStateMachine {
 			catch (DeprovisionApplicationException e) {
 				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not deprovision application: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Disconnect the connection created by the communication plugin.
+		 */
 		protected void disconnect(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Disconnecting from resource."));
 
 			try {
@@ -403,12 +466,17 @@ public abstract class AbstractStateMachine {
 			catch (DisconnectConnectionException e) {
 				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not disconnect from resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Deprovision the resource using the resource plugin.
+		 */
 		protected void deprovisionResource(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning resource."));
 
 			try {
@@ -421,17 +489,32 @@ public abstract class AbstractStateMachine {
 			catch (DeprovisionResourceException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not deprovision resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Handle failure of resource deprovisioning.
+		 * Manual intervention might be necessary at this point!
+		 */
 		protected void fatalError(final String from, final String to, final String fsmEvent) {
+			final String warningMessage = "#################### WARNING ####################"
+					+ "Deprovisioning of a resource has failed."
+					+ "Manual intervention might be necessary to remove any remaining resources."
+					+ "Check your resource providers management interface for any remaining resources and manually remove them."
+					+ "#################################################";
+			eventBus.publish(new CoreEvent(Severity.ERROR, warningMessage));
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
+		/**
+		 * Unload all request plugins.
+		 */
 		protected void unloadRequestPlugins(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading request plugins."));
 
 			final RequestContext context = request.getRequestContext();
@@ -448,6 +531,7 @@ public abstract class AbstractStateMachine {
 			catch (UnloadPluginException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload request plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -458,7 +542,11 @@ public abstract class AbstractStateMachine {
 			//stateMachine.fire(StateMachineEvents.FAILURE);
 		}
 
+		/**
+		 * Unload all event plugins.
+		 */
 		protected void unloadEventPlugins(final String from, final String to, final String fsmEvent) {
+
 			eventBus.publish(new CoreEvent(Severity.INFO, "Unloading event plugins."));
 
 			try {
@@ -467,24 +555,34 @@ public abstract class AbstractStateMachine {
 			catch (UnloadPluginException e) {
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload event plugins: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
-			// log to local file?
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Run clean up code.
+		 */
 		protected void cleanup(final String from, final String to, final String fsmEvent) {
-			// log to local file?
+
+			System.out.println("Stopping plugin manager");
 			try {
 				pluginManager.stop();
 			}
 			catch (UnloadPluginException e) {
+				System.out.println("Stopping plugin manager failed: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
 			}
+
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Stop the state machine
+		 */
 		protected void end(final String from, final String to, final String fsmEvent) {
-			// log to local file?
 			stateMachine.terminate();
 			stopped = true;
 		}

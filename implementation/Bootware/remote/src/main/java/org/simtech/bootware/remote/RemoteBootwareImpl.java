@@ -26,7 +26,7 @@ import org.simtech.bootware.core.plugins.ProvisionPlugin;
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 
 /**
- * The main bootware program.
+ * The main remote bootware program.
  * <p>
  * Implements a finite state machine using squirrelframework.
  * The whole bootware process is executed by this state machine.
@@ -38,11 +38,14 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 	/**
 	 * Creates the bootware process as state machine.
+	 * <p>
+	 * Creates the specific state graph of the local bootware and starts the state machine.
 	 */
 	@SuppressWarnings("checkstyle:multiplestringliterals")
 	public RemoteBootwareImpl() {
 		builder = StateMachineBuilderFactory.create(Machine.class);
 
+		// Call transition() on any transition.
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
@@ -91,6 +94,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		stateMachine = builder.newStateMachine(StateMachineEvents.START);
 	}
 
+	/**
+	 * Implements the deploy operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 		request = new Request("deploy");
@@ -111,6 +117,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		return informationList;
 	}
 
+	/**
+	 * Implements the undeploy operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void undeploy(final UserContext context) throws UndeployException {
 		request = new Request("undeploy");
@@ -130,6 +139,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		}
 	}
 
+	/**
+	 * Implements the getActive operation specified in @see org.simtech.bootware.remote.RemoteBootware
+	 */
 	@Override
 	public final InformationListWrapper getActive(final UserContext context) {
 		final InformationListWrapper informationList = new InformationListWrapper();
@@ -139,12 +151,18 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		return informationList;
 	}
 
+	/**
+	 * Implements the setConfiguration operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
 		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 	}
 
+	/**
+	 * Implements the shutdown operation specified in @see org.simtech.bootware.core.Bootware
+	 */
 	@Override
 	public final void shutdown() throws ShutdownException {
 		// undeploy workflow middleware
@@ -162,7 +180,8 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			}
 		}
 
-		// trigger shutdown in thread after delay so that this method can return before it
+		// trigger shutdown in thread after delay so that this method can return
+		// before the remote bootware is shut down.
 		final Thread delayedShutdown = new Thread() {
 			public void run() {
 				try {
@@ -181,27 +200,45 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	/**
-	 * Describes the entryMethods for the bootware process.
+	 * Describes the operations that are executed on state entry as defined by
+	 * the transition above. The remote bootware does add the provisionMiddleware
+	 * and deprovisionMiddleware operations to the default operation defined in
+	 * @see org.simtech.bootware.core.AbstractStateMachine
 	 */
 	static class Machine extends AbstractMachine {
 
 		public Machine() {}
 
+		/**
+		 * Provisions the workflow middleware by calling the provisioning engine
+		 * with the service package reference.
+		 */
 		protected void provisionMiddleware(final String from, final String to, final String fsmEvent) {
 
 			final RequestContext context = request.getRequestContext();
 			final String servicePackageReference = context.getServicePackageReference();
 
+			// Only call provisioning engine if service package reference is provided
 			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
 				try {
+					// Load and initialize provision plugin
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
 					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
+
+					// Call provisioning engine
+					eventBus.publish(new CoreEvent(Severity.INFO, "Call provisioning engine."));
 					final Map<String, String> informationList = provisionPlugin.provision(url.toString(), servicePackageReference);
+
+					// Combine response with the instance information returned earlier
+					// by the provision resource step.
 					final Map<String, String> instanceInformation = instance.getInstanceInformation();
 					instanceInformation.putAll(informationList);
+
+					// Unload provision plugin
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Unload provision plugin"));
 					provisionPlugin = null;
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
-					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
 				}
 				catch (LoadPluginException e) {
 					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
@@ -226,19 +263,31 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
+		/**
+		 * Provisions the workflow middleware by calling the provisioning engine
+		 * with the service package reference.
+		 */
 		protected void deprovisionMiddleware(final String from, final String to, final String fsmEvent) {
 
 			final RequestContext context = request.getRequestContext();
 			final String servicePackageReference = context.getServicePackageReference();
 
+			// Only call provisioning engine if service package reference is provided
 			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
 				try {
+					// Load and initialize provision plugin
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
 					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
+
+					// Call provisioning engine
+					eventBus.publish(new CoreEvent(Severity.INFO, "Call provision engine."));
 					provisionPlugin.deprovision(url.toString(), servicePackageReference);
+
+					// Unload provision plugin
+					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Undload provision plugin."));
 					provisionPlugin = null;
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
-					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Provision plugin loaded."));
 				}
 				catch (LoadPluginException e) {
 					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));

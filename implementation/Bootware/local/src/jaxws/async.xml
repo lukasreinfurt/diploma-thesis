@@ -1,3 +1,4 @@
+<!-- Enables creation of asynchronous methods -->
 <bindings
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"

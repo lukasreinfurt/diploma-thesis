@@ -8,6 +8,9 @@ import net.engio.mbassy.bus.config.BusConfiguration;
 
 /**
  * A thin wrapper layer around the MBassador library.
+ * <p>
+ * The event bus offers PubSub functionality to distribute events between
+ * publishers and subscribers.
  */
 public class EventBus {
 
@@ -33,6 +36,17 @@ public class EventBus {
 
 	/**
 	 * Subscribe to the event bus.
+	 * <p>
+	 * The object can implement zero to many handle methods with the handle
+	 * annotation to react to specific events. If it doesn't implement any handle
+	 * methods it will be ignored.
+	 * For example:
+	 * <code><pre>
+	 *   @Handler
+	 *   public final void handle(final BaseEvent event) {
+	 *     System.out.println("[" + event.getSeverity() + "] " + event.getMessage());
+	 *   }
+	 * </pre></code>
 	 *
 	 * @param subscriber Object to be subscribed.
 	 */
