@@ -80,8 +80,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");
 
 		// cleanup
-		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Return_Response", "Return_Response");
-		buildDefaultTransition("Return_Response", "returnResponse", "Wait", "Wait");
+		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Wait", "Wait");
 		buildDefaultTransition("Unload_Event_Plugins", "unloadEventPlugins", "Cleanup", "Cleanup");
 		buildDefaultTransition("Cleanup", "cleanup", "End", "End");
 

@@ -543,11 +543,6 @@ public abstract class AbstractStateMachine {
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
 
-		protected void returnResponse(final String from, final String to, final String fsmEvent) {
-			stateMachine.fire(StateMachineEvents.SUCCESS);
-			//stateMachine.fire(StateMachineEvents.FAILURE);
-		}
-
 		/**
 		 * Unload all event plugins.
 		 */
