@@ -10,7 +10,6 @@ import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.Request;
 import org.simtech.bootware.core.RequestContext;
-import org.simtech.bootware.core.StateMachineEvents;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
@@ -49,48 +48,48 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
-		builder.externalTransition().from("Start").to("Initialize").on(StateMachineEvents.START);
+		builder.externalTransition().from(SMStates.START).to(SMStates.INITIALIZE).on(SMEvents.START);
 
 		// initialize
-		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
-		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
+		buildDefaultTransition(SMStates.INITIALIZE, "initialize", SMStates.LOAD_EVENT_PLUGINS, SMStates.CLEANUP);
+		buildDefaultTransition(SMStates.LOAD_EVENT_PLUGINS, "loadEventPlugins", SMStates.WAIT, SMStates.UNLOAD_EVENT_PLUGINS);
 
-		builder.onEntry("Wait").callMethod("wait");
-		builder.externalTransition().from("Wait").to("Read_Context").on(StateMachineEvents.REQUEST);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.SHUTDOWN);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.FAILURE);
+		builder.onEntry(SMStates.WAIT).callMethod("wait");
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.READ_CONTEXT).on(SMEvents.REQUEST);
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.UNLOAD_EVENT_PLUGINS).on(SMEvents.SHUTDOWN);
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.UNLOAD_EVENT_PLUGINS).on(SMEvents.FAILURE);
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Wait");
+		buildDefaultTransition(SMStates.READ_CONTEXT, "readContext", SMStates.LOAD_REQUEST_PLUGINS, SMStates.WAIT);
 
-		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
-		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(StateMachineEvents.DEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Deprovision_Middleware").on(StateMachineEvents.UNDEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(StateMachineEvents.FAILURE);
+		builder.onEntry(SMStates.LOAD_REQUEST_PLUGINS).callMethod("loadRequestPlugins");
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.PROVISION_RESOURCE).on(SMEvents.DEPLOY);
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.DEPROVISION_MIDDLEWARE).on(SMEvents.UNDEPLOY);
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.UNLOAD_REQUEST_PLUGINS).on(SMEvents.FAILURE);
 
 		// deploy
-		buildDefaultTransition("Provision_Resource", "provisionResource", "Connect", "Deprovision_Resource");
-		buildDefaultTransition("Connect", "connect", "Provision_Application", "Disconnect");
-		buildDefaultTransition("Provision_Application", "provisionApplication", "Start_Application", "Deprovision_Application");
-		buildDefaultTransition("Start_Application", "startApplication", "Provision_Middleware", "Stop_Application");
-		buildDefaultTransition("Provision_Middleware", "provisionMiddleware", "Unload_Request_Plugins", "Deprovision_Middleware");
+		buildDefaultTransition(SMStates.PROVISION_RESOURCE, "provisionResource", SMStates.CONNECT, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.CONNECT, "connect", SMStates.PROVISION_APPLICATION, SMStates.DISCONNECT);
+		buildDefaultTransition(SMStates.PROVISION_APPLICATION, "provisionApplication", SMStates.START_APPLICATION, SMStates.DEPROVISION_APPLICATION);
+		buildDefaultTransition(SMStates.START_APPLICATION, "startApplication", SMStates.PROVISION_MIDDLEWARE, SMStates.STOP_APPLICATION);
+		buildDefaultTransition(SMStates.PROVISION_MIDDLEWARE, "provisionMiddleware", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.DEPROVISION_MIDDLEWARE);
 
 		// undeploy
-		buildDefaultTransition("Deprovision_Middleware", "deprovisionMiddleware", "Stop_Application", "Stop_Application");
-		buildDefaultTransition("Stop_Application", "stopApplication", "Deprovision_Application", "Deprovision_Application");
-		buildDefaultTransition("Deprovision_Application", "deprovisionApplication", "Disconnect", "Disconnect");
-		buildDefaultTransition("Disconnect", "disconnect", "Deprovision_Resource", "Deprovision_Resource");
-		buildDefaultTransition("Deprovision_Resource", "deprovisionResource", "Unload_Request_Plugins", "Fatal_Error");
-		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");
+		buildDefaultTransition(SMStates.DEPROVISION_MIDDLEWARE, "deprovisionMiddleware", SMStates.STOP_APPLICATION, SMStates.STOP_APPLICATION);
+		buildDefaultTransition(SMStates.STOP_APPLICATION, "stopApplication", SMStates.DEPROVISION_APPLICATION, SMStates.DEPROVISION_APPLICATION);
+		buildDefaultTransition(SMStates.DEPROVISION_APPLICATION, "deprovisionApplication", SMStates.DISCONNECT, SMStates.DISCONNECT);
+		buildDefaultTransition(SMStates.DISCONNECT, "disconnect", SMStates.DEPROVISION_RESOURCE, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.DEPROVISION_RESOURCE, "deprovisionResource", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.FATAL_ERROR);
+		buildDefaultTransition(SMStates.FATAL_ERROR, "fatalError", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.UNLOAD_REQUEST_PLUGINS);
 
 		// cleanup
-		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Wait", "Wait");
-		buildDefaultTransition("Unload_Event_Plugins", "unloadEventPlugins", "Cleanup", "Cleanup");
-		buildDefaultTransition("Cleanup", "cleanup", "End", "End");
+		buildDefaultTransition(SMStates.UNLOAD_REQUEST_PLUGINS, "unloadRequestPlugins", SMStates.WAIT, SMStates.WAIT);
+		buildDefaultTransition(SMStates.UNLOAD_EVENT_PLUGINS, "unloadEventPlugins", SMStates.CLEANUP, SMStates.CLEANUP);
+		buildDefaultTransition(SMStates.CLEANUP, "cleanup", SMStates.END, SMStates.END);
 
 		// end
-		builder.onEntry("End").callMethod("end");
+		builder.onEntry(SMStates.END).callMethod("end");
 
-		stateMachine = builder.newStateMachine(StateMachineEvents.START);
+		stateMachine = builder.newStateMachine(SMEvents.START);
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		instance = new ApplicationInstance("temp");
 		instance.setUserContext(context);
 
-		stateMachine.fire(StateMachineEvents.REQUEST);
+		stateMachine.fire(SMEvents.REQUEST);
 
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
@@ -128,7 +127,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			throw new UndeployException("There was no active application that matched this request");
 		}
 
-		stateMachine.fire(StateMachineEvents.REQUEST);
+		stateMachine.fire(SMEvents.REQUEST);
 
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());
@@ -190,7 +189,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				stateMachine.fire(StateMachineEvents.SHUTDOWN);
+				stateMachine.fire(SMEvents.SHUTDOWN);
 			}
 		};
 
@@ -241,17 +240,17 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (UnloadPluginException e) {
 					fail("Could not unload provision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (InitializeException e) {
 					fail("Could not initialize provisision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 			}
@@ -259,7 +258,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				eventBus.publish(new CoreEvent(Severity.INFO, "No service package reference provided. Skipping provision middleware step."));
 			}
 
-			stateMachine.fire(StateMachineEvents.SUCCESS);
+			stateMachine.fire(SMEvents.SUCCESS);
 		}
 
 		/**
@@ -290,17 +289,17 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (UnloadPluginException e) {
 					fail("Could not unload provision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (InitializeException e) {
 					fail("Could not initialize provision plugins: " + e.getMessage());
-					stateMachine.fire(StateMachineEvents.FAILURE);
+					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 			}
@@ -308,7 +307,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				eventBus.publish(new CoreEvent(Severity.INFO, "No service package reference provided. Skipping deprovision middleware step."));
 			}
 
-			stateMachine.fire(StateMachineEvents.SUCCESS);
+			stateMachine.fire(SMEvents.SUCCESS);
 		}
 
 	}

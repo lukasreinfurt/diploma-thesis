@@ -48,44 +48,44 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		builder.transit().fromAny().toAny().onAny().callMethod("transition");
 
 		// start
-		builder.externalTransition().from("Start").to("Initialize").on(SMEvents.START);
+		builder.externalTransition().from(SMStates.START).to(SMStates.INITIALIZE).on(SMEvents.START);
 
 		// initialize
-		buildDefaultTransition("Initialize", "initialize", "Load_Event_Plugins", "Cleanup");
-		buildDefaultTransition("Load_Event_Plugins", "loadEventPlugins", "Wait", "Unload_Event_Plugins");
+		buildDefaultTransition(SMStates.INITIALIZE, "initialize", SMStates.LOAD_EVENT_PLUGINS, SMStates.CLEANUP);
+		buildDefaultTransition(SMStates.LOAD_EVENT_PLUGINS, "loadEventPlugins", SMStates.WAIT, SMStates.UNLOAD_EVENT_PLUGINS);
 
-		builder.onEntry("Wait").callMethod("wait");
-		builder.externalTransition().from("Wait").to("Read_Context").on(SMEvents.REQUEST);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(SMEvents.SHUTDOWN);
-		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(SMEvents.FAILURE);
+		builder.onEntry(SMStates.WAIT).callMethod("wait");
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.READ_CONTEXT).on(SMEvents.REQUEST);
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.UNLOAD_EVENT_PLUGINS).on(SMEvents.SHUTDOWN);
+		builder.externalTransition().from(SMStates.WAIT).to(SMStates.UNLOAD_EVENT_PLUGINS).on(SMEvents.FAILURE);
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Wait");
+		buildDefaultTransition(SMStates.READ_CONTEXT, "readContext", SMStates.LOAD_REQUEST_PLUGINS, SMStates.WAIT);
 
-		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
-		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(SMEvents.DEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Stop_Application").on(SMEvents.UNDEPLOY);
-		builder.externalTransition().from("Load_Request_Plugins").to("Unload_Request_Plugins").on(SMEvents.FAILURE);
+		builder.onEntry(SMStates.LOAD_REQUEST_PLUGINS).callMethod("loadRequestPlugins");
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.PROVISION_RESOURCE).on(SMEvents.DEPLOY);
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.STOP_APPLICATION).on(SMEvents.UNDEPLOY);
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.UNLOAD_REQUEST_PLUGINS).on(SMEvents.FAILURE);
 
 		// deploy
-		buildDefaultTransition("Provision_Resource", "provisionResource", "Connect", "Deprovision_Resource");
-		buildDefaultTransition("Connect", "connect", "Provision_Application", "Disconnect");
-		buildDefaultTransition("Provision_Application", "provisionApplication", "Start_Application", "Deprovision_Application");
-		buildDefaultTransition("Start_Application", "startApplication", "Unload_Request_Plugins", "Stop_Application");
+		buildDefaultTransition(SMStates.PROVISION_RESOURCE, "provisionResource", SMStates.CONNECT, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.CONNECT, "connect", SMStates.PROVISION_APPLICATION, SMStates.DISCONNECT);
+		buildDefaultTransition(SMStates.PROVISION_APPLICATION, "provisionApplication", SMStates.START_APPLICATION, SMStates.DEPROVISION_APPLICATION);
+		buildDefaultTransition(SMStates.START_APPLICATION, "startApplication", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.STOP_APPLICATION);
 
 		// undeploy
-		buildDefaultTransition("Stop_Application", "stopApplication", "Deprovision_Application", "Deprovision_Application");
-		buildDefaultTransition("Deprovision_Application", "deprovisionApplication", "Disconnect", "Disconnect");
-		buildDefaultTransition("Disconnect", "disconnect", "Deprovision_Resource", "Deprovision_Resource");
-		buildDefaultTransition("Deprovision_Resource", "deprovisionResource", "Unload_Request_Plugins", "Fatal_Error");
-		buildDefaultTransition("Fatal_Error", "fatalError", "Unload_Request_Plugins", "Unload_Request_Plugins");
+		buildDefaultTransition(SMStates.STOP_APPLICATION, "stopApplication", SMStates.DEPROVISION_APPLICATION, SMStates.DEPROVISION_APPLICATION);
+		buildDefaultTransition(SMStates.DEPROVISION_APPLICATION, "deprovisionApplication", SMStates.DISCONNECT, SMStates.DISCONNECT);
+		buildDefaultTransition(SMStates.DISCONNECT, "disconnect", SMStates.DEPROVISION_RESOURCE, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.DEPROVISION_RESOURCE, "deprovisionResource", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.FATAL_ERROR);
+		buildDefaultTransition(SMStates.FATAL_ERROR, "fatalError", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.UNLOAD_REQUEST_PLUGINS);
 
 		// cleanup
-		buildDefaultTransition("Unload_Request_Plugins", "unloadRequestPlugins", "Wait", "Wait");
-		buildDefaultTransition("Unload_Event_Plugins", "unloadEventPlugins", "Cleanup", "Cleanup");
-		buildDefaultTransition("Cleanup", "cleanup", "End", "End");
+		buildDefaultTransition(SMStates.UNLOAD_REQUEST_PLUGINS, "unloadRequestPlugins", SMStates.WAIT, SMStates.WAIT);
+		buildDefaultTransition(SMStates.UNLOAD_EVENT_PLUGINS, "unloadEventPlugins", SMStates.CLEANUP, SMStates.CLEANUP);
+		buildDefaultTransition(SMStates.CLEANUP, "cleanup", SMStates.END, SMStates.END);
 
 		// end
-		builder.onEntry("End").callMethod("end");
+		builder.onEntry(SMStates.END).callMethod("end");
 
 		stateMachine = builder.newStateMachine(SMEvents.START);
 	}
