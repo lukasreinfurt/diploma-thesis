@@ -162,7 +162,6 @@ public abstract class AbstractStateMachine {
 
 			// Register objects that are shared with plugins.
 			pluginManager.registerSharedObject(eventBus);
-			pluginManager.registerSharedObject(configurationList);
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}
