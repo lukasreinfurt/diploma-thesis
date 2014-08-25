@@ -59,7 +59,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(SMEvents.SHUTDOWN);
 		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(SMEvents.FAILURE);
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
+		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Wait");
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
 		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(SMEvents.DEPLOY);
@@ -127,6 +127,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				eventBus.publish(new RemoteBootwareStartedEvent(Severity.INFO, "Remote bootware started at " + url.toString() + ".", url.toString()));
 			}
 			catch (WebServiceException e) {
+				remoteBootware = null;
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Connecting to remote bootware failed: " + e.getMessage()));
 				throw new DeployException(e);
 			}

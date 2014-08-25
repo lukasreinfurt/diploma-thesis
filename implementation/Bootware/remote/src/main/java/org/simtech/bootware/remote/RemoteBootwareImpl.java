@@ -60,7 +60,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.SHUTDOWN);
 		builder.externalTransition().from("Wait").to("Unload_Event_Plugins").on(StateMachineEvents.FAILURE);
 
-		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Return_Response");
+		buildDefaultTransition("Read_Context", "readContext", "Load_Request_Plugins", "Wait");
 
 		builder.onEntry("Load_Request_Plugins").callMethod("loadRequestPlugins");
 		builder.externalTransition().from("Load_Request_Plugins").to("Provision_Resource").on(StateMachineEvents.DEPLOY);
