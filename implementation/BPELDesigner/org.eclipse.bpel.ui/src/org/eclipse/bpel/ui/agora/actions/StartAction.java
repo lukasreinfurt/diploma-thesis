@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
 import org.simtech.workflow.ode.auditing.communication.messages.InstanceInformation;
@@ -33,6 +34,8 @@ import java.io.PrintWriter;
 public class StartAction extends Action implements IEditorActionDelegate{
 
 	private BPELMultipageEditorPart fEditor;
+	private static Object monitor = new Object();
+	private static boolean bootstrappingDone = false;
 
 	public void setActiveEditor(IAction arg0, IEditorPart arg1) {
 
@@ -45,85 +48,133 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 	public void run(IAction arg0) {
 
-		fEditor.refreshEditor();
-
 		//@reinfuls
-		try {
-			// get all extension that implement the bootware extension point
-			IExtensionRegistry reg = Platform.getExtensionRegistry();
-			IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
 
-			// call the execute method of each extension
-			for (int i = 0; i < extensions.length; i++) {
-				IConfigurationElement element = extensions[i];
-				if (element.getAttribute("class") != null) {
-					try {
-						IBootwarePlugin plugin = (IBootwarePlugin) element.createExecutableExtension("class");
-						plugin.execute();
-					} catch (CoreException e) {
-						e.printStackTrace();
+		// Start the bootware plugin in a separate thread so that the UI won't be blocked.
+		final Thread bootwareThread = new Thread(new Runnable() {
+
+			public void run() {
+
+				try {
+					// Get all extension that implement the bootware extension point.
+					IExtensionRegistry reg = Platform.getExtensionRegistry();
+					IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
+
+					// Call the execute method of each extension.
+					for (int i = 0; i < extensions.length; i++) {
+						IConfigurationElement element = extensions[i];
+						if (element.getAttribute("class") != null) {
+							try {
+								IBootwarePlugin plugin = (IBootwarePlugin) element.createExecutableExtension("class");
+								plugin.execute();
+							} catch (CoreException e) {
+								e.printStackTrace();
+							}
+						}
 					}
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// Notify startProcessInstanceThread that the bootstrapping process is finished.
+				bootstrappingDone = true;
+				synchronized(monitor) {
+					monitor.notifyAll();
 				}
 			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		});
 
-		//@schrotbn
-		IContainer folder = fEditor.getEditorFile().getParent();
-		HashMap<String, String> props = FileOperations.loadPropertiesFromDD(folder);
-		if (props.size() == 0) {
+		bootwareThread.start();
 
-			MetaDataWizard wizard = new MetaDataWizard(props, fEditor.getEditorFile());
-			wizard.init(fEditor.getSite().getWorkbenchWindow()
-					.getWorkbench(), null);
+		// Start the process instance start code in a separate thread so we can wait
+		// for the bootstrapping process to finish without blocking the UI.
+		final Thread startProcessInstanceThread = new Thread(new Runnable() {
 
-			WizardDialog dialog = new WizardDialog(fEditor.getSite()
-					.getShell(), wizard);
-			dialog.create();
-			if (dialog.open() == Dialog.CANCEL)
-				return;
+			public void run() {
 
-			HashMap<String, String> newProps = wizard.getProperties();
-			FileOperations
-					.storePropertiesToDD(folder, newProps);
-		}
-
-		//@hahnml
-		ProcessManager processManager = MonitoringProvider.getInstance().getProcessManager(fEditor);
-		MonitorManager manager = processManager.getLastStartedInstance();
-
-		//Check if a manager exists already
-		if (manager == null) {
-			manager = processManager.createMonitorManager(processManager, new InstanceInformation());
-			//Update the references to the new MonitorManager instance
-			MonitoringProvider.getInstance().changeActiveEditor(fEditor);
-		}
-
-		AgoraStates state = manager.getApplicationState();
-				switch(state){
-				case gestoppt:
-					if (processManager.getParameterHandler().initDialog(processManager)) {
-						processManager.getParameterHandler().getDialog().open();
-					} else {
-						processManager.prepareAndStartProcessInstance(null, null);
+				// Wait for bootstrapping process to finish
+				while(!bootstrappingDone) {
+					synchronized(monitor) {
+						try {
+							monitor.wait();
+						} catch(InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
-					break;
-				case beendet:
-					if (processManager.getParameterHandler().initDialog(processManager)) {
-						processManager.getParameterHandler().getDialog().open();
-					} else {
-						processManager.getParameterHandler().getParameters().clear();
-						processManager.prepareAndStartProcessInstance(null, null);
-					}
-					break;
-				case angehalten:
-					manager.resume();
-					break;
-					default:
-						// do nothing
 				}
+
+				// Execute the code to start the process instance. It changes the UI and
+				// since this is only allowed from the main eclipse thread, this code
+				// has to be wrapped in asyncExec().
+				Display.getDefault().asyncExec(new Runnable() {
+
+					public void run() {
+
+						fEditor.refreshEditor();
+
+						//@schrotbn
+						IContainer folder = fEditor.getEditorFile().getParent();
+						HashMap<String, String> props = FileOperations.loadPropertiesFromDD(folder);
+						if (props.size() == 0) {
+							MetaDataWizard wizard = new MetaDataWizard(props, fEditor.getEditorFile());
+							wizard.init(fEditor.getSite().getWorkbenchWindow()
+									.getWorkbench(), null);
+
+							WizardDialog dialog = new WizardDialog(fEditor.getSite()
+									.getShell(), wizard);
+							dialog.create();
+							if (dialog.open() == Dialog.CANCEL)
+								return;
+
+							HashMap<String, String> newProps = wizard.getProperties();
+							FileOperations
+									.storePropertiesToDD(folder, newProps);
+						}
+
+						//@hahnml
+						ProcessManager processManager = MonitoringProvider.getInstance().getProcessManager(fEditor);
+						MonitorManager manager = processManager.getLastStartedInstance();
+
+						//Check if a manager exists already
+						if (manager == null) {
+							manager = processManager.createMonitorManager(processManager, new InstanceInformation());
+							//Update the references to the new MonitorManager instance
+							MonitoringProvider.getInstance().changeActiveEditor(fEditor);
+						}
+
+						AgoraStates state = manager.getApplicationState();
+								switch(state){
+								case gestoppt:
+									if (processManager.getParameterHandler().initDialog(processManager)) {
+										processManager.getParameterHandler().getDialog().open();
+									} else {
+										processManager.prepareAndStartProcessInstance(null, null);
+									}
+									break;
+								case beendet:
+									if (processManager.getParameterHandler().initDialog(processManager)) {
+										processManager.getParameterHandler().getDialog().open();
+									} else {
+										processManager.getParameterHandler().getParameters().clear();
+										processManager.prepareAndStartProcessInstance(null, null);
+									}
+									break;
+								case angehalten:
+									manager.resume();
+									break;
+									default:
+										// do nothing
+								}
+					}
+
+				});
+
+			}
+
+		});
+
+		startProcessInstanceThread.start();
 
 	}
 
