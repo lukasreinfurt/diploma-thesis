@@ -201,13 +201,15 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		// undeploy remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy remote bootware."));
-		final ApplicationInstance remoteBootwareInstance = instanceStore.get(remoteContext);
-		if (remoteBootwareInstance != null) {
-			try {
-				undeploy(remoteContext);
-			}
-			catch (UndeployException e) {
-				throw new ShutdownException(e);
+		if (remoteContext != null) {
+			final ApplicationInstance remoteBootwareInstance = instanceStore.get(remoteContext);
+			if (remoteBootwareInstance != null) {
+				try {
+					undeploy(remoteContext);
+				}
+				catch (UndeployException e) {
+					throw new ShutdownException(e);
+				}
 			}
 		}
 
