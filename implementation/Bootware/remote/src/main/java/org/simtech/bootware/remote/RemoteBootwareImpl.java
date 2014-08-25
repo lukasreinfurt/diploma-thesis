@@ -241,17 +241,17 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+					fail("Could not load provision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}
 				catch (UnloadPluginException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+					fail("Could not unload provision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}
 				catch (InitializeException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provisision plugins: " + e.getMessage()));
+					fail("Could not initialize provisision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}
@@ -290,17 +290,17 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load provision plugins: " + e.getMessage()));
+					fail("Could not load provision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}
 				catch (UnloadPluginException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload provision plugins: " + e.getMessage()));
+					fail("Could not unload provision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}
 				catch (InitializeException e) {
-					eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize provision plugins: " + e.getMessage()));
+					fail("Could not initialize provision plugins: " + e.getMessage());
 					stateMachine.fire(StateMachineEvents.FAILURE);
 					return;
 				}

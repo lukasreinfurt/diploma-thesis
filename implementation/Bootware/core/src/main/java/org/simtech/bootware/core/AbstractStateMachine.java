@@ -109,7 +109,6 @@ public abstract class AbstractStateMachine {
 		return stopped;
 	}
 
-
 	/**
 	 * Describes the entryMethods for the bootware process.
 	 */
@@ -120,6 +119,16 @@ public abstract class AbstractStateMachine {
 	@ContextInsensitive
 	@StateMachineParameters(stateType = String.class, eventType = String.class, contextType = Void.class)
 	protected abstract static class AbstractMachine extends AbstractUntypedStateMachine {
+
+		/**
+		 * Convenience method to call when request should fail.
+		 *
+		 * @param reason A string containing the reason of the failure.
+		 */
+		protected void fail(final String reason) {
+			request.fail(reason);
+			eventBus.publish(new CoreEvent(Severity.ERROR, reason));
+		}
 
 		/**
 		 * Debug output on each state transition.
@@ -276,9 +285,7 @@ public abstract class AbstractStateMachine {
 				configurationList = mergeConfigurationLists(defaultConfigurationList, userConfigurationList, requestConfigurationList);
 			}
 			catch (ContextMappingException e) {
-				final String failureMessage = "Could not map userContext to requestContext: " + e.getMessage();
-				request.fail(failureMessage);
-				eventBus.publish(new CoreEvent(Severity.ERROR, failureMessage));
+				fail("Could not map userContext to requestContext: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -308,12 +315,12 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins loaded."));
 			}
 			catch (LoadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not load request plugins: " + e.getMessage()));
+				fail("Could not load request plugins: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
 			catch (InitializeException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not initialize request plugins: " + e.getMessage()));
+				fail("Could not initialize request plugins: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -342,7 +349,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource provisioned."));
 			}
 			catch (ProvisionResourceException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision resource: " + e.getMessage()));
+				fail("Could not provision resource: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -363,7 +370,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Connected to resource."));
 			}
 			catch (ConnectConnectionException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not connect to resource: " + e.getMessage()));
+				fail("Could not connect to resource: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -384,7 +391,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application provisioned."));
 			}
 			catch (ProvisionApplicationException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not provision application: " + e.getMessage()));
+				fail("Could not provision application: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -404,7 +411,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application started."));
 			}
 			catch (StartApplicationException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not start application: " + e.getMessage()));
+				fail("Could not start application: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -487,7 +494,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource deprovisioned."));
 			}
 			catch (DeprovisionResourceException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not deprovision resource: " + e.getMessage()));
+				fail("Could not deprovision resource: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -529,7 +536,7 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins unloaded."));
 			}
 			catch (UnloadPluginException e) {
-				eventBus.publish(new CoreEvent(Severity.ERROR, "Could not unload request plugins: " + e.getMessage()));
+				fail("Could not unload request plugins: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
