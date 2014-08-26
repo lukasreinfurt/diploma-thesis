@@ -8,22 +8,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.Response;
-import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.configuration.MapConfiguration;
@@ -41,14 +35,19 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
-import org.simtech.bootware.local.DeployResponse;
-
-import async.client.LocalBootware;
-import async.client.SetConfigurationException;
+import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.SetConfigurationException;
 
 //import fragmentorcp.FragmentoPlugIn;
 //import fragmentorcppresenter.presenter.Presenter;
 
+/**
+ * Starts the bootstrapping process.
+ * <p>
+ * This plugin starts the local bootware and triggers the deployment of the
+ * local bootware as well as the SimTech SWfMS. It uses the response of the
+ * SimTech SWfMS deployment to set the SimTech properties in the Modeler.
+ */
 @SuppressWarnings({
 	"checkstyle:anoninnerlength",
 	"checkstyle:classfanoutcomplexity",
@@ -63,44 +62,71 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
 
+	/**
+	 * Creates the bootware plugin.
+	 */
 	public BootwarePlugin() {
 		myConsole = findConsole("Bootware");
 		out = myConsole.newMessageStream();
 		out.println("Bootware Plugin has been started.");
 	}
 
+	/**
+	 * Finds a console by the given name.
+	 * <p>
+	 * A console by the given name is created if it doesn't exist already.
+	 *
+	 * @param name The name of the requested console.
+	 *
+	 * @return The requested console.
+	 */
 	private MessageConsole findConsole(final String name) {
+
 		final ConsolePlugin plugin = ConsolePlugin.getDefault();
 		final IConsoleManager conMan = plugin.getConsoleManager();
 		final IConsole[] existing = conMan.getConsoles();
+
+		// Get the console if it already exists.
 		for (int i = 0; i < existing.length; i++) {
 			if (name.equals(existing[i].getName())) {
 				return (MessageConsole) existing[i];
 			}
 		}
-		//no console found, so create a new one
+
+		// Create the requested console if it doesn't exist already.
 		final MessageConsole newConsole = new MessageConsole(name, null);
 		conMan.addConsoles(new IConsole[]{newConsole});
 		return newConsole;
 	}
 
+	/**
+	 * Starts the local bootware.
+	 */
 	private void executeLocalBootware() {
 		out.println("Starting local bootware.");
 
+		// Create local bootware process.
 		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
 		processBuilder.directory(new File("plugins/bootware/bin"));
 		processBuilder.redirectErrorStream(true);
 
 		try {
+			// Start local bootware.
 			final Process process = processBuilder.start();
+
+
 			final OutputStream processOutput = process.getOutputStream();
 			final InputStream processInput = process.getInputStream();
 			final BufferedReader processReader = new BufferedReader(new InputStreamReader(processInput));
 			final BufferedWriter processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
 			String line;
+
+			// Write local bootware output to console. This will block until the
+			// local bootware is terminated.
 			while ((line = processReader.readLine()) != null) {
 				out.println(line);
 			}
+
 			processReader.close();
 		}
 		catch (IOException e) {
@@ -110,6 +136,10 @@ public class BootwarePlugin implements IBootwarePlugin {
 		out.println("Local bootware stopped.");
 	}
 
+	/**
+	 * Loads the user context that will be send to the local bootware to deploy
+	 * the local bootware and the SimTech SWfMS.
+	 */
 	private void loadContext() {
 		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(UserContext.class);
@@ -125,12 +155,17 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	/**
+	 * Loads the default configuration that will be send to the local and local
+	 * bootware.
+	 */
 	private void loadDefaultConfiguration() {
 		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationListWrapper.class);
 			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			final File file = new File("plugins/bootware/defaultConfiguration.xml");
 			final JAXBElement<ConfigurationListWrapper> root = unmarshaller.unmarshal(new StreamSource(file), ConfigurationListWrapper.class);
+
 			defaultConfiguration = root.getValue();
 		}
 		catch (JAXBException e) {
@@ -139,6 +174,11 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	/**
+	 * Sets the SimTech preferences to the values provided in the given map.
+	 *
+	 * @param preferences A map of strings with the preference values.
+	 */
 	private void setSimTechPreferences(final Map<String, String> preferences) {
 
 		out.println("Setting SimTech preferences.");
@@ -171,8 +211,13 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	/**
+	 * Executes the bootstrapping process.
+	 */
 	public final void execute() {
 
+		// Start local bootware process in new thread so that we don't block further
+		// execution
 		final Thread t = new Thread(new Runnable() {
 
 			public void run() {
@@ -182,80 +227,44 @@ public class BootwarePlugin implements IBootwarePlugin {
 		});
 		t.start();
 
+		// Load user context and default configuration.
 		loadContext();
 		loadDefaultConfiguration();
 
-		final QName qname = new QName("http://local.bootware.simtech.org/", "LocalBootwareImplService");
-		Service service = null;
-		final int max = 30;
-		int count = 1;
+		try {
+			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
-		while (true) {
-			try {
-				final Integer time = 1000;
-				Thread.sleep(time);
-				out.println("Trying to connect to local bootware (" + count + "/" + max + ").");
-				service = Service.create(new URL("http://localhost:6007/axis2/services/Bootware?wsdl"), qname);
-				break;
+			// Create local bootware service.
+			out.println("Connecting to local bootware.");
+			final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
+			out.println("Local bootware started at " + localBootwareURL + ".");
+
+			// Send default configuration to local bootware.
+			localBootware.setConfiguration(defaultConfiguration);
+
+			// Send deploy request for remote bootware and SimTech SWfMS to local bootware.
+			final InformationListWrapper infosWrapper = localBootware.deploy(context);
+
+			final Map<String, String> infos = infosWrapper.getInformationList();
+			for (Map.Entry<String, String> entry : infos.entrySet()) {
+				out.println(entry.getKey() + ": " + entry.getValue());
 			}
-			catch (WebServiceException e) {
-				if (++count == max) {
-					out.println("Connecting to local bootware failed: " + e.getMessage());
-					break;
-				}
-			}
-			catch (MalformedURLException e) {
-				out.println("Local bootware URL seems to be wrong: " + e.getMessage());
-				break;
-			}
-			catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-				break;
-			}
+
+			// Set the SimTech preferences from the response.
+			setSimTechPreferences(infos);
+
 		}
-
-		if (service != null) {
-			try {
-				final LocalBootware lb = service.getPort(LocalBootware.class);
-
-				final Integer time2 = 3000;
-				Thread.sleep(time2);
-
-				out.println("Passing default configuration to local bootware.");
-				lb.setConfiguration(defaultConfiguration);
-
-				Thread.sleep(time2);
-
-				out.println("Passing deploy request to local bootware.");
-				final Response<DeployResponse> response = lb.deployAsync(context);
-
-				while (!response.isDone()) {
-					final Integer time = 1000;
-					Thread.sleep(time);
-				}
-
-				final InformationListWrapper infosWrapper = response.get().getReturn();
-				final Map<String, String> infos = infosWrapper.getInformationList();
-				for (Map.Entry<String, String> entry : infos.entrySet()) {
-					out.println(entry.getKey() + ": " + entry.getValue());
-				}
-				setSimTechPreferences(infos);
-			}
-			catch (WebServiceException e) {
-				out.println("Retrieving service port failed: " + e.getMessage());
-				final StringWriter sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				out.println(sw.toString());
-			}
-			catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			catch (ExecutionException e) {
-				out.println("Executing deploy on local bootware failed: " + e.getMessage());
-			}
-			catch (SetConfigurationException e) {
-				out.println("Setting default configuration failed: " + e.getMessage());
-			}
+		catch (MalformedURLException e) {
+			out.println("Local bootware URL is malformed: " + e.getMessage());
+		}
+		catch (WebServiceException e) {
+			out.println("Connecting to local bootware failed: " + e.getMessage());
+		}
+		catch (SetConfigurationException e) {
+			out.println("Could not set default configuration: " + e.getMessage());
+		}
+		catch (DeployException e) {
+			out.println("Deploy request failed: " + e.getMessage());
 		}
 
 	}
