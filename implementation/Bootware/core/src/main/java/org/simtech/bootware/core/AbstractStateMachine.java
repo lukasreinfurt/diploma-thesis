@@ -17,6 +17,7 @@ import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
 import org.simtech.bootware.core.exceptions.InitializeException;
+import org.simtech.bootware.core.exceptions.InitializePluginManagerException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.ProvisionResourceException;
@@ -144,24 +145,31 @@ public abstract class AbstractStateMachine {
 		 */
 		protected void initialize(final String from, final String to, final String fsmEvent) {
 
-			// Load properties file.
+
 			try {
+				// Load properties file.
 				System.out.println("Loading properties file.");
 				final InputStream propFile = new FileInputStream("config.properties");
 				properties.load(propFile);
+
+				// Initialize some objects.
+				instanceStore = new InstanceStore();
+				eventBus      = new EventBus();
+				pluginManager = new PluginManager();
+
+				// Register objects that are shared with plugins.
+				pluginManager.registerSharedObject(eventBus);
 			}
 			catch (IOException e) {
 				System.out.println("Properties file could not be loaded: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
-
-			instanceStore = new InstanceStore();
-			eventBus      = new EventBus();
-			pluginManager = new PluginManager();
-
-			// Register objects that are shared with plugins.
-			pluginManager.registerSharedObject(eventBus);
+			catch (InitializePluginManagerException e) {
+				System.out.println("The plugin manager could not be initialized: " + e.getMessage());
+				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
+			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
 		}

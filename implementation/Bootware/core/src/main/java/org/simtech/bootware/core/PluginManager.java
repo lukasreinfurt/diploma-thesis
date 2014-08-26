@@ -15,6 +15,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
+import org.simtech.bootware.core.exceptions.InitializePluginManagerException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
 
@@ -35,7 +36,7 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager() {
+	public PluginManager() throws InitializePluginManagerException {
 
 		config           = new HashMap<String, String>();
 		installedBundles = new HashMap<String, Bundle>();
@@ -62,7 +63,7 @@ public class PluginManager {
 			framework.start();
 		}
 		catch (BundleException e) {
-			e.printStackTrace();
+			throw new InitializePluginManagerException(e);
 		}
 
 		context = framework.getBundleContext();
