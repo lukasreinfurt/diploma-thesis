@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context>
+	<resourcePlugin>test-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>test-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>test-1.0.0.jar</applicationPlugin>
+	<callApplicationPlugin>cloudformation-1.0.0.jar</callApplicationPlugin>
+</context>
