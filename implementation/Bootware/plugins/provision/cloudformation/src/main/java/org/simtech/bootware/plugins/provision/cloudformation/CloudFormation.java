@@ -8,7 +8,9 @@ import java.util.NoSuchElementException;
 import org.apache.commons.configuration.MapConfiguration;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.exceptions.DeprovisionException;
 import org.simtech.bootware.core.exceptions.InitializeException;
+import org.simtech.bootware.core.exceptions.ProvisionException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ProvisionPlugin;
 
@@ -68,7 +70,7 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 		// no op
 	}
 
-	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) {
+	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) throws ProvisionException {
 		System.out.println("Provision middleware with Cloudformation");
 		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
 		System.out.println("Service package reference: " + servicePackageReference);
@@ -78,7 +80,7 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 		return getStackOutput();
 	}
 
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) {
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
 		System.out.println("Deprovision middleware with CloudFormation");
 		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
 		System.out.println("Service package reference: " + servicePackageReference);
@@ -91,8 +93,7 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 			cloudFormationClient.deleteStack(request);
 		}
 		catch (AmazonServiceException e) {
-			e.printStackTrace();
-			//throw new ProvisionResourceException(e);
+			throw new DeprovisionException(e);
 		}
 
 		waitForStackToReachStatus("DELETE_COMPLETE");
@@ -108,7 +109,7 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 		cloudFormationClient.setEndpoint("https://cloudformation.eu-west-1.amazonaws.com");
 	}
 
-	private void createStack(final String templateURL) {
+	private void createStack(final String templateURL) throws ProvisionException {
 
 		final Parameter parameter = new Parameter();
 
@@ -127,14 +128,13 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 			final CreateStackResult result = cloudFormationClient.createStack(request);
 		}
 		catch (AmazonServiceException e) {
-			e.printStackTrace();
-			//throw new ProvisionResourceException(e);
+			throw new ProvisionException(e);
 		}
 
 		waitForStackToReachStatus("CREATE_COMPLETE");
 	}
 
-	private Map<String, String> getStackOutput() {
+	private Map<String, String> getStackOutput() throws ProvisionException {
 
 		final Map<String, String> outputMap = new HashMap<String, String>();
 
@@ -153,8 +153,7 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 			}
 		}
 		catch (AmazonServiceException e) {
-			e.printStackTrace();
-			//throw new ProvisionResourceException(e);
+			throw new ProvisionException(e);
 		}
 
 		return outputMap;
@@ -201,8 +200,8 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 				final Integer wait = 5000;
 				Thread.sleep(wait);
 			}
-			catch (InterruptedException ex) {
-				System.out.println(ex);
+			catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 			}
 		}
 

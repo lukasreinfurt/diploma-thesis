@@ -14,8 +14,10 @@ import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.DeprovisionException;
 import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
+import org.simtech.bootware.core.exceptions.ProvisionException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.core.exceptions.UndeployException;
@@ -261,6 +263,11 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
+				catch (ProvisionException e) {
+					fail("Provisioning with provision plugin failed: " + e.getMessage());
+					stateMachine.fire(SMEvents.FAILURE);
+					return;
+				}
 			}
 			else {
 				eventBus.publish(new CoreEvent(Severity.INFO, "No service package reference provided. Skipping provision middleware step."));
@@ -296,17 +303,22 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
-					fail("Could not load provision plugins: " + e.getMessage());
+					fail("Could not load provision plugin: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (UnloadPluginException e) {
-					fail("Could not unload provision plugins: " + e.getMessage());
+					fail("Could not unload provision plugin: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
 				catch (InitializeException e) {
-					fail("Could not initialize provision plugins: " + e.getMessage());
+					fail("Could not initialize provision plugin: " + e.getMessage());
+					stateMachine.fire(SMEvents.FAILURE);
+					return;
+				}
+				catch (DeprovisionException e) {
+					fail("Deprovisioning with provision plugin failed: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
