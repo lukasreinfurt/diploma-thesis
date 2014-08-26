@@ -131,18 +131,18 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Connecting to remote bootware failed: " + e.getMessage()));
 				throw new DeployException(e);
 			}
-		}
 
-		// set default configuration at remote bootware
-		try {
-			eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
-			final ConfigurationListWrapper wrapper = new ConfigurationListWrapper();
-			wrapper.setConfigurationList(defaultConfigurationList);
-			remoteBootware.setConfiguration(wrapper);
-		}
-		catch (SetConfigurationException e) {
-			eventBus.publish(new CoreEvent(Severity.ERROR, "Setting default configuration at remote bootware failed: " + e.getMessage()));
-			throw new DeployException(e);
+			// set default configuration at remote bootware
+			try {
+				eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
+				final ConfigurationListWrapper wrapper = new ConfigurationListWrapper();
+				wrapper.setConfigurationList(defaultConfigurationList);
+				remoteBootware.setConfiguration(wrapper);
+			}
+			catch (SetConfigurationException e) {
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Setting default configuration at remote bootware failed: " + e.getMessage()));
+				throw new DeployException(e);
+			}
 		}
 
 		// pass on original request to remote bootware

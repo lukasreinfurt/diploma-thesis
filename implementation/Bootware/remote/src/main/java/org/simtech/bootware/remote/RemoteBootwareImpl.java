@@ -97,6 +97,15 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
+		final InformationListWrapper informationList = new InformationListWrapper();
+
+		// Return information if instance already exists.
+		if (instanceStore.get(context) != null) {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Returning information of already active instance."));
+			informationList.setInformationList(instanceStore.get(context).getInstanceInformation());
+			return informationList;
+		}
+
 		request = new Request("deploy");
 		instance = new ApplicationInstance("temp");
 		instance.setUserContext(context);
@@ -110,7 +119,6 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			instanceStore.put(context, instance);
 		}
 
-		final InformationListWrapper informationList = new InformationListWrapper();
 		informationList.setInformationList(instance.getInstanceInformation());
 		return informationList;
 	}
