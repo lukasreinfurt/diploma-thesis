@@ -1,12 +1,11 @@
 package org.simtech.bootware.core;
 
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.namespace.QName;
 
 import org.simtech.bootware.core.exceptions.ContextMappingException;
 
@@ -36,27 +35,25 @@ public class ContextMapper {
 	 */
 	public final RequestContext map(final UserContext userContext) throws ContextMappingException {
 
-		// Build path to potential mapping file from the resource and application provided.
-		final String resource    = userContext.getResource();
-		final String application = userContext.getApplication();
-		final File mappingFile = new File("mapping/" + application + "/" + resource + "/context.xml");
+		// Create client.
+		final Client client = ClientBuilder.newBuilder().register(JAXBElement.class).build();
 
-		// Load mapping file if it exists
-		if (mappingFile.isFile()) {
-			try {
-				final JAXBContext jaxbContext = JAXBContext.newInstance(RequestContext.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-				final JAXBElement<RequestContext> root = unmarshaller.unmarshal(new StreamSource(mappingFile), RequestContext.class);
+		// Wrap userContext in JAXBElement to send it as payload.
+		final QName qName = new QName("", "userContext");
+		final JAXBElement<UserContext> requestRoot = new JAXBElement<UserContext>(qName, UserContext.class, userContext);
 
-				return root.getValue();
-			}
-			catch (JAXBException e) {
-				throw new ContextMappingException("There was an error while loading the mapping file " + mappingFile + ": " + e.getMessage());
-			}
+		// Send POST to repository with payload attached.
+		try {
+			return client
+				.target(repositoryURL)
+				.path("/mapContext")
+				.request()
+				.post(Entity.entity(requestRoot, "application/xml"), RequestContext.class);
 		}
-		else {
-			throw new ContextMappingException("Could not find mapping file " + mappingFile + ".");
+		catch (WebApplicationException e) {
+			throw new ContextMappingException(e);
 		}
+
 	}
 
 }
