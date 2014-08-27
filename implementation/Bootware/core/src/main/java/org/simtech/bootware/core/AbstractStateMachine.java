@@ -27,6 +27,7 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
+import org.simtech.bootware.core.plugins.PluginTypes;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
 
 import org.squirrelframework.foundation.fsm.UntypedStateMachine;
@@ -64,11 +65,6 @@ public abstract class AbstractStateMachine {
 	protected static URL url;
 
 	protected static ApplicationInstance instance;
-
-	private static String resourcePluginPath      = "plugins/resource/";
-	private static String communicationPluginPath = "plugins/communication/";
-	private static String applicationPluginPath   = "plugins/application/";
-	private static String eventPluginsPath        = "plugins/event/";
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -186,7 +182,7 @@ public abstract class AbstractStateMachine {
 				final String[] eventPlugins = properties.getProperty("eventPlugins").split(";");
 
 				for (String eventPlugin : eventPlugins) {
-					final EventPlugin plugin = pluginManager.loadPlugin(EventPlugin.class, eventPluginsPath + eventPlugin);
+					final EventPlugin plugin = pluginManager.loadPlugin(EventPlugin.class, PluginTypes.EVENT, eventPlugin);
 					plugin.initialize(configurationList);
 				}
 
@@ -311,13 +307,13 @@ public abstract class AbstractStateMachine {
 			final RequestContext context = request.getRequestContext();
 
 			try {
-				resourcePlugin = pluginManager.loadPlugin(ResourcePlugin.class, resourcePluginPath + context.getResourcePlugin());
+				resourcePlugin = pluginManager.loadPlugin(ResourcePlugin.class, PluginTypes.RESOURCE, context.getResourcePlugin());
 				resourcePlugin.initialize(configurationList);
 
-				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, communicationPluginPath + context.getCommunicationPlugin());
+				communicationPlugin = pluginManager.loadPlugin(CommunicationPlugin.class, PluginTypes.COMMUNICATION, context.getCommunicationPlugin());
 				communicationPlugin.initialize(configurationList);
 
-				applicationPlugin = pluginManager.loadPlugin(ApplicationPlugin.class, applicationPluginPath + context.getApplicationPlugin());
+				applicationPlugin = pluginManager.loadPlugin(ApplicationPlugin.class, PluginTypes.APPLICATION, context.getApplicationPlugin());
 				applicationPlugin.initialize(configurationList);
 
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins loaded."));
@@ -538,9 +534,9 @@ public abstract class AbstractStateMachine {
 				resourcePlugin      = null;
 				communicationPlugin = null;
 				applicationPlugin   = null;
-				pluginManager.unloadPlugin(resourcePluginPath + context.getResourcePlugin());
-				pluginManager.unloadPlugin(communicationPluginPath + context.getCommunicationPlugin());
-				pluginManager.unloadPlugin(applicationPluginPath + context.getApplicationPlugin());
+				pluginManager.unloadPlugin(PluginTypes.RESOURCE, context.getResourcePlugin());
+				pluginManager.unloadPlugin(PluginTypes.COMMUNICATION, context.getCommunicationPlugin());
+				pluginManager.unloadPlugin(PluginTypes.APPLICATION, context.getApplicationPlugin());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Request plugins unloaded."));
 			}
 			catch (UnloadPluginException e) {

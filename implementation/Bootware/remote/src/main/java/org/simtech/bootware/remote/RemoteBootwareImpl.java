@@ -22,6 +22,7 @@ import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.core.exceptions.UndeployException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
+import org.simtech.bootware.core.plugins.PluginTypes;
 import org.simtech.bootware.core.plugins.ProvisionPlugin;
 
 import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
@@ -231,7 +232,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				try {
 					// Load and initialize provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
-					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
 
 					// Call provisioning engine
@@ -246,7 +247,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					// Unload provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Unload provision plugin"));
 					provisionPlugin = null;
-					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+					pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugins: " + e.getMessage());
@@ -290,7 +291,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 				try {
 					// Load and initialize provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
-					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, provisionPluginPath + context.getCallApplicationPlugin());
+					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
 
 					// Call provisioning engine
@@ -300,7 +301,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					// Unload provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Undload provision plugin."));
 					provisionPlugin = null;
-					pluginManager.unloadPlugin(provisionPluginPath + context.getCallApplicationPlugin());
+					pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugin: " + e.getMessage());

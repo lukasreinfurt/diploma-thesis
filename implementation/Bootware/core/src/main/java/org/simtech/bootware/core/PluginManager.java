@@ -1,10 +1,19 @@
 package org.simtech.bootware.core;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Response;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -24,6 +33,7 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
  * <p>
  * The plugin manager handles the loading and unloading of plugins.
  */
+@SuppressWarnings("checkstyle:classfanoutcomplexity")
 public class PluginManager {
 
 	private String repositoryURL;
@@ -84,56 +94,116 @@ public class PluginManager {
 	/**
 	 * Load and start a plugin.
 	 *
-	 * @param path Path to the .jar file that implements the plugin.
+	 * If the plugin doesn't exist already, it will be downloaded from the repository.
+	 *
+	 * @param type The type of the plugin that should be unloaded.
+	 * @param name The name of the plugin that should be unloaded.
 	 *
 	 * @return The plugin object.
 	 *
 	 * @throws LoadPluginException If there was an error while loading the plugin.
 	 */
-	public final <T> T loadPlugin(final Class<T> type, final String path) throws LoadPluginException {
+	public final <T> T loadPlugin(final Class<T> clazz, final String type, final String name) throws LoadPluginException {
+
+		final String pluginID = type + "/" + name;
+		final File pluginFile = new File("plugins/" + pluginID);
+
+		// Check if plugin is already available locally.
+		// If not, try downloading it from the repository
+		if (!pluginFile.exists()) {
+			System.out.println("File doesn't exist locally. Downloading...");
+
+			// Create client.
+			final Client client = ClientBuilder.newBuilder().register(Response.class).build();
+
+			// Send GET request for the plugin to repository
+			try {
+				final Response response = client.target(repositoryURL)
+				                          .path("/getPlugin/{pluginType}/{pluginName}")
+				                          .resolveTemplate("pluginType", type)
+				                          .resolveTemplate("pluginName", name)
+				                          .request()
+				                          .get(Response.class);
+
+				// Save plugin locally if response was okay.
+				final Integer ok = 200;
+				if (response.getStatus() == ok) {
+					// Create local folders if they don't exist already.
+					pluginFile.getParentFile().mkdirs();
+
+					// Write response file to local file.
+					final File responseFile = response.readEntity(File.class);
+					final FileInputStream is  = new FileInputStream(responseFile);
+					final FileOutputStream os = new FileOutputStream(pluginFile);
+					final Integer bufferSize = 4096;
+					final byte[] buffer = new byte[bufferSize];
+					int len;
+					while ((len = is.read(buffer)) > 0) {
+						os.write(buffer, 0, len);
+					}
+					os.close();
+					is.close();
+				}
+				else {
+					throw new LoadPluginException("The plugin " + pluginID + " could not be found in the repository.");
+				}
+			}
+			catch (WebApplicationException e) {
+				throw new LoadPluginException(e);
+			}
+			catch (FileNotFoundException e) {
+				throw new LoadPluginException(e);
+			}
+			catch (IOException e) {
+				throw new LoadPluginException(e);
+			}
+		}
 
 		// Load the plugin and store a reference in installedBundles. Then start it.
 		try {
-			installedBundles.put(path, context.installBundle("file:" + path));
-			installedBundles.get(path).start();
+			installedBundles.put(pluginID, context.installBundle("file:" + pluginFile.toString().replace("\\", "/")));
+			installedBundles.get(pluginID).start();
 		}
 		catch (BundleException e) {
 			throw new LoadPluginException(e);
 		}
 
 		// Get the plugin object that will be returned.
-		final BundleContext bundleContext = installedBundles.get(path).getBundleContext();
-		final String pluginName = new File(path).getName();
-		final String filter = "(name=" + pluginName + ")";
+		final BundleContext bundleContext = installedBundles.get(pluginID).getBundleContext();
+		final String filter = "(name=" + name + ")";
 		final ServiceReference[] serviceReferences;
 
 		try {
-			serviceReferences = bundleContext.getServiceReferences(type.getName(), filter);
+			serviceReferences = bundleContext.getServiceReferences(clazz.getName(), filter);
 		}
 		catch (InvalidSyntaxException e) {
 			throw new LoadPluginException("Invalid filter syntax.");
 		}
 
 		if (serviceReferences.length == 0) {
-			throw new LoadPluginException("Could not retrieve service reference for plugin '" + pluginName + "'.");
+			throw new LoadPluginException("Could not retrieve service reference for plugin '" + pluginID + "'.");
 		}
 
-		return type.cast(bundleContext.getService(serviceReferences[0]));
+		return clazz.cast(bundleContext.getService(serviceReferences[0]));
 	}
 
 	/**
 	 * Unload a loaded plugin.
 	 *
-	 * @param path Path to the .jar file that implements the plugin.
+	 * @param type The type of the plugin that should be unloaded.
+	 * @param name The name of the plugin that should be unloaded.
 	 *
 	 * @throws UnloadPluginException If there was an error while unloading the plugin.
 	 */
-	public final void unloadPlugin(final String path) throws UnloadPluginException {
-		final Bundle bundle = installedBundles.get(path);
+	public final void unloadPlugin(final String type, final String name) throws UnloadPluginException {
+
+		final String pluginID = type + "/" + name;
+		final Bundle bundle = installedBundles.get(pluginID);
+
 		if (bundle != null) {
 			try {
 				bundle.uninstall();
-				installedBundles.remove(path);
+				installedBundles.remove(pluginID);
 			}
 			catch (BundleException e) {
 				throw new UnloadPluginException(e);
