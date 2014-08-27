@@ -1,6 +1,8 @@
 package org.simtech.bootware.repository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -10,13 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
 
-import org.simtech.bootware.core.RequestContext;
 import org.simtech.bootware.core.UserContext;
 
 /**
@@ -59,33 +55,24 @@ public class RestServer {
 	 *
 	 * @param userContext The user context that should be mapped to a request context.
 	 *
-	 * @return A JAXBElement that contains the request context.
+	 * @return A string that contains the request context.
 	 */
 	@POST
 	@Path("/mapContext")
 	@Consumes("application/xml")
 	@Produces("application/xml")
-	public final JAXBElement<RequestContext> getPlugin(final UserContext userContext) {
+	public final String getPlugin(final UserContext userContext) {
 
 		// Build path to potential mapping file from the resource and application provided.
 		final String resource    = userContext.getResource();
 		final String application = userContext.getApplication();
-		final File mappingFile = new File("mappings/" + application + "/" + resource + "/context.xml");
+		final File mappingFile   = new File("mappings/" + application + "/" + resource + "/context.xml");
 
-		// Load mapping file if it exists
-		if (mappingFile.isFile()) {
-			try {
-				final JAXBContext jaxbContext = JAXBContext.newInstance(RequestContext.class);
-				final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-				final JAXBElement<RequestContext> root = unmarshaller.unmarshal(new StreamSource(mappingFile), RequestContext.class);
-
-				return root;
-			}
-			catch (JAXBException e) {
-				throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-			}
+		// Load and return mapping file if it exists
+		try {
+			return new Scanner(mappingFile).useDelimiter("\\Z").next();
 		}
-		else {
+		catch (FileNotFoundException e) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
