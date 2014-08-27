@@ -19,7 +19,11 @@ import org.simtech.bootware.core.exceptions.ContextMappingException;
  */
 public class ContextMapper {
 
-	public ContextMapper() {}
+	private String repositoryURL;
+
+	public ContextMapper(final String repositoryURL) {
+		this.repositoryURL = repositoryURL;
+	}
 
 	/**
 	 * Maps a user context object to a request context object.

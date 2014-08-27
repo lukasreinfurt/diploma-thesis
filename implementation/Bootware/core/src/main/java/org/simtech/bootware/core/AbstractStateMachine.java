@@ -49,6 +49,7 @@ public abstract class AbstractStateMachine {
 	protected static EventBus eventBus;
 	protected static PluginManager pluginManager;
 	protected static InstanceStore instanceStore;
+	protected static ContextMapper contextMapper;
 
 	protected static ResourcePlugin resourcePlugin;
 	protected static CommunicationPlugin communicationPlugin;
@@ -155,7 +156,8 @@ public abstract class AbstractStateMachine {
 				// Initialize some objects.
 				instanceStore = new InstanceStore();
 				eventBus      = new EventBus();
-				pluginManager = new PluginManager();
+				pluginManager = new PluginManager(properties.getProperty("repositoryURL"));
+				contextMapper = new ContextMapper(properties.getProperty("repositoryURL"));
 
 				// Register objects that are shared with plugins.
 				pluginManager.registerSharedObject(eventBus);
@@ -275,8 +277,7 @@ public abstract class AbstractStateMachine {
 			try {
 				// map user context to request context
 				final UserContext userContext = instance.getUserContext();
-				final ContextMapper mapper = new ContextMapper();
-				final RequestContext requestContext = mapper.map(userContext);
+				final RequestContext requestContext = contextMapper.map(userContext);
 
 				// use service package reference from user context if given
 				final String servicePackageReference = userContext.getServicePackageReference();

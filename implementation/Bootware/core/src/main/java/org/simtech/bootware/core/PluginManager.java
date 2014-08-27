@@ -26,6 +26,7 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
  */
 public class PluginManager {
 
+	private String repositoryURL;
 	private Map<String, String> config;
 	private Map<String, Bundle> installedBundles;
 	private FrameworkFactory frameworkFactory;
@@ -36,8 +37,9 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager() throws InitializePluginManagerException {
+	public PluginManager(final String repositoryURL) throws InitializePluginManagerException {
 
+		this.repositoryURL    = repositoryURL;
 		config           = new HashMap<String, String>();
 		installedBundles = new HashMap<String, Bundle>();
 
