@@ -44,11 +44,17 @@ public class ContextMapper {
 
 		// Send POST to repository with payload attached.
 		try {
-			return client
-				.target(repositoryURL)
-				.path("/mapContext")
-				.request()
-				.post(Entity.entity(requestRoot, "application/xml"), RequestContext.class);
+			final RequestContext requestContext = client
+					.target(repositoryURL)
+					.path("/mapContext")
+					.request()
+					.post(Entity.entity(requestRoot, "application/xml"), RequestContext.class);
+
+			if (requestContext == null) {
+				throw new ContextMappingException("The response send by the repository was empty.");
+			}
+
+			return requestContext;
 		}
 		catch (WebApplicationException e) {
 			throw new ContextMappingException(e);
