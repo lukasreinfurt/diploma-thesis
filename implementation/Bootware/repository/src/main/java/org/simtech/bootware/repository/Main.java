@@ -1,13 +1,18 @@
 package org.simtech.bootware.repository;
 
-import java.io.Closeable;
+import java.net.URI;
 
-import com.sun.jersey.simple.container.SimpleServerFactory;
+import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * Simple mock repository
  */
 public final class Main {
+
+	static final String BASE_URI = "http://0.0.0.0:80/";
 
 	private Main() {
 		// not called
@@ -17,14 +22,12 @@ public final class Main {
 	 * Starts the repository server.
 	 */
 	public static void main(final String[] args) throws Exception {
-		final Closeable server = SimpleServerFactory.create("http://0.0.0.0:80");
-		try {
-			System.out.println("Press any key to stop the server...");
-			System.in.read();
-		}
-		finally {
-			server.close();
-		}
+		final ResourceConfig rc = new ResourceConfig(RestServer.class);
+		final URI endpoint = new URI(BASE_URI);
+		final HttpServer server = JdkHttpServerFactory.createHttpServer(endpoint, rc);
+		System.out.println("Press Enter to stop the server. ");
+		System.in.read();
+		server.stop(0);
 	}
 
 }
