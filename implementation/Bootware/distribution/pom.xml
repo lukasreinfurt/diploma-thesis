@@ -27,7 +27,7 @@
 				<version>2.4</version>
 				<executions>
 					<execution>
-						<id>distro-assembly</id>
+						<id>bootware-assembly</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
@@ -44,6 +44,22 @@
 								</descriptor>
 								<descriptor>
 									src/main/assemble/remote_bootware.xml
+								</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+					<execution>
+						<id>repository-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>repository</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>
+									src/main/assemble/repository.xml
 								</descriptor>
 							</descriptors>
 						</configuration>
