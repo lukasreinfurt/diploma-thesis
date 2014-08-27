@@ -22,14 +22,6 @@
 		</fileSet>
 
 		<fileSet>
-			<directory>../mapping</directory>
-			<outputDirectory>bin/remote/mapping</outputDirectory>
-			<includes>
-				<include>**/*.*</include>
-			</includes>
-		</fileSet>
-
-		<fileSet>
 			<directory>../remote/target</directory>
 			<outputDirectory>bin/remote</outputDirectory>
 			<includes>
@@ -48,61 +40,6 @@
 			</includes>
 			<binaries>
 				<outputDirectory>bin/remote</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.resource:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/remote/plugins/resource</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.communication:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/remote/plugins/communication</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.application:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/remote/plugins/application</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.event:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/remote/plugins/event</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.provision:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/remote/plugins/provision</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>

@@ -22,14 +22,6 @@
 		</fileSet>
 
 		<fileSet>
-			<directory>../mapping</directory>
-			<outputDirectory>bin/mapping</outputDirectory>
-			<includes>
-				<include>**/*.*</include>
-			</includes>
-		</fileSet>
-
-		<fileSet>
 			<directory>../local/target</directory>
 			<outputDirectory>bin</outputDirectory>
 			<includes>
@@ -48,50 +40,6 @@
 			</includes>
 			<binaries>
 				<outputDirectory>bin</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.resource:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/plugins/resource</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.communication:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/plugins/communication</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.application:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/plugins/application</outputDirectory>
-				<unpack>false</unpack>
-			</binaries>
-		</moduleSet>
-
-		<moduleSet>
-			<useAllReactorProjects>true</useAllReactorProjects>
-			<includes>
-				<include>org.simtech.bootware.plugins.event:*</include>
-			</includes>
-			<binaries>
-				<outputDirectory>bin/plugins/event</outputDirectory>
 				<unpack>false</unpack>
 			</binaries>
 		</moduleSet>
