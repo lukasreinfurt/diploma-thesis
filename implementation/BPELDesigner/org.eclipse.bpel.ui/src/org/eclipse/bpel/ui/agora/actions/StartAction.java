@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
@@ -34,6 +35,8 @@ import java.io.PrintWriter;
 public class StartAction extends Action implements IEditorActionDelegate{
 
 	private BPELMultipageEditorPart fEditor;
+	private Thread bootwareThread;
+	private Thread startProcessInstanceThread;
 	private static Object monitor = new Object();
 	private static boolean bootstrappingDone = false;
 
@@ -49,9 +52,18 @@ public class StartAction extends Action implements IEditorActionDelegate{
 	public void run(IAction arg0) {
 
 		//@reinfuls
+		// Do nothing if bootware thread is still alive from previous call.
+		if (bootwareThread != null && bootwareThread.isAlive()) {
+			MessageDialog.openInformation(
+					Display.getDefault().getActiveShell(),
+					"Still bootstrapping ...",
+					"The bootstrapping process has not finished yet. Please wait until the"
+					+ "process is finished and try again.");
+			return;
+		}
 
 		// Start the bootware plugin in a separate thread so that the UI won't be blocked.
-		final Thread bootwareThread = new Thread(new Runnable() {
+		bootwareThread = new Thread(new Runnable() {
 
 			public void run() {
 
@@ -89,7 +101,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 		// Start the process instance start code in a separate thread so we can wait
 		// for the bootstrapping process to finish without blocking the UI.
-		final Thread startProcessInstanceThread = new Thread(new Runnable() {
+		startProcessInstanceThread = new Thread(new Runnable() {
 
 			public void run() {
 
