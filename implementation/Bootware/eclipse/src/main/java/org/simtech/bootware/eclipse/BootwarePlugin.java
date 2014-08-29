@@ -9,8 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-// import java.net.MalformedURLException;
-// import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -24,12 +24,8 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-// import javax.xml.ws.WebServiceException;
+import javax.xml.ws.WebServiceException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.configuration.MapConfiguration;
@@ -48,10 +44,10 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import org.simtech.bootware.core.ConfigurationListWrapper;
-// import org.simtech.bootware.core.InformationListWrapper;
+import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
-// import org.simtech.bootware.core.exceptions.DeployException;
-// import org.simtech.bootware.core.exceptions.SetConfigurationException;
+import org.simtech.bootware.core.exceptions.DeployException;
+import org.simtech.bootware.core.exceptions.SetConfigurationException;
 
 //import fragmentorcp.FragmentoPlugIn;
 //import fragmentorcppresenter.presenter.Presenter;
@@ -157,44 +153,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		bootwareRunning = false;
 		out.println("Local bootware stopped.");
-	}
-
-	/**
-	 * Loads the user context that will be send to the local bootware to deploy
-	 * the local bootware and the SimTech SWfMS.
-	 */
-	private void loadContext() {
-		try {
-			final JAXBContext jaxbContext = JAXBContext.newInstance(UserContext.class);
-			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			final File file = new File("plugins/bootware/context.xml");
-			final JAXBElement<UserContext> root = unmarshaller.unmarshal(new StreamSource(file), UserContext.class);
-
-			context = root.getValue();
-		}
-		catch (JAXBException e) {
-			out.println("Loading context failed: " + e.getMessage());
-			out.println(e.toString());
-		}
-	}
-
-	/**
-	 * Loads the default configuration that will be send to the local and local
-	 * bootware.
-	 */
-	private void loadDefaultConfiguration() {
-		try {
-			final JAXBContext jaxbContext = JAXBContext.newInstance(ConfigurationListWrapper.class);
-			final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			final File file = new File("plugins/bootware/defaultConfiguration.xml");
-			final JAXBElement<ConfigurationListWrapper> root = unmarshaller.unmarshal(new StreamSource(file), ConfigurationListWrapper.class);
-
-			defaultConfiguration = root.getValue();
-		}
-		catch (JAXBException e) {
-			out.println("Loading context failed: " + e.getMessage());
-			out.println(e.toString());
-		}
 	}
 
 	/**
@@ -350,43 +308,48 @@ public class BootwarePlugin implements IBootwarePlugin {
 		localBootwareThread.start();
 
 		// Load user context and default configuration.
-		loadContext();
-		loadDefaultConfiguration();
+		try {
+			context = XMLUtil.load(UserContext.class, "plugins/bootware/context.xml");
+			defaultConfiguration = XMLUtil.load(ConfigurationListWrapper.class, "plugins/bootware/defaultConfiguration.xml");
+		}
+		catch (JAXBException e) {
+			e.printStackTrace();
+		}
 
-		final Map<String, String> informationList;
+		//final Map<String, String> informationList;
 
 		// Deploy the middleware.
-		// try {
-		// 	final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
+		try {
+			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
-		// 	// Create local bootware service.
-		// 	out.println("Connecting to local bootware.");
-		// 	final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
-		// 	out.println("Local bootware started at " + localBootwareURL + ".");
+			// Create local bootware service.
+			out.println("Connecting to local bootware.");
+			final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
+			out.println("Local bootware started at " + localBootwareURL + ".");
 
-		// 	// Send default configuration to local bootware.
-		// 	localBootware.setConfiguration(defaultConfiguration);
+			// Send default configuration to local bootware.
+			localBootware.setConfiguration(defaultConfiguration);
 
-		// 	// Send deploy request for remote bootware and SimTech SWfMS to local bootware.
-		// 	final InformationListWrapper informationListWrapper = localBootware.deploy(context);
+			// Send deploy request for remote bootware and SimTech SWfMS to local bootware.
+			final InformationListWrapper informationListWrapper = localBootware.deploy(context);
 
-		// 	// Unwrap response
-		// 	informationList = informationListWrapper.getInformationList();
-		// }
-		// catch (MalformedURLException e) {
-		// 	out.println("Local bootware URL is malformed: " + e.getMessage());
-		// }
-		// catch (WebServiceException e) {
-		// 	out.println("Connecting to local bootware failed: " + e.getMessage());
-		// }
-		// catch (SetConfigurationException e) {
-		// 	out.println("Could not set default configuration: " + e.getMessage());
-		// }
-		// catch (DeployException e) {
-		// 	out.println("Deploy request failed: " + e.getMessage());
-		// }
+			// Unwrap response
+			//informationList = informationListWrapper.getInformationList();
+		}
+		catch (MalformedURLException e) {
+			out.println("Local bootware URL is malformed: " + e.getMessage());
+		}
+		catch (WebServiceException e) {
+			out.println("Connecting to local bootware failed: " + e.getMessage());
+		}
+		catch (SetConfigurationException e) {
+			out.println("Could not set default configuration: " + e.getMessage());
+		}
+		catch (DeployException e) {
+			out.println("Deploy request failed: " + e.getMessage());
+		}
 
-		informationList = new HashMap<String, String>();
+		final Map<String, String> informationList = new HashMap<String, String>();
 		informationList.put("odeServerUrl", "http://localhost:8080/ode");
 		informationList.put("activeMQUrl", "tcp://localhost:61616");
 		informationList.put("fragmentoUrl", "fragmento");
