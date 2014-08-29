@@ -8,23 +8,38 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.Serializable;
+// import java.net.MalformedURLException;
+// import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.jms.Topic;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.ws.WebServiceException;
+// import javax.xml.ws.WebServiceException;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.configuration.MapConfiguration;
+import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Deployed;
+import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Undeployed;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -33,10 +48,10 @@ import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import org.simtech.bootware.core.ConfigurationListWrapper;
-import org.simtech.bootware.core.InformationListWrapper;
+// import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
-import org.simtech.bootware.core.exceptions.DeployException;
-import org.simtech.bootware.core.exceptions.SetConfigurationException;
+// import org.simtech.bootware.core.exceptions.DeployException;
+// import org.simtech.bootware.core.exceptions.SetConfigurationException;
 
 //import fragmentorcp.FragmentoPlugIn;
 //import fragmentorcppresenter.presenter.Presenter;
@@ -61,6 +76,8 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private MessageConsoleStream out;
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
+	private Boolean stopShutdownTrigger = false;
+	private Boolean bootwareRunning = false;
 
 	/**
 	 * Creates the bootware plugin.
@@ -104,6 +121,11 @@ public class BootwarePlugin implements IBootwarePlugin {
 	 */
 	private void executeLocalBootware() {
 		out.println("Starting local bootware.");
+		bootwareRunning = true;
+
+		// check if file exists
+
+		// check if bootware already running
 
 		// Create local bootware process.
 		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
@@ -133,6 +155,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			e.printStackTrace();
 		}
 
+		bootwareRunning = false;
 		out.println("Local bootware stopped.");
 	}
 
@@ -211,61 +234,193 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	private void initializeShutdownTrigger(final String activeMQUrl) {
+		try {
+			out.println("Shutdown trigger is now listening at " + activeMQUrl);
+
+			final ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(activeMQUrl);
+			final Connection connection = connectionFactory.createConnection();
+			final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			final Topic topic = session.createTopic("org.apache.ode.events");
+			connection.start();
+
+			final MessageConsumer consumer = session.createConsumer(topic);
+
+			final MessageListener listener = new MessageListener() {
+
+				private Integer activeProcesses = 0;
+
+				public void onMessage(final Message message) {
+
+					if (!(message instanceof ObjectMessage)) {
+						return;
+					}
+
+					final ObjectMessage oMsg = (ObjectMessage) message;
+					Serializable obj = null;
+
+					try {
+						obj = oMsg.getObject();
+					}
+					catch (JMSException e) {
+						e.printStackTrace();
+						return;
+					}
+
+					if (obj == null) {
+						return;
+					}
+
+					if (obj instanceof Process_Deployed) {
+						activeProcesses = activeProcesses + 1;
+						out.println("Active processes: " + activeProcesses);
+					}
+					if (obj instanceof Process_Undeployed) {
+						activeProcesses = activeProcesses - 1;
+						out.println("Active processes: " + activeProcesses);
+						if (activeProcesses == 0) {
+							out.println("No active processes left. Triggering bootware shutdown...");
+
+							Display.getDefault().asyncExec(new Runnable() {
+
+								public void run() {
+									final TriggerBootwareShutdownHandler shutdownHandler = new TriggerBootwareShutdownHandler();
+
+									// Ask for user confirmation.
+									final Integer returnCode = shutdownHandler.askForConfirmation();
+
+									// User confirmed. Shut down the bootware.
+									final Integer ok = 32;
+									if (returnCode == ok) {
+										stopShutdownTrigger = true;
+										out.println("Bootware shutdown has been triggered.");
+										shutdownHandler.triggerShutdown();
+									}
+									else {
+										out.println("User canceled bootware shutdown.");
+									}
+								}
+
+							});
+
+						}
+					}
+
+				}
+			};
+
+			consumer.setMessageListener(listener);
+
+			while (!stopShutdownTrigger) {
+				try {
+					final Integer wait = 10;
+					Thread.sleep(wait);
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			connection.close();
+			out.println("Shutdown trigger stopped.");
+		}
+		catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Executes the bootstrapping process.
 	 */
 	public final void execute() {
 
+		if (bootwareRunning) {
+			return;
+		}
+
 		// Start local bootware process in new thread so that we don't block further
-		// execution
-		final Thread t = new Thread(new Runnable() {
+		// execution.
+		final Thread localBootwareThread = new Thread(new Runnable() {
 
 			public void run() {
 				executeLocalBootware();
 			}
 
 		});
-		t.start();
+		localBootwareThread.start();
 
 		// Load user context and default configuration.
 		loadContext();
 		loadDefaultConfiguration();
 
-		try {
-			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
+		final Map<String, String> informationList;
 
-			// Create local bootware service.
-			out.println("Connecting to local bootware.");
-			final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
-			out.println("Local bootware started at " + localBootwareURL + ".");
+		// Deploy the middleware.
+		// try {
+		// 	final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
-			// Send default configuration to local bootware.
-			localBootware.setConfiguration(defaultConfiguration);
+		// 	// Create local bootware service.
+		// 	out.println("Connecting to local bootware.");
+		// 	final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
+		// 	out.println("Local bootware started at " + localBootwareURL + ".");
 
-			// Send deploy request for remote bootware and SimTech SWfMS to local bootware.
-			final InformationListWrapper infosWrapper = localBootware.deploy(context);
+		// 	// Send default configuration to local bootware.
+		// 	localBootware.setConfiguration(defaultConfiguration);
 
-			final Map<String, String> infos = infosWrapper.getInformationList();
-			for (Map.Entry<String, String> entry : infos.entrySet()) {
-				out.println(entry.getKey() + ": " + entry.getValue());
+		// 	// Send deploy request for remote bootware and SimTech SWfMS to local bootware.
+		// 	final InformationListWrapper informationListWrapper = localBootware.deploy(context);
+
+		// 	// Unwrap response
+		// 	informationList = informationListWrapper.getInformationList();
+		// }
+		// catch (MalformedURLException e) {
+		// 	out.println("Local bootware URL is malformed: " + e.getMessage());
+		// }
+		// catch (WebServiceException e) {
+		// 	out.println("Connecting to local bootware failed: " + e.getMessage());
+		// }
+		// catch (SetConfigurationException e) {
+		// 	out.println("Could not set default configuration: " + e.getMessage());
+		// }
+		// catch (DeployException e) {
+		// 	out.println("Deploy request failed: " + e.getMessage());
+		// }
+
+		informationList = new HashMap<String, String>();
+		informationList.put("odeServerUrl", "http://localhost:8080/ode");
+		informationList.put("activeMQUrl", "tcp://localhost:61616");
+		informationList.put("fragmentoUrl", "fragmento");
+		for (Map.Entry<String, String> entry : informationList.entrySet()) {
+			out.println(entry.getKey() + ": " + entry.getValue());
+		}
+
+		if (informationList == null) {
+			out.println("fail");
+		}
+
+		// Set the SimTech preferences from the response.
+		setSimTechPreferences(informationList);
+
+		// Initialize the shutdown trigger in new thread so that we don't block
+		// further execution.
+		final Thread shutdownTriggerThread = new Thread(new Runnable() {
+
+			public void run() {
+
+				final MapConfiguration configuration = new MapConfiguration(informationList);
+				configuration.setThrowExceptionOnMissing(true);
+
+				try {
+					final String activeMQUrl = configuration.getString("activeMQUrl");
+					initializeShutdownTrigger(activeMQUrl);
+				}
+				catch (NoSuchElementException e) {
+					out.println("There was an error while initializing the shutdown trigger: " + e.getMessage());
+				}
 			}
 
-			// Set the SimTech preferences from the response.
-			setSimTechPreferences(infos);
-
-		}
-		catch (MalformedURLException e) {
-			out.println("Local bootware URL is malformed: " + e.getMessage());
-		}
-		catch (WebServiceException e) {
-			out.println("Connecting to local bootware failed: " + e.getMessage());
-		}
-		catch (SetConfigurationException e) {
-			out.println("Could not set default configuration: " + e.getMessage());
-		}
-		catch (DeployException e) {
-			out.println("Deploy request failed: " + e.getMessage());
-		}
+		});
+		shutdownTriggerThread.start();
 
 	}
 
