@@ -36,9 +36,6 @@ import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -68,7 +65,6 @@ import org.simtech.bootware.core.exceptions.SetConfigurationException;
 })
 public class BootwarePlugin implements IBootwarePlugin {
 
-	private MessageConsole myConsole;
 	private MessageConsoleStream out;
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
@@ -79,37 +75,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 	 * Creates the bootware plugin.
 	 */
 	public BootwarePlugin() {
-		myConsole = findConsole("Bootware");
-		out = myConsole.newMessageStream();
+		final MessageConsole console = Util.findConsole("Bootware");
+		out = console.newMessageStream();
 		out.println("Bootware Plugin has been started.");
-	}
-
-	/**
-	 * Finds a console by the given name.
-	 * <p>
-	 * A console by the given name is created if it doesn't exist already.
-	 *
-	 * @param name The name of the requested console.
-	 *
-	 * @return The requested console.
-	 */
-	private MessageConsole findConsole(final String name) {
-
-		final ConsolePlugin plugin = ConsolePlugin.getDefault();
-		final IConsoleManager conMan = plugin.getConsoleManager();
-		final IConsole[] existing = conMan.getConsoles();
-
-		// Get the console if it already exists.
-		for (int i = 0; i < existing.length; i++) {
-			if (name.equals(existing[i].getName())) {
-				return (MessageConsole) existing[i];
-			}
-		}
-
-		// Create the requested console if it doesn't exist already.
-		final MessageConsole newConsole = new MessageConsole(name, null);
-		conMan.addConsoles(new IConsole[]{newConsole});
-		return newConsole;
 	}
 
 	/**
@@ -309,8 +277,8 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		// Load user context and default configuration.
 		try {
-			context = XMLUtil.load(UserContext.class, "plugins/bootware/context.xml");
-			defaultConfiguration = XMLUtil.load(ConfigurationListWrapper.class, "plugins/bootware/defaultConfiguration.xml");
+			context = Util.loadXML(UserContext.class, "plugins/bootware/context.xml");
+			defaultConfiguration = Util.loadXML(ConfigurationListWrapper.class, "plugins/bootware/defaultConfiguration.xml");
 		}
 		catch (JAXBException e) {
 			e.printStackTrace();
