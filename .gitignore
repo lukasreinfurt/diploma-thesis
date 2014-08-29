@@ -54,3 +54,4 @@ pom.properties
 /implementation/Bootware/eclipse/lib/
 /implementation/EclipseTest
 /implementation/repository_client_test
+/implementation/shutdown_listener_test
