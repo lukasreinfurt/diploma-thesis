@@ -38,7 +38,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 	private Thread bootwareThread;
 	private Thread startProcessInstanceThread;
 	private static Object monitor = new Object();
-	private static boolean bootstrappingDone = false;
+	private static boolean waitForBootstrap = true;
 
 	public void setActiveEditor(IAction arg0, IEditorPart arg1) {
 
@@ -90,13 +90,14 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				}
 
 				// Notify startProcessInstanceThread that the bootstrapping process is finished.
-				bootstrappingDone = true;
+				waitForBootstrap = false;
 				synchronized(monitor) {
 					monitor.notifyAll();
 				}
 			}
 		});
 
+		waitForBootstrap = true;
 		bootwareThread.start();
 
 		// Start the process instance start code in a separate thread so we can wait
@@ -106,7 +107,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 			public void run() {
 
 				// Wait for bootstrapping process to finish
-				while(!bootstrappingDone) {
+				while(waitForBootstrap) {
 					synchronized(monitor) {
 						try {
 							monitor.wait();
