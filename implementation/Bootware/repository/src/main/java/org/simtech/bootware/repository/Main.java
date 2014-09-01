@@ -25,6 +25,7 @@ public final class Main {
 		final ResourceConfig rc = new ResourceConfig(RestServer.class);
 		final URI endpoint = new URI(BASE_URI);
 		final HttpServer server = JdkHttpServerFactory.createHttpServer(endpoint, rc);
+		System.out.println("The server is now listening at " + BASE_URI);
 		System.out.println("Press Enter to stop the server. ");
 		System.in.read();
 		server.stop(0);

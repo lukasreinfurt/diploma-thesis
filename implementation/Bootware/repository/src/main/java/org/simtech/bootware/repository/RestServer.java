@@ -38,11 +38,14 @@ public class RestServer {
 	public final Response getPlugin(@PathParam("pluginType") final String pluginType,
 	                                @PathParam("pluginName") final String pluginName) {
 
+		System.out.println("GET /repository/getPlugin/" + pluginType + "/" + pluginName);
+
 		// Generate path to plugin file.
 		final File file = new File("plugins/" + pluginType + "/" + pluginName);
 
 		// If plugin file doesn't exist, return error.
 		if (file == null || !file.exists()) {
+			System.out.println("Plugin not found. Returning 404.");
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 
@@ -68,11 +71,14 @@ public class RestServer {
 		final String application = userContext.getApplication();
 		final File mappingFile   = new File("mappings/" + application + "/" + resource + "/context.xml");
 
+		System.out.println("POST /repository/mapContext with " + mappingFile);
+
 		// Load and return mapping file if it exists
 		try {
 			return new Scanner(mappingFile).useDelimiter("\\Z").next();
 		}
 		catch (FileNotFoundException e) {
+			System.out.println("Mapping not found. Returning 404.");
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
