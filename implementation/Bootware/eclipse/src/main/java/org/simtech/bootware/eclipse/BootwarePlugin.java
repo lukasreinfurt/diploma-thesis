@@ -69,7 +69,8 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
 	private Boolean stopShutdownTrigger = false;
-	private Boolean bootwareRunning = false;
+	private Thread localBootwareThread;
+	private Thread shutdownTriggerThread;
 
 	/**
 	 * Creates the bootware plugin.
@@ -85,7 +86,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 	 */
 	private void executeLocalBootware() {
 		out.println("Starting local bootware.");
-		bootwareRunning = true;
 
 		// check if file exists
 
@@ -119,7 +119,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			e.printStackTrace();
 		}
 
-		bootwareRunning = false;
+		stopShutdownTrigger = true;
 		out.println("Local bootware stopped.");
 	}
 
@@ -237,6 +237,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 			consumer.setMessageListener(listener);
 
+			stopShutdownTrigger = false;
 			while (!stopShutdownTrigger) {
 				try {
 					final Integer wait = 10;
@@ -260,13 +261,14 @@ public class BootwarePlugin implements IBootwarePlugin {
 	 */
 	public final void execute() {
 
-		if (bootwareRunning) {
+		if (localBootwareThread != null && localBootwareThread.isAlive()) {
+			out.println("Local bootware is already running. Skipping bootstrapping.");
 			return;
 		}
 
 		// Start local bootware process in new thread so that we don't block further
 		// execution.
-		final Thread localBootwareThread = new Thread(new Runnable() {
+		localBootwareThread = new Thread(new Runnable() {
 
 			public void run() {
 				executeLocalBootware();
@@ -334,7 +336,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		// Initialize the shutdown trigger in new thread so that we don't block
 		// further execution.
-		final Thread shutdownTriggerThread = new Thread(new Runnable() {
+		shutdownTriggerThread = new Thread(new Runnable() {
 
 			public void run() {
 
