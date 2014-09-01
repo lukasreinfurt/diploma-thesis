@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpServer;
  */
 public final class Main {
 
-	static final String BASE_URI = "http://0.0.0.0:80/";
+	static final String BASE_URI = "http://0.0.0.0:8888/";
 
 	private Main() {
 		// not called
