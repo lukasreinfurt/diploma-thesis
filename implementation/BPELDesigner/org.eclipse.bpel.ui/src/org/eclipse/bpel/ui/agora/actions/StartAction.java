@@ -36,6 +36,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 	private BPELMultipageEditorPart fEditor;
 	private Thread bootwareThread;
+	private IBootwarePlugin bootwarePlugin;
 	private Thread startProcessInstanceThread;
 	private static Object monitor = new Object();
 	private static boolean waitForBootstrap = true;
@@ -52,6 +53,31 @@ public class StartAction extends Action implements IEditorActionDelegate{
 	public void run(IAction arg0) {
 
 		//@reinfuls
+
+		// Load bootware plugin if it is not already loaded.
+		if (bootwarePlugin == null) {
+			try {
+				// Get all extension that implement the bootware extension point.
+				IExtensionRegistry reg = Platform.getExtensionRegistry();
+				IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
+
+				// Call the execute method of each extension.
+				for (int i = 0; i < extensions.length; i++) {
+					IConfigurationElement element = extensions[i];
+					if (element.getAttribute("class") != null) {
+						try {
+							bootwarePlugin = (IBootwarePlugin) element.createExecutableExtension("class");
+						} catch (CoreException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		// Do nothing if bootware thread is still alive from previous call.
 		if (bootwareThread != null && bootwareThread.isAlive()) {
 			MessageDialog.openInformation(
@@ -66,27 +92,9 @@ public class StartAction extends Action implements IEditorActionDelegate{
 		bootwareThread = new Thread(new Runnable() {
 
 			public void run() {
-
-				try {
-					// Get all extension that implement the bootware extension point.
-					IExtensionRegistry reg = Platform.getExtensionRegistry();
-					IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
-
-					// Call the execute method of each extension.
-					for (int i = 0; i < extensions.length; i++) {
-						IConfigurationElement element = extensions[i];
-						if (element.getAttribute("class") != null) {
-							try {
-								IBootwarePlugin plugin = (IBootwarePlugin) element.createExecutableExtension("class");
-								plugin.execute();
-							} catch (CoreException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-				catch (Exception e) {
-					e.printStackTrace();
+				// Execute bootstrapping process.
+				if (bootwarePlugin != null) {
+					bootwarePlugin.execute();
 				}
 
 				// Notify startProcessInstanceThread that the bootstrapping process is finished.
