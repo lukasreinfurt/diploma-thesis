@@ -153,7 +153,7 @@ public abstract class AbstractStateMachine {
 				instanceStore = new InstanceStore();
 				eventBus      = new EventBus();
 				pluginManager = new PluginManager(properties.getProperty("repositoryURL"));
-				contextMapper = new ContextMapper(properties.getProperty("repositoryURL"));
+				contextMapper = new ContextMapper(eventBus, properties.getProperty("repositoryURL"));
 
 				// Register objects that are shared with plugins.
 				pluginManager.registerSharedObject(eventBus);

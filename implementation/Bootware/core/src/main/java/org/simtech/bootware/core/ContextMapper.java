@@ -7,6 +7,8 @@ import javax.ws.rs.client.Entity;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.simtech.bootware.core.events.CoreEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.ContextMappingException;
 
 /**
@@ -19,8 +21,10 @@ import org.simtech.bootware.core.exceptions.ContextMappingException;
 public class ContextMapper {
 
 	private String repositoryURL;
+	private EventBus eventBus;
 
-	public ContextMapper(final String repositoryURL) {
+	public ContextMapper(final EventBus eventBus, final String repositoryURL) {
+		this.eventBus = eventBus;
 		this.repositoryURL = repositoryURL;
 	}
 
@@ -34,6 +38,8 @@ public class ContextMapper {
 	 * @throws ContextMappingException If the user context could not be mapped to a request context.
 	 */
 	public final RequestContext map(final UserContext userContext) throws ContextMappingException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Mapping context with repository at " + repositoryURL + "/mapContext."));
 
 		// Create client.
 		final Client client = ClientBuilder.newBuilder().register(JAXBElement.class).build();
