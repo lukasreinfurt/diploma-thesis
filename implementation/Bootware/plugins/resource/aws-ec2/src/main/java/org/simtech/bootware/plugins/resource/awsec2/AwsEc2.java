@@ -258,11 +258,24 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 			.withIpPermissions(ipPermissions);
 
 		// Send request.
-		try {
-			ec2Client.authorizeSecurityGroupIngress(request);
-		}
-		catch (AmazonServiceException e) {
-			throw new ProvisionResourceException(e);
+		// Retry a couple times because it sometimes takes some time for AWS to
+		// register new security groups.
+		final Integer max = 10;
+		for (Integer i = 1; i <= max; i++) {
+			try {
+				final Integer time = 5000;
+				Thread.sleep(time);
+				ec2Client.authorizeSecurityGroupIngress(request);
+				break;
+			}
+			catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+			catch (AmazonServiceException e) {
+				if (i == max) {
+					throw new ProvisionResourceException(e);
+				}
+			}
 		}
 
 		eventBus.publish(new ResourcePluginEvent(Severity.INFO, "Ports opened."));

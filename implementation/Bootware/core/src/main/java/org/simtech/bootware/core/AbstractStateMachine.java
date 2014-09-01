@@ -412,6 +412,7 @@ public abstract class AbstractStateMachine {
 
 			try {
 				url = applicationPlugin.start(instance.getConnection());
+				instance.getInstanceInformation().put("appURL", url.toString());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application started."));
 			}
 			catch (StartApplicationException e) {
