@@ -24,6 +24,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 import org.osgi.framework.launch.FrameworkFactory;
 
+import org.simtech.bootware.core.events.CoreEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.InitializePluginManagerException;
 import org.simtech.bootware.core.exceptions.LoadPluginException;
 import org.simtech.bootware.core.exceptions.UnloadPluginException;
@@ -36,6 +38,7 @@ import org.simtech.bootware.core.exceptions.UnloadPluginException;
 @SuppressWarnings("checkstyle:classfanoutcomplexity")
 public class PluginManager {
 
+	private EventBus eventBus;
 	private String repositoryURL;
 	private Map<String, String> config;
 	private Map<String, Bundle> installedBundles;
@@ -47,11 +50,12 @@ public class PluginManager {
 	 * Creates a plugin manager with its own OSGi framework instance and starts the framework.
 	 * The framework should be stopped with {@link #stop} before the plugin manager is destroyed (e.g. when the application shuts down).
 	 */
-	public PluginManager(final String repositoryURL) throws InitializePluginManagerException {
+	public PluginManager(final EventBus eventBus, final String repositoryURL) throws InitializePluginManagerException {
 
-		this.repositoryURL    = repositoryURL;
-		config           = new HashMap<String, String>();
-		installedBundles = new HashMap<String, Bundle>();
+		this.eventBus      = eventBus;
+		this.repositoryURL = repositoryURL;
+		config             = new HashMap<String, String>();
+		installedBundles   = new HashMap<String, Bundle>();
 
 		// export packages via system bundle to resolve constrains of plugin bundles.
 		// Specific version is needed or unresolved constraint occur.
@@ -108,10 +112,13 @@ public class PluginManager {
 		final String pluginID = type + "/" + name;
 		final File pluginFile = new File("plugins/" + pluginID);
 
+		eventBus.publish(new CoreEvent(Severity.INFO, "Loading plugin " + pluginID + "."));
+
 		// Check if plugin is already available locally.
 		// If not, try downloading it from the repository
 		if (!pluginFile.exists()) {
-			System.out.println("File doesn't exist locally. Downloading...");
+			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginID + " doesn't exist yet locally."));
+			eventBus.publish(new CoreEvent(Severity.INFO, "Downloading from repository at " + repositoryURL + "/getPlugin/" + type + "/" + name));
 
 			// Create client.
 			final Client client = ClientBuilder.newBuilder().register(Response.class).build();
@@ -158,6 +165,11 @@ public class PluginManager {
 				throw new LoadPluginException(e);
 			}
 		}
+		else {
+			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginID + " already exist locally."));
+		}
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Starting plugin " + pluginID + "."));
 
 		// Load the plugin and store a reference in installedBundles. Then start it.
 		try {
@@ -198,6 +210,9 @@ public class PluginManager {
 	public final void unloadPlugin(final String type, final String name) throws UnloadPluginException {
 
 		final String pluginID = type + "/" + name;
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Unloading plugin " + pluginID + "."));
+
 		final Bundle bundle = installedBundles.get(pluginID);
 
 		if (bundle != null) {
@@ -222,6 +237,7 @@ public class PluginManager {
 			final Map.Entry<String, Bundle> entry = iterator.next();
 			final String key = entry.getKey().toString();
 			try {
+				eventBus.publish(new CoreEvent(Severity.INFO, "Unloading plugin " + key + "."));
 				installedBundles.get(key).uninstall();
 				iterator.remove();
 			}
