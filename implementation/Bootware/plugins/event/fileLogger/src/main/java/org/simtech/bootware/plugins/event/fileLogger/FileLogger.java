@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.BaseEvent;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
 
@@ -26,16 +27,19 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
 	 */
-	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 		// Open writer object to be used later.
 		try {
 			writer = new PrintWriter("filelogger.log", "UTF-8");
+			writer.println("Filelogger plugin was started.");
+			writer.println("Please remember: There might have been events before this plugin was loaded which therefore weren't logged here.");
+			writer.flush();
 		}
 		catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw new InitializeException(e);
 		}
 		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			throw new InitializeException(e);
 		}
 	}
 
@@ -43,6 +47,9 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	 * Implements the shutdown operation defined in @see org.simtech.bootware.core.plugins.Plugin
 	 */
 	public final void shutdown() {
+		writer.println("Filelogger plugin will be stopped.");
+		writer.println("Please remember: There might be events after this plugin was stopped which therefore aren't logged here.");
+		writer.flush();
 		writer.close();
 	}
 
@@ -52,6 +59,7 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	@Handler
 	public final void handle(final BaseEvent event) {
 		writer.println(event.getTimestamp() + ": " + event.getMessage());
+		writer.flush();
 	}
 
 	/**
@@ -63,6 +71,7 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	@Handler
 	public final void handle(final DeadMessage message) {
 		writer.println("DeadMessage: " + message.getMessage());
+		writer.flush();
 	}
 
 	/**
@@ -74,6 +83,7 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	@Handler
 	public final void handle(final FilteredMessage message) {
 		writer.println("FilteredMessage: " + message.getMessage());
+		writer.flush();
 	}
 
 }
