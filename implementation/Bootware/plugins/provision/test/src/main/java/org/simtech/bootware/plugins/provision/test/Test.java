@@ -10,6 +10,9 @@ import org.simtech.bootware.core.exceptions.ProvisionException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ProvisionPlugin;
 
+/**
+ * A provision plugin that can be used for testing.
+ */
 public class Test extends AbstractBasePlugin implements ProvisionPlugin {
 
 	public Test() {}

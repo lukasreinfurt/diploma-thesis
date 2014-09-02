@@ -10,6 +10,9 @@ import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 
+/**
+ * A communication plugin that can be used for testing.
+ */
 public class Test extends AbstractBasePlugin implements CommunicationPlugin {
 
 	public Test() {}

@@ -9,17 +9,23 @@ import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
 // import org.simtech.bootware.core.events.ApplicationPluginEvent;
 // import org.simtech.bootware.core.events.Severity;
+import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.ExecuteCommandException;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
+import org.simtech.bootware.core.exceptions.StopApplicationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
+/**
+ * An application plugin that can be used for testing.
+ */
 public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public Test() {}
 
-	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 		// no op
 	}
 
@@ -42,7 +48,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 		}
 	}
 
-	public final void deprovision(final Connection connection) {
+	public final void deprovision(final Connection connection) throws DeprovisionApplicationException {
 		// no op
 	}
 
@@ -50,7 +56,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 
 		if (connection != null) {
 			try {
-				final URL url = new URL("http://192.168.80.80");
+				final URL url = new URL("http://www.example.com");
 				return url;
 			}
 			catch (MalformedURLException e) {
@@ -62,7 +68,7 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 		}
 	}
 
-	public final void stop(final Connection connection) {
+	public final void stop(final Connection connection) throws StopApplicationException {
 		// no op
 	}
 

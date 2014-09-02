@@ -10,6 +10,9 @@ import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
 
+/**
+ * An empty resource plugin that can be used if no resource plugin is required.
+ */
 public class Empty extends AbstractBasePlugin implements ResourcePlugin {
 
 	public Empty() {}

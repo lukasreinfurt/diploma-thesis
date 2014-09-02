@@ -10,6 +10,9 @@ import org.simtech.bootware.core.exceptions.ProvisionException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ProvisionPlugin;
 
+/**
+ * An empty provision plugin that can be used if no provision plugin is required.
+ */
 public class Empty extends AbstractBasePlugin implements ProvisionPlugin {
 
 	public Empty() {}

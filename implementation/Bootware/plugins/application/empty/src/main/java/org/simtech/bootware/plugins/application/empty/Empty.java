@@ -13,6 +13,9 @@ import org.simtech.bootware.core.exceptions.StopApplicationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
+/**
+ * An empty application plugin that can be used if no application plugin is required.
+ */
 public class Empty extends AbstractBasePlugin implements ApplicationPlugin {
 
 	public Empty() {}

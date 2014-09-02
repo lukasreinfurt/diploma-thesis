@@ -10,6 +10,9 @@ import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 
+/**
+ * An empty communication plugin that can be used if no communication plugin is required.
+ */
 public class Empty extends AbstractBasePlugin implements CommunicationPlugin {
 
 	public Empty() {}
