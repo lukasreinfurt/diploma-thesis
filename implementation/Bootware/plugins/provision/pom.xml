@@ -22,6 +22,7 @@
 		<module>cloudformation</module>
 		<module>opentosca</module>
 		<module>test</module>
+		<module>empty</module>
 	</modules>
 
 	<build>

@@ -1,0 +1,59 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>Empty Plugin</name>
+
+	<parent>
+		<groupId>org.simtech.bootware.plugins</groupId>
+		<artifactId>provision</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<groupId>org.simtech.bootware.plugins.provision</groupId>
+	<artifactId>empty</artifactId>
+	<version>1.0.0</version>
+	<packaging>bundle</packaging>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>
+							org.simtech.bootware.plugins.provision.empty.*
+						</Private-Package>
+						<Bundle-Activator>
+							org.simtech.bootware.plugins.provision.empty.Activator
+						</Bundle-Activator>
+						<!-- run mvn dependency:tree -->
+						<!-- list all artifacts that should be embedded here -->
+						<!-- (the jars will be embedded in the lib folder) -->
+						<Embed-Dependency>
+						</Embed-Dependency>
+						<!-- list all packages that are not embedded here -->
+						<!-- (these have to be exported by the bootware core) -->
+						<Import-Package>
+							net.engio.mbassy.*,
+							org.simtech.bootware.core.*,
+							!*
+						</Import-Package>
+						<Embed-Directory>lib</Embed-Directory>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+					</instructions>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
