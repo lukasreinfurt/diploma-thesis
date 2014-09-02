@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CountDownLatch;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -71,6 +72,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private Boolean stopShutdownTrigger = false;
 	private Thread localBootwareThread;
 	private Thread shutdownTriggerThread;
+	private CountDownLatch shutdownTriggerLatch;
 
 	/**
 	 * Creates the bootware plugin.
@@ -237,6 +239,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 			consumer.setMessageListener(listener);
 
+			// Signal to outer threat to continue;
+			shutdownTriggerLatch.countDown();
+
 			stopShutdownTrigger = false;
 			while (!stopShutdownTrigger) {
 				try {
@@ -244,7 +249,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 					Thread.sleep(wait);
 				}
 				catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 			}
 
@@ -336,6 +341,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		// Initialize the shutdown trigger in new thread so that we don't block
 		// further execution.
+		shutdownTriggerLatch = new CountDownLatch(1);
 		shutdownTriggerThread = new Thread(new Runnable() {
 
 			public void run() {
@@ -354,6 +360,14 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		});
 		shutdownTriggerThread.start();
+
+		// Wait for shutdown trigger to be ready.
+		try {
+			shutdownTriggerLatch.await();
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 
 	}
 
