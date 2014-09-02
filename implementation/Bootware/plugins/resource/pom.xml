@@ -21,6 +21,7 @@
 	<modules>
 		<module>aws-ec2</module>
 		<module>test</module>
+		<module>empty</module>
 	</modules>
 
 	<build>
