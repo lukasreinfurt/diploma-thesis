@@ -87,7 +87,7 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 			t.start();
 		}
 		catch (URISyntaxException e) {
-			eventBus.publish(new PluginEvent(Severity.INFO, "Error connecting ZeroMQ subscriber: " + e.getMessage()));
+			eventBus.publish(new PluginEvent(Severity.ERROR, "Error connecting ZeroMQ subscriber: " + e.getMessage()));
 		}
 	}
 
@@ -116,7 +116,7 @@ public class ZeroMQSubscriber extends AbstractBasePlugin implements EventPlugin 
 			while (running) {
 				final String contents = subscriber.recvStr(ZMQ.NOBLOCK);
 				if (contents != null) {
-					System.out.println("Remote Bootware => " + contents);
+					eventBus.publish(new PluginEvent(Severity.INFO, "Remote Bootware => " + contents));
 				}
 			}
 		}
