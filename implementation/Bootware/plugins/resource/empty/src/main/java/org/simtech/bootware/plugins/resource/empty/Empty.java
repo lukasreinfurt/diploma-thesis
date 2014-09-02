@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.exceptions.DeprovisionResourceException;
 import org.simtech.bootware.core.exceptions.InitializeException;
+import org.simtech.bootware.core.exceptions.ProvisionResourceException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ResourcePlugin;
 
@@ -20,12 +22,12 @@ public class Empty extends AbstractBasePlugin implements ResourcePlugin {
 		// no op
 	}
 
-	public final Map<String, String> provision() {
+	public final Map<String, String> provision() throws ProvisionResourceException {
 		final Map<String, String> instanceInformation = new HashMap<String, String>();
 		return instanceInformation;
 	}
 
-	public final void deprovision(final Map<String, String> instanceInformation) {
+	public final void deprovision(final Map<String, String> instanceInformation) throws DeprovisionResourceException {
 		// no op
 	}
 

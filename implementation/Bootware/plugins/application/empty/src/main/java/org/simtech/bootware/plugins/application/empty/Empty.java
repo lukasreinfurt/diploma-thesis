@@ -9,6 +9,7 @@ import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
+import org.simtech.bootware.core.exceptions.StopApplicationException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
 
@@ -44,7 +45,7 @@ public class Empty extends AbstractBasePlugin implements ApplicationPlugin {
 
 	}
 
-	public final void stop(final Connection connection) {
+	public final void stop(final Connection connection) throws StopApplicationException {
 		// no op
 	}
 

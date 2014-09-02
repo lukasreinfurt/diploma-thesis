@@ -6,6 +6,7 @@ import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.exceptions.ConnectConnectionException;
 import org.simtech.bootware.core.exceptions.DisconnectConnectionException;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.CommunicationPlugin;
 
@@ -13,7 +14,7 @@ public class Test extends AbstractBasePlugin implements CommunicationPlugin {
 
 	public Test() {}
 
-	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 		// no op
 	}
 

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.BaseEvent;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.EventPlugin;
 
@@ -21,7 +22,7 @@ public class ConsoleLogger extends AbstractBasePlugin implements EventPlugin {
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
 	 */
-	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 		// no op
 	}
 

@@ -15,9 +15,12 @@ import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
 // import org.simtech.bootware.core.events.ApplicationPluginEvent;
 // import org.simtech.bootware.core.events.Severity;
+import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.ExecuteCommandException;
+import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.ProvisionApplicationException;
 import org.simtech.bootware.core.exceptions.StartApplicationException;
+import org.simtech.bootware.core.exceptions.StopApplicationException;
 import org.simtech.bootware.core.exceptions.UploadFileException;
 import org.simtech.bootware.core.plugins.AbstractBasePlugin;
 import org.simtech.bootware.core.plugins.ApplicationPlugin;
@@ -32,7 +35,7 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
 	 */
-	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) {
+	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
 		// no op
 	}
 
@@ -87,7 +90,7 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 	/**
 	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
 	 */
-	public final void deprovision(final Connection connection) {
+	public final void deprovision(final Connection connection) throws DeprovisionApplicationException {
 		// no op
 	}
 
@@ -119,7 +122,7 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 	/**
 	 * Implements the stop operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
 	 */
-	public final void stop(final Connection connection) {
+	public final void stop(final Connection connection) throws StopApplicationException {
 		// no op
 	}
 
