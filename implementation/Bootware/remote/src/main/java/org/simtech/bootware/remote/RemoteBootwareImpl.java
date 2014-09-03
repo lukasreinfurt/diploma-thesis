@@ -222,7 +222,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					Thread.sleep(time);
 				}
 				catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 				stateMachine.fire(SMEvents.SHUTDOWN);
 			}

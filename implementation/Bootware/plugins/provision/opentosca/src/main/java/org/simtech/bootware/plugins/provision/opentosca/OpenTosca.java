@@ -83,7 +83,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			Thread.sleep(wait);
 		}
 		catch (InterruptedException e) {
-			e.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 
 		// instantiate csar

@@ -260,7 +260,7 @@ public class PluginManager {
 			framework.stop();
 		}
 		catch (BundleException e) {
-			e.printStackTrace();
+			System.out.println("Stopping OSGi Framework failed: " + e.getMessage());
 		}
 	}
 }

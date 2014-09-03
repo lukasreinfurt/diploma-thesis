@@ -211,12 +211,12 @@ public abstract class AbstractStateMachine {
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Loading event plugins succeeded."));
 			}
 			catch (LoadPluginException e) {
-				e.printStackTrace();
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Loading plugin failed: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
 			catch (InitializeException e) {
-				e.printStackTrace();
+				eventBus.publish(new CoreEvent(Severity.ERROR, "Initializing plugin failed: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}

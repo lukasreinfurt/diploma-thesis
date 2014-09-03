@@ -118,7 +118,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			processReader.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			out.println("There was an error while reading the output of the bootware process: " + e.getMessage());
 		}
 
 		stopShutdownTrigger = true;
@@ -288,7 +288,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			defaultConfiguration = Util.loadXML(ConfigurationListWrapper.class, "plugins/bootware/defaultConfiguration.xml");
 		}
 		catch (JAXBException e) {
-			e.printStackTrace();
+			out.println("There was an error while loading an XML file: " + e.getMessage());
 		}
 
 		//final Map<String, String> informationList;

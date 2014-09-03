@@ -85,7 +85,7 @@ public final class Main {
 					thread.join();
 				}
 				catch (ShutdownException e) {
-					e.printStackTrace();
+					System.out.println("There was an error while shutting down the remote bootware: " + e.getMessage());
 				}
 				catch (InterruptedException e) {
 					Thread.currentThread().interrupt();

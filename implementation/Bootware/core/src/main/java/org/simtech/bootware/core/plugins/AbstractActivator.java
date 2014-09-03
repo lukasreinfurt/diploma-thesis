@@ -48,6 +48,7 @@ public abstract class AbstractActivator implements BundleActivator {
 			properties.put("name", jarName);
 		}
 		catch (URISyntaxException e) {
+			// Should never happen.
 			e.printStackTrace();
 		}
 
