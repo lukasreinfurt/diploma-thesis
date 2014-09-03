@@ -52,9 +52,9 @@ public class SshConnection implements Connection {
 	 */
 	@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 	public final void connect(final Map<String, String> settings) throws ConnectConnectionException {
-		url      = settings.get("publicDNS");
-		username = settings.get("username");
-		key      = settings.get("privateKey");
+		url      = settings.get("resourceURL");
+		username = settings.get("sshUsername");
+		key      = settings.get("sshKey");
 
 		connection = new ch.ethz.ssh2.Connection(url);
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connecting to '" + url + "'."));

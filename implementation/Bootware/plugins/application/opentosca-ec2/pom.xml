@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>OpenTOSCA Plugin</name>
+	<name>OpenTOSCA EC2 Plugin</name>
 
 	<parent>
 		<groupId>org.simtech.bootware.plugins</groupId>
@@ -14,7 +14,7 @@
 	</parent>
 
 	<groupId>org.simtech.bootware.plugins.application</groupId>
-	<artifactId>opentosca</artifactId>
+	<artifactId>opentosca-ec2</artifactId>
 	<version>1.0.0</version>
 	<packaging>bundle</packaging>
 
@@ -29,10 +29,10 @@
 				<configuration>
 					<instructions>
 						<Private-Package>
-							org.simtech.bootware.plugins.application.opentosca.*
+							org.simtech.bootware.plugins.application.opentoscaec2.*
 						</Private-Package>
 						<Bundle-Activator>
-							org.simtech.bootware.plugins.application.opentosca.Activator
+							org.simtech.bootware.plugins.application.opentoscaec2.Activator
 						</Bundle-Activator>
 						<!-- run mvn dependency:tree -->
 						<!-- list all artifacts that should be embedded here -->

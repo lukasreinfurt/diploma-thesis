@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.application.opentosca;
+package org.simtech.bootware.plugins.application.opentoscaec2;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,9 +26,9 @@ import org.simtech.bootware.core.plugins.ApplicationPlugin;
 /**
  * An application plugin that provisions OpenTOSCA on AWS EC2
  */
-public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
+public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugin {
 
-	public OpenTosca() {}
+	public OpenToscaEC2() {}
 
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin

@@ -19,7 +19,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>opentosca</module>
+		<module>opentosca-ec2</module>
 		<module>remote-bootware</module>
 		<module>test</module>
 		<module>empty</module>

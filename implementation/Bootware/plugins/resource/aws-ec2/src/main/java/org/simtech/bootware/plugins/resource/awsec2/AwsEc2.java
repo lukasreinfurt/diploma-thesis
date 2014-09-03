@@ -132,10 +132,10 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		// Return some information about the instance.
 		final Map<String, String> instanceInformation = getInstanceInformation(instanceID);
 
-		instanceInformation.put("username", username);
+		instanceInformation.put("sshUsername", username);
 		instanceInformation.put("securityGroupName", securityGroupName);
 		instanceInformation.put("keyName", keyName);
-		instanceInformation.put("privateKey", privateKey);
+		instanceInformation.put("sshKey", privateKey);
 		instanceInformation.put("instanceID", instanceID);
 
 		return instanceInformation;
@@ -410,11 +410,11 @@ public class AwsEc2 extends AbstractBasePlugin implements ResourcePlugin {
 		try {
 			final DescribeInstancesResult ipResult = ec2Client.describeInstances(ipRequest);
 
-			final String publicIP  = ipResult.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
+			//final String publicIP  = ipResult.getReservations().get(0).getInstances().get(0).getPublicIpAddress();
 			final String publicDNS = ipResult.getReservations().get(0).getInstances().get(0).getPublicDnsName();
 
-			instanceInformation.put("publicIP", publicIP);
-			instanceInformation.put("publicDNS", publicDNS);
+			//instanceInformation.put("publicIP", publicIP);
+			instanceInformation.put("resourceURL", publicDNS);
 		}
 		catch (AmazonServiceException e) {
 			throw new ProvisionResourceException(e);
