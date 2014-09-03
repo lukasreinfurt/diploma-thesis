@@ -100,6 +100,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: deploy\n\n"));
+
 		final InformationListWrapper informationList = new InformationListWrapper();
 
 		// Return information if instance already exists.
@@ -131,6 +134,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final void undeploy(final UserContext context) throws UndeployException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: undeploy\n\n"));
+
 		request = new Request("undeploy");
 		instance = instanceStore.get(context);
 
@@ -153,6 +159,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final InformationListWrapper getActive(final UserContext context) {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: getActive\n\n"));
+
 		final InformationListWrapper informationList = new InformationListWrapper();
 		if (instanceStore.get(context) != null) {
 			informationList.setInformationList(instanceStore.get(context).getInstanceInformation());
@@ -165,7 +174,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
-		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: setConfiguration\n\n"));
+
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
 	}
 
@@ -174,6 +185,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@Override
 	public final void shutdown() throws ShutdownException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: shutdown\n\n"));
+
 		// undeploy workflow middleware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Deprovision Workflow Middleware"));
 

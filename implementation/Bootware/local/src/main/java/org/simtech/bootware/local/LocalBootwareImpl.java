@@ -95,6 +95,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	 */
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: deploy\n\n"));
+
 		// Deploy remote bootware if not yet deployed
 		if (remoteBootware == null || !remoteBootware.isAvailable()) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deploying remote bootware."));
@@ -155,6 +158,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	 */
 	@Override
 	public final void undeploy(final UserContext context) throws UndeployException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: undeploy\n\n"));
+
 		request = new Request("undeploy");
 		instance = instanceStore.get(context);
 
@@ -177,6 +183,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	 */
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: setConfiguration\n\n"));
+
 		// Replace default configuration with the new configuration.
 		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
 		defaultConfigurationList = configurationListWrapper.getConfigurationList();
@@ -193,6 +202,9 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	 */
 	@Override
 	public final void shutdown() throws ShutdownException {
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: shutdown\n\n"));
+
 		// pass on shutdown request to remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on shutdown request to remote bootware."));
 		if (remoteBootware != null && remoteBootware.isAvailable()) {
@@ -214,7 +226,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		}
 
 		// trigger shutdown in thread after delay so that this method can return
-		// the local bootware is shut down.
+		// before the local bootware is shut down.
 		final Thread delayedShutdown = new Thread() {
 			public void run() {
 				try {
