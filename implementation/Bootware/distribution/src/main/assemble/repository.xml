@@ -22,7 +22,7 @@
 		</fileSet>
 
 		<fileSet>
-			<directory>../mapping</directory>
+			<directory>../mappings</directory>
 			<outputDirectory>mappings</outputDirectory>
 			<includes>
 				<include>**/*.*</include>
