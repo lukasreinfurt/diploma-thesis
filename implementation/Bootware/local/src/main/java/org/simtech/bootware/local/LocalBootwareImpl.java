@@ -96,7 +96,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final InformationListWrapper deploy(final UserContext context) throws DeployException {
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: deploy\n\n"));
+		logRequestStart("Received request: deploy");
 
 		// Deploy remote bootware if not yet deployed
 		if (remoteBootware == null || !remoteBootware.isAvailable()) {
@@ -150,7 +150,11 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		// pass on original request to remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on deploy request to remote bootware."));
-		return remoteBootware.deploy(context);
+		final InformationListWrapper remoteResponse = remoteBootware.deploy(context);
+
+		logRequestEnd("Finished processing request: deploy");
+
+		return remoteResponse;
 	}
 
 	/**
@@ -159,7 +163,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void undeploy(final UserContext context) throws UndeployException {
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: undeploy\n\n"));
+		logRequestStart("Received request: undeploy");
 
 		request = new Request("undeploy");
 		instance = instanceStore.get(context);
@@ -176,6 +180,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 		else {
 			instanceStore.remove(context);
 		}
+
+		logRequestEnd("Finished processing request: undeploy");
 	}
 
 	/**
@@ -184,7 +190,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void setConfiguration(final ConfigurationListWrapper configurationListWrapper) throws SetConfigurationException {
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: setConfiguration\n\n"));
+		logRequestStart("Received request: setConfiguration");
 
 		// Replace default configuration with the new configuration.
 		eventBus.publish(new CoreEvent(Severity.INFO, "Setting default configuration."));
@@ -195,6 +201,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			eventBus.publish(new CoreEvent(Severity.INFO, "Passing on default configuration to remote Bootware."));
 			remoteBootware.setConfiguration(configurationListWrapper);
 		}
+
+		logRequestEnd("Finished processing request: setConfiguration");
 	}
 
 	/**
@@ -203,7 +211,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	@Override
 	public final void shutdown() throws ShutdownException {
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "\n\nReceived request: shutdown\n\n"));
+		logRequestStart("Received request: shutdown");
 
 		// pass on shutdown request to remote bootware
 		eventBus.publish(new CoreEvent(Severity.INFO, "Passing on shutdown request to remote bootware."));
@@ -239,6 +247,8 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				stateMachine.fire(SMEvents.SHUTDOWN);
 			}
 		};
+
+		logRequestEnd("Finished processing request: shutdown");
 
 		eventBus.publish(new CoreEvent(Severity.INFO, "Shutting down."));
 		delayedShutdown.start();

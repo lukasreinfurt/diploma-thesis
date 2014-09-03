@@ -92,6 +92,28 @@ public abstract class AbstractStateMachine {
 	}
 
 	/**
+	 * Convenience method for logging a request start with some formatting.
+	 *
+	 * @param message A string containing the message that should be logged.
+	 */
+	protected final void logRequestStart(final String message) {
+		eventBus.publish(new CoreEvent(Severity.INFO, " "));
+		eventBus.publish(new CoreEvent(Severity.INFO, "----------"));
+		eventBus.publish(new CoreEvent(Severity.INFO, message));
+	}
+
+	/**
+	 * Convenience method for logging a request end with some formatting.
+	 *
+	 * @param message A string containing the message that should be logged.
+	 */
+	protected final void logRequestEnd(final String message) {
+		eventBus.publish(new CoreEvent(Severity.INFO, message));
+		eventBus.publish(new CoreEvent(Severity.INFO, "----------"));
+		eventBus.publish(new CoreEvent(Severity.INFO, " "));
+	}
+
+	/**
 	 * Starts the state machine.
 	 */
 	public final void run() {
@@ -133,7 +155,7 @@ public abstract class AbstractStateMachine {
 		 */
 		protected void transition(final String from, final String to, final String fsmEvent) {
 			if (eventBus != null) {
-				eventBus.publish(new FSMEvent(Severity.DEBUG, "Transition from '" + from + "' to '" + to + "' on '" + fsmEvent + "'."));
+				eventBus.publish(new FSMEvent(Severity.DEBUG, "--- Transition to '" + to + "' from '" + from + "' on '" + fsmEvent + "'."));
 			}
 		}
 
