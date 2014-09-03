@@ -113,7 +113,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		}
 
 		request = new Request("deploy");
-		instance = new ApplicationInstance("temp");
+		instance = new ApplicationInstance("-");
 		instance.setUserContext(context);
 
 		stateMachine.fire(SMEvents.REQUEST);
@@ -198,7 +198,8 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		logRequestStart("Received request: shutdown");
 
 		// undeploy workflow middleware
-		eventBus.publish(new CoreEvent(Severity.INFO, "Deprovision Workflow Middleware"));
+		// Note: Will happen in the loop below.
+		//eventBus.publish(new CoreEvent(Severity.INFO, "Deprovision Workflow Middleware"));
 
 		// undeploy all provisioning engines
 		eventBus.publish(new CoreEvent(Severity.INFO, "Undeploy active applications."));
