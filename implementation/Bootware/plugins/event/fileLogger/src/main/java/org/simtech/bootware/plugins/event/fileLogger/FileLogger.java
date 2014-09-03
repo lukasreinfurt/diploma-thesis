@@ -58,7 +58,16 @@ public class FileLogger extends AbstractBasePlugin implements EventPlugin {
 	 */
 	@Handler
 	public final void handle(final BaseEvent event) {
-		writer.println(event.getTimestamp() + ": [" + event.getSeverity() + "] " + event.getMessage());
+
+		// Shorten severity to 4 characters.
+		final String severity = event.getSeverity().toString();
+		String shortSeverity = severity;
+		final Integer maxLenght = 4;
+		if (severity != null && severity.length() >= maxLenght) {
+			shortSeverity = severity.substring(0, maxLenght);
+		}
+
+		writer.println(event.getTimestamp() + ": [" + shortSeverity + "] " + event.getMessage());
 		writer.flush();
 	}
 
