@@ -104,13 +104,14 @@ public class OpenTosca extends AbstractBasePlugin implements ApplicationPlugin {
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
 
+				// No longer necessary
 				// delete old jar and upload replacement jar
-				final String jarName = "org.opentosca.siengine.service.impl_1.0.0.201407231442.jar";
-				final InputStream is1 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
-				final InputStream is2 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
-				connection.upload(is1, getSize(is2), "/tmp/" + jarName);
-				connection.execute("sudo rm ~/OpenTOSCA/lib/org.opentosca.siengine.service.impl_1.0.0.201311221533.jar");
-				connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
+				// final String jarName = "org.opentosca.siengine.service.impl_1.0.0.201407231442.jar";
+				// final InputStream is1 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
+				// final InputStream is2 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
+				// connection.upload(is1, getSize(is2), "/tmp/" + jarName);
+				// connection.execute("sudo rm ~/OpenTOSCA/lib/org.opentosca.siengine.service.impl_1.0.0.201311221533.jar");
+				// connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
 
 				// stop tomcat and opentosca
 				connection.execute("sudo service tomcat7 stop");
