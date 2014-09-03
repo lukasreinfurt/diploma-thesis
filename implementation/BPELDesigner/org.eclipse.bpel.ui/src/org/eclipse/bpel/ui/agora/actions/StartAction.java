@@ -1,6 +1,7 @@
 package org.eclipse.bpel.ui.agora.actions;
 
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.bpel.ui.BPELMultipageEditorPart;
 import org.eclipse.bpel.ui.agora.AgoraStates;
@@ -38,8 +39,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 	private Thread bootwareThread;
 	private IBootwarePlugin bootwarePlugin;
 	private Thread startProcessInstanceThread;
-	private static Object monitor = new Object();
-	private static boolean waitForBootstrap = true;
+	private static CountDownLatch bootstrappingDoneLatch;
 
 	public void setActiveEditor(IAction arg0, IEditorPart arg1) {
 
@@ -93,14 +93,12 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				}
 
 				// Notify startProcessInstanceThread that the bootstrapping process is finished.
-				waitForBootstrap = false;
-				synchronized(monitor) {
-					monitor.notifyAll();
-				}
+				bootstrappingDoneLatch.countDown();
 			}
 		});
 
-		waitForBootstrap = true;
+		// Reset latch.
+		bootstrappingDoneLatch = new CountDownLatch(1);
 		bootwareThread.start();
 
 		// Start the process instance start code in a separate thread so we can wait
@@ -110,14 +108,11 @@ public class StartAction extends Action implements IEditorActionDelegate{
 			public void run() {
 
 				// Wait for bootstrapping process to finish
-				while(waitForBootstrap) {
-					synchronized(monitor) {
-						try {
-							monitor.wait();
-						} catch(InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
+				try {
+					bootstrappingDoneLatch.await();
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
 				}
 
 				// Execute the code to start the process instance. It changes the UI and
