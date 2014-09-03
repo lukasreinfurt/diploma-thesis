@@ -56,25 +56,20 @@ public class StartAction extends Action implements IEditorActionDelegate{
 
 		// Load bootware plugin if it is not already loaded.
 		if (bootwarePlugin == null) {
-			try {
-				// Get all extension that implement the bootware extension point.
-				IExtensionRegistry reg = Platform.getExtensionRegistry();
-				IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
+			// Get all extension that implement the bootware extension point.
+			IExtensionRegistry reg = Platform.getExtensionRegistry();
+			IConfigurationElement[] extensions = reg.getConfigurationElementsFor("org.eclipse.bpel.ui.bootware");
 
-				// Call the execute method of each extension.
-				for (int i = 0; i < extensions.length; i++) {
-					IConfigurationElement element = extensions[i];
-					if (element.getAttribute("class") != null) {
-						try {
-							bootwarePlugin = (IBootwarePlugin) element.createExecutableExtension("class");
-						} catch (CoreException e) {
-							e.printStackTrace();
-						}
+			// Load the extension (there should only be one).
+			for (int i = 0; i < extensions.length; i++) {
+				IConfigurationElement element = extensions[i];
+				if (element.getAttribute("class") != null) {
+					try {
+						bootwarePlugin = (IBootwarePlugin) element.createExecutableExtension("class");
+					} catch (CoreException e) {
+						e.printStackTrace();
 					}
 				}
-			}
-			catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 
