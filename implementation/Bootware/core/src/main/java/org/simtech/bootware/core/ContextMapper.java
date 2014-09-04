@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -63,6 +64,9 @@ public class ContextMapper {
 			return requestContext;
 		}
 		catch (WebApplicationException e) {
+			throw new ContextMappingException(e);
+		}
+		catch (ProcessingException e) {
 			throw new ContextMappingException(e);
 		}
 

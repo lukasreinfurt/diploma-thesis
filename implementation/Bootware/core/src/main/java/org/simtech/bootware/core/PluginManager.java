@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -160,6 +161,9 @@ public class PluginManager {
 				}
 			}
 			catch (WebApplicationException e) {
+				throw new LoadPluginException(e);
+			}
+			catch (ProcessingException e) {
 				throw new LoadPluginException(e);
 			}
 			catch (FileNotFoundException e) {
