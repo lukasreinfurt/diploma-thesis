@@ -160,9 +160,10 @@ public class SshConnection implements Connection {
 			catch (IOException e) {
 				throw new ExecuteCommandException(e);
 			}
-
-			// Close the session.
-			session.close();
+			finally {
+				// Close the session.
+				session.close();
+			}
 		}
 		else {
 			throw new ExecuteCommandException("Session was null.");
@@ -176,22 +177,33 @@ public class SshConnection implements Connection {
 
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
 
+		SCPOutputStream outputStream = null;
 		try {
 			final SCPClient scp = new SCPClient(connection);
 			final File file = new File(remotePath);
-			final SCPOutputStream outputStream = scp.put(file.getName(), length, file.getParent().replace("\\", "/"), "0755");
+			outputStream = scp.put(file.getName(), length, file.getParent().replace("\\", "/"), "0755");
 
 			final byte[] buffer = new byte[bufferSize];
 			int n;
 			while ((n = inputStream.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, n);
 			}
-
-			outputStream.close();
-			inputStream.close();
 		}
 		catch (IOException e) {
 			throw new UploadFileException(e);
+		}
+		finally {
+			try {
+				if (outputStream != null) {
+					outputStream.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			}
+			catch (IOException e) {
+				throw new UploadFileException(e);
+			}
 		}
 	}
 

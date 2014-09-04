@@ -107,6 +107,10 @@ public class PluginManager {
 	 *
 	 * @throws LoadPluginException If there was an error while loading the plugin.
 	 */
+	@SuppressWarnings({
+		"checkstyle:cyclomaticcomplexity",
+		"checkstyle:javancss"
+	})
 	public final <T> T loadPlugin(final Class<T> clazz, final String type, final String name) throws LoadPluginException {
 
 		final String pluginID = type + "/" + name;
@@ -124,6 +128,8 @@ public class PluginManager {
 			final Client client = ClientBuilder.newBuilder().register(Response.class).build();
 
 			// Send GET request for the plugin to repository
+			FileInputStream inputStream = null;
+			FileOutputStream outputStream = null;
 			try {
 				final Response response = client.target(repositoryURL)
 				                          .path("/getPlugin/{pluginType}/{pluginName}")
@@ -140,16 +146,14 @@ public class PluginManager {
 
 					// Write response file to local file.
 					final File responseFile = response.readEntity(File.class);
-					final FileInputStream is  = new FileInputStream(responseFile);
-					final FileOutputStream os = new FileOutputStream(pluginFile);
+					inputStream = new FileInputStream(responseFile);
+					outputStream = new FileOutputStream(pluginFile);
 					final Integer bufferSize = 4096;
 					final byte[] buffer = new byte[bufferSize];
 					int len;
-					while ((len = is.read(buffer)) > 0) {
-						os.write(buffer, 0, len);
+					while ((len = inputStream.read(buffer)) > 0) {
+						outputStream.write(buffer, 0, len);
 					}
-					os.close();
-					is.close();
 				}
 				else {
 					throw new LoadPluginException("The plugin " + pluginID + " could not be found in the repository.");
@@ -163,6 +167,19 @@ public class PluginManager {
 			}
 			catch (IOException e) {
 				throw new LoadPluginException(e);
+			}
+			finally {
+				try {
+					if (outputStream != null) {
+						outputStream.close();
+					}
+					if (inputStream != null) {
+						inputStream.close();
+					}
+				}
+				catch (IOException e) {
+					throw new LoadPluginException(e);
+				}
 			}
 		}
 		else {

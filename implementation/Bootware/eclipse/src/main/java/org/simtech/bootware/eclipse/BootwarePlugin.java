@@ -98,15 +98,16 @@ public class BootwarePlugin implements IBootwarePlugin {
 		processBuilder.directory(new File("plugins/bootware/bin"));
 		processBuilder.redirectErrorStream(true);
 
+		BufferedReader processReader = null;
+		BufferedWriter processWriter = null;
 		try {
 			// Start local bootware.
 			final Process process = processBuilder.start();
 
-
 			final OutputStream processOutput = process.getOutputStream();
 			final InputStream processInput = process.getInputStream();
-			final BufferedReader processReader = new BufferedReader(new InputStreamReader(processInput));
-			final BufferedWriter processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
+			processReader = new BufferedReader(new InputStreamReader(processInput));
+			processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
 			String line;
 
 			// Write local bootware output to console. This will block until the
@@ -114,11 +115,22 @@ public class BootwarePlugin implements IBootwarePlugin {
 			while ((line = processReader.readLine()) != null) {
 				out.println(line);
 			}
-
-			processReader.close();
 		}
 		catch (IOException e) {
 			out.println("There was an error while reading the output of the bootware process: " + e.getMessage());
+		}
+		finally {
+			try {
+				if (processReader != null) {
+					processReader.close();
+				}
+				if (processWriter != null) {
+					processWriter.close();
+				}
+			}
+			catch (IOException e) {
+				out.println("There was an error: " + e.getMessage());
+			}
 		}
 
 		stopShutdownTrigger = true;
