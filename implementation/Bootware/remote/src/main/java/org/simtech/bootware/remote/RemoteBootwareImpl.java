@@ -254,11 +254,12 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			final String servicePackageReference = context.getServicePackageReference();
 
 			// Only call provisioning engine if service package reference is provided
+			ProvisionPlugin provisionPlugin = null;
 			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
 				try {
 					// Load and initialize provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
-					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
+					provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
 
 					// Call provisioning engine
@@ -269,19 +270,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					// by the provision resource step.
 					final Map<String, String> instanceInformation = instance.getInstanceInformation();
 					instanceInformation.putAll(informationList);
-
-					// Unload provision plugin
-					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Unload provision plugin"));
-					provisionPlugin = null;
-					pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugins: " + e.getMessage());
-					stateMachine.fire(SMEvents.FAILURE);
-					return;
-				}
-				catch (UnloadPluginException e) {
-					fail("Could not unload provision plugins: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
@@ -294,6 +285,19 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					fail("Provisioning with provision plugin failed: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
+				}
+				finally {
+					try {
+						// Unload provision plugin
+						eventBus.publish(new CoreEvent(Severity.SUCCESS, "Unload provision plugin"));
+						provisionPlugin = null;
+						pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
+					}
+					catch (UnloadPluginException e) {
+						fail("Could not unload provision plugins: " + e.getMessage());
+						stateMachine.fire(SMEvents.FAILURE);
+						return;
+					}
 				}
 			}
 			else {
@@ -313,32 +317,24 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			final String servicePackageReference = context.getServicePackageReference();
 
 			// Only call provisioning engine if service package reference is provided
+			ProvisionPlugin provisionPlugin = null;
 			if (servicePackageReference != null && !"".equals(servicePackageReference)) {
 				try {
 					// Load and initialize provision plugin
 					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Load provision plugin."));
-					ProvisionPlugin provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
+					provisionPlugin = pluginManager.loadPlugin(ProvisionPlugin.class, PluginTypes.PROVISION, context.getCallApplicationPlugin());
 					provisionPlugin.initialize(configurationList);
 
 					// Call provisioning engine
 					eventBus.publish(new CoreEvent(Severity.INFO, "Call provision engine."));
 					provisionPlugin.deprovision(url.toString(), servicePackageReference);
-
-					// Unload provision plugin
-					eventBus.publish(new CoreEvent(Severity.SUCCESS, "Undload provision plugin."));
-					provisionPlugin = null;
-					pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugin: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
 				}
-				catch (UnloadPluginException e) {
-					fail("Could not unload provision plugin: " + e.getMessage());
-					stateMachine.fire(SMEvents.FAILURE);
-					return;
-				}
+
 				catch (InitializeException e) {
 					fail("Could not initialize provision plugin: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
@@ -348,6 +344,19 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					fail("Deprovisioning with provision plugin failed: " + e.getMessage());
 					stateMachine.fire(SMEvents.FAILURE);
 					return;
+				}
+				finally {
+					try {
+						// Unload provision plugin
+						eventBus.publish(new CoreEvent(Severity.SUCCESS, "Undload provision plugin."));
+						provisionPlugin = null;
+						pluginManager.unloadPlugin(PluginTypes.PROVISION, context.getCallApplicationPlugin());
+					}
+					catch (UnloadPluginException e) {
+						fail("Could not unload provision plugin: " + e.getMessage());
+						stateMachine.fire(SMEvents.FAILURE);
+						return;
+					}
 				}
 			}
 			else {
