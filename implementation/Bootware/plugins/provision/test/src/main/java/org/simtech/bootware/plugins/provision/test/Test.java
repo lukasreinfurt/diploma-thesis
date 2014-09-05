@@ -32,8 +32,8 @@ public class Test extends AbstractBasePlugin implements ProvisionPlugin {
 
 		final Map<String, String> response = new HashMap<String, String>();
 
-		response.put("odeServerUrl", "odeServerUrl");
-		response.put("activeMQUrl", "activeMQUrl");
+		response.put("odeServerUrl", "http://localhost:8080/ode");
+		response.put("activeMQUrl", "tcp://localhost:61616");
 		response.put("fragmentoUrl", "fragmentoUrl");
 
 		return response;
