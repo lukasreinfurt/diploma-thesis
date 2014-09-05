@@ -8,6 +8,8 @@ import java.util.Map;
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
+import org.simtech.bootware.core.events.ProvisionPluginEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeprovisionException;
 import org.simtech.bootware.core.exceptions.InitializeException;
 import org.simtech.bootware.core.exceptions.ProvisionException;
@@ -58,12 +60,9 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
 	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) throws ProvisionException {
-		System.out.println("Provision OpenTOSCA");
-		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
-		System.out.println("Service package reference: " + servicePackageReference);
+		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Provisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
 
-		//final String endpoint = provisioningEngineEndpoint.replace("http://", "");
-		final String endpoint = "192.168.80.80";
+		final String endpoint = provisioningEngineEndpoint.replace("http://", "");
 		final String csarPath = servicePackageReference;
 		final String csarName = new File(csarPath).getName();
 		final Map<String, String> response = new HashMap<String, String>();
@@ -75,9 +74,10 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		}
 
 		// upload csar
+		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Uploading " + csarName));
 		final String uploadResponse = client.uploadCSARDueURL(csarPath);
-		System.out.println("upload response: " + uploadResponse);
 
+		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Waiting for " + csarName + " to be deployed."));
 		try {
 			final Integer wait = 30000;
 			Thread.sleep(wait);
@@ -87,8 +87,8 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		}
 
 		// instantiate csar
+		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Instantiate " + csarName));
 		final String instantiateResponse = client.instanitateCSAR(csarName);
-		System.out.println("instantiation: " + instantiateResponse);
 
 		if (instantiateResponse != null) {
 
@@ -116,8 +116,12 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 
 			// build response
 			final String odeServerUrl = "http://" + ipaddress + ":" + odePort + "/" + odeUrl;
-			final String activeMQUrl = "http://" + ipaddress + ":" + activeMQPort;
+			final String activeMQUrl = "tcp://" + ipaddress + ":" + activeMQPort;
 			final String fragmentoUrl = "http://" + ipaddress + ":" + fragmentoPort + "/" + fragmentoServiceUrl;
+
+			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "ODE Server URL is " + odeServerUrl));
+			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "ActiveMQ Broker URL is " + activeMQUrl));
+			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Fragmento URL is " + fragmentoUrl));
 
 			response.put("odeServerUrl", odeServerUrl);
 			response.put("activeMQUrl", activeMQUrl);
