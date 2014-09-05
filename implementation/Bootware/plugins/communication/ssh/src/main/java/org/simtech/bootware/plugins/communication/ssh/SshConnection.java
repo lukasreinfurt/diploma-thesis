@@ -37,8 +37,8 @@ public class SshConnection implements Connection {
 	private String username;
 	private String key;
 
-	private final Integer maxRetries = 20;
-	private final Integer waitBetweenRetries = 5000;
+	private final Integer maxRetries = 30;
+	private final Integer waitBetweenRetries = 10000;
 	private final Integer bufferSize = 4096;
 
 	public SshConnection(final EventBus eb) {
@@ -59,14 +59,18 @@ public class SshConnection implements Connection {
 		connection = new ch.ethz.ssh2.Connection(url);
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Connecting to '" + url + "'."));
 
-		// Retry a few times
-		for (int retries = 0; retries < maxRetries; retries++) {
+		// Connect. Retry a few times in case SSH server isn't available yet.
+		for (int retries = 1; retries <= maxRetries; retries++) {
 			try {
 				Thread.sleep(waitBetweenRetries);
+				eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Attempt " + retries + " out of " + maxRetries));
 				connection.connect();
 				break;
 			}
 			catch (ConnectException e) {
+				if (retries == maxRetries) {
+					throw new ConnectConnectionException(e);
+				}
 				continue;
 			}
 			catch (IOException e) {
@@ -79,12 +83,15 @@ public class SshConnection implements Connection {
 
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Authenticating connection."));
 
-		// Try authentication with public key
+		// Try authentication with public key.
 		try {
 			final boolean isAuthenticated = connection.authenticateWithPublicKey(username, key.toCharArray(), null);
 			if (!isAuthenticated) {
 				throw new ConnectConnectionException("Authentication failed.");
 			}
+		}
+		catch (IllegalStateException e) {
+			throw new ConnectConnectionException(e);
 		}
 		catch (IOException e) {
 			throw new ConnectConnectionException(e);
