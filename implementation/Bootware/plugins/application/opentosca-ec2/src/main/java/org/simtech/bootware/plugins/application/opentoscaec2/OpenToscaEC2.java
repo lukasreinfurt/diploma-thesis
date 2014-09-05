@@ -11,8 +11,8 @@ import java.util.Properties;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.Connection;
-// import org.simtech.bootware.core.events.ApplicationPluginEvent;
-// import org.simtech.bootware.core.events.Severity;
+import org.simtech.bootware.core.events.ApplicationPluginEvent;
+import org.simtech.bootware.core.events.Severity;
 import org.simtech.bootware.core.exceptions.DeprovisionApplicationException;
 import org.simtech.bootware.core.exceptions.ExecuteCommandException;
 import org.simtech.bootware.core.exceptions.InitializeException;
@@ -78,16 +78,19 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// Bugfix: The apt-get update in the install script seems to fail for
 				// some reason. Executing apt-get update before the install script
 				// is a fix for that.
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Updating apt-get. This can take a while."));
 				connection.execute("sudo apt-get update &> /tmp/install.log");
 
 				// regular installation
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Executing OpenTOSCA install script. This can take a while."));
 				connection.execute("curl install.opentosca.de/installEC2|sh &> /tmp/install.log");
 
-				System.out.println("Waiting...");
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for OpenTOSCA to be started."));
 				final Integer wait = 120000;
 				Thread.sleep(wait);
 
 				// bug fix start
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Applying bugfix."));
 
 				// create properties file with the actual ip address
 				final Properties properties = new Properties();
@@ -114,19 +117,22 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
 
 				// stop tomcat and opentosca
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Stopping Tomcat and OpenTOSCA"));
 				connection.execute("sudo service tomcat7 stop");
 				connection.execute("pkill -f \"java\"");
 
 				// start tomcat again
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Starting Tomcat again."));
 				connection.execute("sudo service tomcat7 start");
 
-				System.out.println("Waiting...");
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for Tomcat to be started."));
 				Thread.sleep(wait);
 
 				// start opentosca again
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Start OpenTOSCA again."));
 				connection.execute("sudo wget -qO- http://install.opentosca.de/start | sh");
 
-				System.out.println("Waiting...");
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for OpenTOSCA to be started."));
 				Thread.sleep(wait);
 
 				// bug fix end
