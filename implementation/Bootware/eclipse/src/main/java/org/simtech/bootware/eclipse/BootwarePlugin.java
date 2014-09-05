@@ -46,6 +46,7 @@ import org.simtech.bootware.core.InformationListWrapper;
 import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
+import org.simtech.bootware.core.exceptions.ShutdownException;
 
 //import fragmentorcp.FragmentoPlugIn;
 //import fragmentorcppresenter.presenter.Presenter;
@@ -70,6 +71,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
 	private Boolean stopShutdownTrigger = false;
+	private Process localBootwareProcess;
 	private Thread localBootwareThread;
 	private Thread shutdownTriggerThread;
 	private CountDownLatch shutdownTriggerLatch;
@@ -102,10 +104,10 @@ public class BootwarePlugin implements IBootwarePlugin {
 		BufferedWriter processWriter = null;
 		try {
 			// Start local bootware.
-			final Process process = processBuilder.start();
+			localBootwareProcess = processBuilder.start();
 
-			final OutputStream processOutput = process.getOutputStream();
-			final InputStream processInput = process.getInputStream();
+			final OutputStream processOutput = localBootwareProcess.getOutputStream();
+			final InputStream processInput = localBootwareProcess.getInputStream();
 			processReader = new BufferedReader(new InputStreamReader(processInput));
 			processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
 			String line;
@@ -276,6 +278,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 	/**
 	 * Executes the bootstrapping process.
 	 */
+	@SuppressWarnings("checkstyle:npathcomplexity")
 	public final void execute() {
 
 		if (localBootwareThread != null && localBootwareThread.isAlive()) {
@@ -306,12 +309,13 @@ public class BootwarePlugin implements IBootwarePlugin {
 		//final Map<String, String> informationList;
 
 		// Deploy the middleware.
+		LocalBootwareService localBootware = null;
 		try {
 			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
 			// Create local bootware service.
 			out.println("Connecting to local bootware.");
-			final LocalBootwareService localBootware = new LocalBootwareService(localBootwareURL);
+			localBootware = new LocalBootwareService(localBootwareURL);
 			out.println("Local bootware started at " + localBootwareURL + ".");
 
 			// Send default configuration to local bootware.
@@ -323,17 +327,52 @@ public class BootwarePlugin implements IBootwarePlugin {
 			// Unwrap response
 			//informationList = informationListWrapper.getInformationList();
 		}
+		// Shutdown local bootware if something didn't work.
 		catch (MalformedURLException e) {
 			out.println("Local bootware URL is malformed: " + e.getMessage());
+			localBootwareProcess.destroy();
+			try {
+				localBootwareThread.join();
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+			return;
 		}
 		catch (WebServiceException e) {
 			out.println("Connecting to local bootware failed: " + e.getMessage());
+			localBootwareProcess.destroy();
+			try {
+				localBootwareThread.join();
+			}
+			catch (InterruptedException ex) {
+				Thread.currentThread().interrupt();
+			}
+			return;
 		}
 		catch (SetConfigurationException e) {
 			out.println("Could not set default configuration: " + e.getMessage());
+			try {
+				if (localBootware != null) {
+					localBootware.shutdown();
+				}
+			}
+			catch (ShutdownException ex) {
+				out.println("Shutting down bootware failed: " + ex.getMessage());
+			}
+			return;
 		}
 		catch (DeployException e) {
 			out.println("Deploy request failed: " + e.getMessage());
+			try {
+				if (localBootware != null) {
+					localBootware.shutdown();
+				}
+			}
+			catch (ShutdownException ex) {
+				out.println("Shutting down bootware failed: " + ex.getMessage());
+			}
+			return;
 		}
 
 		final Map<String, String> informationList = new HashMap<String, String>();
