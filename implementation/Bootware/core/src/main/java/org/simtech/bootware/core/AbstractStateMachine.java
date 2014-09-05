@@ -172,8 +172,15 @@ public abstract class AbstractStateMachine {
 				properties.load(propFile);
 
 				// Initialize some objects.
-				instanceStore = new InstanceStore();
 				eventBus      = new EventBus();
+
+				// Subscribe backup event handler to even bus. It will print out events
+				// that have no subscriber. This is mainly useful for when no event
+				// plugins are loaded yet and for debugging.
+				final BackupEventHandler backupEventHandler = new BackupEventHandler();
+				eventBus.subscribe(backupEventHandler);
+
+				instanceStore = new InstanceStore();
 				pluginManager = new PluginManager(eventBus, properties.getProperty("repositoryURL"));
 				contextMapper = new ContextMapper(eventBus, properties.getProperty("repositoryURL"));
 
