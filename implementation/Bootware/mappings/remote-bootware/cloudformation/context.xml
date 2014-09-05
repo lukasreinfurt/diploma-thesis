@@ -3,8 +3,6 @@
 	<resourcePlugin>aws-ec2-1.0.0.jar</resourcePlugin>
 	<communicationPlugin>ssh-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>remote-bootware-1.0.0.jar</applicationPlugin>
-	<callApplicationPlugin>cloudformation-1.0.0.jar</callApplicationPlugin>
-	<servicePackageReference></servicePackageReference>
 	<configurationList>
 		<entry>
 			<key>aws-ec2</key>
