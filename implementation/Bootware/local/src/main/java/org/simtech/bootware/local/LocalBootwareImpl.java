@@ -91,6 +91,21 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 	}
 
 	/**
+	 * Implements the isReady operation specified in @see org.simtech.bootware.core.Bootware
+	 */
+	@Override
+	public final Boolean isReady() {
+
+		logRequestStart("Received request: isReady");
+
+		final String currentState = (String) stateMachine.getCurrentState();
+
+		logRequestEnd("Finished processing request: isReady");
+
+		return SMStates.WAIT.equals(currentState);
+	}
+
+	/**
 	 * Implements the deploy operation specified in @see org.simtech.bootware.core.Bootware
 	 */
 	@Override
@@ -134,6 +149,24 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 				eventBus.publish(new CoreEvent(Severity.ERROR, "Connecting to remote bootware failed: " + e.getMessage()));
 				throw new DeployException(e);
 			}
+
+			// Wait for remote bootware to be ready.
+			eventBus.publish(new CoreEvent(Severity.INFO, "Wait for remote bootware to be ready."));
+			final Integer max = 10;
+			final Integer wait = 5000;
+			for (Integer i = 0; i <= max; i++) {
+				if (remoteBootware.isReady()) {
+					break;
+				}
+				eventBus.publish(new CoreEvent(Severity.INFO, "Remote bootware is not ready yet."));
+				try {
+					Thread.sleep(wait);
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			eventBus.publish(new CoreEvent(Severity.INFO, "Remote bootware is ready."));
 
 			// set default configuration at remote bootware
 			try {

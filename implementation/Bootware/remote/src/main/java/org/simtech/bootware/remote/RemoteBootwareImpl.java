@@ -96,6 +96,21 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	}
 
 	/**
+	 * Implements the isReady operation specified in @see org.simtech.bootware.core.Bootware
+	 */
+	@Override
+	public final Boolean isReady() {
+
+		logRequestStart("Received request: isReady");
+
+		final String currentState = (String) stateMachine.getCurrentState();
+
+		logRequestEnd("Finished processing request: isReady");
+
+		return SMStates.WAIT.equals(currentState);
+	}
+
+	/**
 	 * Implements the deploy operation specified in @see org.simtech.bootware.core.Bootware
 	 */
 	@Override

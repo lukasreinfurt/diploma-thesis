@@ -28,7 +28,6 @@ public class TriggerBootwareShutdownHandler extends AbstractHandler {
 		dialog.setMessage("Triggering the bootware shutdown operation will undeploy"
 				+ "all active process models, services, the SimTech SWfMS, and the bootware."
 				+ "\nAre you sure you want to do this?");
-
 		return dialog.open();
 	}
 
@@ -42,31 +41,50 @@ public class TriggerBootwareShutdownHandler extends AbstractHandler {
 			// Trigger shutdown operation.
 			localBootware.shutdown();
 
-			MessageDialog.openInformation(
-					Display.getDefault().getActiveShell(),
-					"Bootware Shutdown Successful",
-					"The bootware shutdown process was successful.");
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+							"Bootware Shutdown Successful",
+							"The bootware shutdown process was successful.");
+				}
+			});
 
 		}
 		catch (MalformedURLException e) {
-			MessageDialog.openInformation(
-					Display.getDefault().getActiveShell(),
-					"Bootware Shutdown Error",
-					"There was an error during the bootware shutdown process: " + e.getMessage());
+			final String message = e.getMessage();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+							"Bootware Shutdown Error",
+							"There was an error during the bootware shutdown process: " + message);
+				}
+			});
 		}
 		catch (WebServiceException e) {
-			MessageDialog.openInformation(
-					Display.getDefault().getActiveShell(),
-					"Bootware Shutdown Error",
-					"There was an error during the bootware shutdown process: " + e.getMessage());
+			final String message = e.getMessage();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+							"Bootware Shutdown Error",
+							"There was an error during the bootware shutdown process: " + message);
+				}
+			});
 		}
 		catch (ShutdownException e) {
-			MessageDialog.openInformation(
-					Display.getDefault().getActiveShell(),
-					"Bootware Shutdown Error",
-					"There was an error during the bootware shutdown process."
-					+ "\n\nYou should manually check if there are any resources left running!"
-					+ "\n\nMore details: " + e.getMessage());
+			final String message = e.getMessage();
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openInformation(
+							Display.getDefault().getActiveShell(),
+							"Bootware Shutdown Error",
+							"There was an error during the bootware shutdown process."
+							+ "\n\nYou should manually check if there are any resources left running!"
+							+ "\n\nMore details: " + message);
+				}
+			});
 		}
 	}
 
@@ -79,7 +97,12 @@ public class TriggerBootwareShutdownHandler extends AbstractHandler {
 		// User confirmed. Shut down the bootware.
 		final Integer ok = 32;
 		if (returnCode == ok) {
-			triggerShutdown();
+			final Thread t = new Thread(new Runnable() {
+				public void run() {
+					triggerShutdown();
+				}
+			});
+			t.start();
 		}
 
 		return null;

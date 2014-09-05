@@ -14,8 +14,10 @@ import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.remote.DeployResponse;
+import org.simtech.bootware.remote.IsReadyResponse;
 import org.simtech.bootware.remote.SetConfigurationResponse;
 import org.simtech.bootware.remote.ShutdownResponse;
+
 
 import async.client.RemoteBootware;
 
@@ -48,6 +50,31 @@ public class RemoteBootwareService {
 	 */
 	public final Boolean isAvailable() {
 		return available;
+	}
+
+	/**
+	 * Calls the isReady operation of the remote bootware.
+	 * <p>
+	 * This implementation uses asynchronous polling for the call.
+	 */
+	public final Boolean isReady() {
+		try {
+			final Response<IsReadyResponse> response = remoteBootware.isReadyAsync();
+
+			while (!response.isDone()) {
+				final Integer time = 1000;
+				Thread.sleep(time);
+			}
+
+			return response.get().isReturn();
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		}
+		catch (ExecutionException e) {
+			return false;
+		}
 	}
 
 	/**

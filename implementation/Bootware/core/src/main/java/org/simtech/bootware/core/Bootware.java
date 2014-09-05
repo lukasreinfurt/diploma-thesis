@@ -16,6 +16,13 @@ import org.simtech.bootware.core.exceptions.UndeployException;
 public interface Bootware {
 
 	/**
+	 * Checks if the bootware is ready.
+	 *
+	 * @return A boolean indicating if the bootware is ready.
+	 */
+	@WebMethod Boolean isReady();
+
+	/**
 	 * Deploys an application on a specific resource.
 	 *
 	 * @param userContext Describes the application and the resource that should be provisioned.

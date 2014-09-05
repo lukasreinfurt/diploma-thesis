@@ -14,6 +14,7 @@ import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
 import org.simtech.bootware.local.DeployResponse;
+import org.simtech.bootware.local.IsReadyResponse;
 import org.simtech.bootware.local.SetConfigurationResponse;
 import org.simtech.bootware.local.ShutdownResponse;
 
@@ -48,6 +49,31 @@ public class LocalBootwareService {
 	 */
 	public final Boolean isAvailable() {
 		return available;
+	}
+
+	/**
+	 * Calls the isReady operation of the local bootware.
+	 * <p>
+	 * This implementation uses asynchronous polling for the call.
+	 */
+	public final Boolean isReady() {
+		try {
+			final Response<IsReadyResponse> response = localBootware.isReadyAsync();
+
+			while (!response.isDone()) {
+				final Integer time = 1000;
+				Thread.sleep(time);
+			}
+
+			return response.get().isReturn();
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return false;
+		}
+		catch (ExecutionException e) {
+			return false;
+		}
 	}
 
 	/**

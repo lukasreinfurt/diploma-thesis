@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CountDownLatch;
@@ -166,7 +165,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			//odeStore.setValue("pref_ode_version", "ODE_Version_134");
 
 			// Fragmento settings
-			out.println(configuration.getString("fragmentoUrl"));
+			//out.println(configuration.getString("fragmentoUrl"));
 			//final Presenter presenter = FragmentoPlugIn.getDefault().getPresenter();
 			//presenter.getOperator().getFragmento().setServiceURI("Blub");
 
@@ -191,6 +190,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			final MessageListener listener = new MessageListener() {
 
 				private Integer activeProcesses = 0;
+				private Integer returnCode = 0;
 
 				public void onMessage(final Message message) {
 
@@ -223,27 +223,25 @@ public class BootwarePlugin implements IBootwarePlugin {
 						if (activeProcesses == 0) {
 							out.println("No active processes left. Triggering bootware shutdown...");
 
-							Display.getDefault().asyncExec(new Runnable() {
+							final TriggerBootwareShutdownHandler shutdownHandler = new TriggerBootwareShutdownHandler();
 
+							// Ask for user confirmation.
+							Display.getDefault().syncExec(new Runnable() {
 								public void run() {
-									final TriggerBootwareShutdownHandler shutdownHandler = new TriggerBootwareShutdownHandler();
-
-									// Ask for user confirmation.
-									final Integer returnCode = shutdownHandler.askForConfirmation();
-
-									// User confirmed. Shut down the bootware.
-									final Integer ok = 32;
-									if (returnCode == ok) {
-										stopShutdownTrigger = true;
-										out.println("Bootware shutdown has been triggered.");
-										shutdownHandler.triggerShutdown();
-									}
-									else {
-										out.println("User canceled bootware shutdown.");
-									}
+									returnCode = shutdownHandler.askForConfirmation();
 								}
-
 							});
+
+							// User confirmed. Shut down the bootware.
+							final Integer ok = 32;
+							if (returnCode == ok) {
+								stopShutdownTrigger = true;
+								out.println("Bootware shutdown has been triggered.");
+								shutdownHandler.triggerShutdown();
+							}
+							else {
+								out.println("User canceled bootware shutdown.");
+							}
 
 						}
 					}
@@ -278,7 +276,11 @@ public class BootwarePlugin implements IBootwarePlugin {
 	/**
 	 * Executes the bootstrapping process.
 	 */
-	@SuppressWarnings("checkstyle:npathcomplexity")
+	@SuppressWarnings({
+		"checkstyle:npathcomplexity",
+		"checkstyle:executablestatementcount",
+		"checkstyle:methodlength"
+	})
 	public final void execute() {
 
 		if (localBootwareThread != null && localBootwareThread.isAlive()) {
@@ -297,6 +299,15 @@ public class BootwarePlugin implements IBootwarePlugin {
 		});
 		localBootwareThread.start();
 
+		// out.println("Give local bootware some time to start.");
+		// try {
+		// 	final Integer wait = 10000;
+		// 	Thread.sleep(wait);
+		// }
+		// catch (InterruptedException e) {
+		// 	Thread.currentThread().interrupt();
+		// }
+
 		// Load user context and default configuration.
 		try {
 			context = Util.loadXML(UserContext.class, "plugins/bootware/context.xml");
@@ -306,7 +317,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			out.println("There was an error while loading an XML file: " + e.getMessage());
 		}
 
-		//final Map<String, String> informationList;
+		final Map<String, String> informationList;
 
 		// Deploy the middleware.
 		LocalBootwareService localBootware = null;
@@ -318,6 +329,24 @@ public class BootwarePlugin implements IBootwarePlugin {
 			localBootware = new LocalBootwareService(localBootwareURL);
 			out.println("Local bootware started at " + localBootwareURL + ".");
 
+			// Wait for local bootware to be ready.
+			out.println("Wait for local bootware to be ready.");
+			final Integer max = 10;
+			final Integer wait = 5000;
+			for (Integer i = 0; i <= max; i++) {
+				if (localBootware.isReady()) {
+					break;
+				}
+				out.println("Local bootware is not ready yet.");
+				try {
+					Thread.sleep(wait);
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			out.println("Local bootware is ready.");
+
 			// Send default configuration to local bootware.
 			localBootware.setConfiguration(defaultConfiguration);
 
@@ -325,7 +354,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 			final InformationListWrapper informationListWrapper = localBootware.deploy(context);
 
 			// Unwrap response
-			//informationList = informationListWrapper.getInformationList();
+			informationList = informationListWrapper.getInformationList();
 		}
 		// Shutdown local bootware if something didn't work.
 		catch (MalformedURLException e) {
@@ -373,18 +402,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 				out.println("Shutting down bootware failed: " + ex.getMessage());
 			}
 			return;
-		}
-
-		final Map<String, String> informationList = new HashMap<String, String>();
-		informationList.put("odeServerUrl", "http://localhost:8080/ode");
-		informationList.put("activeMQUrl", "tcp://localhost:61616");
-		informationList.put("fragmentoUrl", "fragmento");
-		for (Map.Entry<String, String> entry : informationList.entrySet()) {
-			out.println(entry.getKey() + ": " + entry.getValue());
-		}
-
-		if (informationList == null) {
-			out.println("fail");
 		}
 
 		// Set the SimTech preferences from the response.
