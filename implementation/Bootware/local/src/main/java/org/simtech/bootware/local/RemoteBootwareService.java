@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service;
+import javax.xml.ws.WebServiceException;
 
 import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
@@ -26,6 +27,8 @@ import async.client.RemoteBootware;
  */
 public class RemoteBootwareService {
 
+	private final Integer maxRetries = 30;
+	private final Integer waitBetweenRetries = 5000;
 	private URL url;
 	private Boolean available = false;
 	private RemoteBootware remoteBootware;
@@ -38,9 +41,26 @@ public class RemoteBootwareService {
 	public RemoteBootwareService(final URL url) {
 		this.url = url;
 		final QName qname = new QName("http://remote.bootware.simtech.org/", "RemoteBootwareImplService");
-		final Service service = Service.create(url, qname);
-		remoteBootware = service.getPort(RemoteBootware.class);
-		available = true;
+
+		// Retry a few times. Sometimes the web service isn't reachable yet.
+		for (int retries = 1; retries <= maxRetries; retries++) {
+			try {
+				Thread.sleep(waitBetweenRetries);
+				final Service service = Service.create(url, qname);
+				remoteBootware = service.getPort(RemoteBootware.class);
+				available = true;
+				break;
+			}
+			catch (WebServiceException e) {
+				if (retries == maxRetries) {
+					throw e;
+				}
+				continue;
+			}
+			catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
 	}
 
 	/**
