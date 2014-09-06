@@ -33,11 +33,14 @@ import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Deployed;
 import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Undeployed;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import org.simtech.bootware.core.ConfigurationListWrapper;
@@ -299,15 +302,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 		});
 		localBootwareThread.start();
 
-		// out.println("Give local bootware some time to start.");
-		// try {
-		// 	final Integer wait = 10000;
-		// 	Thread.sleep(wait);
-		// }
-		// catch (InterruptedException e) {
-		// 	Thread.currentThread().interrupt();
-		// }
-
 		// Load user context and default configuration.
 		try {
 			context = Util.loadXML(UserContext.class, "plugins/bootware/context.xml");
@@ -406,6 +400,21 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		// Set the SimTech preferences from the response.
 		setSimTechPreferences(informationList);
+
+		// Restart ActiveMQ connection by executing the already existing restart command.
+		out.println("Restarting ActiveMQ connection");
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				try {
+					final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
+					handlerService.executeCommand("org.eclipse.bpel.ui.restartActiveMQ", null);
+				}
+				catch (CommandException e) {
+					out.println(e.getMessage());
+					out.println("Restarting ActiveMQ connection failed. Please restart it manually using the command in the SimTech menu.");
+				}
+			}
+		});
 
 		// Initialize the shutdown trigger in new thread so that we don't block
 		// further execution.
