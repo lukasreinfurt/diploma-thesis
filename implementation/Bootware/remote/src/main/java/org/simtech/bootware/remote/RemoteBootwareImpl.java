@@ -124,6 +124,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		if (instanceStore.get(context) != null) {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Returning information of already active instance."));
 			informationList.setInformationList(instanceStore.get(context).getInstanceInformation());
+			logRequestEnd("Finished processing request: deploy");
 			return informationList;
 		}
 
