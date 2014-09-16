@@ -33,15 +33,9 @@ import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Deployed;
 import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Undeployed;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
-import org.eclipse.core.commands.common.CommandException;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import org.simtech.bootware.core.ConfigurationListWrapper;
 import org.simtech.bootware.core.InformationListWrapper;
@@ -49,9 +43,6 @@ import org.simtech.bootware.core.UserContext;
 import org.simtech.bootware.core.exceptions.DeployException;
 import org.simtech.bootware.core.exceptions.SetConfigurationException;
 import org.simtech.bootware.core.exceptions.ShutdownException;
-
-//import fragmentorcp.FragmentoPlugIn;
-//import fragmentorcppresenter.presenter.Presenter;
 
 /**
  * Starts the bootstrapping process.
@@ -139,43 +130,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 		stopShutdownTrigger = true;
 		out.println("Local bootware stopped.");
-	}
-
-	/**
-	 * Sets the SimTech preferences to the values provided in the given map.
-	 *
-	 * @param preferences A map of strings with the preference values.
-	 */
-	private void setSimTechPreferences(final Map<String, String> preferences) {
-
-		out.println("Setting SimTech preferences.");
-		final MapConfiguration configuration = new MapConfiguration(preferences);
-		configuration.setThrowExceptionOnMissing(true);
-
-		try {
-			// SimTech settings
-			final IPreferenceStore simTechStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.bpel.ui");
-
-			simTechStore.setValue("ACTIVE_MQ_URL", configuration.getString("activeMQUrl"));
-			//simTechStore.setValue("SEND_REQUESTS", true);
-			//simTechStore.setValue("USE_EXT_ITERATION", false);
-			//simTechStore.setValue("INSTANCE_WAITING_TIME", "200");
-
-			// ODE settings
-			final IPreferenceStore odeStore = new ScopedPreferenceStore(new InstanceScope(), "org.eclipse.apache.ode.processManagement");
-
-			odeStore.setValue("pref_ode_url", configuration.getString("odeServerUrl"));
-			//odeStore.setValue("pref_ode_version", "ODE_Version_134");
-
-			// Fragmento settings
-			//out.println(configuration.getString("fragmentoUrl"));
-			//final Presenter presenter = FragmentoPlugIn.getDefault().getPresenter();
-			//presenter.getOperator().getFragmento().setServiceURI("Blub");
-
-		}
-		catch (NoSuchElementException e) {
-			out.println("There was an error while setting the SimTech preferences: " + e.getMessage());
-		}
 	}
 
 	private void initializeShutdownTrigger(final String activeMQUrl) {
@@ -285,7 +239,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 		"checkstyle:methodlength"
 	})
 	public final void execute() {
-
 		if (localBootwareThread != null && localBootwareThread.isAlive()) {
 			out.println("Local bootware is already running. Skipping bootstrapping.");
 			return;
@@ -399,22 +352,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 
 		// Set the SimTech preferences from the response.
-		setSimTechPreferences(informationList);
-
-		// Restart ActiveMQ connection by executing the already existing restart command.
-		out.println("Restarting ActiveMQ connection");
-		Display.getDefault().syncExec(new Runnable() {
-			public void run() {
-				try {
-					final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-					handlerService.executeCommand("org.eclipse.bpel.ui.restartActiveMQ", null);
-				}
-				catch (CommandException e) {
-					out.println(e.getMessage());
-					out.println("Restarting ActiveMQ connection failed. Please restart it manually using the command in the SimTech menu.");
-				}
-			}
-		});
+		SimTechPreferences.update(informationList);
 
 		// Initialize the shutdown trigger in new thread so that we don't block
 		// further execution.
