@@ -75,7 +75,10 @@ public class RestServer {
 
 		// Load and return mapping file if it exists
 		try {
-			return new Scanner(mappingFile).useDelimiter("\\Z").next();
+			final Scanner scanner = new Scanner(mappingFile);
+			final String response = scanner.useDelimiter("\\Z").next();
+			scanner.close();
+			return response;
 		}
 		catch (FileNotFoundException e) {
 			System.out.println("Mapping not found. Returning 404.");
