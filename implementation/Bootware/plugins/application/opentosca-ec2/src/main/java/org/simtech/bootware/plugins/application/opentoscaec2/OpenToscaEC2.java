@@ -81,16 +81,14 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Updating apt-get. This can take a while."));
 				connection.execute("sudo apt-get update &> /tmp/install.log");
 
-				// regular installation
+				// run regular installation
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Executing OpenTOSCA install script. This can take a while."));
-				connection.execute("curl install.opentosca.de/installEC2|sh &> /tmp/install.log");
+				connection.execute("wget -qO- http://install.opentosca.org/installEC2 | sh &> /tmp/install.log");
 
+				// wait a bit
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for OpenTOSCA to be started."));
-				final Integer wait = 120000;
+				final Integer wait = 60000;
 				Thread.sleep(wait);
-
-				// bug fix start
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Applying bugfix."));
 
 				// create properties file with the actual ip address
 				final Properties properties = new Properties();
@@ -106,36 +104,6 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// upload properties
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
-
-				// No longer necessary
-				// delete old jar and upload replacement jar
-				// final String jarName = "org.opentosca.siengine.service.impl_1.0.0.201407231442.jar";
-				// final InputStream is1 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
-				// final InputStream is2 = OpenTosca.class.getResourceAsStream("/bugfix/" + jarName);
-				// connection.upload(is1, getSize(is2), "/tmp/" + jarName);
-				// connection.execute("sudo rm ~/OpenTOSCA/lib/org.opentosca.siengine.service.impl_1.0.0.201311221533.jar");
-				// connection.execute("sudo cp /tmp/" + jarName + " ~/OpenTOSCA/lib/" + jarName);
-
-				// stop tomcat and opentosca
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Stopping Tomcat and OpenTOSCA"));
-				connection.execute("sudo service tomcat7 stop");
-				connection.execute("pkill -f \"java\"");
-
-				// start tomcat again
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Starting Tomcat again."));
-				connection.execute("sudo service tomcat7 start");
-
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for Tomcat to be started."));
-				Thread.sleep(wait);
-
-				// start opentosca again
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Start OpenTOSCA again."));
-				connection.execute("sudo wget -qO- http://install.opentosca.de/start | sh");
-
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for OpenTOSCA to be started."));
-				Thread.sleep(wait);
-
-				// bug fix end
 			}
 			catch (IOException e) {
 				throw new ProvisionApplicationException(e);
@@ -154,7 +122,7 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 			}
 		}
 		else {
-			throw new ProvisionApplicationException("Connection is null.");
+			throw new ProvisionApplicationException("Connection was null.");
 		}
 	}
 
@@ -180,7 +148,7 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 			}
 		}
 		else {
-			throw new StartApplicationException("Connection null.");
+			throw new StartApplicationException("Connection was null.");
 		}
 	}
 
