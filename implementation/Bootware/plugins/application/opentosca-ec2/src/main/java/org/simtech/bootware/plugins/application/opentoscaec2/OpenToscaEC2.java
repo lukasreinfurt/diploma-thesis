@@ -85,11 +85,6 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Executing OpenTOSCA install script. This can take a while."));
 				connection.execute("wget -qO- http://install.opentosca.org/installEC2 | sh &> /tmp/install.log");
 
-				// wait a bit
-				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Wait for OpenTOSCA to be started."));
-				final Integer wait = 60000;
-				Thread.sleep(wait);
-
 				// create properties file with the actual ip address
 				final Properties properties = new Properties();
 				properties.setProperty("containerapi.instancedata.epr", "http://" + connection.getURL() + ":1337/containerapi/instancedata");
@@ -104,6 +99,17 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// upload properties
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
+
+				// wait a bit
+				// When the install script above is finished it still takes about two
+				// minutes for WSO to start up. If a CSAR is uploaded before that's done
+				// it will not be deployed correctly and instantiation will fail.
+				// Waiting for everything to be started should be done in a cleaner way
+				// in the future.
+				final Integer msInS = 1000;
+				final Integer wait = 180000;
+				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Waiting " + wait / msInS + " seconds for OpenTOSCA to be started."));
+				Thread.sleep(wait);
 			}
 			catch (IOException e) {
 				throw new ProvisionApplicationException(e);
