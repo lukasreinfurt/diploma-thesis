@@ -239,6 +239,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		"checkstyle:methodlength"
 	})
 	public final void execute() {
+
 		if (localBootwareThread != null && localBootwareThread.isAlive()) {
 			out.println("Local bootware is already running. Skipping bootstrapping.");
 			return;
