@@ -79,7 +79,7 @@ public class OpenTOSCAInstanceDataAccess {
 
 		if(!StringUtils.isEmpty(callbackURI)){
 			logger.info("Start Polling...");
-			while((response=doGet(callbackURI)).equals("NO-CALLBACK-RECEIVED-YET")){
+			while((response=doGet(callbackURI)).equals("{\"NO-CALLBACK-RECEIVED-YET\":true}")){
 				logger.info("NO-CALLBACK-RECEIVED-YET");
 				try {
 					Thread.sleep(10000);
@@ -90,7 +90,7 @@ public class OpenTOSCAInstanceDataAccess {
 			}
 		}
 		logger.info("Build plan Response of CSAR file '"+csarName+"' is: "+ response);
-	    return response;
+		return response;
 	}
 
 	private String getVinothekRequestURL(String csarName){
@@ -120,6 +120,8 @@ public class OpenTOSCAInstanceDataAccess {
 		GetMethod method = new GetMethod(url);
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 				new DefaultHttpMethodRetryHandler(3, false));
+		// We want XML! In some cases, the OpenTOSCA API may otherwise return e.g. binary data (e.g. when GETting a certain CSAR).
+		method.setRequestHeader("Accept", "text/xml");
 		String responseBody = "";
 		try {
 			int statusCode = client.executeMethod(method);
