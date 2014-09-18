@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONObject;
+
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
@@ -90,29 +92,32 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Instantiate " + csarName));
 		final String instantiateResponse = client.instanitateCSAR(csarName);
 
-		if (instantiateResponse != null) {
+		// parse JSON response to get application URL
+		final JSONObject obj = new JSONObject(instantiateResponse);
+		final String applicationUrl = obj.getString("applicationUrl");
+
+		if (applicationUrl != null) {
 
 			// get properties
-			final String id = instantiateResponse.substring(instantiateResponse.lastIndexOf("/") + 1);
+			final String id = applicationUrl.substring(applicationUrl.lastIndexOf("/") + 1);
 			final URI propertiesURI = URI.create("http://" + endpoint + ":1337/containerapi/instancedata/nodeInstances/" + id);
-
-			System.out.println(propertiesURI.toString());
-
 			final Document properties = client.getProperties(propertiesURI);
 
+			// get some values from properties
 			final String odePort = getProperty(properties, "odePort");
 			final String odeUrl = getProperty(properties, "odeUrl");
 			final String activeMQPort = getProperty(properties, "activeMQPort");
 			final String fragmentoPort = getProperty(properties, "fragmentoPort");
 			final String fragmentoServiceUrl = getProperty(properties, "fragmentoServiceUrl");
 
+			// get some other properties
 			final String installedOnNodeInstanceID = getProperty(properties, "installedOnNodeInstanceID");
 			final String id2 = installedOnNodeInstanceID.substring(installedOnNodeInstanceID.lastIndexOf("/") + 1);
 			final URI propertiesURI2 = URI.create("http://" + endpoint + ":1337/containerapi/instancedata/nodeInstances/" + id2);
-
 			final Document properties2 = client.getProperties(propertiesURI2);
 
-			final String ipaddress = getProperty(properties, "ipaddress");
+			// get IP address from other properties
+			final String ipaddress = getProperty(properties2, "publicDNS");
 
 			// build response
 			final String odeServerUrl = "http://" + ipaddress + ":" + odePort + "/" + odeUrl;
@@ -138,9 +143,10 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
 	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
-		System.out.println("Deprovision OpenTOSCA");
-		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
-		System.out.println("Service package reference: " + servicePackageReference);
+		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Deprovisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
+
+		// Call termination plan with OpenTOSCA client. This is not yet implemented.
+		eventBus.publish(new ProvisionPluginEvent(Severity.WARNING, "Termination plan not yet implemented. Resources have to be removed by hand!"));
 	}
 
 }
