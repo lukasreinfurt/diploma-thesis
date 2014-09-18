@@ -49,7 +49,16 @@ public class ZeroMQPublisher extends AbstractBasePlugin implements EventPlugin {
 	 */
 	@Handler
 	public final void handle(final BaseEvent event) {
-		publisher.send("[" + event.getSeverity() + "] " + event.getMessage(), ZMQ.NOBLOCK);
+
+		// Shorten severity to 4 characters.
+		final String severity = event.getSeverity().toString();
+		String shortSeverity = severity;
+		final Integer maxLenght = 4;
+		if (severity != null && severity.length() >= maxLenght) {
+			shortSeverity = severity.substring(0, maxLenght);
+		}
+
+		publisher.send("[" + shortSeverity + "] " + event.getMessage(), ZMQ.NOBLOCK);
 	}
 
 	/**
