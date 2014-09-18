@@ -76,12 +76,17 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		}
 
 		// upload csar
+		// In the future there should be a check here if the upload/deployment of
+		// the csar was successful.
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Uploading " + csarName));
 		final String uploadResponse = client.uploadCSARDueURL(csarPath);
 
-		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Waiting for " + csarName + " to be deployed."));
+		// wait a bit so that the csar is deployed
+		// There should be a better way to do this.
 		try {
-			final Integer wait = 30000;
+			final Integer msInS = 1000;
+			final Integer wait = 60000;
+			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Waiting " + wait / msInS + " seconds for " + csarName + " to be deployed."));
 			Thread.sleep(wait);
 		}
 		catch (InterruptedException e) {
@@ -89,6 +94,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		}
 
 		// instantiate csar
+		// There should probably be a check here if the instantiation was successful.
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Instantiate " + csarName));
 		final String instantiateResponse = client.instanitateCSAR(csarName);
 
