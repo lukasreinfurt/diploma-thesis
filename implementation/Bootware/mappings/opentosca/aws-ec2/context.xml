@@ -20,11 +20,11 @@
 					</entry>
 					<entry>
 						<key>imageId</key>
-						<value>ami-25865252</value>
+						<value>ami-88f129ff</value>
 					</entry>
 					<entry>
 						<key>instanceType</key>
-						<value>m1.medium</value>
+						<value>m3.medium</value>
 					</entry>
 				</configuration>
 			</value>
