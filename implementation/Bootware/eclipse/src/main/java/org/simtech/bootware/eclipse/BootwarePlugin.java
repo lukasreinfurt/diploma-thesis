@@ -29,13 +29,6 @@ import org.simtech.bootware.core.exceptions.ShutdownException;
  * local bootware as well as the SimTech SWfMS. It uses the response of the
  * SimTech SWfMS deployment to set the SimTech properties in the Modeler.
  */
-@SuppressWarnings({
-	"checkstyle:anoninnerlength",
-	"checkstyle:classfanoutcomplexity",
-	"checkstyle:javancss",
-	"checkstyle:cyclomaticcomplexity",
-	"checkstyle:classdataabstractioncoupling"
-})
 public class BootwarePlugin implements IBootwarePlugin {
 
 	private MessageConsoleStream out;
@@ -44,7 +37,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private Thread localBootwareThread;
 	private LocalBootwareService localBootware;
 	private Thread shutdownTriggerThread;
-	private CountDownLatch shutdownTriggerLatch;
 
 	/**
 	 * Creates the bootware plugin.
@@ -53,6 +45,48 @@ public class BootwarePlugin implements IBootwarePlugin {
 		final MessageConsole console = Util.findConsole("Bootware");
 		out = console.newMessageStream();
 		out.println("Bootware Plugin has been started.");
+	}
+
+	/**
+	 * Loads the user context from an XML file.
+	 */
+	private void loadUserContext() {
+		try {
+			final String userContextFile = "plugins/bootware/context.xml";
+			out.println("Loading user context from " + userContextFile);
+			context = Util.loadXML(UserContext.class, userContextFile);
+		}
+		catch (JAXBException e) {
+			out.println("There was an error while loading an the user context file: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Loads the default configuration from an XML file.
+	 */
+	private void loadDefaultConfiguration() {
+		try {
+			final String defaultConfigurationFile = "plugins/bootware/defaultConfiguration.xml";
+			out.println("Loading default configuration from " + defaultConfigurationFile);
+			defaultConfiguration = Util.loadXML(ConfigurationListWrapper.class, defaultConfigurationFile);
+		}
+		catch (JAXBException e) {
+			out.println("There was an error while loading an the default configuration file: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Starts the local bootware in a new thread so that we don't block further execution.
+	 */
+	private void startBootware() {
+		localBootwareThread = new Thread(new Runnable() {
+
+			public void run() {
+				LocalBootwareProcess.start();
+			}
+
+		});
+		localBootwareThread.start();
 	}
 
 	/**
@@ -79,6 +113,44 @@ public class BootwarePlugin implements IBootwarePlugin {
 	}
 
 	/**
+	 * Starts the shutdown trigger in new thread so that we don't block further execution.
+	 */
+	private void startShutdownTrigger(final Map<String, String> informationList) {
+
+		// The latch is counted down when the shutdown trigger is ready.
+		final CountDownLatch shutdownTriggerLatch = new CountDownLatch(1);
+
+		// Start thread.
+		shutdownTriggerThread = new Thread(new Runnable() {
+
+			public void run() {
+				try {
+					// Get ActiveMQ URL from the informationList.
+					final MapConfiguration configuration = new MapConfiguration(informationList);
+					configuration.setThrowExceptionOnMissing(true);
+					final String activeMQUrl = configuration.getString("activeMQUrl");
+
+					// Start shutdown trigger.
+					ShutdownTrigger.start(activeMQUrl, shutdownTriggerLatch);
+				}
+				catch (NoSuchElementException e) {
+					out.println("There was an error while initializing the shutdown trigger: " + e.getMessage());
+				}
+			}
+
+		});
+		shutdownTriggerThread.start();
+
+		// Wait for shutdown trigger to be ready.
+		try {
+			shutdownTriggerLatch.await();
+		}
+		catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
 	 * Checks if the bootware is currently shutting down.
 	 */
 	public final Boolean isShuttingDown() {
@@ -88,11 +160,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 	/**
 	 * Executes the bootstrapping process.
 	 */
-	@SuppressWarnings({
-		"checkstyle:npathcomplexity",
-		"checkstyle:executablestatementcount",
-		"checkstyle:methodlength"
-	})
 	public final void execute() {
 
 		if (localBootwareThread != null && localBootwareThread.isAlive()) {
@@ -100,25 +167,9 @@ public class BootwarePlugin implements IBootwarePlugin {
 			return;
 		}
 
-		// Start local bootware process in new thread so that we don't block further
-		// execution.
-		localBootwareThread = new Thread(new Runnable() {
-
-			public void run() {
-				LocalBootwareProcess.start();
-			}
-
-		});
-		localBootwareThread.start();
-
-		// Load user context and default configuration.
-		try {
-			context = Util.loadXML(UserContext.class, "plugins/bootware/context.xml");
-			defaultConfiguration = Util.loadXML(ConfigurationListWrapper.class, "plugins/bootware/defaultConfiguration.xml");
-		}
-		catch (JAXBException e) {
-			out.println("There was an error while loading an XML file: " + e.getMessage());
-		}
+		loadUserContext();
+		loadDefaultConfiguration();
+		startBootware();
 
 		final Map<String, String> informationList;
 
@@ -183,35 +234,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		// Set the SimTech preferences from the response.
 		SimTechPreferences.update(informationList);
 
-		// Initialize the shutdown trigger in new thread so that we don't block
-		// further execution.
-		shutdownTriggerLatch = new CountDownLatch(1);
-		shutdownTriggerThread = new Thread(new Runnable() {
-
-			public void run() {
-
-				final MapConfiguration configuration = new MapConfiguration(informationList);
-				configuration.setThrowExceptionOnMissing(true);
-
-				try {
-					final String activeMQUrl = configuration.getString("activeMQUrl");
-					ShutdownTrigger.start(activeMQUrl, shutdownTriggerLatch);
-				}
-				catch (NoSuchElementException e) {
-					out.println("There was an error while initializing the shutdown trigger: " + e.getMessage());
-				}
-			}
-
-		});
-		shutdownTriggerThread.start();
-
-		// Wait for shutdown trigger to be ready.
-		try {
-			shutdownTriggerLatch.await();
-		}
-		catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
+		startShutdownTrigger(informationList);
 
 	}
 
