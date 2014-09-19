@@ -29,8 +29,8 @@ import javax.xml.ws.WebServiceException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.configuration.MapConfiguration;
-import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Deployed;
-import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Undeployed;
+import org.apache.ode.bpel.extensions.comm.messages.engineOut.Instance_Terminated;
+import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Instantiated;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
 import org.eclipse.swt.widgets.Display;
@@ -170,15 +170,15 @@ public class BootwarePlugin implements IBootwarePlugin {
 						return;
 					}
 
-					if (obj instanceof Process_Deployed) {
+					if (obj instanceof Process_Instantiated) {
 						activeProcesses = activeProcesses + 1;
-						out.println("Active processes: " + activeProcesses);
+						out.println("Active processes instances: " + activeProcesses);
 					}
-					if (obj instanceof Process_Undeployed) {
+					if (obj instanceof Instance_Terminated) {
 						activeProcesses = activeProcesses - 1;
-						out.println("Active processes: " + activeProcesses);
+						out.println("Active processes instances: " + activeProcesses);
 						if (activeProcesses == 0) {
-							out.println("No active processes left. Triggering bootware shutdown...");
+							out.println("No active processes instances left. Triggering bootware shutdown...");
 
 							final TriggerBootwareShutdownHandler shutdownHandler = new TriggerBootwareShutdownHandler();
 
