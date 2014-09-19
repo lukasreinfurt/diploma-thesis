@@ -100,6 +100,21 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
 
+				// Bugfix for termination plans
+
+				// delete old vinothek.war and upload replacement
+				connection.execute("sudo rm -rf /var/lib/tomcat7/webapps/vinothek.war");
+				// wait for undeployment
+				final Integer wait2 = 10000;
+				Thread.sleep(wait2);
+				final String fileName = "vinothek.war";
+				final InputStream is1 = OpenToscaEC2.class.getResourceAsStream("/bugfix/" + fileName);
+				final InputStream is2 = OpenToscaEC2.class.getResourceAsStream("/bugfix/" + fileName);
+				connection.upload(is1, getSize(is2), "/tmp/" + fileName);
+				connection.execute("sudo cp /tmp/" + fileName + " /var/lib/tomcat7/webapps/" + fileName);
+
+				// Bugfix end
+
 				// wait a bit
 				// When the install script above is finished it still takes about two
 				// minutes for WSO to start up. If a CSAR is uploaded before that's done

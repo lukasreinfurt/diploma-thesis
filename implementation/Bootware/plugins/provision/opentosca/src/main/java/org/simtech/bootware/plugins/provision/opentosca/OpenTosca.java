@@ -5,8 +5,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
 
 import org.simtech.bootware.core.ConfigurationWrapper;
@@ -96,18 +94,13 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		// instantiate csar
 		// There should probably be a check here if the instantiation was successful.
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Instantiate " + csarName));
-		final String instantiateResponse = client.instanitateCSAR(csarName);
+		final String serviceInstanceID = client.provisionService(csarName);
+		System.out.println("serviceInstanceID:" + serviceInstanceID);
 
-		// parse JSON response to get application URL
-		final JSONObject obj = new JSONObject(instantiateResponse);
-		final String applicationUrl = obj.getString("applicationUrl");
-
-		if (applicationUrl != null) {
+		if (serviceInstanceID != null) {
 
 			// get properties
-			final String id = applicationUrl.substring(applicationUrl.lastIndexOf("/") + 1);
-			final URI propertiesURI = URI.create("http://" + endpoint + ":1337/containerapi/instancedata/nodeInstances/" + id);
-			final Document properties = client.getProperties(propertiesURI);
+			final Document properties = client.getProperties(URI.create(serviceInstanceID), "SimTech Node Template");
 
 			// get some values from properties
 			final String odePort = getProperty(properties, "odePort");
@@ -119,8 +112,8 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			// get some other properties
 			final String installedOnNodeInstanceID = getProperty(properties, "installedOnNodeInstanceID");
 			final String id2 = installedOnNodeInstanceID.substring(installedOnNodeInstanceID.lastIndexOf("/") + 1);
-			final URI propertiesURI2 = URI.create("http://" + endpoint + ":1337/containerapi/instancedata/nodeInstances/" + id2);
-			final Document properties2 = client.getProperties(propertiesURI2);
+			final URI nodeInstancesID = URI.create("http://" + endpoint + ":1337/containerapi/instancedata/nodeInstances/" + id2);
+			final Document properties2 = client.getProperties(nodeInstancesID);
 
 			// get IP address from other properties
 			final String ipaddress = getProperty(properties2, "publicDNS");
@@ -134,6 +127,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "ActiveMQ Broker URL is " + activeMQUrl));
 			eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Fragmento URL is " + fragmentoUrl));
 
+			response.put("serviceInstanceID", serviceInstanceID);
 			response.put("odeServerUrl", odeServerUrl);
 			response.put("activeMQUrl", activeMQUrl);
 			response.put("fragmentoUrl", fragmentoUrl);
@@ -148,11 +142,20 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	/**
 	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference, final Map<String, String> instanceInformation) throws DeprovisionException {
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Deprovisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
 
-		// Call termination plan with OpenTOSCA client. This is not yet implemented.
-		eventBus.publish(new ProvisionPluginEvent(Severity.WARNING, "Termination plan not yet implemented. Resources have to be removed by hand!"));
+		final String endpoint = provisioningEngineEndpoint.replace("http://", "");
+		final String csarPath = servicePackageReference;
+		final String csarName = new File(csarPath).getName();
+
+		final OpenTOSCAInstanceDataAccess client = new OpenTOSCAInstanceDataAccess(endpoint);
+
+		if (client == null) {
+			throw new DeprovisionException("Client was null.");
+		}
+
+		final String instantiateResponse = client.deprovisionService(csarName, instanceInformation.get("serviceInstanceID"));
 	}
 
 }

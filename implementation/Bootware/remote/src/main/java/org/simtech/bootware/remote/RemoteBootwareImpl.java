@@ -342,7 +342,9 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 					// Call provisioning engine
 					eventBus.publish(new CoreEvent(Severity.INFO, "Call provision engine."));
-					provisionPlugin.deprovision(url.toString(), servicePackageReference);
+					if (instance.getInstanceInformation() != null) {
+						provisionPlugin.deprovision(url.toString(), servicePackageReference, instance.getInstanceInformation());
+					}
 				}
 				catch (LoadPluginException e) {
 					fail("Could not load provision plugin: " + e.getMessage());

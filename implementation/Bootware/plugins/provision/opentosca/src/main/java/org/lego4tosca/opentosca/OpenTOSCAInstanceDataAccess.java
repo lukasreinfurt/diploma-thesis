@@ -37,6 +37,8 @@ public class OpenTOSCAInstanceDataAccess {
 
 	private String APIRootNodeInstances = null;
 	private static final String QUERY_PARAM_NODEINSTACEID = "nodeInstanceID";
+	private static final String QUERY_PARAM_SERVICEINSTACEID = "serviceInstanceID";
+	private static final String QUERY_PARAM_NODETEMPLATEID = "nodeTemplateName";
 	private static final String NS_XLINK = "http://www.w3.org/1999/xlink";
 	private static final String NS_CONTAINERAPI_INSTANCEDATA = "http://opentosca.org/api/pp";
 	private final QName ELEMENT_NAME_LINK = new QName(NS_CONTAINERAPI_INSTANCEDATA, "link");
@@ -64,12 +66,12 @@ public class OpenTOSCAInstanceDataAccess {
 	 * @param csarName the name of the CSAR file whose build plan has to run
 	 * @return
 	 */
-	public String instanitateCSAR(String csarName){
+	public String provisionService(String csarName){
 
-		String url = getVinothekRequestURL(csarName);
+		String url = getVinothekRequestURLForBuildPlan(csarName);
 
 		if(StringUtils.isEmpty(url)){
-			logger.error("Cannot run the plan of "+ csarName+", error with CSAR name");
+			logger.error("Cannot run the build plan of "+ csarName+", error with CSAR name");
 			return null;
 		}
 
@@ -79,7 +81,7 @@ public class OpenTOSCAInstanceDataAccess {
 
 		if(!StringUtils.isEmpty(callbackURI)){
 			logger.info("Start Polling...");
-			while((response=doGet(callbackURI)).equals("{\"NO-CALLBACK-RECEIVED-YET\":true}")){
+			while((response=doGet(callbackURI)).equals("NO-CALLBACK-RECEIVED-YET")){
 				logger.info("NO-CALLBACK-RECEIVED-YET");
 				try {
 					Thread.sleep(10000);
@@ -90,10 +92,45 @@ public class OpenTOSCAInstanceDataAccess {
 			}
 		}
 		logger.info("Build plan Response of CSAR file '"+csarName+"' is: "+ response);
-		return response;
+	    return response;
 	}
 
-	private String getVinothekRequestURL(String csarName){
+	/**
+	 * To run the termination plan of the specified CSAR
+	 * @param csarName the name of the CSAR file whose termination plan has to run
+	 * @param serviceInstanceID the id of the service that will be deprovisioned
+	 * @return
+	 */
+	public String deprovisionService(String csarName, String serviceInstanceID){
+
+		String url = getVinothekRequestURLForTerminationPlan(csarName, serviceInstanceID);
+
+		if(StringUtils.isEmpty(url)){
+			logger.error("Cannot run the termination plan of "+ csarName+", error with CSAR name");
+			return null;
+		}
+
+		String callbackURI = doGet(url);
+		logger.info("callback link: "+ callbackURI);
+		String response = "";
+
+		if(!StringUtils.isEmpty(callbackURI)){
+			logger.info("Start Polling...");
+			while((response=doGet(callbackURI)).equals("NO-CALLBACK-RECEIVED-YET")){
+				logger.info("NO-CALLBACK-RECEIVED-YET");
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		logger.info("Termination plan Response of CSAR file '"+csarName+"' is: "+ response);
+	    return response;
+	}
+
+	private String getVinothekRequestURLForBuildPlan(String csarName){
 		if(StringUtils.isEmpty(csarName)){
 			logger.error("CSAR name should not be empty");
 			return null;
@@ -112,6 +149,12 @@ public class OpenTOSCAInstanceDataAccess {
 				+ "ApplicationInstantiation?applicationId=" + csarURL
 				+ (csarURL.endsWith("/") == true ? "" : "/")
 				+ "Content/SELFSERVICE-Metadata/&optionId=1";
+		return url;
+	}
+
+	private String getVinothekRequestURLForTerminationPlan(String csarName, String serviceInstanceID){
+		String url = getVinothekRequestURLForBuildPlan(csarName);
+		url += "&terminate=true&serviceInstanceID="+serviceInstanceID;
 		return url;
 	}
 
@@ -230,6 +273,70 @@ public class OpenTOSCAInstanceDataAccess {
 		return null;
 	}
 
+	public Document getProperties(URI serviceInstanceID, String nodeTemplateName) {
+
+		URI nodeInstanceURI = null;
+		Document doc;
+		HttpClient httpClient = new HttpClient();
+		// not set = default = 0 = no timeout
+		httpClient.getHttpConnectionManager().getParams()
+				.setConnectionTimeout(10000);
+		GetMethod httpget = new GetMethod(APIRootNodeInstances);
+		NameValuePair[] query = {new NameValuePair(QUERY_PARAM_SERVICEINSTACEID, serviceInstanceID.toString()),
+								 new NameValuePair(QUERY_PARAM_NODETEMPLATEID, nodeTemplateName)};
+		httpget.setQueryString(query);
+		try {
+			httpget.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+					new DefaultHttpMethodRetryHandler(3, false));
+			int status = httpClient.executeMethod(httpget);
+			logger.trace("GET " + httpget.getURI() + " --> " + status);
+//			System.out.println("GET " + httpget.getURI() + " --> " + status);
+			InputStream instream = httpget.getResponseBodyAsStream();
+			doc = newDocumentFromInputStream(instream);
+			// retrieve 'href' attribute from first link element
+			NodeList nl = doc.getElementsByTagNameNS(ELEMENT_NAME_LINK.getNamespaceURI(), ELEMENT_NAME_LINK.getLocalPart());
+			if (nl != null && nl.getLength() > 0) {
+				Element firstLink = (Element) nl.item(0);
+				String attrValue = firstLink.getAttributeNS(ATTRIBUTE_NAME_HREF.getNamespaceURI(), ATTRIBUTE_NAME_HREF.getLocalPart());
+				nodeInstanceURI = new URI(attrValue);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			httpget.releaseConnection();
+		}
+		 if (nodeInstanceURI != null) {
+				//HttpClient httpClient = new HttpClient();
+				// not set = default = 0 = no timeout
+				httpClient.getHttpConnectionManager().getParams()
+						.setConnectionTimeout(10000);
+				httpget = new GetMethod(buildURI(nodeInstanceURI.toString(),
+						PATH_SEG_PROPERTIES));
+				try {
+					httpget.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+							new DefaultHttpMethodRetryHandler(3, false));
+
+					int status = httpClient.executeMethod(httpget);
+					logger.trace("GET " + httpget.getURI() + " --> " + status);
+//					System.out.println("GET " + httpget.getURI() + " --> " + status);
+					InputStream instream = httpget.getResponseBodyAsStream();
+					doc = newDocumentFromInputStream(instream);
+					return doc;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					httpget.releaseConnection();
+				}
+				return null;
+		 }
+		 return null;
+	}
+
 	private URI getNodeInstanceURI(URI nodeInstanceID) {
 		Document doc;
 		HttpClient httpClient = new HttpClient();
@@ -251,6 +358,7 @@ public class OpenTOSCAInstanceDataAccess {
 					new DefaultHttpMethodRetryHandler(3, false));
 			int status = httpClient.executeMethod(httpget);
 			logger.trace("GET " + httpget.getURI() + " --> " + status);
+//			System.out.println("GET " + httpget.getURI() + " --> " + status);
 			InputStream instream = httpget.getResponseBodyAsStream();
 			doc = newDocumentFromInputStream(instream);
 			// retrieve 'href' attribute from first link element

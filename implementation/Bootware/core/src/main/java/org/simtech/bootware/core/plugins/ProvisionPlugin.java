@@ -25,6 +25,7 @@ public interface ProvisionPlugin extends Plugin {
 	 *
 	 * @param provisioningEngineEndpoint The endpoint of the provisioning engine that should be called.
 	 * @param servicePackageReference The reference to the service package that should be deprovisioned.
+	 * @param instanceInformation A Map of Strings containing information about the instance.
 	 */
-	void deprovision(String provisioningEngineEndpoint, String servicePackageReference) throws DeprovisionException;
+	void deprovision(String provisioningEngineEndpoint, String servicePackageReference, Map<String, String> instanceInformation) throws DeprovisionException;
 }
