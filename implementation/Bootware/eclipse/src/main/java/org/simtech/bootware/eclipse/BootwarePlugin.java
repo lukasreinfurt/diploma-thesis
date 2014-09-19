@@ -1,13 +1,5 @@
 package org.simtech.bootware.eclipse;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -49,9 +41,8 @@ public class BootwarePlugin implements IBootwarePlugin {
 	private MessageConsoleStream out;
 	private UserContext context;
 	private ConfigurationListWrapper defaultConfiguration;
-	private Boolean stopShutdownTrigger = false;
-	private Process localBootwareProcess;
 	private Thread localBootwareThread;
+	private LocalBootwareService localBootware;
 	private Thread shutdownTriggerThread;
 	private CountDownLatch shutdownTriggerLatch;
 
@@ -65,60 +56,31 @@ public class BootwarePlugin implements IBootwarePlugin {
 	}
 
 	/**
-	 * Starts the local bootware.
+	 * Stops the bootware. Forcefully if necessary
 	 */
-	private void executeLocalBootware() {
-		out.println("Starting local bootware.");
-
-		// check if file exists
-
-		// check if bootware already running
-
-		// Create local bootware process.
-		final ProcessBuilder processBuilder = new ProcessBuilder("java", "-jar", "bootware-local-1.0.0.jar");
-		processBuilder.directory(new File("plugins/bootware/bin"));
-		processBuilder.redirectErrorStream(true);
-
-		BufferedReader processReader = null;
-		BufferedWriter processWriter = null;
+	private void stopBootware() {
 		try {
-			// Start local bootware.
-			localBootwareProcess = processBuilder.start();
-
-			final OutputStream processOutput = localBootwareProcess.getOutputStream();
-			final InputStream processInput = localBootwareProcess.getInputStream();
-			processReader = new BufferedReader(new InputStreamReader(processInput));
-			processWriter = new BufferedWriter(new OutputStreamWriter(processOutput));
-			String line;
-
-			// Write local bootware output to console. This will block until the
-			// local bootware is terminated.
-			while ((line = processReader.readLine()) != null) {
-				out.println(line);
+			if (localBootware != null) {
+				out.println("Trying to shutdown bootware normally.");
+				localBootware.shutdown();
+			}
+			else if (localBootwareThread != null && localBootwareThread.isAlive()) {
+				out.println("Forcefully stopping local bootware process.");
+				LocalBootwareProcess.stop();
+				localBootwareThread.join();
 			}
 		}
-		catch (IOException e) {
-			out.println("There was an error while reading the output of the bootware process: " + e.getMessage());
+		catch (ShutdownException ex) {
+			out.println("Shutting down bootware failed: " + ex.getMessage());
 		}
-		finally {
-			try {
-				if (processReader != null) {
-					processReader.close();
-				}
-				if (processWriter != null) {
-					processWriter.close();
-				}
-			}
-			catch (IOException e) {
-				out.println("There was an error: " + e.getMessage());
-			}
+		catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
 		}
-
-		//stopShutdownTrigger = true;
-		ShutdownTrigger.stop();
-		out.println("Local bootware stopped.");
 	}
 
+	/**
+	 * Checks if the bootware is currently shutting down.
+	 */
 	public final Boolean isShuttingDown() {
 		return ShutdownTrigger.isTriggered();
 	}
@@ -143,7 +105,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 		localBootwareThread = new Thread(new Runnable() {
 
 			public void run() {
-				executeLocalBootware();
+				LocalBootwareProcess.start();
 			}
 
 		});
@@ -161,7 +123,6 @@ public class BootwarePlugin implements IBootwarePlugin {
 		final Map<String, String> informationList;
 
 		// Deploy the middleware.
-		LocalBootwareService localBootware = null;
 		try {
 			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
@@ -200,48 +161,22 @@ public class BootwarePlugin implements IBootwarePlugin {
 		// Shutdown local bootware if something didn't work.
 		catch (MalformedURLException e) {
 			out.println("Local bootware URL is malformed: " + e.getMessage());
-			localBootwareProcess.destroy();
-			try {
-				localBootwareThread.join();
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
+			stopBootware();
 			return;
 		}
 		catch (WebServiceException e) {
 			out.println("Connecting to local bootware failed: " + e.getMessage());
-			localBootwareProcess.destroy();
-			try {
-				localBootwareThread.join();
-			}
-			catch (InterruptedException ex) {
-				Thread.currentThread().interrupt();
-			}
+			stopBootware();
 			return;
 		}
 		catch (SetConfigurationException e) {
 			out.println("Could not set default configuration: " + e.getMessage());
-			try {
-				if (localBootware != null) {
-					localBootware.shutdown();
-				}
-			}
-			catch (ShutdownException ex) {
-				out.println("Shutting down bootware failed: " + ex.getMessage());
-			}
+			stopBootware();
 			return;
 		}
 		catch (DeployException e) {
 			out.println("Deploy request failed: " + e.getMessage());
-			try {
-				if (localBootware != null) {
-					localBootware.shutdown();
-				}
-			}
-			catch (ShutdownException ex) {
-				out.println("Shutting down bootware failed: " + ex.getMessage());
-			}
+			stopBootware();
 			return;
 		}
 
