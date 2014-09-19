@@ -8,32 +8,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CountDownLatch;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
-import javax.jms.Topic;
 import javax.xml.bind.JAXBException;
 import javax.xml.ws.WebServiceException;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.configuration.MapConfiguration;
-import org.apache.ode.bpel.extensions.comm.messages.engineOut.Instance_Terminated;
-import org.apache.ode.bpel.extensions.comm.messages.engineOut.Process_Instantiated;
 
 import org.eclipse.bpel.ui.IBootwarePlugin;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
@@ -128,110 +114,13 @@ public class BootwarePlugin implements IBootwarePlugin {
 			}
 		}
 
-		stopShutdownTrigger = true;
+		//stopShutdownTrigger = true;
+		ShutdownTrigger.stop();
 		out.println("Local bootware stopped.");
 	}
 
-	private void initializeShutdownTrigger(final String activeMQUrl) {
-		try {
-			out.println("Shutdown trigger is now listening at " + activeMQUrl);
-
-			final ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(activeMQUrl);
-			final Connection connection = connectionFactory.createConnection();
-			final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			final Topic topic = session.createTopic("org.apache.ode.events");
-			connection.start();
-
-			final MessageConsumer consumer = session.createConsumer(topic);
-
-			final MessageListener listener = new MessageListener() {
-
-				private Integer activeProcesses = 0;
-				private Integer returnCode = 0;
-
-				public void onMessage(final Message message) {
-
-					if (!(message instanceof ObjectMessage)) {
-						return;
-					}
-
-					final ObjectMessage oMsg = (ObjectMessage) message;
-					Serializable obj = null;
-
-					try {
-						obj = oMsg.getObject();
-					}
-					catch (JMSException e) {
-						e.printStackTrace();
-						return;
-					}
-
-					if (obj == null) {
-						return;
-					}
-
-					if (obj instanceof Process_Instantiated) {
-						activeProcesses = activeProcesses + 1;
-						out.println("Active processes instances: " + activeProcesses);
-					}
-					if (obj instanceof Instance_Terminated) {
-						activeProcesses = activeProcesses - 1;
-						out.println("Active processes instances: " + activeProcesses);
-						if (activeProcesses == 0) {
-							out.println("No active processes instances left. Triggering bootware shutdown...");
-
-							final TriggerBootwareShutdownHandler shutdownHandler = new TriggerBootwareShutdownHandler();
-
-							// Ask for user confirmation.
-							Display.getDefault().syncExec(new Runnable() {
-								public void run() {
-									returnCode = shutdownHandler.askForConfirmation();
-								}
-							});
-
-							// User confirmed. Shut down the bootware.
-							final Integer ok = 32;
-							if (returnCode == ok) {
-								stopShutdownTrigger = true;
-								out.println("Bootware shutdown has been triggered.");
-								shutdownHandler.triggerShutdown();
-							}
-							else {
-								out.println("User canceled bootware shutdown.");
-							}
-
-						}
-					}
-
-				}
-			};
-
-			consumer.setMessageListener(listener);
-
-			// Signal to outer threat to continue;
-			shutdownTriggerLatch.countDown();
-
-			stopShutdownTrigger = false;
-			while (!stopShutdownTrigger) {
-				try {
-					final Integer wait = 10;
-					Thread.sleep(wait);
-				}
-				catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-			}
-
-			connection.close();
-			out.println("Shutdown trigger stopped.");
-		}
-		catch (JMSException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public final Boolean isShuttingDown() {
-		return ShutdownState.get();
+		return ShutdownTrigger.isTriggered();
 	}
 
 	/**
@@ -371,7 +260,7 @@ public class BootwarePlugin implements IBootwarePlugin {
 
 				try {
 					final String activeMQUrl = configuration.getString("activeMQUrl");
-					initializeShutdownTrigger(activeMQUrl);
+					ShutdownTrigger.start(activeMQUrl, shutdownTriggerLatch);
 				}
 				catch (NoSuchElementException e) {
 					out.println("There was an error while initializing the shutdown trigger: " + e.getMessage());
