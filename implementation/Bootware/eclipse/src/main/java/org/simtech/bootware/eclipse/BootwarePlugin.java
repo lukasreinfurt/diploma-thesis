@@ -230,6 +230,10 @@ public class BootwarePlugin implements IBootwarePlugin {
 		}
 	}
 
+	public final Boolean isShuttingDown() {
+		return ShutdownState.get();
+	}
+
 	/**
 	 * Executes the bootstrapping process.
 	 */

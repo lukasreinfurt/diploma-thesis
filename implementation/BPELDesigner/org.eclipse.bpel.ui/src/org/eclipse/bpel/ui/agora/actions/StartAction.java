@@ -72,6 +72,16 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				}
 			}
 		}
+		else {
+			if (bootwarePlugin.isShuttingDown()) {
+				MessageDialog.openInformation(
+					Display.getDefault().getActiveShell(),
+					"Bootware shutting down",
+					"The Bootware is shutting down at the moment. Please wait until the"
+					+ "process is finished and try again.");
+				return;
+			}
+		}
 
 		// Do nothing if bootware thread is still alive from previous call.
 		if (bootwareThread != null && bootwareThread.isAlive()) {

@@ -33,6 +33,8 @@ public class TriggerBootwareShutdownHandler extends AbstractHandler {
 
 	public final void triggerShutdown() {
 		try {
+			ShutdownState.set(true);
+
 			final URL localBootwareURL = new URL("http://localhost:6007/axis2/services/Bootware?wsdl");
 
 			// Create local bootware service.
@@ -49,6 +51,8 @@ public class TriggerBootwareShutdownHandler extends AbstractHandler {
 							"The bootware shutdown process was successful.");
 				}
 			});
+
+			ShutdownState.set(false);
 
 		}
 		catch (MalformedURLException e) {
