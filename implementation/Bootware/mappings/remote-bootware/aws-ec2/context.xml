@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <context>
-	<resourcePlugin>aws-ec2-1.0.0.jar</resourcePlugin>
-	<communicationPlugin>ssh-1.0.0.jar</communicationPlugin>
-	<applicationPlugin>remote-bootware-1.0.0.jar</applicationPlugin>
+	<resourcePlugin>plugins/resource/aws-ec2-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>plugins/communication/ssh-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>plugins/application/remote-bootware-1.0.0.jar</applicationPlugin>
 	<configurationList>
 		<entry>
 			<key>aws-ec2</key>

@@ -33,12 +33,12 @@ public class RestServer {
 	 *
 	 */
 	@GET
-	@Path("/getPlugin/{pluginType}/{pluginName}")
+	@Path("/plugins/{pluginType}/{pluginName}")
 	@Produces("application/octet-stream")
 	public final Response getPlugin(@PathParam("pluginType") final String pluginType,
 	                                @PathParam("pluginName") final String pluginName) {
 
-		System.out.println("GET /repository/getPlugin/" + pluginType + "/" + pluginName);
+		System.out.println("GET /repository/plugins/" + pluginType + "/" + pluginName);
 
 		// Generate path to plugin file.
 		final File file = new File("plugins/" + pluginType + "/" + pluginName);

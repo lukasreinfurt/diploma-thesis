@@ -112,18 +112,18 @@ public class PluginManager {
 		"checkstyle:cyclomaticcomplexity",
 		"checkstyle:javancss"
 	})
-	public final <T> T loadPlugin(final Class<T> clazz, final String type, final String name) throws LoadPluginException {
+	public final <T> T loadPlugin(final Class<T> clazz, final String name) throws LoadPluginException {
 
-		final String pluginID = type + "/" + name;
-		final File pluginFile = new File("plugins/" + pluginID);
+		final File pluginFile = new File(name);
+		final String pluginName = pluginFile.toString().replace("\\", "/");
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "Loading plugin " + pluginID + "."));
+		eventBus.publish(new CoreEvent(Severity.INFO, "Loading plugin " + pluginName + "."));
 
 		// Check if plugin is already available locally.
 		// If not, try downloading it from the repository
 		if (!pluginFile.exists()) {
-			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginID + " doesn't exist yet locally."));
-			eventBus.publish(new CoreEvent(Severity.INFO, "Downloading from repository at " + repositoryURL + "/getPlugin/" + type + "/" + name));
+			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginName + " doesn't exist yet locally."));
+			eventBus.publish(new CoreEvent(Severity.INFO, "Downloading from repository at " + repositoryURL + "/" + pluginName));
 
 			// Create client.
 			final Client client = ClientBuilder.newBuilder().register(Response.class).build();
@@ -133,9 +133,7 @@ public class PluginManager {
 			FileOutputStream outputStream = null;
 			try {
 				final Response response = client.target(repositoryURL)
-				                          .path("/getPlugin/{pluginType}/{pluginName}")
-				                          .resolveTemplate("pluginType", type)
-				                          .resolveTemplate("pluginName", name)
+				                          .path(pluginName)
 				                          .request()
 				                          .get(Response.class);
 
@@ -157,7 +155,7 @@ public class PluginManager {
 					}
 				}
 				else {
-					throw new LoadPluginException("The plugin " + pluginID + " could not be found in the repository.");
+					throw new LoadPluginException("The plugin " + pluginName + " could not be found in the repository.");
 				}
 			}
 			catch (WebApplicationException e) {
@@ -187,23 +185,23 @@ public class PluginManager {
 			}
 		}
 		else {
-			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginID + " already exist locally."));
+			eventBus.publish(new CoreEvent(Severity.INFO, "Plugin " + pluginName + " already exist locally."));
 		}
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "Starting plugin " + pluginID + "."));
+		eventBus.publish(new CoreEvent(Severity.INFO, "Starting plugin " + pluginName + "."));
 
 		// Load the plugin and store a reference in installedBundles. Then start it.
 		try {
-			installedBundles.put(pluginID, context.installBundle("file:" + pluginFile.toString().replace("\\", "/")));
-			installedBundles.get(pluginID).start();
+			installedBundles.put(pluginName, context.installBundle("file:" + pluginName));
+			installedBundles.get(pluginName).start();
 		}
 		catch (BundleException e) {
 			throw new LoadPluginException(e);
 		}
 
 		// Get the plugin object that will be returned.
-		final BundleContext bundleContext = installedBundles.get(pluginID).getBundleContext();
-		final String filter = "(name=" + name + ")";
+		final BundleContext bundleContext = installedBundles.get(pluginName).getBundleContext();
+		final String filter = "(name=" + pluginFile.getName() + ")";
 		final ServiceReference[] serviceReferences;
 
 		try {
@@ -214,7 +212,7 @@ public class PluginManager {
 		}
 
 		if (serviceReferences.length == 0) {
-			throw new LoadPluginException("Could not retrieve service reference for plugin '" + pluginID + "'.");
+			throw new LoadPluginException("Could not retrieve service reference for plugin '" + pluginName + "'.");
 		}
 
 		return clazz.cast(bundleContext.getService(serviceReferences[0]));
@@ -228,18 +226,16 @@ public class PluginManager {
 	 *
 	 * @throws UnloadPluginException If there was an error while unloading the plugin.
 	 */
-	public final void unloadPlugin(final String type, final String name) throws UnloadPluginException {
+	public final void unloadPlugin(final String name) throws UnloadPluginException {
 
-		final String pluginID = type + "/" + name;
+		eventBus.publish(new CoreEvent(Severity.INFO, "Unloading plugin " + name + "."));
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "Unloading plugin " + pluginID + "."));
-
-		final Bundle bundle = installedBundles.get(pluginID);
+		final Bundle bundle = installedBundles.get(name);
 
 		if (bundle != null) {
 			try {
 				bundle.uninstall();
-				installedBundles.remove(pluginID);
+				installedBundles.remove(name);
 			}
 			catch (BundleException e) {
 				throw new UnloadPluginException(e);
