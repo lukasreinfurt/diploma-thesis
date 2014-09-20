@@ -48,25 +48,25 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 	 * Get the size in bytes of an input stream by reading the stream once.
 	 * Does NOT reset the input stream!
 	 */
-	private long getSize(final InputStream is) {
-		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		final int bufferSize = 4096;
+	// private long getSize(final InputStream is) {
+	// 	final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	// 	final int bufferSize = 4096;
 
-		byte[] buffer = new byte[bufferSize];
-		int n;
+	// 	byte[] buffer = new byte[bufferSize];
+	// 	int n;
 
-		try {
-			while ((n = is.read(buffer)) > 0) {
-				bos.write(buffer, 0, n);
-				buffer = bos.toByteArray();
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+	// 	try {
+	// 		while ((n = is.read(buffer)) > 0) {
+	// 			bos.write(buffer, 0, n);
+	// 			buffer = bos.toByteArray();
+	// 		}
+	// 	}
+	// 	catch (IOException e) {
+	// 		e.printStackTrace();
+	// 	}
 
-		return buffer.length;
-	}
+	// 	return buffer.length;
+	// }
 
 	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
@@ -94,11 +94,13 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				final ByteArrayOutputStream output = new ByteArrayOutputStream();
 				properties.store(output, null);
 				final ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
-				final ByteArrayInputStream input2 = new ByteArrayInputStream(output.toByteArray());
 
 				// upload properties
-				connection.upload(input, getSize(input2), "/tmp/opentosca.properties");
+				connection.upload(input, "/tmp/opentosca.properties");
 				connection.execute("sudo cp /tmp/opentosca.properties /etc/tomcat7/opentosca.properties");
+
+				output.close();
+				input.close();
 
 				// Bugfix for termination plans
 
@@ -108,10 +110,11 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				final Integer wait2 = 10000;
 				Thread.sleep(wait2);
 				final String fileName = "vinothek.war";
-				final InputStream is1 = OpenToscaEC2.class.getResourceAsStream("/bugfix/" + fileName);
-				final InputStream is2 = OpenToscaEC2.class.getResourceAsStream("/bugfix/" + fileName);
-				connection.upload(is1, getSize(is2), "/tmp/" + fileName);
+				final InputStream is = OpenToscaEC2.class.getResourceAsStream("/bugfix/" + fileName);
+				connection.upload(is, "/tmp/" + fileName);
 				connection.execute("sudo cp /tmp/" + fileName + " /var/lib/tomcat7/webapps/" + fileName);
+
+				is.close();
 
 				// Bugfix end
 

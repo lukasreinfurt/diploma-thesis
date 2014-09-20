@@ -3,6 +3,7 @@ package org.simtech.bootware.plugins.application.remotebootware;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -49,19 +50,21 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
 	 */
+	@SuppressWarnings("checkstyle:cyclomaticcomplexity")
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
 		final String remotePathPrefix = "/tmp/";
 
 		if (connection != null) {
 			// Upload the content of the remote folder to /tmp/remote on the resource.
+			FileInputStream is = null;
 			try {
 				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 				for (File file : files) {
 					final String remotePath = new File(remotePathPrefix, file.toString()).toString().replace("\\", "/");
 					// If file, upload file
 					if (file.isFile()) {
-						final FileInputStream is = new FileInputStream(file);
-						connection.upload(is, file.length(), remotePath);
+						is = new FileInputStream(file);
+						connection.upload(is, remotePath);
 					}
 					// If directory, create directory
 					else if (file.isDirectory()) {
@@ -80,6 +83,17 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 			}
 			catch (UploadFileException e) {
 				throw new ProvisionApplicationException(e);
+			}
+			finally {
+				// Clean up.
+				try {
+					if (is != null) {
+						is.close();
+					}
+				}
+				catch (IOException e) {
+					throw new ProvisionApplicationException(e);
+				}
 			}
 		}
 		else {

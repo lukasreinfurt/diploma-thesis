@@ -1,12 +1,16 @@
 package org.simtech.bootware.plugins.communication.ssh;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 
 import org.simtech.bootware.core.Connection;
 import org.simtech.bootware.core.EventBus;
@@ -180,19 +184,35 @@ public class SshConnection implements Connection {
 	/**
 	 * Implements the upload operation defined in @see org.simtech.bootware.core.plugins.Connection
 	 */
-	public final void upload(final InputStream inputStream, final long length, final String remotePath) throws UploadFileException {
+	public final void upload(final InputStream inputStream, final String remotePath) throws UploadFileException {
 
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
 
+		// Upload file.
 		SCPOutputStream outputStream = null;
+		ByteArrayOutputStream baos = null;
+		ByteArrayInputStream bais = null;
 		try {
+
+			// Set up byte array so that we can get the size of the file.
+			baos = new ByteArrayOutputStream();
+			IOUtils.copy(inputStream, baos);
+			final byte[] bytes = baos.toByteArray();
+			// Can be read multiple times with bais.reset() in between reads.
+			bais = new ByteArrayInputStream(bytes);
+
+			// Get size of file to be uploaded.
+			final long size = bytes.length;
+
+			// Create scp connection.
 			final SCPClient scp = new SCPClient(connection);
 			final File file = new File(remotePath);
-			outputStream = scp.put(file.getName(), length, file.getParent().replace("\\", "/"), "0755");
+			outputStream = scp.put(file.getName(), size, file.getParent().replace("\\", "/"), "0755");
 
+			// Write file to connection.
 			final byte[] buffer = new byte[bufferSize];
 			int n;
-			while ((n = inputStream.read(buffer)) > 0) {
+			while ((n = bais.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, n);
 			}
 		}
@@ -200,9 +220,16 @@ public class SshConnection implements Connection {
 			throw new UploadFileException(e);
 		}
 		finally {
+			// Clean up.
 			try {
 				if (outputStream != null) {
 					outputStream.close();
+				}
+				if (baos != null) {
+					baos.close();
+				}
+				if (bais != null) {
+					bais.close();
 				}
 				if (inputStream != null) {
 					inputStream.close();

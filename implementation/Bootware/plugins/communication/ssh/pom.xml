@@ -26,6 +26,12 @@
 			<version>262</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -48,7 +54,8 @@
 						<!-- list all artifacts that should be embedded here -->
 						<!-- (the jars will be embedded in the lib folder) -->
 						<Embed-Dependency>
-							ganymed-ssh2
+							ganymed-ssh2,
+							commons-io
 						</Embed-Dependency>
 						<!-- list all packages that are not embedded here -->
 						<!-- (these have to be exported by the bootware core) -->

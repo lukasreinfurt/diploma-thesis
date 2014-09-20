@@ -51,7 +51,7 @@ public interface Connection {
 	 *
 	 * @throws UploadFileException If there was an error uploading the file.
 	 */
-	void upload(InputStream inputStream, long lenght, String remotePath) throws UploadFileException;
+	void upload(InputStream inputStream, String remotePath) throws UploadFileException;
 
 	/**
 	 * Returns the URL of the connection.
