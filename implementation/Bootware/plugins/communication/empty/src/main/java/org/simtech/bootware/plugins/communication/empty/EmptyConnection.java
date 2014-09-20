@@ -30,7 +30,7 @@ public class EmptyConnection implements Connection {
 		// no op
 	}
 
-	public final void upload(final InputStream is, final long length, final String remotePath) throws UploadFileException {
+	public final void upload(final InputStream is, final String remotePath) throws UploadFileException {
 		// no op
 	}
 

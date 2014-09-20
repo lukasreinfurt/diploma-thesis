@@ -30,7 +30,7 @@ public class Empty extends AbstractBasePlugin implements ProvisionPlugin {
 		return response;
 	}
 
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference,  final Map<String, String> instanceInformation) throws DeprovisionException {
 		// no op
 	}
 

@@ -71,19 +71,11 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 	}
 
 	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) throws ProvisionException {
-		System.out.println("Provision middleware with Cloudformation");
-		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
-		System.out.println("Service package reference: " + servicePackageReference);
-
 		createStack(servicePackageReference);
-
 		return getStackOutput();
 	}
 
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
-		System.out.println("Deprovision middleware with CloudFormation");
-		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
-		System.out.println("Service package reference: " + servicePackageReference);
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference, final Map<String, String> instanceInformation) throws DeprovisionException {
 
 		final DeleteStackRequest request = new DeleteStackRequest();
 

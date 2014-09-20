@@ -39,7 +39,7 @@ public class Test extends AbstractBasePlugin implements ProvisionPlugin {
 		return response;
 	}
 
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference) throws DeprovisionException {
+	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference,  final Map<String, String> instanceInformation) throws DeprovisionException {
 		System.out.println("Deprovision middleware");
 		System.out.println("Provision engine endpoint: " + provisioningEngineEndpoint);
 		System.out.println("Service package reference: " + servicePackageReference);

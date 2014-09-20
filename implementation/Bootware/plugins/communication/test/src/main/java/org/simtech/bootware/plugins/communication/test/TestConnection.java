@@ -32,7 +32,7 @@ public class TestConnection implements Connection {
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Executing command '" + command + "'."));
 	}
 
-	public final void upload(final InputStream is, final long length, final String remotePath) throws UploadFileException {
+	public final void upload(final InputStream is, final String remotePath) throws UploadFileException {
 		eventBus.publish(new CommunicationPluginEvent(Severity.INFO, "Uploading file '" + remotePath + "'."));
 	}
 
