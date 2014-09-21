@@ -64,10 +64,17 @@
 			<version>1.4.7</version>
 		</dependency>
 
+		<!-- for setting up PM -->
 		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20140107</version>
+			<groupId>ch.ethz.ganymed</groupId>
+			<artifactId>ganymed-ssh2</artifactId>
+			<version>262</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
 		</dependency>
 
 	</dependencies>
@@ -99,7 +106,8 @@
 							commons-lang3,
 							jms,
 							mail,
-							json
+							ganymed-ssh2,
+							commons-io
 						</Embed-Dependency>
 						<!-- list all packages that are not embedded here -->
 						<!-- (these have to be exported by the bootware core) -->
