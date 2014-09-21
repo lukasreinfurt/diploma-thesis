@@ -198,6 +198,7 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		logRequestStart("Received request: undeploy");
 
+		// Set up request object and get instance from instance store.
 		request = new Request("undeploy");
 		instance = instanceStore.get(context);
 
@@ -205,8 +206,10 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 			throw new UndeployException("There was no active application that matched this request");
 		}
 
+		// Start the undeploy process.
 		stateMachine.fire(SMEvents.REQUEST);
 
+		// Fail if undeploy process failed.
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());
 		}

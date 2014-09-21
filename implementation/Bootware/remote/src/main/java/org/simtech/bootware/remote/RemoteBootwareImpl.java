@@ -51,6 +51,8 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	public RemoteBootwareImpl() {
 
 		// Get IP address of this server to pass on when provisioning the middleware.
+		// This property value is written by the local bootware when it deploys the
+		// remote bootware.
 		InputStream propFile = null;
 		try {
 			final Properties properties = new Properties();
@@ -72,6 +74,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			}
 		}
 
+		// Build the state machine.
 		builder = StateMachineBuilderFactory.create(Machine.class);
 
 		// Call transition() on any transition.
@@ -134,6 +137,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 		logRequestEnd("Finished processing request: isReady");
 
+		// The bootware is ready once it is in the wait state.
 		return SMStates.WAIT.equals(currentState);
 	}
 
@@ -155,10 +159,12 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			return informationList;
 		}
 
+		// Set up request and instance objects which are used throughout the process.
 		request = new Request("deploy");
 		instance = new ApplicationInstance(context.getResource() + ":" + context.getApplication());
 		instance.setUserContext(context);
 
+		// Add remote bootware IP to the instance information.
 		if (remoteBootwareIP != null) {
 			instance.getInstanceInformation().put("remoteBootwareIP", remoteBootwareIP);
 		}
@@ -168,8 +174,10 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			throw new DeployException("The remote bootware IP was null.");
 		}
 
+		// Start the deploy process.
 		stateMachine.fire(SMEvents.REQUEST);
 
+		// Fail if depploy process failed.
 		if (request.isFailing()) {
 			throw new DeployException((String) request.getResponse());
 		}
@@ -191,6 +199,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 		logRequestStart("Received request: undeploy");
 
+		// Set up request object and get instance object from store.
 		request = new Request("undeploy");
 		instance = instanceStore.get(context);
 
@@ -198,8 +207,10 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 			throw new UndeployException("There was no active application that matched this request");
 		}
 
+		// Start the undeploy process
 		stateMachine.fire(SMEvents.REQUEST);
 
+		// Fail if undeploy process failed.
 		if (request.isFailing()) {
 			throw new UndeployException((String) request.getResponse());
 		}
@@ -218,6 +229,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 		logRequestStart("Received request: getActive");
 
+		// Get instance information from instance store if an instance with the given context exists.
 		final InformationListWrapper informationList = new InformationListWrapper();
 		if (instanceStore.get(context) != null) {
 			informationList.setInformationList(instanceStore.get(context).getInstanceInformation());
