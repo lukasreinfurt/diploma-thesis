@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration.MapConfiguration;
 
+import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.exceptions.DeprovisionException;
 import org.simtech.bootware.core.exceptions.InitializeException;
@@ -70,12 +71,13 @@ public class CloudFormation extends AbstractBasePlugin implements ProvisionPlugi
 		// no op
 	}
 
-	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) throws ProvisionException {
+	public final Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException {
+		final String servicePackageReference = instance.getUserContext().getServicePackageReference();
 		createStack(servicePackageReference);
 		return getStackOutput();
 	}
 
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference, final Map<String, String> instanceInformation) throws DeprovisionException {
+	public final void deprovision(final ApplicationInstance instance) throws DeprovisionException {
 
 		final DeleteStackRequest request = new DeleteStackRequest();
 

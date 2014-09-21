@@ -1,6 +1,10 @@
 package org.simtech.bootware.remote;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.jws.WebService;
 
@@ -36,6 +40,7 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBootware {
 
 	private static String provisionPluginPath = "plugins/provision/";
+	private static String remoteBootwareIP = null;
 
 	/**
 	 * Creates the bootware process as state machine.
@@ -44,6 +49,29 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 	 */
 	@SuppressWarnings("checkstyle:multiplestringliterals")
 	public RemoteBootwareImpl() {
+
+		// Get IP address of this server to pass on when provisioning the middleware.
+		InputStream propFile = null;
+		try {
+			final Properties properties = new Properties();
+			propFile = new FileInputStream("config.properties");
+			properties.load(propFile);
+			remoteBootwareIP = properties.getProperty("remoteBootwareIP");
+		}
+		catch (IOException e) {
+			System.out.println("Could not load property file config.property: " + e.getMessage());
+		}
+		finally {
+			try {
+				if (propFile != null) {
+					propFile.close();
+				}
+			}
+			catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
 		builder = StateMachineBuilderFactory.create(Machine.class);
 
 		// Call transition() on any transition.
@@ -128,8 +156,17 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 		}
 
 		request = new Request("deploy");
-		instance = new ApplicationInstance("-");
+		instance = new ApplicationInstance(context.getResource() + ":" + context.getApplication());
 		instance.setUserContext(context);
+
+		if (remoteBootwareIP != null) {
+			instance.getInstanceInformation().put("remoteBootwareIP", remoteBootwareIP);
+		}
+		else {
+			eventBus.publish(new CoreEvent(Severity.ERROR, "The remote bootware IP was null."));
+			logRequestEnd("Finished processing request: deploy");
+			throw new DeployException("The remote bootware IP was null.");
+		}
 
 		stateMachine.fire(SMEvents.REQUEST);
 
@@ -279,7 +316,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 
 					// Call provisioning engine
 					eventBus.publish(new CoreEvent(Severity.INFO, "Call provisioning engine."));
-					final Map<String, String> informationList = provisionPlugin.provision(url.toString(), servicePackageReference);
+					final Map<String, String> informationList = provisionPlugin.provision(instance);
 
 					// Combine response with the instance information returned earlier
 					// by the provision resource step.
@@ -343,7 +380,7 @@ public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBo
 					// Call provisioning engine
 					eventBus.publish(new CoreEvent(Severity.INFO, "Call provision engine."));
 					if (instance.getInstanceInformation() != null) {
-						provisionPlugin.deprovision(url.toString(), servicePackageReference, instance.getInstanceInformation());
+						provisionPlugin.deprovision(instance);
 					}
 				}
 				catch (LoadPluginException e) {

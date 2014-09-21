@@ -115,8 +115,10 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 
 		if (connection != null) {
 			try {
+				// Write the IP address of the remote bootware to a property file.
+				connection.execute("echo \"remoteBootwareIP = " + connection.getURL() + "\" >> /tmp/remote/config.properties");
 				// Execute the remote bootware jar in the background and pipe output to /dev/null
-				connection.execute("cd /tmp/remote; nohup java -jar bootware-remote-1.0.0.jar &> /dev/null &");
+				connection.execute("cd /tmp/remote; nohup java -jar bootware-remote-1.0.0.jar &> debug.log &");
 
 				final URL url = new URL("http://" + connection.getURL() + ":8080/axis2/services/Bootware");
 				return url;

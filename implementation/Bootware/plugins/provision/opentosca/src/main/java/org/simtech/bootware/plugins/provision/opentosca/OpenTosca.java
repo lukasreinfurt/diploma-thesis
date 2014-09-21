@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
 
+import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.events.ProvisionPluginEvent;
 import org.simtech.bootware.core.events.Severity;
@@ -59,12 +60,15 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
-	public final Map<String, String> provision(final String provisioningEngineEndpoint, final String servicePackageReference) throws ProvisionException {
+	public final Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException {
+
+		final String provisioningEngineEndpoint = instance.getInstanceInformation().get("appURL");
+		final String servicePackageReference = instance.getUserContext().getServicePackageReference();
+
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Provisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
 
 		final String endpoint = provisioningEngineEndpoint.replace("http://", "");
-		final String csarPath = servicePackageReference;
-		final String csarName = new File(csarPath).getName();
+		final String csarName = new File(servicePackageReference).getName();
 		final Map<String, String> response = new HashMap<String, String>();
 
 		final OpenTOSCAInstanceDataAccess client = new OpenTOSCAInstanceDataAccess(endpoint);
@@ -77,7 +81,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		// In the future there should be a check here if the upload/deployment of
 		// the csar was successful.
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Uploading " + csarName));
-		final String uploadResponse = client.uploadCSARDueURL(csarPath);
+		final String uploadResponse = client.uploadCSARDueURL(servicePackageReference);
 
 		// wait a bit so that the csar is deployed
 		// There should be a better way to do this.
@@ -131,6 +135,21 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			response.put("odeServerUrl", odeServerUrl);
 			response.put("activeMQUrl", activeMQUrl);
 			response.put("fragmentoUrl", fragmentoUrl);
+
+			// Begin: Setup provisioning manager.
+			// This should be done with management plans in the future.
+
+			final String sshUsername = getProperty(properties2, "username");
+			final String sshKey = getProperty(properties2, "identityFile");
+
+			final Map<String, String> sshSettings = new HashMap<String, String>();
+			sshSettings.put("resourceURL", ipaddress);
+			sshSettings.put("sshUsername", sshUsername);
+			sshSettings.put("sshKey", sshKey);
+			SetupProvisioningManager.execute(eventBus, sshSettings, instance);
+
+			// End: Setup provisioning manager
+
 		}
 		else {
 			throw new ProvisionException("Instantiate response was null.");
@@ -142,12 +161,16 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	/**
 	 * Implements the deprovision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
-	public final void deprovision(final String provisioningEngineEndpoint, final String servicePackageReference, final Map<String, String> instanceInformation) throws DeprovisionException {
+	public final void deprovision(final ApplicationInstance instance) throws DeprovisionException {
+
+		final String provisioningEngineEndpoint = instance.getInstanceInformation().get("appURL");
+		final String servicePackageReference = instance.getUserContext().getServicePackageReference();
+		final String serviceInstanceID = instance.getInstanceInformation().get("serviceInstanceID");
+
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Deprovisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
 
 		final String endpoint = provisioningEngineEndpoint.replace("http://", "");
-		final String csarPath = servicePackageReference;
-		final String csarName = new File(csarPath).getName();
+		final String csarName = new File(servicePackageReference).getName();
 
 		final OpenTOSCAInstanceDataAccess client = new OpenTOSCAInstanceDataAccess(endpoint);
 
@@ -155,7 +178,8 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			throw new DeprovisionException("Client was null.");
 		}
 
-		final String instantiateResponse = client.deprovisionService(csarName, instanceInformation.get("serviceInstanceID"));
+		final String instantiateResponse = client.deprovisionService(csarName, serviceInstanceID);
+
 	}
 
 }

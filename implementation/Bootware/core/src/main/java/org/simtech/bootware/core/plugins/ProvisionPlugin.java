@@ -2,6 +2,7 @@ package org.simtech.bootware.core.plugins;
 
 import java.util.Map;
 
+import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.exceptions.DeprovisionException;
 import org.simtech.bootware.core.exceptions.ProvisionException;
 
@@ -13,19 +14,20 @@ public interface ProvisionPlugin extends Plugin {
 	/**
 	 * Call the given provisioning engine to provision the given service package.
 	 *
-	 * @param provisioningEngineEndpoint The endpoint of the provisioning engine that should be called.
-	 * @param servicePackageReference The reference to the service package that should be provisioned.
+	 * @param instance The ApplicationInstance containing among other this the
+	 *                 informationList with the provisioning engine endpoint and
+	 *                 the user context with the service package reference.
 	 *
 	 * @return A map of strings that contains information returned from the provisioning process.
 	 */
-	Map<String, String> provision(String provisioningEngineEndpoint, String servicePackageReference) throws ProvisionException;
+	Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException;
 
 	/**
 	 * Call the given provisioning engine to deprovision the given service package.
 	 *
-	 * @param provisioningEngineEndpoint The endpoint of the provisioning engine that should be called.
-	 * @param servicePackageReference The reference to the service package that should be deprovisioned.
-	 * @param instanceInformation A Map of Strings containing information about the instance.
+	 * @param instance The ApplicationInstance containing among other this the
+	 *                 informationList with the provisioning engine endpoint and
+	 *                 the user context with the service package reference.
 	 */
-	void deprovision(String provisioningEngineEndpoint, String servicePackageReference, Map<String, String> instanceInformation) throws DeprovisionException;
+	void deprovision(final ApplicationInstance instance) throws DeprovisionException;
 }

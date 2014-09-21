@@ -1,5 +1,6 @@
 package org.simtech.bootware.core;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,6 +20,7 @@ public class ApplicationInstance {
 
 	public ApplicationInstance(final String id) {
 		this.id = id;
+		instanceInformation = new HashMap<String, String>();
 	}
 
 	public final String getID() {

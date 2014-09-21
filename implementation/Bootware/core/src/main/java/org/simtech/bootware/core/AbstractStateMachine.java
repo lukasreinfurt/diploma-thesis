@@ -163,11 +163,11 @@ public abstract class AbstractStateMachine {
 		 */
 		protected void initialize(final String from, final String to, final String fsmEvent) {
 
-
+			InputStream propFile = null;
 			try {
 				// Load properties file.
 				System.out.println("Loading properties file.");
-				final InputStream propFile = new FileInputStream("config.properties");
+				propFile = new FileInputStream("config.properties");
 				properties.load(propFile);
 
 				// Initialize some objects.
@@ -195,6 +195,16 @@ public abstract class AbstractStateMachine {
 				System.out.println("The plugin manager could not be initialized: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
+			}
+			finally {
+				try {
+					if (propFile != null) {
+						propFile.close();
+					}
+				}
+				catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);
@@ -315,6 +325,9 @@ public abstract class AbstractStateMachine {
 				final Map<String, ConfigurationWrapper> userConfigurationList = userContext.getConfigurationList();
 				final Map<String, ConfigurationWrapper> requestConfigurationList = requestContext.getConfigurationList();
 				configurationList = mergeConfigurationLists(defaultConfigurationList, userConfigurationList, requestConfigurationList);
+
+				// save merged configuration in user context
+				userContext.setConfigurationList(configurationList);
 			}
 			catch (ContextMappingException e) {
 				fail("Could not map userContext to requestContext: " + e.getMessage());
@@ -377,7 +390,7 @@ public abstract class AbstractStateMachine {
 
 			try {
 				final Map<String, String> instanceInformation = resourcePlugin.provision();
-				instance.setInstanceInformation(instanceInformation);
+				instance.getInstanceInformation().putAll(instanceInformation);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Resource provisioned."));
 			}
 			catch (ProvisionResourceException e) {
