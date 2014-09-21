@@ -55,9 +55,16 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 		final String remotePathPrefix = "/tmp/";
 
 		if (connection != null) {
-			// Upload the content of the remote folder to /tmp/remote on the resource.
+
 			FileInputStream is = null;
 			try {
+				// Update apt-get
+				connection.execute("sudo apt-get update &> /tmp/install.log");
+
+				// Install java
+				connection.execute("sudo apt-get -y install openjdk-7-jre-headless &> /tmp/install.log");
+
+				// Upload the content of the remote folder to /tmp/remote on the resource.
 				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
 				for (File file : files) {
 					final String remotePath = new File(remotePathPrefix, file.toString()).toString().replace("\\", "/");
