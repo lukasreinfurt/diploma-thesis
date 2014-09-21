@@ -45,30 +45,6 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 	}
 
 	/**
-	 * Get the size in bytes of an input stream by reading the stream once.
-	 * Does NOT reset the input stream!
-	 */
-	// private long getSize(final InputStream is) {
-	// 	final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	// 	final int bufferSize = 4096;
-
-	// 	byte[] buffer = new byte[bufferSize];
-	// 	int n;
-
-	// 	try {
-	// 		while ((n = is.read(buffer)) > 0) {
-	// 			bos.write(buffer, 0, n);
-	// 			buffer = bos.toByteArray();
-	// 		}
-	// 	}
-	// 	catch (IOException e) {
-	// 		e.printStackTrace();
-	// 	}
-
-	// 	return buffer.length;
-	// }
-
-	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ApplicationPlugin
 	 */
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
