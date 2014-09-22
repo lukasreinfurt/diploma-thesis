@@ -27,7 +27,7 @@ import async.client.RemoteBootware;
  */
 public class RemoteBootwareService {
 
-	private final Integer maxRetries = 30;
+	private final Integer maxRetries = 6;
 	private final Integer waitBetweenRetries = 5000;
 	private URL url;
 	private Boolean available = false;
