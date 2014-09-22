@@ -61,7 +61,9 @@ public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlu
 	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
-	@SuppressWarnings("checkstyle:javancss")
+	@SuppressWarnings({
+			"checkstyle:javancss",
+			"checkstyle:executablestatementcount"})
 	public final Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException {
 
 		final String provisioningEngineEndpoint = instance.getInstanceInformation().get("appURL");
@@ -149,7 +151,8 @@ public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlu
 			sshSettings.put("resourceURL", ipaddress);
 			sshSettings.put("sshUsername", sshUsername);
 			sshSettings.put("sshKey", sshKey);
-			SetupProvisioningManager.execute(eventBus, sshSettings, instance);
+			final SetupProvisioningManager setup = new SetupProvisioningManager();
+			setup.execute(eventBus, sshSettings, instance);
 
 			// End: Setup provisioning manager
 

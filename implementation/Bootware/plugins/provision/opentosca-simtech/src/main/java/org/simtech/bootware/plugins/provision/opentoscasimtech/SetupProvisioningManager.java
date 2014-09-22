@@ -14,11 +14,11 @@ import org.simtech.bootware.core.EventBus;
 import org.simtech.bootware.core.UserContext;
 
 @SuppressWarnings("checkstyle:illegalcatch")
-public final class SetupProvisioningManager {
+public class SetupProvisioningManager {
 
-	private SetupProvisioningManager() {}
+	public SetupProvisioningManager() {}
 
-	public static void execute(final EventBus eb, final Map<String, String> sshSettings, final ApplicationInstance instance) {
+	public final void execute(final EventBus eb, final Map<String, String> sshSettings, final ApplicationInstance instance) {
 		System.out.println("##################################################################################");
 
 		final SshConnection connection = new SshConnection(eb);
