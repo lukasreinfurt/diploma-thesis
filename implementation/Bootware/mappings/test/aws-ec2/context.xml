@@ -16,15 +16,15 @@
 					</entry>
 					<entry>
 						<key>ports</key>
-						<value>22,1337,8080,9443,9763</value>
+						<value>22,8080,5563</value>
 					</entry>
 					<entry>
 						<key>imageId</key>
-						<value>ami-25865252</value>
+						<value>ami-0307d674</value>
 					</entry>
 					<entry>
 						<key>instanceType</key>
-						<value>m1.medium</value>
+						<value>t2.micro</value>
 					</entry>
 				</configuration>
 			</value>

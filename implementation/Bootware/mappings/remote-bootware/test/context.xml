@@ -7,10 +7,10 @@
 		<entry>
 			<key>aws-ec2</key>
 			<value>
-				<configuration>
+				<<configuration>
 					<entry>
 						<key>username</key>
-						<value>ec2-user</value>
+						<value>ubuntu</value>
 					</entry>
 					<entry>
 						<key>ports</key>
@@ -18,11 +18,11 @@
 					</entry>
 					<entry>
 						<key>imageId</key>
-						<value>ami-2918e35e</value>
+						<value>ami-0307d674</value>
 					</entry>
 					<entry>
 						<key>instanceType</key>
-						<value>t1.micro</value>
+						<value>t2.micro</value>
 					</entry>
 				</configuration>
 			</value>

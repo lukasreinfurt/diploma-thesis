@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.provision.opentosca;
+package org.simtech.bootware.plugins.provision.opentoscasimtech;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

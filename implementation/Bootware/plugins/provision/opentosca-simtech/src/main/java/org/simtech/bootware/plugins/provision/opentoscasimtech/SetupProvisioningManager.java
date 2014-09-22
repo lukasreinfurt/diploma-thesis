@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.provision.opentosca;
+package org.simtech.bootware.plugins.provision.opentoscasimtech;
 
 import java.io.File;
 import java.io.FileInputStream;

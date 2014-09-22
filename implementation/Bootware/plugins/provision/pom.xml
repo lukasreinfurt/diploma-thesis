@@ -20,7 +20,7 @@
 
 	<modules>
 		<module>cloudformation</module>
-		<module>opentosca</module>
+		<module>opentosca-simtech</module>
 		<module>test</module>
 		<module>empty</module>
 	</modules>

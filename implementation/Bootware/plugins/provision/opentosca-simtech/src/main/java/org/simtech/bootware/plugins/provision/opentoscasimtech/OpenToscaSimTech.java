@@ -1,4 +1,4 @@
-package org.simtech.bootware.plugins.provision.opentosca;
+package org.simtech.bootware.plugins.provision.opentoscasimtech;
 
 import java.io.File;
 import java.net.URI;
@@ -22,11 +22,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * A provision plugin that can call OpenTOSCA to provision and deprovision.
+ * A provision plugin that can call OpenTOSCA to provision and deprovision the SimTech System.
  */
-public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
+public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlugin {
 
-	public OpenTosca() {}
+	public OpenToscaSimTech() {}
 
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin

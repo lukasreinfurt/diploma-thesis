@@ -3,7 +3,7 @@
 	<resourcePlugin>plugins/resource/aws-ec2-1.0.0.jar</resourcePlugin>
 	<communicationPlugin>plugins/communication/ssh-1.0.0.jar</communicationPlugin>
 	<applicationPlugin>plugins/application/opentosca-ec2-1.0.0.jar</applicationPlugin>
-	<callApplicationPlugin>plugins/provision/opentosca-1.0.0.jar</callApplicationPlugin>
+	<callApplicationPlugin>plugins/provision/opentosca-simtech-1.0.0.jar</callApplicationPlugin>
 	<servicePackageReference></servicePackageReference>
 	<configurationList>
 		<entry>
