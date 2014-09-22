@@ -4,9 +4,6 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 
 import org.simtech.bootware.core.events.CoreEvent;
 import org.simtech.bootware.core.events.Severity;
@@ -40,22 +37,23 @@ public class ContextMapper {
 	 */
 	public final RequestContext map(final UserContext userContext) throws ContextMappingException {
 
-		eventBus.publish(new CoreEvent(Severity.INFO, "Mapping context with repository at " + repositoryURL + "/mapContext."));
+		final String application = userContext.getApplication();
+		final String resource = userContext.getResource();
+
+		eventBus.publish(new CoreEvent(Severity.INFO, "Mapping context with repository at " + repositoryURL + "/context?application=" + application + "&resource=" + resource));
 
 		// Create client.
-		final Client client = ClientBuilder.newBuilder().register(JAXBElement.class).build();
-
-		// Wrap userContext in JAXBElement to send it as payload.
-		final QName qName = new QName("", "userContext");
-		final JAXBElement<UserContext> requestRoot = new JAXBElement<UserContext>(qName, UserContext.class, userContext);
+		final Client client = ClientBuilder.newBuilder().register(RequestContext.class).build();
 
 		// Send POST to repository with payload attached.
 		try {
 			final RequestContext requestContext = client
 					.target(repositoryURL)
-					.path("/mapContext")
+					.path("/context")
+					.queryParam("application", application)
+					.queryParam("resource", resource)
 					.request()
-					.post(Entity.entity(requestRoot, "application/xml"), RequestContext.class);
+					.get(RequestContext.class);
 
 			if (requestContext == null) {
 				throw new ContextMappingException("The response send by the repository was empty.");

@@ -21,12 +21,6 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>org.simtech.bootware</groupId>
-			<artifactId>bootware-core</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
 			<artifactId>jersey-container-jdk-http</artifactId>
 			<version>2.11</version>

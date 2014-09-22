@@ -4,16 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-
-import org.simtech.bootware.core.UserContext;
 
 /**
  * Implements a simple REST server
@@ -56,22 +53,21 @@ public class RestServer {
 	/**
 	 * Returns the request context that maps to the given user context if it exists.
 	 *
-	 * @param userContext The user context that should be mapped to a request context.
+	 * @param application The application parameter.
+	 * @param resource The resource parameter.
 	 *
 	 * @return A string that contains the request context.
 	 */
-	@POST
-	@Path("/mapContext")
-	@Consumes("application/xml")
+	@GET
+	@Path("context")
 	@Produces("application/xml")
-	public final String getPlugin(final UserContext userContext) {
+	public final String getContext(@QueryParam("application") final String application,
+	                               @QueryParam("resource") final String resource) {
+
+		System.out.println("GET /repository/context?application=" + application + "&resource=" + resource);
 
 		// Build path to potential mapping file from the resource and application provided.
-		final String resource    = userContext.getResource();
-		final String application = userContext.getApplication();
 		final File mappingFile   = new File("mappings/" + application + "/" + resource + "/context.xml");
-
-		System.out.println("POST /repository/mapContext with " + mappingFile);
 
 		// Load and return mapping file if it exists
 		try {
@@ -85,5 +81,4 @@ public class RestServer {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
-
 }
