@@ -54,12 +54,13 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// Bugfix: The apt-get update in the install script seems to fail for
 				// some reason. Executing apt-get update before the install script
 				// is a fix for that.
+				// Update apt-get. Retry 5 times if it fails.
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Updating apt-get. This can take a while."));
-				connection.execute("sudo apt-get update &> /tmp/install.log");
+				connection.execute("trial=0; until sudo apt-get update -y || [ $trial -e q 5 ]; do sleep $((2**++trial )); done >> /tmp/install.log 2>&1");
 
 				// run regular installation
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Executing OpenTOSCA install script. This can take a while."));
-				connection.execute("wget -qO- http://install.opentosca.org/installEC2 | sh &> /tmp/install.log");
+				connection.execute("wget -qO- http://install.opentosca.org/installEC2 | sh >> /tmp/install.log 2>&1");
 
 				// create properties file with the actual ip address
 				final Properties properties = new Properties();

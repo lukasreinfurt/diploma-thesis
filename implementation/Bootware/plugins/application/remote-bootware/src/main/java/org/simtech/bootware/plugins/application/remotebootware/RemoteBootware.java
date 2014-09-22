@@ -58,11 +58,11 @@ public class RemoteBootware extends AbstractBasePlugin implements ApplicationPlu
 
 			FileInputStream is = null;
 			try {
-				// Update apt-get
-				connection.execute("sudo apt-get update &> /tmp/install.log");
+				// Update apt-get. Retry 5 times if it fails.
+				connection.execute("trial=0; until sudo apt-get update -y || [ $trial -e q 5 ]; do sleep $((2**++trial )); done >> /tmp/install.log 2>&1");
 
 				// Install java
-				connection.execute("sudo apt-get -y install openjdk-7-jre-headless &> /tmp/install.log");
+				connection.execute("sudo apt-get -y install openjdk-7-jre-headless >> /tmp/install.log 2>&1");
 
 				// Upload the content of the remote folder to /tmp/remote on the resource.
 				final Collection<File> files =  FileUtils.listFilesAndDirs(new File("remote/"), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
