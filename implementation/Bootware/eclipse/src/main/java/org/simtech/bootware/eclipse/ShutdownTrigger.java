@@ -151,7 +151,7 @@ public final class ShutdownTrigger {
 	 * @param message The message shown on the message dialog.
 	 */
 	public static void showMessage(final String titel, final String message) {
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openInformation(
 						Display.getDefault().getActiveShell(),

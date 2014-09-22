@@ -128,7 +128,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				// Execute the code to start the process instance. It changes the UI and
 				// since this is only allowed from the main eclipse thread, this code
 				// has to be wrapped in asyncExec().
-				Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().syncExec(new Runnable() {
 
 					public void run() {
 
