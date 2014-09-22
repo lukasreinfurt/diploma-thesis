@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 public class OpenTOSCAInstanceDataAccess {
 
 	//static Logger logger = Logger.getLogger(OpenTOSCAInstanceDataAccess.class.getName());
+	// work around for log4j not working because of some osgi version clash
 	private Logger logger = new Logger();
 
 	// the endpoint (address) of the instance data REST API
@@ -66,7 +67,7 @@ public class OpenTOSCAInstanceDataAccess {
 	 * @param csarName the name of the CSAR file whose build plan has to run
 	 * @return
 	 */
-	public String provisionService(String csarName){
+	public PlanResponse provisionService(String csarName){
 
 		String url = getVinothekRequestURLForBuildPlan(csarName);
 
@@ -92,7 +93,7 @@ public class OpenTOSCAInstanceDataAccess {
 			}
 		}
 		logger.info("Build plan Response of CSAR file '"+csarName+"' is: "+ response);
-	    return response;
+	    return new PlanResponse(response);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class OpenTOSCAInstanceDataAccess {
 	 * @param serviceInstanceID the id of the service that will be deprovisioned
 	 * @return
 	 */
-	public String deprovisionService(String csarName, String serviceInstanceID){
+	public PlanResponse deprovisionService(String csarName, String serviceInstanceID){
 
 		String url = getVinothekRequestURLForTerminationPlan(csarName, serviceInstanceID);
 
@@ -127,7 +128,7 @@ public class OpenTOSCAInstanceDataAccess {
 			}
 		}
 		logger.info("Termination plan Response of CSAR file '"+csarName+"' is: "+ response);
-	    return response;
+		return new PlanResponse(response);
 	}
 
 	private String getVinothekRequestURLForBuildPlan(String csarName){
@@ -432,6 +433,24 @@ public class OpenTOSCAInstanceDataAccess {
 		return ret;
 	}
 
+	public class PlanResponse {
+		private String serviceEndpoint;
+		private String serviceInstanceID;
+		public PlanResponse(String vinothekResponse) {
+			super();
+			String[] x = vinothekResponse.split("###");
+			this.serviceEndpoint = x[0];
+			this.serviceInstanceID = x[1];
+		}
+		public String getServiceEndpoint() {
+			return serviceEndpoint;
+		}
+		public String getServiceInstanceID() {
+			return serviceInstanceID;
+		}
+	}
+
+	// Work around for log4j not working
 	private class Logger {
 
 		public void info(String string) {

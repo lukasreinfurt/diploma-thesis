@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
+import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess.PlanResponse;
 
 import org.simtech.bootware.core.ApplicationInstance;
 import org.simtech.bootware.core.ConfigurationWrapper;
@@ -60,6 +61,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 	/**
 	 * Implements the provision operation defined in @see org.simtech.bootware.core.plugins.ProvisionPlugin
 	 */
+	@SuppressWarnings("checkstyle:javancss")
 	public final Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException {
 
 		final String provisioningEngineEndpoint = instance.getInstanceInformation().get("appURL");
@@ -98,7 +100,8 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 		// instantiate csar
 		// There should probably be a check here if the instantiation was successful.
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Instantiate " + csarName));
-		final String serviceInstanceID = client.provisionService(csarName);
+		final PlanResponse provisionResponse = client.provisionService(csarName);
+		final String serviceInstanceID = provisionResponse.getServiceInstanceID();
 		System.out.println("serviceInstanceID:" + serviceInstanceID);
 
 		if (serviceInstanceID != null) {
@@ -178,7 +181,7 @@ public class OpenTosca extends AbstractBasePlugin implements ProvisionPlugin {
 			throw new DeprovisionException("Client was null.");
 		}
 
-		final String instantiateResponse = client.deprovisionService(csarName, serviceInstanceID);
+		final PlanResponse deprovisionResponse = client.deprovisionService(csarName, serviceInstanceID);
 
 	}
 
