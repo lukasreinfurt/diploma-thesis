@@ -2,8 +2,6 @@ package org.simtech.bootware.plugins.provision.opentosca;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -12,11 +10,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 import org.simtech.bootware.core.ApplicationInstance;
-import org.simtech.bootware.core.ConfigurationWrapper;
 import org.simtech.bootware.core.EventBus;
 import org.simtech.bootware.core.UserContext;
 
-public class SetupProvisioningManager {
+@SuppressWarnings("checkstyle:illegalcatch")
+public final class SetupProvisioningManager {
 
 	private SetupProvisioningManager() {}
 

@@ -40,7 +40,7 @@ import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
 public class RemoteBootwareImpl extends AbstractStateMachine implements RemoteBootware {
 
 	private static String provisionPluginPath = "plugins/provision/";
-	private static String remoteBootwareIP = null;
+	private static String remoteBootwareIP;
 
 	/**
 	 * Creates the bootware process as state machine.
