@@ -34,10 +34,9 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void provision(final Connection connection) throws ProvisionApplicationException {
-
 		if (connection != null) {
 			try {
-				connection.execute("mkdir -p ");
+				connection.execute("ls -al .");
 			}
 			catch (ExecuteCommandException e) {
 				throw new ProvisionApplicationException(e);
@@ -49,7 +48,17 @@ public class Test extends AbstractBasePlugin implements ApplicationPlugin {
 	}
 
 	public final void deprovision(final Connection connection) throws DeprovisionApplicationException {
-		// no op
+		if (connection != null) {
+			try {
+				connection.execute("ls -al .");
+			}
+			catch (ExecuteCommandException e) {
+				throw new DeprovisionApplicationException(e);
+			}
+		}
+		else {
+			throw new DeprovisionApplicationException("Connection is null.");
+		}
 	}
 
 	public final URL start(final Connection connection) throws StartApplicationException {
