@@ -64,6 +64,7 @@ public abstract class AbstractStateMachine {
 	protected static URL url;
 
 	protected static ApplicationInstance instance;
+	protected static Connection connection;
 
 	protected UntypedStateMachineBuilder builder;
 
@@ -403,15 +404,14 @@ public abstract class AbstractStateMachine {
 		}
 
 		/**
-		 * Create a connection to the resource using the communication plugin.
+		 * Create a connection to the resource using the communication plugin for the deploy process.
 		 */
-		protected void connect(final String from, final String to, final String fsmEvent) {
+		protected void connectDeploy(final String from, final String to, final String fsmEvent) {
 
 			eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to resource."));
 
 			try {
-				final Connection connection = communicationPlugin.connect(instance.getInstanceInformation());
-				instance.setConnection(connection);
+				connection = communicationPlugin.connect(instance.getInstanceInformation());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Connected to resource."));
 			}
 			catch (ConnectConnectionException e) {
@@ -432,7 +432,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Provisioning application."));
 
 			try {
-				applicationPlugin.provision(instance.getConnection());
+				applicationPlugin.provision(connection);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application provisioned."));
 			}
 			catch (ProvisionApplicationException e) {
@@ -452,12 +452,55 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Starting application."));
 
 			try {
-				url = applicationPlugin.start(instance.getConnection());
+				url = applicationPlugin.start(connection);
 				instance.getInstanceInformation().put("appURL", url.toString());
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application started."));
 			}
 			catch (StartApplicationException e) {
 				fail("Could not start application: " + e.getMessage());
+				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
+			}
+
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+		}
+
+		/**
+		 * Disconnect the connection created by the communication plugin during the deploy process.
+		 */
+		protected void disconnectDeploy(final String from, final String to, final String fsmEvent) {
+
+			eventBus.publish(new CoreEvent(Severity.INFO, "Disconnecting from resource."));
+
+			try {
+				communicationPlugin.disconnect(connection);
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Disconnected from resource."));
+			}
+			catch (DisconnectConnectionException e) {
+				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not disconnect from resource: " + e.getMessage()));
+				stateMachine.fire(StateMachineEvents.FAILURE);
+				return;
+			}
+			finally {
+				connection = null;
+			}
+
+			stateMachine.fire(StateMachineEvents.SUCCESS);
+		}
+
+		/**
+		 * Create a connection to the resource using the communication plugin for the undeploy process.
+		 */
+		protected void connectUndeploy(final String from, final String to, final String fsmEvent) {
+
+			eventBus.publish(new CoreEvent(Severity.INFO, "Connecting to resource."));
+
+			try {
+				connection = communicationPlugin.connect(instance.getInstanceInformation());
+				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Connected to resource."));
+			}
+			catch (ConnectConnectionException e) {
+				fail("Could not connect to resource: " + e.getMessage());
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
 			}
@@ -473,7 +516,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Stopping application."));
 
 			try {
-				applicationPlugin.stop(instance.getConnection());
+				applicationPlugin.stop(connection);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application stopped."));
 			}
 			catch (StopApplicationException e) {
@@ -493,7 +536,7 @@ public abstract class AbstractStateMachine {
 			eventBus.publish(new CoreEvent(Severity.INFO, "Deprovisioning application."));
 
 			try {
-				applicationPlugin.deprovision(instance.getConnection());
+				applicationPlugin.deprovision(connection);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Application deprovisioned."));
 			}
 			catch (DeprovisionApplicationException e) {
@@ -506,20 +549,23 @@ public abstract class AbstractStateMachine {
 		}
 
 		/**
-		 * Disconnect the connection created by the communication plugin.
+		 * Disconnect the connection created by the communication plugin for the undeploy process.
 		 */
-		protected void disconnect(final String from, final String to, final String fsmEvent) {
+		protected void disconnectUndeploy(final String from, final String to, final String fsmEvent) {
 
 			eventBus.publish(new CoreEvent(Severity.INFO, "Disconnecting from resource."));
 
 			try {
-				communicationPlugin.disconnect(instance.getConnection());
+				communicationPlugin.disconnect(connection);
 				eventBus.publish(new CoreEvent(Severity.SUCCESS, "Disconnected from resource."));
 			}
 			catch (DisconnectConnectionException e) {
 				eventBus.publish(new CoreEvent(Severity.WARNING, "Could not disconnect from resource: " + e.getMessage()));
 				stateMachine.fire(StateMachineEvents.FAILURE);
 				return;
+			}
+			finally {
+				connection = null;
 			}
 
 			stateMachine.fire(StateMachineEvents.SUCCESS);

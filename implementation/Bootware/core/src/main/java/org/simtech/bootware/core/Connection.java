@@ -46,7 +46,6 @@ public interface Connection {
 	 * Requires that an active connection exists (i.e. that @see #connect was called earlier).
 	 *
 	 * @param inputStream An input stream of the file that should be uploaded.
-	 * @param length The size of the file in bytes.
 	 * @param remotePath The absolute path on the resource where the file should be uploaded to, including file name.
 	 *
 	 * @throws UploadFileException If there was an error uploading the file.

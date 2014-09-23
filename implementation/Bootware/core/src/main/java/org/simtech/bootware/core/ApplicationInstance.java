@@ -15,7 +15,6 @@ import java.util.Map;
 public class ApplicationInstance {
 	private String id;
 	private Map<String, String> instanceInformation;
-	private Connection connection;
 	private UserContext userContext;
 
 	public ApplicationInstance(final String id) {
@@ -33,14 +32,6 @@ public class ApplicationInstance {
 
 	public final Map<String, String> getInstanceInformation() {
 		return instanceInformation;
-	}
-
-	public final void setConnection(final Connection connection) {
-		this.connection = connection;
-	}
-
-	public final Connection getConnection() {
-		return connection;
 	}
 
 	public final void setUserContext(final UserContext context) {

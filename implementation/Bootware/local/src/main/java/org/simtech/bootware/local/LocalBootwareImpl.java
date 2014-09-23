@@ -63,19 +63,21 @@ public class LocalBootwareImpl extends AbstractStateMachine implements LocalBoot
 
 		builder.onEntry(SMStates.LOAD_REQUEST_PLUGINS).callMethod("loadRequestPlugins");
 		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.PROVISION_RESOURCE).on(SMEvents.DEPLOY);
-		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.STOP_APPLICATION).on(SMEvents.UNDEPLOY);
+		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.CONNECT_UNDEPLOY).on(SMEvents.UNDEPLOY);
 		builder.externalTransition().from(SMStates.LOAD_REQUEST_PLUGINS).to(SMStates.UNLOAD_REQUEST_PLUGINS).on(SMEvents.FAILURE);
 
 		// deploy
-		buildDefaultTransition(SMStates.PROVISION_RESOURCE, "provisionResource", SMStates.CONNECT, SMStates.DEPROVISION_RESOURCE);
-		buildDefaultTransition(SMStates.CONNECT, "connect", SMStates.PROVISION_APPLICATION, SMStates.DISCONNECT);
+		buildDefaultTransition(SMStates.PROVISION_RESOURCE, "provisionResource", SMStates.CONNECT_DEPLOY, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.CONNECT_DEPLOY, "connectDeploy", SMStates.PROVISION_APPLICATION, SMStates.DISCONNECT_UNDEPLOY);
 		buildDefaultTransition(SMStates.PROVISION_APPLICATION, "provisionApplication", SMStates.START_APPLICATION, SMStates.DEPROVISION_APPLICATION);
-		buildDefaultTransition(SMStates.START_APPLICATION, "startApplication", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.STOP_APPLICATION);
+		buildDefaultTransition(SMStates.START_APPLICATION, "startApplication", SMStates.DISCONNECT_DEPLOY, SMStates.STOP_APPLICATION);
+		buildDefaultTransition(SMStates.DISCONNECT_DEPLOY, "disconnectDeploy", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.UNLOAD_REQUEST_PLUGINS);
 
 		// undeploy
+		buildDefaultTransition(SMStates.CONNECT_UNDEPLOY, "connectUndeploy", SMStates.STOP_APPLICATION, SMStates.DISCONNECT_UNDEPLOY);
 		buildDefaultTransition(SMStates.STOP_APPLICATION, "stopApplication", SMStates.DEPROVISION_APPLICATION, SMStates.DEPROVISION_APPLICATION);
-		buildDefaultTransition(SMStates.DEPROVISION_APPLICATION, "deprovisionApplication", SMStates.DISCONNECT, SMStates.DISCONNECT);
-		buildDefaultTransition(SMStates.DISCONNECT, "disconnect", SMStates.DEPROVISION_RESOURCE, SMStates.DEPROVISION_RESOURCE);
+		buildDefaultTransition(SMStates.DEPROVISION_APPLICATION, "deprovisionApplication", SMStates.DISCONNECT_UNDEPLOY, SMStates.DISCONNECT_UNDEPLOY);
+		buildDefaultTransition(SMStates.DISCONNECT_UNDEPLOY, "disconnectUndeploy", SMStates.DEPROVISION_RESOURCE, SMStates.DEPROVISION_RESOURCE);
 		buildDefaultTransition(SMStates.DEPROVISION_RESOURCE, "deprovisionResource", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.FATAL_ERROR);
 		buildDefaultTransition(SMStates.FATAL_ERROR, "fatalError", SMStates.UNLOAD_REQUEST_PLUGINS, SMStates.UNLOAD_REQUEST_PLUGINS);
 

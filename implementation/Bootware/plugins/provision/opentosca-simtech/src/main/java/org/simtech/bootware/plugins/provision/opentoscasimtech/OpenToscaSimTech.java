@@ -63,7 +63,8 @@ public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlu
 	 */
 	@SuppressWarnings({
 			"checkstyle:javancss",
-			"checkstyle:executablestatementcount"})
+			"checkstyle:executablestatementcount"
+	})
 	public final Map<String, String> provision(final ApplicationInstance instance) throws ProvisionException {
 
 		final String provisioningEngineEndpoint = instance.getInstanceInformation().get("appURL");
