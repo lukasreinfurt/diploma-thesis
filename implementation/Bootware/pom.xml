@@ -45,6 +45,8 @@
 				</configuration>
 			</plugin>
 
+			<!-- Remove comments around this block to check code with checkstyle during compile -->
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -67,6 +69,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 
 		</plugins>
 	</build>
