@@ -5,6 +5,7 @@
 	id="org.simtech.bootware.eclipse"
 	version="1.0.0">
 
+	<!-- Set the class that implements the bootware extension point -->
 	<extension
 		point="org.eclipse.bpel.ui.bootware">
 		<execute
@@ -12,6 +13,7 @@
 		</execute>
 	</extension>
 
+	<!-- Add shutdown button after restart ActiveMQ button in SimTech menu -->
 	<extension
 		point="org.eclipse.ui.menus">
 		<menuContribution
@@ -24,6 +26,7 @@
 		</menuContribution>
 	</extension>
 
+	<!-- Set class that implements the shutdown button functionality -->
 	<extension
 		point="org.eclipse.ui.commands">
 		<command
