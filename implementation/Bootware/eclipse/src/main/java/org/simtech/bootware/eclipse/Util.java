@@ -45,6 +45,14 @@ public final class Util {
 		return newConsole;
 	}
 
+	/**
+	 * Loads an object from the given type from an XML file.
+	 *
+	 * @param type The class of the object that should be loaded.
+	 * @param path The path to the XML file that should be loaded.
+	 *
+	 * @return The object of the give ntype loaded from the given XML file.
+	 */
 	public static <T> T loadXML(final Class<T> type, final String path) throws JAXBException {
 		final JAXBContext jaxbContext = JAXBContext.newInstance(type);
 		final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
