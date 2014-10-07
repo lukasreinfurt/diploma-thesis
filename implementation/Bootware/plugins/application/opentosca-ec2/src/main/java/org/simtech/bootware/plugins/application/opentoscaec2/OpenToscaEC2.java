@@ -79,6 +79,10 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				output.close();
 				input.close();
 
+				// Deploy monitor server
+				// TODO: Host monitor server .war somewhere "real" and change the URL here.
+				connection.execute("wget -P /var/lib/tomcat7/webapps/ https://dl.dropboxusercontent.com/u/2010067/monitor-server-0.1.war");
+
 				// Bugfix for termination plans
 
 				// delete old vinothek.war and upload replacement
