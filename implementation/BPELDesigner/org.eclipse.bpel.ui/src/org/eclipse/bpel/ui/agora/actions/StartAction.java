@@ -77,7 +77,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 				MessageDialog.openInformation(
 					Display.getDefault().getActiveShell(),
 					"Bootware shutting down",
-					"The Bootware is shutting down at the moment. Please wait until the"
+					"The Bootware is shutting down at the moment. Please wait until the "
 					+ "process is finished and try again.");
 				return;
 			}
@@ -88,7 +88,7 @@ public class StartAction extends Action implements IEditorActionDelegate{
 			MessageDialog.openInformation(
 					Display.getDefault().getActiveShell(),
 					"Still bootstrapping ...",
-					"The bootstrapping process has not finished yet. Please wait until the"
+					"The bootstrapping process has not finished yet. Please wait until the "
 					+ "process is finished and try again.");
 			return;
 		}
