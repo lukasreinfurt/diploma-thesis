@@ -104,7 +104,7 @@ public class OpenToscaEC2 extends AbstractBasePlugin implements ApplicationPlugi
 				// minutes for WSO to start up. If a CSAR is uploaded before that's done
 				// it will not be deployed correctly and instantiation will fail.
 				// Waiting for everything to be started should be done in a cleaner way
-				// in the future.
+				// in the future, if possible.
 				final Integer msInS = 1000;
 				final Integer wait = 180000;
 				eventBus.publish(new ApplicationPluginEvent(Severity.INFO, "Waiting " + wait / msInS + " seconds for OpenTOSCA to be started."));
