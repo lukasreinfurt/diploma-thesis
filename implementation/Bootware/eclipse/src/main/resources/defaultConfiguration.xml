@@ -2,6 +2,21 @@
 <configurationListWrapper>
 	<configurationList>
 		<entry>
+			<key>provisioning-manager</key>
+				<value>
+					<configuration>
+						<entry>
+							<key>serviceRegistryURL</key>
+							<value>http://[IP]:8077/ServiceRegistryMockup/services/ServiceRegistry</value>
+						</entry>
+						<entry>
+							<key>serviceRepositoryURL</key>
+							<value>http://[IP]:8077/ServiceRepositoryMockup/services/ServiceRepository</value>
+						</entry>
+				</configuration>
+			</value>
+		</entry>
+		<entry>
 			<key>aws-ec2</key>
 			<value>
 				<configuration>
