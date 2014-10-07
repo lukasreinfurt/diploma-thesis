@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context>
+	<resourcePlugin>plugins/resource/empty-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>plugins/communication/empty-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>plugins/application/empty-1.0.0.jar</applicationPlugin>
+	<callApplicationPlugin>plugins/provision/cloudformation-1.0.0.jar</callApplicationPlugin>
+</context>

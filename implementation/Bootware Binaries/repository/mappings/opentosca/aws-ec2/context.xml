@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context>
+	<resourcePlugin>plugins/resource/aws-ec2-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>plugins/communication/ssh-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>plugins/application/opentosca-ec2-1.0.0.jar</applicationPlugin>
+	<callApplicationPlugin>plugins/provision/opentosca-simtech-1.0.0.jar</callApplicationPlugin>
+	<servicePackageReference></servicePackageReference>
+	<configurationList>
+		<entry>
+			<key>aws-ec2</key>
+			<value>
+				<configuration>
+					<entry>
+						<key>username</key>
+						<value>ubuntu</value>
+					</entry>
+					<entry>
+						<key>ports</key>
+						<value>22,1337,8080,9443,9763</value>
+					</entry>
+					<entry>
+						<key>imageId</key>
+						<value>ami-88f129ff</value>
+					</entry>
+					<entry>
+						<key>instanceType</key>
+						<value>m3.medium</value>
+					</entry>
+				</configuration>
+			</value>
+		</entry>
+	</configurationList>
+</context>

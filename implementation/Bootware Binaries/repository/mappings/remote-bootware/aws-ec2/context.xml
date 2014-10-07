@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context>
+	<resourcePlugin>plugins/resource/aws-ec2-1.0.0.jar</resourcePlugin>
+	<communicationPlugin>plugins/communication/ssh-1.0.0.jar</communicationPlugin>
+	<applicationPlugin>plugins/application/remote-bootware-1.0.0.jar</applicationPlugin>
+	<configurationList>
+		<entry>
+			<key>aws-ec2</key>
+			<value>
+				<configuration>
+					<entry>
+						<key>username</key>
+						<value>ubuntu</value>
+					</entry>
+					<entry>
+						<key>ports</key>
+						<value>22,8080,5563</value>
+					</entry>
+					<entry>
+						<key>imageId</key>
+						<value>ami-0307d674</value>
+					</entry>
+					<entry>
+						<key>instanceType</key>
+						<value>t2.micro</value>
+					</entry>
+				</configuration>
+			</value>
+		</entry>
+	</configurationList>
+</context>
