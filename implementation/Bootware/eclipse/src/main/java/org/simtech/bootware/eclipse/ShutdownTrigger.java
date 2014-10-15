@@ -137,7 +137,7 @@ public final class ShutdownTrigger {
 				final MessageBox dialog = new MessageBox(Display.getDefault().getActiveShell(), SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
 				dialog.setText("Trigger Bootware Shutdown");
 				dialog.setMessage("Triggering the bootware shutdown operation will undeploy"
-						+ "all active process models, services, the SimTech SWfMS, and the bootware."
+						+ "the SimTech SWfMS, all provisioning engines, and the bootware."
 						+ "\nAre you sure you want to do this?");
 				returnCode = dialog.open();
 			}
