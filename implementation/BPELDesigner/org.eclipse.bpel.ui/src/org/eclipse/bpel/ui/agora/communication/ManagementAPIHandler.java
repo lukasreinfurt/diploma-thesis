@@ -297,7 +297,7 @@ public class ManagementAPIHandler {
 					out.write(data, 0, count);
 				}
 				out.closeEntry(); // close each entry
-				
+
 				in.close();
 			}
 			out.flush();
@@ -507,6 +507,11 @@ public class ManagementAPIHandler {
 		SOAPAddress soapAddress = (SOAPAddress) port.getExtensibilityElements()
 				.iterator().next();
 		epr = soapAddress.getLocationURI();
+
+		// @hahnml: Take the SOAP address and change the IP and port to the
+		// values specified in the Eclipse preferences
+		epr = changeToCorrectOdeAddress(epr);
+
 		String wsdlNS = wsdl.getTargetNamespace();
 		String method = "";
 		javax.wsdl.Message inputMsg = null;
@@ -640,6 +645,28 @@ public class ManagementAPIHandler {
 		}
 	}
 
+	// @hahnml: New method to change the address of ODE contained in the process
+	// model service addresses according to the value
+	// specified in the preferences
+	private static String changeToCorrectOdeAddress(String epr) {
+		String result = epr;
+		
+		// Get only the suffix of the process service address (EPR without ODE address, e.g. http://localhost:8080/ode/processes/SimTechTestService -> /processes/SimTechTestService)
+		String[] split = epr.split("http://\\w+:\\d{4}/ode");
+		
+		// Retrieve the correct address of ODE from the preference store of the
+		// process management plugin
+		String odeAddress = ProcessManagementUI.getDefault()
+				.getPreferenceStore()
+				.getString(IProcessManagementConstants.PREF_ODE_URL);
+		
+		if (odeAddress != null && !odeAddress.isEmpty() && split.length == 2) {
+			result = odeAddress + split[1];
+		}
+
+		return result;
+	}
+
 	/**
 	 * Builds a soap body if the rpc styl is chosen and returns the root
 	 * OMElement
@@ -765,6 +792,10 @@ public class ManagementAPIHandler {
 		SOAPAddress soapAddress = (SOAPAddress) port.getExtensibilityElements()
 				.iterator().next();
 		epr = soapAddress.getLocationURI();
+
+		// @hahnml: Take the SOAP address and change the IP and port to the
+		// values specified in the Eclipse preferences
+		epr = changeToCorrectOdeAddress(epr);
 
 		// build the message
 		ServiceClient client;
