@@ -7,11 +7,11 @@
 					<configuration>
 						<entry>
 							<key>serviceRegistryURL</key>
-							<value>http://[IP]:8077/ServiceRegistryMockup/services/ServiceRegistry</value>
+							<value>http://ec2-54-72-148-204.eu-west-1.compute.amazonaws.com:8080/ServiceRegistryMockup/services/ServiceRegistry</value>
 						</entry>
 						<entry>
 							<key>serviceRepositoryURL</key>
-							<value>http://[IP]:8077/ServiceRepositoryMockup/services/ServiceRepository</value>
+							<value>http://ec2-54-72-148-204.eu-west-1.compute.amazonaws.com:8080/ServiceRepositoryMockup/services/ServiceRepository</value>
 						</entry>
 				</configuration>
 			</value>
