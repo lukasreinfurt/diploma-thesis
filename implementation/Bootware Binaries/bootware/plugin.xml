@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin
+	name="SimTech Bootware Eclipse Plugin"
+	id="org.simtech.bootware.eclipse"
+	version="1.0.0">
+
+	<!-- Set the class that implements the bootware extension point -->
+	<extension
+		point="org.eclipse.bpel.ui.bootware">
+		<execute
+				class="org.simtech.bootware.eclipse.BootwarePlugin">
+		</execute>
+	</extension>
+
+	<!-- Add shutdown button after restart ActiveMQ button in SimTech menu -->
+	<extension
+		point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="menu:simTech?after=org.eclipse.bpel.ui.restartActiveMQ">
+			<command
+				commandId="org.eclipse.bpel.ui.triggerBootwareShutdown"
+				label="Trigger Bootware Shutdown"
+				style="push">
+			</command>
+		</menuContribution>
+	</extension>
+
+	<!-- Set class that implements the shutdown button functionality -->
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			defaultHandler="org.simtech.bootware.eclipse.TriggerBootwareShutdownHandler"
+			id="org.eclipse.bpel.ui.triggerBootwareShutdown"
+			name="Trigger Bootware Shutdown">
+		</command>
+	</extension>
+
+</plugin>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<context>
+	<resource>aws-ec2</resource>
+	<application>opentosca</application>
+	<servicePackageReference>https://dl.dropboxusercontent.com/u/2010067/SimTech-EC2.csar</servicePackageReference>
+</context>
