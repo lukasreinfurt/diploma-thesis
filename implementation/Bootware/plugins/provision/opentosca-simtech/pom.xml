@@ -77,6 +77,18 @@
 			<version>2.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -107,7 +119,10 @@
 							jms,
 							mail,
 							ganymed-ssh2,
-							commons-io
+							commons-io,
+							commons-configuration,
+							commons-lang,
+							javax.servlet-api
 						</Embed-Dependency>
 						<!-- list all packages that are not embedded here -->
 						<!-- (these have to be exported by the bootware core) -->

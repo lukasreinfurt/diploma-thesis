@@ -4,6 +4,9 @@ import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+
+import org.apache.commons.configuration.MapConfiguration;
 
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess;
 import org.lego4tosca.opentosca.OpenTOSCAInstanceDataAccess.PlanResponse;
@@ -26,13 +29,34 @@ import org.w3c.dom.Node;
  */
 public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlugin {
 
+	private String serviceRegistryURL;
+	private String serviceRepositoryURL;
+
 	public OpenToscaSimTech() {}
 
 	/**
 	 * Implements the initialize operation defined in @see org.simtech.bootware.core.plugins.Plugin
 	 */
 	public final void initialize(final Map<String, ConfigurationWrapper> configurationList) throws InitializeException {
-		// no op
+		// Get the provisioning-manager configuration from the configuration list.
+		final ConfigurationWrapper configurationWrapper = configurationList.get("provisioning-manager");
+
+		if (configurationWrapper == null) {
+			throw new InitializeException("Could not find configuration for 'provisioning-manager'.");
+		}
+
+		// Try to read the configuration values the plugin expects.
+		final Map<String, String> configurationMap = configurationWrapper.getConfiguration();
+		final MapConfiguration configuration = new MapConfiguration(configurationMap);
+		configuration.setThrowExceptionOnMissing(true);
+
+		try {
+			serviceRegistryURL   = configuration.getString("serviceRegistryURL");
+			serviceRepositoryURL = configuration.getString("serviceRepositoryURL");
+		}
+		catch (NoSuchElementException e) {
+			throw new InitializeException(e);
+		}
 	}
 
 	/**
@@ -153,7 +177,7 @@ public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlu
 			sshSettings.put("sshUsername", sshUsername);
 			sshSettings.put("sshKey", sshKey);
 			final SetupProvisioningManager setup = new SetupProvisioningManager();
-			setup.execute(eventBus, sshSettings, instance);
+			setup.execute(eventBus, sshSettings, instance, serviceRegistryURL, serviceRepositoryURL);
 
 			// End: Setup provisioning manager
 
