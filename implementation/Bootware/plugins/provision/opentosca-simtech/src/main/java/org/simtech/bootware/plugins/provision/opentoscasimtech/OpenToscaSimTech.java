@@ -96,6 +96,7 @@ public class OpenToscaSimTech extends AbstractBasePlugin implements ProvisionPlu
 
 		eventBus.publish(new ProvisionPluginEvent(Severity.INFO, "Provisioning " + servicePackageReference + " with OpenTOSCA at " + provisioningEngineEndpoint));
 
+		// TODO: Replace this with URI.getHost()
 		final String endpoint = provisioningEngineEndpoint.replace("http://", "");
 		final String csarName = new File(servicePackageReference).getName();
 		final Map<String, String> response = new HashMap<String, String>();
